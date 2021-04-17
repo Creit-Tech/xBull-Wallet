@@ -9,6 +9,23 @@ module.exports = {
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {},
+    colors: {
+      'off-black': '#14142B',
+      'ash': '#262338',
+      'body': '#4E4B66',
+      'label': '#6E7191',
+      'placeholder': '#A0A3BD',
+      'line': '#D9DBE9',
+      'input': '#EFF0F6',
+      'background': '#F7F7FC',
+      'off-white': '#FCFCFC',
+      'primary': '#C19CFC',
+      'success': '#4CFFA6',
+      'error': '#FF5DA1',
+      'primary-alternative': '#6308F7',
+      'success-alternative': '#00CC67',
+      'error-alternative': '#E40173',
+    }
   },
   variants: {
     extend: {},
