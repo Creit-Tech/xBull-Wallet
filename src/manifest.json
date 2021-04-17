@@ -4,11 +4,19 @@
   "description": "A sweet Stellar Wallet for people and businesses.",
   "version": "0.0.0",
   "action": {
-    "default_popup": "index.html"
+    "default_popup": "index.html",
+    "default_title": "xBull",
+    "default_icon": "./assets/icons/extension-icon-128.png"
   },
   "icons": {
     "16": "./assets/icons/extension-icon-16.png",
     "48": "./assets/icons/extension-icon-48.png",
     "128": "./assets/icons/extension-icon-128.png"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "sw.js"
   }
 }
