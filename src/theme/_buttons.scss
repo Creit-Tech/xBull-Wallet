@@ -4,25 +4,32 @@
     tracking-wide
     transition
     outline-none
-    focus:outline-none;
+    focus:outline-none
+    rounded-xl;
 }
 
 .btn-primary {
-  @apply bg-primary text-off-white rounded-xl;
+  @apply bg-primary
+    text-off-white;
 }
 
 .btn-primary:hover {
-  @apply bg-input text-primary;
+  @apply bg-input
+    text-primary;
 }
 
 .btn-primary:active {
-  @apply bg-line text-body;
+  @apply bg-line
+    text-body;
 }
 
 .btn-primary--outline {
-  @apply bg-transparent text-primary border-primary border-2;
+  @apply bg-transparent
+    text-primary
+    border-primary
+    border-2;
 }
 
 .btn--small {
-  @apply h-11 text-sm;
+  @apply h-10 text-sm;
 }
