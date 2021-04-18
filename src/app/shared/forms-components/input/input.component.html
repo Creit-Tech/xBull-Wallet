@@ -1,0 +1,19 @@
+<section class="bg-body rounded-xl flex items-center h-14 px-6 py-1.5">
+  <div class="w-auto mr-4">
+    <img src="/assets/icons/lock-unlocked.svg" alt="unlock-icon">
+  </div>
+
+  <div class="w-auto">
+    <div class="text-line font-semibold text-sm">
+      <span>{{ title }}</span>
+    </div>
+
+    <label class="w-full">
+      <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+             [type]="type"
+             [placeholder]="placeholder"
+             [disabled]="disabled"/>
+    </label>
+  </div>
+</section>
+

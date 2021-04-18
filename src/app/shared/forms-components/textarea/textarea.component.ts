@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class TextareaComponent implements OnInit {
   @Input() disabled = false;
+  @Input() title = 'Textarea';
 
   constructor() { }
 

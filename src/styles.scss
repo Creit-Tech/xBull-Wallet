@@ -7,6 +7,10 @@
 
 @import "theme/buttons";
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   height: 600px;
   width: 375px;

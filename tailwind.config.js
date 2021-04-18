@@ -32,6 +32,9 @@ module.exports = {
     extend: {},
   },
   plugins: [
-    require("@tailwindcss/forms")
+    // We use the strategy class to avoid undesired classes on elements
+    require("@tailwindcss/forms")({
+      strategy: 'class',
+    })
   ],
 };

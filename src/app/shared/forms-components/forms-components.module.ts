@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TextareaComponent } from './textarea/textarea.component';
+import { InputComponent } from './input/input.component';
 
 @NgModule({
   declarations: [
-    TextareaComponent
+    TextareaComponent,
+    InputComponent
   ],
   exports: [
-    TextareaComponent
+    TextareaComponent,
+    InputComponent
   ],
   imports: [
     CommonModule

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateAccountSelectionsComponent } from './pages/create-account-selections/create-account-selections.component';
 import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet.component';
+import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,10 @@ const routes: Routes = [
   {
     path: 'generate-wallet',
     component: GenerateWalletComponent,
+  },
+  {
+    path: 'generate-password',
+    component: GeneratePasswordComponent,
   }
 ];
 
