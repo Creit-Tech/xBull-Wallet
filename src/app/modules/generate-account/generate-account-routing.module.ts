@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CreateAccountSelectionsComponent } from './pages/create-account-selections/create-account-selections.component';
 import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet.component';
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
+import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
   {
     path: 'generate-password',
     component: GeneratePasswordComponent,
+  },
+  {
+    path: 'confirm-phrase-password.component',
+    component: ConfirmPhrasePasswordComponent,
   }
 ];
 

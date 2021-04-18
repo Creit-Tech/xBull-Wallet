@@ -6,13 +6,15 @@ import { CreateAccountSelectionsComponent } from './pages/create-account-selecti
 import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet.component';
 import { FormsComponentsModule } from '../../shared/forms-components/forms-components.module';
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
+import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
 
 
 @NgModule({
   declarations: [
     CreateAccountSelectionsComponent,
     GenerateWalletComponent,
-    GeneratePasswordComponent
+    GeneratePasswordComponent,
+    ConfirmPhrasePasswordComponent
   ],
   imports: [
     CommonModule,
