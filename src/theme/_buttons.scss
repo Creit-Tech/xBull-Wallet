@@ -1,0 +1,28 @@
+.btn {
+  @apply poppins-family
+    font-semibold
+    tracking-wide
+    transition
+    outline-none
+    focus:outline-none;
+}
+
+.btn-primary {
+  @apply bg-primary text-off-white rounded-xl;
+}
+
+.btn-primary:hover {
+  @apply bg-input text-primary;
+}
+
+.btn-primary:active {
+  @apply bg-line text-body;
+}
+
+.btn-primary--outline {
+  @apply bg-transparent text-primary border-primary border-2;
+}
+
+.btn--small {
+  @apply h-11 text-sm;
+}
