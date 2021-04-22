@@ -5,6 +5,7 @@
     "ng": "./node_modules/.bin/ng",
     "start": "./node_modules/.bin/ng serve",
     "build": "./node_modules/.bin/ng build",
+    "build:background": "./node_modules/.bin/tsc --project tsconfig.background.json",
     "build:watch": "./node_modules/.bin/ng build --watch",
     "build:prod": "cross-env NODE_ENV=production ./node_modules/.bin/ng build --prod",
     "test": "./node_modules/.bin/ng test",

@@ -16,7 +16,8 @@ function generateInitialValue(): AccountsState {
 @Injectable({ providedIn: 'root' })
 @StoreConfig({
   name: 'accounts',
-  idKey: 'publicKey'
+  idKey: 'publicKey',
+  resettable: true
 })
 export class AccountsStore extends EntityStore<AccountsState> {
 
