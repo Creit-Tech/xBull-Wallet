@@ -5,6 +5,7 @@
 
   <div class="w-full flex flex-wrap">
     <app-textarea class="w-full" title="Mnemonic phrase"
+                  [formControl]="mnemonicPhraseFormControl"
                   [disabled]="true"></app-textarea>
   </div>
 
@@ -15,7 +16,7 @@
   </div>
 
   <div class="w-full flex flex-wrap">
-    <button routerLink="/create-account/generate-password" class="w-full btn btn-primary btn--small mb-6">
+    <button (click)="onContinue()" class="w-full btn btn-primary btn--small mb-6">
       Continue
     </button>
     <button routerLink="/create-account" class="w-full btn btn-primary btn--small btn-primary--outline">

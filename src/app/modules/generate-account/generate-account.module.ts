@@ -7,6 +7,7 @@ import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet
 import { FormsComponentsModule } from '../../shared/forms-components/forms-components.module';
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
 import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
+import { GenerateAccountQuery, GenerateAccountService, GenerateAccountStore } from './state';
 
 
 @NgModule({
@@ -20,6 +21,11 @@ import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/
     CommonModule,
     GenerateAccountRoutingModule,
     FormsComponentsModule,
+  ],
+  providers: [
+    GenerateAccountStore,
+    GenerateAccountQuery,
+    GenerateAccountService,
   ]
 })
 export class GenerateAccountModule { }

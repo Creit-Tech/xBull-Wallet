@@ -63,3 +63,9 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+(window as any).global = window;
+global.Buffer = global.Buffer || require('buffer').Buffer;
+(window as any).process = {
+  version: '',
+  nextTick: require('next-tick'), // This is because Stellar SDKs needs it
+};

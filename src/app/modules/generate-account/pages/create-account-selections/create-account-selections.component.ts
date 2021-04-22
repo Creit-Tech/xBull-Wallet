@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { GenerateAccountService } from '../../state';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-account-selections',
@@ -7,9 +9,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CreateAccountSelectionsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private readonly generateAccountService: GenerateAccountService,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+  ) { }
 
   ngOnInit(): void {
+    this.generateAccountService.resetStore();
+  }
+
+  generateWallet(): void {
+    this.generateAccountService.selectGenerateNewWalletPath();
+    this.router.navigate(['generate-wallet'], {
+      relativeTo: this.route
+    })
+      .then();
   }
 
 }

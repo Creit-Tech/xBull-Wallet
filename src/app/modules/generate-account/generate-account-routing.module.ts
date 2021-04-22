@@ -20,7 +20,7 @@ const routes: Routes = [
     component: GeneratePasswordComponent,
   },
   {
-    path: 'confirm-phrase-password.component',
+    path: 'confirm-phrase-password',
     component: ConfirmPhrasePasswordComponent,
   }
 ];
