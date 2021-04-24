@@ -25,12 +25,16 @@ module.exports = {
       'primary-alternative': '#6308F7',
       'success-alternative': '#00CC67',
       'error-alternative': '#E40173',
+      'transparent': 'rgba(0,0,0,0)'
     }
   },
   variants: {
     extend: {},
   },
   plugins: [
-    require("@tailwindcss/forms")
+    // We use the strategy class to avoid undesired classes on elements
+    require("@tailwindcss/forms")({
+      strategy: 'class',
+    })
   ],
 };

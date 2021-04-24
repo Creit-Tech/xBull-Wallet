@@ -1,13 +1,14 @@
+"use strict";
 try {
-  chrome.runtime.onMessage.addListener((msg, sender, resp) => {
-    console.log({
-      msg,
-      sender,
-      resp
+    chrome.runtime.onMessage.addListener((msg, sender, resp1) => {
+        console.log({
+            msg,
+            sender,
+            resp: resp1
+        });
+        resp1('data');
     });
-
-    resp('data')
-  })
-} catch (e) {
-
 }
+catch (e) {
+}
+//# sourceMappingURL=sw.js.map

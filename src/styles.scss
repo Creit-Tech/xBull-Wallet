@@ -3,8 +3,15 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+@import "assets/fonts/poppins/styles";
+
+@import "theme/buttons";
+
+* {
+  box-sizing: border-box;
+}
 
 body {
-  height: 700px;
+  height: 600px;
   width: 375px;
 }

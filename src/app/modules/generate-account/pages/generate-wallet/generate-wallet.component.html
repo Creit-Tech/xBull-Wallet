@@ -1,0 +1,32 @@
+<section class="h-full w-full flex flex-col px-6 py-8">
+  <div class="w-full flex justify-center items-center mb-6">
+    <img src="/assets/icons/xbull-icon.svg" class="h-16" alt="xbull-logo">
+  </div>
+
+  <div class="w-full flex flex-wrap">
+    <app-textarea class="w-full" title="Mnemonic phrase"
+                  [formControl]="mnemonicPhraseFormControl"
+                  [disabled]="true"></app-textarea>
+  </div>
+
+  <div class="w-full text-center px-6 my-auto">
+    <small class="text-off-white">
+      Copy and save these words in a safe place, this is the only time we will show it to you and is not possible to recover it
+    </small>
+  </div>
+
+  <div class="w-full flex flex-wrap">
+    <button (click)="onContinue()" class="w-full btn btn-primary btn--small mb-6">
+      Continue
+    </button>
+    <button routerLink="/create-account" class="w-full btn btn-primary btn--small btn-primary--outline">
+      Start again
+    </button>
+  </div>
+
+  <div class="w-full text-center mt-8">
+    <small class="text-label text-base">
+      xBull Wallet 0.2.3
+    </small>
+  </div>
+</section>

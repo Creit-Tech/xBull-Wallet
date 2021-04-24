@@ -1,0 +1,15 @@
+<section class="bg-body rounded-xl p-5 h-48 flex flex-col">
+  <div class="text-line font-semibold text-sm mb-3">
+    <span>{{ title }}</span>
+  </div>
+
+  <label class="block w-full flex-1" for="phrase">
+    <textarea class="form-textarea bg-transparent w-full text-line border-none p-0 text-sm font-normal leading-6 resize-none h-full"
+              [disabled]="disabled"
+              [placeholder]="placeholder"
+              (input)="onInput(control.value)"
+              [value]="value"
+              name="phrase" id="phrase" #control></textarea>
+  </label>
+</section>
+
