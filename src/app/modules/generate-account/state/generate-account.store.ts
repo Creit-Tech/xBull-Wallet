@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface GenerateAccountState {
-  pathType?: 'new_wallet' | 'restore_wallet' | 'create_account' | 'restore_account';
+  pathType?: 'new_wallet' | 'restore_wallet';
   mnemonicPhrase?: string;
   password?: string;
 }

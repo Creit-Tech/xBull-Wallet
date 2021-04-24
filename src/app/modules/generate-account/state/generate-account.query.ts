@@ -4,6 +4,7 @@ import { GenerateAccountStore, GenerateAccountState } from './generate-account.s
 
 @Injectable()
 export class GenerateAccountQuery extends Query<GenerateAccountState> {
+  pathType$ = this.select(state => state.pathType);
 
   constructor(protected store: GenerateAccountStore) {
     super(store);

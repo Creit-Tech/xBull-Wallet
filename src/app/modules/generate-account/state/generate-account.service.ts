@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { GenerateAccountStore } from './generate-account.store';
+import { GenerateAccountState, GenerateAccountStore } from './generate-account.store';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,13 @@ export class GenerateAccountService {
     this.store.update(state => ({
       ...state,
       pathType: 'new_wallet',
-      step: 1,
+    }));
+  }
+
+  selectRestoreWalletPath(): void {
+    this.store.update((state): GenerateAccountState => ({
+      ...state,
+      pathType: 'restore_wallet',
     }));
   }
 

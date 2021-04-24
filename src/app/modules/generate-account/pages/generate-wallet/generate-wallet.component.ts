@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { MnemonicPhraseService } from '~root/core/accounts/services/mnemonic-phrase.service';
+import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GenerateAccountService } from '~root/modules/generate-account/state';
 

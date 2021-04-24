@@ -27,4 +27,12 @@ export class CreateAccountSelectionsComponent implements OnInit {
       .then();
   }
 
+  restoreWallet(): void {
+    this.generateAccountService.selectRestoreWalletPath();
+    this.router.navigate(['generate-password'], {
+      relativeTo: this.route
+    })
+      .then();
+  }
+
 }
