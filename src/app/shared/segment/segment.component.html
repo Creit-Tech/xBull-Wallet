@@ -1,0 +1,7 @@
+<section class="w-full h-10 flex text-off-white items-center bg-ash rounded-lg p-1">
+  <div class="text-xs cursor-pointer flex items-center justify-center flex-1 h-full rounded-lg"
+       [class.bg-primary]="button.active"
+       *ngFor="let button of buttons$ | async">
+    {{ button.text }}
+  </div>
+</section>

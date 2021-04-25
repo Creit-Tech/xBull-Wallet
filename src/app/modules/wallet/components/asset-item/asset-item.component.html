@@ -1,0 +1,28 @@
+<li class="flex w-full px-6 border-b-2 border-label py-4">
+  <section class="w-12 mr-4">
+    <img [src]="assetImg$ | async" alt=""/>
+  </section>
+
+  <section class="w-full">
+    <div class="w-full flex justify-between mb-1">
+      <p class="m-0 p-0 mr-2 text-off-white text-sm font-bold">
+        {{ assetCode$ | async }}
+      </p>
+
+      <p class="m-0 p-0 ml-2 text-off-white text-sm font-bold">
+        {{ amount$ | async | number: '1.0-7' }}
+      </p>
+    </div>
+
+    <div class="w-full flex justify-between">
+      <p class="m-0 p-0 mr-2 text-placeholder text-xs">
+        {{ domain$ | async }}
+      </p>
+
+      <p class="m-0 p-0 ml-2 text-placeholder text-xs">
+        {{ percentage$ | async | percent: '1.0-7' }}
+      </p>
+    </div>
+  </section>
+
+</li>

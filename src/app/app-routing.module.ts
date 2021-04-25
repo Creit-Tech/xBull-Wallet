@@ -16,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: '**', // TODO: update this once we have complete with the basic development of the welcome and dashboard
-    redirectTo: 'create-account',
+    redirectTo: 'wallet/assets',
   }
 ];
 
