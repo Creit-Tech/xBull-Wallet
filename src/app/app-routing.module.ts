@@ -11,6 +11,9 @@ const routes: Routes = [
   {
     path: 'wallet',
     component: MainLayoutComponent,
+    data: {
+      activeIcon: 'wallet'
+    },
     loadChildren: () => import('./modules/wallet/wallet.module')
       .then(m => m.WalletModule)
   },

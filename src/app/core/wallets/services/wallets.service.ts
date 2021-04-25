@@ -27,7 +27,7 @@ export class WalletsService {
         newWallet = {
           _id: newWalletId,
           type: 'mnemonic_phrase',
-          name: `Account ${newWalletId}`,
+          name: `Wallet ${newWalletId}`,
           mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
           accounts: [{
             publicKey: keypair.publicKey(),
