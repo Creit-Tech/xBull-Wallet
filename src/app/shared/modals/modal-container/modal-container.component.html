@@ -1,0 +1,14 @@
+<div class="back-background fixed top-0 left-0 h-screen w-screen transition"
+     [class.bg-off-black]="showModal$ | async"
+     [class.opacity-90]="showModal$ | async"></div>
+
+<section class="fixed bottom-0 left-0 w-screen bg-off-white rounded-t-3xl px-6 pb-6 pt-4 flex flex-col items-center transform transition duration-300"
+         [class.translate-y-full]="!(showModal$ | async)">
+  <button (click)="onClose()" class="text-error-alternative font-semibold text-sm p-2 mb-2">
+    Close
+  </button>
+
+  <div class="w-full h-full">
+    <ng-template #modalContentContainer></ng-template>
+  </div>
+</section>

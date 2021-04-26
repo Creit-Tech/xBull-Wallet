@@ -5,7 +5,9 @@
     transition
     outline-none
     focus:outline-none
-    rounded-lg;
+    rounded-lg
+    border-transparent
+    border-2;
 }
 
 .btn[disabled] {
@@ -33,6 +35,21 @@
     text-primary
     border-primary
     border-2;
+}
+
+.btn-success-alternative {
+  @apply bg-success-alternative
+    text-off-white;
+}
+
+.btn-success-alternative:hover {
+  @apply bg-transparent
+    text-success-alternative
+    border-success-alternative;
+}
+
+.btn-success-alternative:active {
+  @apply bg-success-alternative text-off-white;
 }
 
 .btn--small {

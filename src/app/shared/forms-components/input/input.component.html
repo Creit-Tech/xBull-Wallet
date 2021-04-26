@@ -1,6 +1,8 @@
-<section class="bg-body rounded-xl flex items-center h-14 px-6 py-1.5">
-  <div class="w-auto mr-4">
-    <img src="/assets/icons/lock-unlocked.svg" alt="unlock-icon">
+<section class="rounded-xl flex items-center h-14 px-6 py-1.5"
+         [class.bg-ash]="mode === 'light'"
+         [class.bg-body]="mode === 'dark'">
+  <div *ngIf="!!iconPath" class="w-auto mr-4">
+    <img [src]="iconPath" alt="unlock-icon">
   </div>
 
   <div class="w-auto">
