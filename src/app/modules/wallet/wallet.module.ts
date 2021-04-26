@@ -9,19 +9,20 @@ import { ModalsModule } from '~root/shared/modals/modals.module';
 import { AddAssetComponent } from './components/add-asset/add-asset.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
+import { SendFundsComponent } from './components/send-funds/send-funds.component';
 
 
 @NgModule({
   declarations: [
     WalletAssetsComponent,
     AssetItemComponent,
-    AddAssetComponent
+    AddAssetComponent,
+    SendFundsComponent
   ],
   imports: [
     CommonModule,
     WalletRoutingModule,
     SegmentModule,
-    ReactiveFormsModule,
     FormsComponentsModule,
   ],
 })
