@@ -10,6 +10,7 @@ import { AddAssetComponent } from './components/add-asset/add-asset.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SendFundsComponent } from './components/send-funds/send-funds.component';
+import { ReceiveFundsComponent } from './components/receive-funds/receive-funds.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { SendFundsComponent } from './components/send-funds/send-funds.component
     WalletAssetsComponent,
     AssetItemComponent,
     AddAssetComponent,
-    SendFundsComponent
+    SendFundsComponent,
+    ReceiveFundsComponent
   ],
   imports: [
     CommonModule,
