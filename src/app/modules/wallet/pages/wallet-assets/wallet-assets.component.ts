@@ -4,6 +4,7 @@ import { AssetItemComponent } from '~root/modules/wallet/components/asset-item/a
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
+import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -29,6 +30,10 @@ export class WalletAssetsComponent implements OnInit {
 
   receiveFunds(): void {
     this.modalsService.open({ component: ReceiveFundsComponent });
+  }
+
+  assetDetails() {
+    this.modalsService.open({ component: AssetDetailsComponent });
   }
 
 }

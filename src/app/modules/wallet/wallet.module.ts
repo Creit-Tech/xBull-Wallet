@@ -11,6 +11,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SendFundsComponent } from './components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from './components/receive-funds/receive-funds.component';
+import { AssetDetailsComponent } from './components/asset-details/asset-details.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { ReceiveFundsComponent } from './components/receive-funds/receive-funds.
     AssetItemComponent,
     AddAssetComponent,
     SendFundsComponent,
-    ReceiveFundsComponent
+    ReceiveFundsComponent,
+    AssetDetailsComponent
   ],
   imports: [
     CommonModule,
