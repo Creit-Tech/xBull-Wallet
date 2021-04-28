@@ -4,7 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 export interface ISegmentButton {
   text: string;
   value: any;
-  active: boolean;
+  active?: boolean;
+  routeLink?: string;
 }
 
 @Component({

@@ -12,6 +12,9 @@ import { FormsComponentsModule } from '~root/shared/forms-components/forms-compo
 import { SendFundsComponent } from './components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from './components/receive-funds/receive-funds.component';
 import { AssetDetailsComponent } from './components/asset-details/asset-details.component';
+import { WalletOffersComponent } from './pages/wallet-offers/wallet-offers.component';
+import { WalletComponent } from './wallet.component';
+import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 
 
 @NgModule({
@@ -21,7 +24,10 @@ import { AssetDetailsComponent } from './components/asset-details/asset-details.
     AddAssetComponent,
     SendFundsComponent,
     ReceiveFundsComponent,
-    AssetDetailsComponent
+    AssetDetailsComponent,
+    WalletOffersComponent,
+    WalletComponent,
+    OfferDetailsComponent
   ],
   imports: [
     CommonModule,
