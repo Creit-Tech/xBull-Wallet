@@ -15,6 +15,8 @@ import { AssetDetailsComponent } from './components/asset-details/asset-details.
 import { WalletOffersComponent } from './pages/wallet-offers/wallet-offers.component';
 import { WalletComponent } from './wallet.component';
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
+import { WalletTransactionsComponent } from './pages/wallet-transactions/wallet-transactions.component';
+import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
 
 
 @NgModule({
@@ -27,7 +29,9 @@ import { OfferDetailsComponent } from './components/offer-details/offer-details.
     AssetDetailsComponent,
     WalletOffersComponent,
     WalletComponent,
-    OfferDetailsComponent
+    OfferDetailsComponent,
+    WalletTransactionsComponent,
+    TransactionDetailsComponent
   ],
   imports: [
     CommonModule,
