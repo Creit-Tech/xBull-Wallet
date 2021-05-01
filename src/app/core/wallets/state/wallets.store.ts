@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { EntityState, EntityStore, EntityUIStore, StoreConfig } from '@datorama/akita';
+import { ActiveState, EntityState, EntityStore, EntityUIStore, StoreConfig } from '@datorama/akita';
 import { IWallet } from './wallet.model';
 
-export interface WalletsState extends EntityState<IWallet> {
+export interface WalletsState extends EntityState<IWallet>, ActiveState  {
   walletsLocked: boolean;
   globalPasswordHash?: string;
 }
 
 export interface IWalletUI {
   _id: IWallet['_id'];
-  isSelected: boolean;
 }
 
 export interface WalletsUIState extends EntityState<IWalletUI> {}
 
 function createInitialValue(): WalletsState {
   return {
+    active: 0,
     walletsLocked: false,
   };
 }
@@ -33,7 +33,6 @@ export class WalletsStore extends EntityStore<WalletsState> {
     this.createUIStore()
       .setInitialEntityState((entity: IWallet): IWalletUI => ({
         _id: entity._id,
-        isSelected: false,
       }));
   }
 

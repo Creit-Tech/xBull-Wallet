@@ -11,6 +11,11 @@ const routes: Routes = [
     component: WalletComponent,
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/wallet/assets',
+      },
+      {
         path: 'assets',
         component: WalletAssetsComponent,
       },
@@ -23,7 +28,7 @@ const routes: Routes = [
         component: WalletTransactionsComponent,
       }
     ]
-  }
+  },
 ];
 
 @NgModule({

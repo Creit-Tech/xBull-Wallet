@@ -6,7 +6,8 @@ const storage = persistState({
   storage: storageAkitaMiddleware,
   preStorageUpdateOperator: () => debounceTime(1000),
   include: [
-    'wallets'
+    'wallets',
+    'wallets-accounts'
   ]
 });
 
