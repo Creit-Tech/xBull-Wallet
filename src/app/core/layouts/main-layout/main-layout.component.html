@@ -1,0 +1,54 @@
+<section class="w-full h-full flex flex-col justify-between">
+  <header class="h-20 bg-ash flex items-center justify-between pl-6 pr-4">
+    <img src="/assets/images/xbull-no-background.svg" class="h-11" alt="xbull-logo">
+
+    <div class="flex flex-col items-end cursor-pointer pr-2 border-r-2 transition border-transparent hover:border-placeholder">
+      <p class="m-0 mb-1 text-off-white font-bold">Wallet 1</p>
+      <p class="m-0 text-placeholder">Public Network</p>
+    </div>
+  </header>
+
+  <div class="h-full overscroll-contain overflow-y-scroll no-scrollbar">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer *ngIf="activeIcon$ | async as activeIcon" class="bg-ash flex items-center justify-between px-6 py-2">
+    <button class="flex flex-col items-center transition outline-none focus:outline-none font-medium py-1 px-2"
+            [class.text-label]="activeIcon !== 'wallet'"
+            [class.text-primary]="activeIcon === 'wallet'">
+
+      <svg class="stroke-current" width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="2.5" y="5.63635" width="20" height="15" rx="2" stroke-width="2"/>
+        <path d="M1.5 10.6364H23.5" stroke-width="2"/>
+      </svg>
+
+      <span [class.text-off-white]="activeIcon === 'wallet'">Wallet</span>
+    </button>
+
+    <button class="flex flex-col items-center transition outline-none focus:outline-none font-medium text-label py-1 px-2"
+            [class.text-label]="activeIcon !== 'trade'"
+            [class.hover:text-off-white]="activeIcon !== 'trade'"
+            [class.text-primary]="activeIcon === 'trade'">
+
+      <svg class="stroke-current" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2.99998 8.63644H21L15 2.63644" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M21 16.6364H2.99998L8.99998 22.6364" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <span [class.text-off-white]="activeIcon === 'trade'">Trade</span>
+    </button>
+
+    <button class="flex flex-col items-center transition outline-none focus:outline-none font-medium text-label py-1 px-2"
+            [class.text-label]="activeIcon !== 'settings'"
+            [class.hover:text-off-white]="activeIcon !== 'settings'"
+            [class.text-primary]="activeIcon === 'settings'">
+
+      <svg class="stroke-current" width="26" height="25" viewBox="0 0 26 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="13" cy="12.6364" r="4" stroke-width="2"/>
+        <path d="M11.2844 2.49928C12.061 1.20331 13.939 1.20332 14.7156 2.49928L15.4213 3.67705C15.8742 4.43284 16.7684 4.80321 17.6231 4.58903L18.9549 4.25527C20.4204 3.88802 21.7483 5.21593 21.3811 6.68145L21.0473 8.0133C20.8331 8.86798 21.2035 9.76213 21.9593 10.215L23.1371 10.9208C24.433 11.6974 24.433 13.5753 23.1371 14.3519L21.9593 15.0577C21.2035 15.5106 20.8331 16.4047 21.0473 17.2594L21.3811 18.5913C21.7483 20.0568 20.4204 21.3847 18.9549 21.0174L17.6231 20.6837C16.7684 20.4695 15.8742 20.8399 15.4213 21.5957L14.7156 22.7734C13.939 24.0694 12.061 24.0694 11.2844 22.7734L10.5787 21.5957C10.1258 20.8399 9.23162 20.4695 8.37695 20.6837L7.04509 21.0174C5.57958 21.3847 4.25166 20.0568 4.61892 18.5913L4.95268 17.2594C5.16686 16.4047 4.79649 15.5106 4.04069 15.0577L2.86293 14.3519C1.56696 13.5753 1.56696 11.6974 2.86293 10.9208L4.0407 10.215C4.79649 9.76213 5.16686 8.86798 4.95268 8.0133L4.61892 6.68145C4.25166 5.21593 5.57958 3.88802 7.0451 4.25527L8.37695 4.58903C9.23162 4.80321 10.1258 4.43284 10.5787 3.67705L11.2844 2.49928Z" stroke-width="2"/>
+      </svg>
+
+      <span [class.text-off-white]="activeIcon === 'settings'">Settings</span>
+    </button>
+  </footer>
+</section>

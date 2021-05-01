@@ -1,0 +1,28 @@
+<div class="w-full text-center mb-4">
+  <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+    Add Asset
+  </h2>
+</div>
+
+<form [formGroup]="form" class="mb-2">
+  <div class="w-full mb-4">
+    <app-input mode="light" title="Issuer" formControlName="keyIssuer" iconPath="/assets/icons/key.svg"></app-input>
+  </div>
+  <div class="w-full mb-4">
+    <app-input mode="light" title="Asset Code" formControlName="assetCode" iconPath="/assets/icons/type.svg"></app-input>
+  </div>
+  <div class="w-full">
+    <app-input mode="light" title="Limit amount" formControlName="limitAmount" iconPath="/assets/icons/world-net.svg"></app-input>
+  </div>
+</form>
+
+<div class="w-full text-center text-label mb-7">
+  Adding an asset requires to lock 0.5 XLM
+</div>
+
+<div class="w-full">
+  <button class="w-full btn btn-success-alternative btn--small">
+    Add Asset
+  </button>
+</div>
+

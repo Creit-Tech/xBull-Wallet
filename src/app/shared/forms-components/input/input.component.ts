@@ -16,9 +16,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class InputComponent implements OnInit, ControlValueAccessor {
   @Input() disabled = false;
   @Input() title = 'Input';
-  @Input() icon?: string;
   @Input() type: 'text' | 'number' | 'password' = 'text';
   @Input() placeholder = 'Write here...';
+  @Input() mode: 'dark' | 'light' = 'dark';
+  @Input() iconPath?: string;
 
   value = '';
 

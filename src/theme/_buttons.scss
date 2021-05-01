@@ -5,7 +5,9 @@
     transition
     outline-none
     focus:outline-none
-    rounded-xl;
+    rounded-lg
+    border-transparent
+    border-2;
 }
 
 .btn[disabled] {
@@ -33,6 +35,44 @@
     text-primary
     border-primary
     border-2;
+}
+
+.btn-success-alternative {
+  @apply bg-success-alternative
+    text-off-white;
+}
+
+.btn-success-alternative:hover {
+  @apply bg-transparent
+    text-success-alternative
+    border-success-alternative;
+}
+
+.btn-success-alternative:active {
+  @apply bg-success-alternative
+    text-off-white;
+}
+
+.btn-error-alternative {
+  @apply bg-error-alternative
+    text-off-white;
+}
+
+.btn-error-alternative:hover {
+  @apply bg-transparent
+    border-error-alternative
+    text-error-alternative;
+}
+
+.btn-off-black {
+  @apply bg-off-black
+    text-off-white;
+}
+
+.btn-off-black:hover {
+  @apply bg-transparent
+    border-off-black
+    text-off-black;
 }
 
 .btn--small {

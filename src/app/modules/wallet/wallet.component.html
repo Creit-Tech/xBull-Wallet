@@ -1,0 +1,21 @@
+<section class="flex flex-col h-full">
+  <section class="w-full px-6 pt-5 pb-1">
+    <app-segment [buttons]="[{
+    text: 'Asset',
+    value: 'asset',
+    routeLink: '/wallet/assets'
+  }, {
+    text: 'Offers',
+    value: 'offers',
+    routeLink: '/wallet/offers'
+  }, {
+    text: 'Transactions',
+    value: 'transactions',
+    routeLink: '/wallet/transactions'
+  }]"></app-segment>
+  </section>
+
+  <section class="w-full overflow-y-auto">
+    <router-outlet></router-outlet>
+  </section>
+</section>
