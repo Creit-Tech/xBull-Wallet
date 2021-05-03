@@ -7,7 +7,8 @@ const storage = persistState({
   preStorageUpdateOperator: () => debounceTime(1000),
   include: [
     'wallets',
-    'wallets-accounts'
+    'wallets-accounts',
+    // 'wallets-assets', TODO: active this as soon as we have complete doing the wallets assets part
   ]
 });
 

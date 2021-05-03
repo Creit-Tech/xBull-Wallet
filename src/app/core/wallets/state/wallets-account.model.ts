@@ -12,5 +12,6 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
     _id: params._id,
     secretKey: params.secretKey,
     isCreated: params.isCreated,
+    accountRecord: params.accountRecord,
   };
 }

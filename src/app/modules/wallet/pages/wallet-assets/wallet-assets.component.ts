@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { map, pluck, switchMap } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
-import { IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/core/wallets/state';
-import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -22,6 +23,8 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     private readonly modalsService: ModalsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly walletsAssetsQuery: WalletsAssetsQuery,
+    private readonly walletsAssetsService: WalletsAssetsService,
   ) { }
 
   ngOnInit(): void {

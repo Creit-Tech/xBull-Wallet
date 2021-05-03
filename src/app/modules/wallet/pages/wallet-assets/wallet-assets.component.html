@@ -1,39 +1,8 @@
 <section class="h-full overscroll-contain overflow-y-scroll no-scrollbar">
   <ul>
-    <app-asset-item (click)="assetDetails()"
-                    assetCode="CREIT"
-                    domain="creit.tech"
-                    percentage="0.53"
-                    assetImg="https://creit-tech-stellar.s3-sa-east-1.amazonaws.com/asset-images/CREIT.png"
-                    amount="20523645.1234567">
-    </app-asset-item>
-    <app-asset-item (click)="assetDetails()"
-                    assetCode="EURT"
-                    domain="k.tempocrypto.com"
-                    percentage="0.23"
-                    assetImg="https://k.tempocrypto.com/static/images/tempo144.png"
-                    amount="12788.90">
-    </app-asset-item>
-    <app-asset-item (click)="assetDetails()"
-                    assetCode="DRA"
-                    domain="www.diruna.org"
-                    percentage="0.53"
-                    assetImg="https://www.diruna.org/diruna.png"
-                    amount="203645.12345">
-    </app-asset-item>
-    <app-asset-item (click)="assetDetails()"
-                    assetCode="USD"
-                    domain="stablecoin.anchorusd.com"
-                    percentage="0.23"
-                    assetImg="https://stablecoin.anchorusd.com/img/usdx.png"
-                    amount="23645.1234567">
-    </app-asset-item>
-    <app-asset-item (click)="assetDetails()"
-                    assetCode="ZAR"
-                    domain="uhuruwallet.co.za"
-                    percentage="0.03"
-                    assetImg="https://uhuruwallet.com/wp-content/uploads/2021/01/uhuruwalletimages.png"
-                    amount="423.12">
+    <app-asset-item *ngFor="let balanceRecord of (selectedAccount$ | async)?.accountRecord?.balances"
+                    [balanceLine]="balanceRecord"
+                    (click)="assetDetails()">
     </app-asset-item>
   </ul>
 </section>
