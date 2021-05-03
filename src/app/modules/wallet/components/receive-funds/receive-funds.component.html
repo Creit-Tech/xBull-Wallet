@@ -11,7 +11,8 @@
 </section>
 
 <div class="w-full">
-  <p class="w-full break-all cursor-pointer m-0 p-0 text-center text-label text-base">
-    GBQ32RYN2KMC2ZT7RJM5GIROVMKZWI254XZROD6I42G7GEAYIY4CQZR3
+  <p class="w-full break-all cursor-pointer m-0 p-0 text-center text-label text-base"
+     appClipboard [textToCopy]="publicKey$ | async">
+    {{ publicKey$ | async }}
   </p>
 </div>

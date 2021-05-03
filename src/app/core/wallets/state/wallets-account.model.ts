@@ -1,7 +1,7 @@
 import { ServerApi } from 'stellar-sdk';
 
 export interface IWalletsAccount  {
-  _id: string;
+  _id: string; // this is the public key
   secretKey: string;
   isCreated: boolean;
   accountRecord?: ServerApi.AccountRecord;

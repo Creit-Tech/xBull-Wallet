@@ -9,6 +9,7 @@ import { environment } from '~env';
 import { MainLayoutComponent } from './core/layouts/main-layout/main-layout.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from '~root/shared/toastr/toastr.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     AkitaNgRouterStoreModule,
     ModalsModule.forRoot(),
     HttpClientModule,
+    ToastrModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
