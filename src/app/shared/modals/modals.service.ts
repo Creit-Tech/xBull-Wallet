@@ -43,6 +43,10 @@ export class ModalsService {
 
     componentRef.instance.childComponent = data.component;
 
+    if (!!data.componentInputs) {
+      componentRef.instance.childComponentInputs = data.componentInputs;
+    }
+
     componentRef.instance.closeModal$
       .pipe(take(1))
       .subscribe(() => {
@@ -55,4 +59,8 @@ export class ModalsService {
 export interface IModalOpenServices {
   id?: string | number;
   component: any;
+  componentInputs?: Array<{
+    input: string;
+    value: any;
+  }>;
 }

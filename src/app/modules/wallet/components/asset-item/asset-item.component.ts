@@ -35,10 +35,10 @@ export class AssetItemComponent implements OnInit, OnDestroy {
   assetCode$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset | undefined>)
     .pipe(map(asset => asset?.assetCode));
 
-  assetImg$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<'full'> | undefined>)
+  assetImg$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<any, 'full'> | undefined>)
     .pipe(map(asset => asset?.image));
 
-  domain$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<'full'> | undefined>)
+  domain$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<any, 'full'> | undefined>)
     .pipe(map(asset => asset?.domain));
 
   amount$: Observable<string> = this.balanceLine$
@@ -53,12 +53,12 @@ export class AssetItemComponent implements OnInit, OnDestroy {
     this.asset$
       .pipe(filter(asset => !!asset && asset._id !== 'native'))
       .pipe(take(1))
-      .pipe(switchMap((asset) => {
-        return this.walletsAssetsService.getAssetExtraRecord(asset as IWalletAsset<'unloaded', 'issued'>)
+      .pipe(switchMap<any, Observable<IWalletAsset<'issued'>>>((asset) => {
+        return this.walletsAssetsService.getAssetExtraRecord(asset)
           .pipe(map(() => asset));
       }))
       .pipe(switchMap((asset) => {
-        return this.walletsAssetsService.getAssetFullRecord(asset as IWalletAsset<'extra', 'issued'>);
+        return this.walletsAssetsService.getAssetFullRecord(asset);
       }))
       .subscribe();
   }

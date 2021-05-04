@@ -2,7 +2,7 @@
   <ul>
     <app-asset-item *ngFor="let balanceRecord of (selectedAccount$ | async)?.accountRecord?.balances"
                     [balanceLine]="balanceRecord"
-                    (click)="assetDetails()">
+                    (click)="assetDetails(balanceRecord)">
     </app-asset-item>
   </ul>
 </section>

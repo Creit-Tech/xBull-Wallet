@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { map, pluck, switchMap } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
@@ -9,6 +8,7 @@ import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-det
 import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { Horizon } from 'stellar-sdk';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -47,8 +47,14 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     this.modalsService.open({ component: ReceiveFundsComponent });
   }
 
-  assetDetails(): void {
-    this.modalsService.open({ component: AssetDetailsComponent });
+  assetDetails(balanceLine: Horizon.BalanceLine): void {
+    this.modalsService.open({
+      component: AssetDetailsComponent,
+      componentInputs: [{
+        input: 'assetId',
+        value: this.walletsAssetsService.formatBalanceLineId(balanceLine)
+      }]
+    });
   }
 
 }

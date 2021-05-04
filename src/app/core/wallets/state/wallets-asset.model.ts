@@ -1,51 +1,85 @@
+// TODO: Probably we will need to refactor this
+
 declare type AssetType = 'native' | 'issued';
+declare type AssetStatus = 'unloaded' | 'extra' | 'full';
 
 interface IBaseNativeAsset {
   _id: 'native';
   assetCode: 'XLM';
 }
 
-export interface IBaseIssuedAsset {
-  _id: string; // This must be `${asset_code}_${asset_issuer}`
-  assetCode: string;
-  assetIssuer: string;
-}
-
-export type IWalletBaseAsset<T extends AssetType = AssetType> = T extends 'native'
-  ? IBaseNativeAsset
-  : T extends 'issued'
-    ? IBaseIssuedAsset
-    : IBaseNativeAsset | IBaseIssuedAsset;
-
-declare type AssetStatus = 'unloaded' | 'extra' | 'full';
-
-interface IUnloadedStatus {
+interface INativeAsset extends IBaseNativeAsset {
   assetExtraDataLoaded: false;
   assetFullDataLoaded: false;
 }
 
-interface IExtraDataLoadedStatus {
+interface INativeAssetExtra extends IBaseNativeAsset {
   assetExtraDataLoaded: true;
   assetFullDataLoaded: false;
-  amountIssued: string;
-  numAccount: number;
 }
 
-interface IFullDataLoadedStatus {
+interface INativeAssetFull extends IBaseNativeAsset {
   assetExtraDataLoaded: true;
   assetFullDataLoaded: true;
   domain: string;
   image: string;
 }
 
-export type IWalletAssetStatus<T extends AssetStatus = AssetStatus> =
-  T extends 'unloaded'
-    ? IUnloadedStatus
-    : T extends 'extra'
-      ? IExtraDataLoadedStatus
-      : T extends 'full'
-        ? IFullDataLoadedStatus
-        : IUnloadedStatus | IExtraDataLoadedStatus | IFullDataLoadedStatus;
+interface IBaseIssuedAsset {
+  _id: string; // This must be `${asset_code}_${asset_issuer}`
+  assetCode: string;
+  assetIssuer: string;
+}
 
-export type IWalletAsset<T extends AssetStatus = AssetStatus, R extends AssetType = AssetType>
-  = IWalletBaseAsset<R> & IWalletAssetStatus<T>;
+interface IIssuedAsset extends IBaseIssuedAsset {
+  assetExtraDataLoaded: false;
+  assetFullDataLoaded: false;
+}
+
+interface IIssuedAssetExtra extends IBaseIssuedAsset {
+  assetExtraDataLoaded: true;
+  assetFullDataLoaded: false;
+  amountIssued: string;
+  numAccount: number;
+}
+
+interface IIssuedAssetFull extends IBaseIssuedAsset {
+  assetExtraDataLoaded: true;
+  assetFullDataLoaded: true;
+  amountIssued: string;
+  numAccount: number;
+  domain?: string;
+  image?: string;
+  name?: string;
+  description?: string;
+  conditions?: string;
+  orgName?: string;
+  orgDba?: string;
+  orgDescription?: string;
+  orgWebsite?: string;
+  orgAddress?: string;
+  orgOfficialEmail?: string;
+}
+
+export type IWalletNativeAsset<T extends AssetStatus = AssetStatus> = T extends 'unloaded'
+  ? INativeAsset
+  : T extends 'extra'
+    ? INativeAssetExtra
+    : T extends 'full'
+      ? INativeAssetFull
+      : INativeAsset | INativeAssetExtra | INativeAssetFull;
+
+export type IWalletIssuedAsset<T extends AssetStatus = AssetStatus> = T extends 'unloaded'
+  ? IIssuedAsset
+  : T extends 'extra'
+    ? IIssuedAssetExtra
+    : T extends 'full'
+      ? IIssuedAssetFull
+      : IIssuedAsset | IIssuedAssetExtra | IIssuedAssetFull;
+
+
+export type IWalletAsset<T extends AssetType = AssetType, R extends AssetStatus = AssetStatus> = T extends 'native'
+  ? IWalletNativeAsset<R>
+  : T extends 'issued'
+    ? IWalletIssuedAsset<R>
+    : IWalletNativeAsset<R> | IWalletIssuedAsset<R>;

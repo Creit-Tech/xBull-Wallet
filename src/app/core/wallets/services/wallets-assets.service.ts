@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Horizon, Server, ServerApi } from 'stellar-sdk';
-import { IWalletAsset, WalletsAssetsStore } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletNativeAsset, WalletsAssetsStore } from '~root/core/wallets/state';
 import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { applyTransaction, withTransaction } from '@datorama/akita';
@@ -21,34 +21,42 @@ export class WalletsAssetsService {
     private readonly http: HttpClient,
   ) { }
 
-  getAssetExtraRecord(asset: IWalletAsset<'unloaded', 'issued'>): Observable<ServerApi.AssetRecord> {
+  getAssetExtraRecord(data: {
+    _id: IWalletAsset['_id'],
+    assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
+    assetCode: IWalletAsset<'issued'>['assetCode'],
+  }): Observable<ServerApi.AssetRecord> {
     const recordPromise = this.Server.assets()
-      .forCode(asset.assetCode)
-      .forIssuer(asset.assetIssuer)
+      .forCode(data.assetCode)
+      .forIssuer(data.assetIssuer)
       .call();
 
     return from(recordPromise)
       .pipe(map(response => response.records.shift()))
       .pipe(map(assetRecord => {
         if (!assetRecord) {
-          throw new Error(`We couldn't get the record for the asset ${asset._id}`);
+          throw new Error(`We couldn't get the record for the asset ${data._id}`);
         }
 
-        const newData: Partial<IWalletAsset<'extra', 'issued'>> = {
+        const newData: Partial<IWalletAsset<'issued', 'extra'>> = {
           amountIssued: assetRecord.amount,
           numAccount: assetRecord.num_accounts,
           assetExtraDataLoaded: true
         };
 
-        this.walletsAssetsStore.upsert(asset._id, newData);
+        this.walletsAssetsStore.upsert(data._id, newData);
 
         return assetRecord;
       }));
   }
 
-  getAssetFullRecord(asset: IWalletAsset<'extra', 'issued'>): Observable<ServerApi.AccountRecord> {
+  getAssetFullRecord(data: {
+    _id: IWalletAsset['_id'],
+    assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
+    assetCode: IWalletAsset<'issued'>['assetCode'],
+  }): Observable<ServerApi.AccountRecord> {
     const recordPromise = this.Server.accounts()
-      .accountId(asset.assetIssuer)
+      .accountId(data.assetIssuer)
       .call();
 
     return from(recordPromise)
@@ -61,13 +69,24 @@ export class WalletsAssetsService {
       .pipe(map(([tolm, accountRecord]) => {
         const parsedTolm = parse(tolm);
         const currencies = parsedTolm.CURRENCIES || parsedTolm.currencies;
-        const currency = currencies.find((c: any) => c.code === asset.assetCode);
+        const documentation = parsedTolm.DOCUMENTATION || parsedTolm.documentation;
+        const currency = currencies.find((c: any) => c.code === data.assetCode);
 
         this.walletsAssetsStore.upsert(
-          asset._id,
+          data._id,
           {
             domain: accountRecord.home_domain,
-            image: currency.image
+            image: currency.image,
+            name: currency.name,
+            description: currency.desc,
+            conditions: currency.conditions,
+            orgName: documentation.ORG_NAME,
+            orgDba: documentation.ORG_DBA,
+            orgDescription: documentation.ORG_DESCRIPTION,
+            orgWebsite: documentation.ORG_URL,
+            orgAddress: documentation.ORG_PHYSICAL_ADDRESS,
+            orgOfficialEmail: documentation.ORG_OFFICIAL_EMAIL,
+            assetFullDataLoaded: true,
           }
         );
         return accountRecord;
@@ -91,14 +110,14 @@ export class WalletsAssetsService {
     }
   }
 
-  nativeAssetDefaultRecord(): IWalletAsset<'full', 'native'> {
+  nativeAssetDefaultRecord(): IWalletNativeAsset<'full'> {
     return {
       _id: 'native',
       assetCode: 'XLM',
       assetExtraDataLoaded: true,
       assetFullDataLoaded: true,
       domain: 'stellar.org',
-      image: '/assets/images/stellar-logo.svg'
+      image: '/assets/images/stellar-logo.svg',
     };
   }
 }
