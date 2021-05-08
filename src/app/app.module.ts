@@ -25,7 +25,6 @@ import { ToastrModule } from '~root/shared/toastr/toastr.module';
     HttpClientModule,
     ToastrModule.forRoot(),
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

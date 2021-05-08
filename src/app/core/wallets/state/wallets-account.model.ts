@@ -5,6 +5,7 @@ export interface IWalletsAccount  {
   secretKey: string;
   isCreated: boolean;
   accountRecord?: ServerApi.AccountRecord;
+  streamCreated: boolean;
 }
 
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
@@ -13,5 +14,6 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
     secretKey: params.secretKey,
     isCreated: params.isCreated,
     accountRecord: params.accountRecord,
+    streamCreated: params.streamCreated,
   };
 }

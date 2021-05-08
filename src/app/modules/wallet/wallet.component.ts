@@ -4,7 +4,7 @@ import { map, pluck, switchMap, take } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { IWalletsAccount, WalletsAccountsQuery } from '~root/core/wallets/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, pipe, Subject } from 'rxjs';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { IWalletsAccountUI } from '~root/core/wallets/state/wallets-accounts.store';
 

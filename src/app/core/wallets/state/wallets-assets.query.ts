@@ -5,6 +5,7 @@ import { IWalletAsset } from '~root/core/wallets/state/wallets-asset.model';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
+  addingAsset$ = this.select(state => state.addingAsset);
 
   constructor(protected store: WalletsAssetsStore) {
     super(store);

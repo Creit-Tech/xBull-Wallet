@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server, NotFoundError, Horizon } from 'stellar-sdk';
+import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
   createWalletsAccount, IWalletAsset,
@@ -11,6 +11,8 @@ import {
 import { catchError, map, withLatestFrom } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
+import { IWalletsAccountUI } from '~root/core/wallets/state/wallets-accounts.store';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +23,46 @@ export class WalletsAccountsService {
     return new Server('https://horizon-testnet.stellar.org');
   }
 
+  accountStream?: () => void;
+
   constructor(
     private readonly walletsAccountsStore: WalletsAccountsStore,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly stellarSdkService: StellarSdkService,
   ) { }
+
+  private saveAccountAndAssets(accountId: IWalletsAccount['_id'], accountRecord: ServerApi.AccountRecord | undefined): void {
+    this.walletsAccountsStore.upsert(accountId, state => ({
+      ...state,
+      isCreated: !!accountRecord,
+      accountRecord
+    }));
+
+    if (!!accountRecord) {
+      for (const balanceLine of accountRecord.balances) {
+        if (balanceLine.asset_type === 'native') {
+          this.walletsAssetsStore.upsert(
+            this.walletsAssetsService.formatBalanceLineId(balanceLine),
+            this.walletsAssetsService.nativeAssetDefaultRecord()
+          );
+        } else {
+          this.walletsAssetsStore.upsert(
+            this.walletsAssetsService.formatBalanceLineId(balanceLine),
+            {
+              _id: this.walletsAssetsService.formatBalanceLineId(balanceLine),
+              assetCode: balanceLine.asset_code,
+              assetExtraDataLoaded: false,
+              assetIssuer: balanceLine.asset_issuer,
+            },
+            (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
+            {}
+          );
+        }
+      }
+    }
+  }
 
   getAccountData(accountId: string): Observable<IWalletsAccount> {
     this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: true }));
@@ -37,6 +73,7 @@ export class WalletsAccountsService {
 
     return from(accountPromise)
       .pipe(catchError(error => {
+        this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: false }));
         return (error instanceof NotFoundError)
           ? of(undefined)
           : throwError(error);
@@ -48,42 +85,7 @@ export class WalletsAccountsService {
           throw new Error('This account does not exists in our wallet');
         }
 
-        applyTransaction(() => {
-          this.walletsAccountsStore.upsert(accountId, createWalletsAccount({
-            ...entity,
-            isCreated: !!accountRecord,
-            accountRecord
-          }));
-
-          if (!!accountRecord) {
-            for (const balanceLine of accountRecord.balances) {
-              if (balanceLine.asset_type === 'native') {
-                this.walletsAssetsStore.upsert(
-                  this.walletsAssetsService.formatBalanceLineId(balanceLine),
-                  this.walletsAssetsService.nativeAssetDefaultRecord()
-                );
-              } else {
-                const newState = {
-                  _id: this.walletsAssetsService.formatBalanceLineId(balanceLine),
-                  assetCode: balanceLine.asset_code,
-                  assetExtraDataLoaded: false,
-                };
-
-                this.walletsAssetsStore.upsert(
-                  this.walletsAssetsService.formatBalanceLineId(balanceLine),
-                  {
-                    _id: this.walletsAssetsService.formatBalanceLineId(balanceLine),
-                    assetCode: balanceLine.asset_code,
-                    assetExtraDataLoaded: false,
-                    assetIssuer: balanceLine.asset_issuer,
-                  },
-                  (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
-                  {}
-                );
-              }
-            }
-          }
-        });
+        this.saveAccountAndAssets(accountId, accountRecord);
 
         return entity;
       }));
@@ -97,6 +99,19 @@ export class WalletsAccountsService {
       sellingLiabilities: balance.selling_liabilities,
       assetIssuer: balance.asset_type !== 'native' ? balance.asset_issuer : undefined,
     }));
+  }
+
+  createStream(account: IWalletsAccount): void {
+    if (account && !account.streamCreated) {
+      this.stellarSdkService.Server.accounts()
+        .accountId(account._id)
+        .stream({
+          onmessage: accountRecord => {
+            this.saveAccountAndAssets(account._id, accountRecord);
+            this.walletsAccountsStore.upsert(account._id, state => ({ ...state, streamCreated: true }));
+          }
+        });
+    }
   }
 }
 

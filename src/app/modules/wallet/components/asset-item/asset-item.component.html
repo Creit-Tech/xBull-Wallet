@@ -16,7 +16,7 @@
         </p>
 
         <p class="m-0 p-0 ml-2 text-off-white text-sm font-bold">
-          {{ amount$ | async | number: '1.0-7' }}
+          {{ amount$ | async | number: '1.2-7' }}
         </p>
       </div>
 
@@ -30,7 +30,7 @@
 
         <ng-container *ngIf="(sellingLiabilities$ | async) as sellingLiabilities">
           <p class="m-0 p-0 ml-2 text-placeholder text-xs">
-            Selling: {{ sellingLiabilities | number: '1.0-7' }}
+            Selling: {{ sellingLiabilities | number: '1.2-7' }}
           </p>
         </ng-container>
       </div>

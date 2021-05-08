@@ -9,6 +9,7 @@ import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
+import { switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -35,8 +36,17 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  addAsset(): void {
-    this.modalsService.open({ component: AddAssetComponent });
+  async addAsset(): Promise<void> {
+    const modalData = await this.modalsService.open<AddAssetComponent>({ component: AddAssetComponent });
+
+    modalData.componentRef.instance.assetAdded
+      .asObservable()
+      .pipe(tap(() => modalData.modalContainer.instance.onClose()))
+      .pipe(withLatestFrom(this.selectedAccount$))
+      .pipe(switchMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount._id)))
+      .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe();
   }
 
   sendFunds(): void {

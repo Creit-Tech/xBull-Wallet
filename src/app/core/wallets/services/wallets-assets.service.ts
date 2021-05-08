@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Horizon, Server, ServerApi } from 'stellar-sdk';
-import { IWalletAsset, IWalletNativeAsset, WalletsAssetsStore } from '~root/core/wallets/state';
+import { Inject, Injectable } from '@angular/core';
+import { Horizon, Server, ServerApi, TransactionBuilder, Networks } from 'stellar-sdk';
+import { IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/core/wallets/state';
 import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
-import { applyTransaction, withTransaction } from '@datorama/akita';
 import { HttpClient } from '@angular/common/http';
 import { parse } from 'toml';
+import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,7 @@ export class WalletsAssetsService {
   constructor(
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly http: HttpClient,
+    private readonly stellarSdkService: StellarSdkService,
   ) { }
 
   getAssetExtraRecord(data: {
@@ -92,6 +93,34 @@ export class WalletsAssetsService {
         return accountRecord;
       }));
   }
+
+  addAssetToAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    this.walletsAssetsStore.update(state => ({ ...state, addingAsset: true }));
+    return this.stellarSdkService.submitTransaction(xdr)
+      .then((response) => {
+        this.walletsAssetsStore.update(state => ({ ...state, addingAsset: false }));
+        return response;
+      })
+      .catch(error => {
+        this.walletsAssetsStore.update(state => ({ ...state, addingAsset: false }));
+        return Promise.reject(error);
+      });
+  }
+
+  // async addAssetToAccount(params: {
+  //   account: IWalletsAccount,
+  //   assetCode: string;
+  //   assetIssuer: string;
+  //   fee: string,
+  //   limit?: number;
+  //   source?: string
+  // }) {
+  //   const accountFromApi = await this.Server.loadAccount(params.account._id);
+  //   const tb = new TransactionBuilder(accountFromApi, {
+  //     fee: params.fee,
+  //     networkPassphrase: Networks.TESTNET,
+  //   })
+  // }
 
   /*
   * This method helps to generate de _id we use to identify assets in the store

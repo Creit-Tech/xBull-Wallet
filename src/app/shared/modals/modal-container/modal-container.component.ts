@@ -3,7 +3,7 @@ import {
   Component, ComponentFactoryResolver, ComponentRef,
   ElementRef,
   EventEmitter, Injector,
-  Input,
+  Input, OnDestroy,
   OnInit,
   Output,
   Renderer2,
@@ -18,8 +18,10 @@ import { delay, take } from 'rxjs/operators';
   templateUrl: './modal-container.component.html',
   styleUrls: ['./modal-container.component.scss']
 })
-export class ModalContainerComponent implements OnInit, AfterViewInit {
+export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() closeModal$: EventEmitter<void> = new EventEmitter<void>();
+  @Output() createdComponent$: EventEmitter<any> = new EventEmitter<any>();
+
   @Input() childComponent: any;
   @Input() childComponentInputs: Array<{ input: string; value: any }> = [];
   @ViewChild('modalContentContainer', { read: ViewContainerRef }) modalContentContainer!: ViewContainerRef;
@@ -48,10 +50,15 @@ export class ModalContainerComponent implements OnInit, AfterViewInit {
         }
       }
 
+      this.createdComponent$.next(component);
       this.showModal$.next(true);
     });
 
   ngOnInit(): void {
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    await this.onClose();
   }
 
   ngAfterViewInit(): void {
