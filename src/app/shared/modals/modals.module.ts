@@ -22,6 +22,7 @@ const COMPONENTS = [
     CommonModule,
     FormsComponentsModule,
     LoadingModule,
+    LoadingModule,
   ],
 })
 export class ModalsModule {

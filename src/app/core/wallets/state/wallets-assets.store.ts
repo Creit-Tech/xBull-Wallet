@@ -4,11 +4,13 @@ import { IWalletAsset } from './wallets-asset.model';
 
 export interface WalletsAssetsState extends EntityState<IWalletAsset> {
   addingAsset: boolean;
+  removingAsset: boolean;
 }
 
 function createInitialState(): WalletsAssetsState {
   return {
     addingAsset: false,
+    removingAsset: false,
   };
 }
 

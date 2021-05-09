@@ -8,7 +8,7 @@ import { SignRequestComponent } from '~root/shared/modals/components/sign-reques
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { StellarParserService } from '~root/libs/stellar/stellar-parser.service';
 import { TransactionBuilder, Operation, Asset, Account } from 'stellar-sdk';
-import { Subject, Subscription } from 'rxjs';
+import { merge, Subject, Subscription } from 'rxjs';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 
 @Component({
@@ -45,18 +45,6 @@ export class AddAssetComponent implements OnInit, OnDestroy {
     private readonly stellarParserService: StellarParserService,
     private readonly walletsAssetsService: WalletsAssetsService,
   ) { }
-
-  signedXDR$: Subject<string> = new Subject<string>();
-  addAssetSubscription: Subscription = this.signedXDR$
-    .asObservable()
-    .pipe(take(1))
-    .pipe(switchMap(signedXDR => this.walletsAssetsService.addAssetToAccount(signedXDR)))
-    .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(signedXdr => {
-      this.assetAdded.emit();
-    }, error => {
-
-    });
 
   ngOnInit(): void {
   }
@@ -103,11 +91,12 @@ export class AddAssetComponent implements OnInit, OnDestroy {
 
         modalData.componentRef.instance.accepted
           .asObservable()
+          .pipe(switchMap(signedXDR => this.walletsAssetsService.addAssetToAccount(signedXDR)))
           .pipe(take(1))
           .pipe(takeUntil(this.componentDestroyed$))
-          .subscribe((xdr: string) => {
-            this.signedXDR$.next(xdr);
+          .subscribe(() => {
             modalData.modalContainer.instance.onClose();
+            this.assetAdded.emit();
           });
 
         modalData.componentRef.instance.deny
@@ -117,6 +106,16 @@ export class AddAssetComponent implements OnInit, OnDestroy {
           .subscribe(() => {
             modalData.modalContainer.instance.onClose();
           });
+
+        this.addingAsset$
+          .pipe(takeUntil(
+            merge(
+              modalData.modalContainer.instance.closeModal$,
+              modalData.componentRef.instance.deny,
+              this.componentDestroyed$
+            )
+          ))
+          .subscribe(addingAssetStatus => modalData.modalContainer.instance.loading = addingAssetStatus);
       });
 
   }

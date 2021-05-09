@@ -3,6 +3,7 @@
      [class.opacity-90]="showModal$ | async"></div>
 
 <section class="fixed bottom-0 left-0 w-screen bg-off-white rounded-t-3xl px-6 pb-6 pt-4 flex flex-col items-center transform transition duration-300 max-h-9/10"
+         [appLoading]="loading"
          [class.translate-y-full]="!(showModal$ | async)">
   <button (click)="onClose()" class="text-error-alternative font-semibold text-sm p-2 mb-2">
     Close

@@ -22,6 +22,19 @@ export class WalletsAssetsService {
     private readonly stellarSdkService: StellarSdkService,
   ) { }
 
+  private simpleStateUpdateFlow(xdr: string, stateField: string): Promise<Horizon.SubmitTransactionResponse> {
+    this.walletsAssetsStore.update(state => ({ ...state, [stateField]: true }));
+    return this.stellarSdkService.submitTransaction(xdr)
+      .then((response) => {
+        this.walletsAssetsStore.update(state => ({ ...state, [stateField]: false }));
+        return response;
+      })
+      .catch(error => {
+        this.walletsAssetsStore.update(state => ({ ...state, [stateField]: false }));
+        return Promise.reject(error);
+      });
+  }
+
   getAssetExtraRecord(data: {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
@@ -95,16 +108,11 @@ export class WalletsAssetsService {
   }
 
   addAssetToAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
-    this.walletsAssetsStore.update(state => ({ ...state, addingAsset: true }));
-    return this.stellarSdkService.submitTransaction(xdr)
-      .then((response) => {
-        this.walletsAssetsStore.update(state => ({ ...state, addingAsset: false }));
-        return response;
-      })
-      .catch(error => {
-        this.walletsAssetsStore.update(state => ({ ...state, addingAsset: false }));
-        return Promise.reject(error);
-      });
+    return this.simpleStateUpdateFlow(xdr, 'addingAsset');
+  }
+
+  removeAssetFromAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    return this.simpleStateUpdateFlow(xdr, 'removingAsset');
   }
 
   // async addAssetToAccount(params: {

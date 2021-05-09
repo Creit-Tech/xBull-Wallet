@@ -22,6 +22,7 @@ export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy
   @Output() closeModal$: EventEmitter<void> = new EventEmitter<void>();
   @Output() createdComponent$: EventEmitter<any> = new EventEmitter<any>();
 
+  @Input() loading = false;
   @Input() childComponent: any;
   @Input() childComponentInputs: Array<{ input: string; value: any }> = [];
   @ViewChild('modalContentContainer', { read: ViewContainerRef }) modalContentContainer!: ViewContainerRef;

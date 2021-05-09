@@ -10,8 +10,9 @@ const storage = persistState({
     'wallets',
     'UI/wallets',
     'wallets-accounts',
-    'UI/wallets-accounts'
-    // 'wallets-assets', TODO: active this as soon as we have complete doing the wallets assets part
+    'UI/wallets-accounts',
+    'wallets-assets',
+    'UI/wallets-assets',
   ],
   preStorageUpdate(storeName: string, state: any): any {
 
