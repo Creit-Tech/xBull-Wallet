@@ -25,10 +25,30 @@
             <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
             <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
 
-            <ng-container>
-              <dt class="text-base font-bold mb-1 w-full">Limit:</dt>
-              <dd class="break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
+            <dt class="text-base font-bold mb-1 w-full">Limit:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
+
+            <ng-container *ngIf="!!operation.source">
+              <dt class="text-base font-bold mb-1 w-full">Source:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
             </ng-container>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'payment'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Payment</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Amount to send:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
 
             <ng-container *ngIf="!!operation.source">
               <dt class="text-base font-bold mb-1 w-full">Source:</dt>

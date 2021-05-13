@@ -11,13 +11,24 @@
     </div>
 
     <label class="w-full">
-      <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+      <input *ngIf="!!mask; else noMask" class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
              #control
+             [mask]="mask"
              [type]="type"
              [value]="value"
              (input)="onInput(control.value)"
              [placeholder]="placeholder"
              [disabled]="disabled"/>
+
+      <ng-template #noMask>
+        <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+               #control
+               [type]="type"
+               [value]="value"
+               (input)="onInput(control.value)"
+               [placeholder]="placeholder"
+               [disabled]="disabled"/>
+      </ng-template>
     </label>
   </div>
 </section>

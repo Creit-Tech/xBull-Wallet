@@ -19,6 +19,7 @@ import { WalletTransactionsComponent } from './pages/wallet-transactions/wallet-
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({

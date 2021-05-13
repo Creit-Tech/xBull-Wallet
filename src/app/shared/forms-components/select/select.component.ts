@@ -1,24 +1,23 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'app-input',
-  templateUrl: './input.component.html',
-  styleUrls: ['./input.component.scss'],
+  selector: 'app-select',
+  templateUrl: './select.component.html',
+  styleUrls: ['./select.component.scss'],
   providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => InputComponent),
-      multi: true
-    }
-  ]
+  {
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => SelectComponent),
+    multi: true
+  }
+]
 })
-export class InputComponent implements OnInit, ControlValueAccessor {
-  @Input() mask = '';
+export class SelectComponent implements OnInit {
+  @Input() options: ISelectOptions[] = [];
   @Input() disabled = false;
   @Input() title = 'Input';
-  @Input() type: 'text' | 'number' | 'password' = 'text';
-  @Input() placeholder = 'Write here...';
+  @Input() placeholder = 'Select a value...';
   @Input() mode: 'dark' | 'light' = 'dark';
   @Input() iconPath?: string;
 
@@ -59,4 +58,9 @@ export class InputComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
+}
+
+export interface ISelectOptions {
+  name: string;
+  value: string;
 }

@@ -36,7 +36,9 @@ export class SignRequestComponent implements OnInit, AfterViewInit, OnDestroy {
       this.stellarParserService.parseFromXDRToTransactionInterface(xdr)
     ));
 
-  operations$: Observable<IOperation[]> = this.xdrParsed$
+  // This is actually IOperation[] but I used "any" so the compiler stops complaining
+  // TODO: Handle this and a better way for the compiler understand the different types of operations
+  operations$: Observable<any> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
 
   // TODO: Make this dynamic with a config store

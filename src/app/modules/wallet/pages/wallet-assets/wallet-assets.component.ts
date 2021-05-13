@@ -57,8 +57,17 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       });
   }
 
-  sendFunds(): void {
-    this.modalsService.open({ component: SendFundsComponent });
+  async sendFunds(): Promise<void> {
+    const modalData = await this.modalsService.open<SendFundsComponent>({ component: SendFundsComponent });
+
+    modalData.componentRef.instance.paymentSent
+      .asObservable()
+      .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        modalData.modalContainer.instance.onClose();
+        this.reloadSelectedAccount$.next();
+      });
   }
 
   receiveFunds(): void {

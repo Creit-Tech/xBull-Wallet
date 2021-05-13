@@ -10,6 +10,7 @@ import { MainLayoutComponent } from './core/layouts/main-layout/main-layout.comp
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from '~root/shared/toastr/toastr.module';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ToastrModule } from '~root/shared/toastr/toastr.module';
     ModalsModule.forRoot(),
     HttpClientModule,
     ToastrModule.forRoot(),
+    NgxMaskModule.forRoot(),
   ],
   bootstrap: [AppComponent]
 })

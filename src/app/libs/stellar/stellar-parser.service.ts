@@ -23,6 +23,16 @@ export class StellarParserService {
           type: 'changeTrust',
         };
 
+      case 'payment':
+        return {
+          type: 'payment',
+          destination: operation.destination,
+          assetCode: operation.asset.code,
+          assetIssuer: operation.asset.issuer,
+          amount: operation.amount,
+          source: operation.source,
+        };
+
       default:
         throw new Error('We can not handle this kind of operation');
     }

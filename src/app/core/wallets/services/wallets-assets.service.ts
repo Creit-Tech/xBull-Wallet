@@ -115,21 +115,6 @@ export class WalletsAssetsService {
     return this.simpleStateUpdateFlow(xdr, 'removingAsset');
   }
 
-  // async addAssetToAccount(params: {
-  //   account: IWalletsAccount,
-  //   assetCode: string;
-  //   assetIssuer: string;
-  //   fee: string,
-  //   limit?: number;
-  //   source?: string
-  // }) {
-  //   const accountFromApi = await this.Server.loadAccount(params.account._id);
-  //   const tb = new TransactionBuilder(accountFromApi, {
-  //     fee: params.fee,
-  //     networkPassphrase: Networks.TESTNET,
-  //   })
-  // }
-
   /*
   * This method helps to generate de _id we use to identify assets in the store
   * */

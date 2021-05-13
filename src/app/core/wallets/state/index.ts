@@ -9,3 +9,7 @@ export { WalletsAccountsState, WalletsAccountsStore } from './wallets-accounts.s
 export * from './wallets-asset.model';
 export * from './wallets-assets.query';
 export { WalletsAssetsState, WalletsAssetsStore } from './wallets-assets.store';
+
+export * from './wallets-operation.model';
+export * from './wallets-operations.query';
+export { WalletsOperationsState, WalletsOperationsStore } from './wallets-operations.store';

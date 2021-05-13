@@ -56,17 +56,27 @@ export class StellarTransactionBuilderService {
   // }
 }
 
-export type IOperationType = 'changeTrust';
+export type IOperationType = 'changeTrust' | 'payment';
 
 export interface IChangeTrustOperation {
-  type: IOperationType;
+  type: 'changeTrust';
   assetCode: string;
   assetIssuer: string;
   limit?: string;
   source?: string;
 }
 
-export type IOperation = IChangeTrustOperation;
+export interface IPaymentOperation {
+  type: 'payment';
+  destination: string;
+  assetCode: string;
+  assetIssuer: string;
+  amount: string;
+  source?: string;
+}
+
+export type IOperation = IChangeTrustOperation |
+  IPaymentOperation;
 
 export interface ITransaction {
   baseAccount: string;
