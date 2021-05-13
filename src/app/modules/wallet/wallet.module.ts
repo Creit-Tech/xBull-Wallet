@@ -17,6 +17,9 @@ import { WalletComponent } from './wallet.component';
 import { OfferDetailsComponent } from './components/offer-details/offer-details.component';
 import { WalletTransactionsComponent } from './pages/wallet-transactions/wallet-transactions.component';
 import { TransactionDetailsComponent } from './components/transaction-details/transaction-details.component';
+import { LoadingModule } from '~root/shared/loading/loading.module';
+import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({
@@ -38,6 +41,8 @@ import { TransactionDetailsComponent } from './components/transaction-details/tr
     WalletRoutingModule,
     SegmentModule,
     FormsComponentsModule,
+    LoadingModule,
+    ClipboardModule,
   ],
 })
 export class WalletModule { }

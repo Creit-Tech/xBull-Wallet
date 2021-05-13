@@ -7,6 +7,7 @@ import { sameValueValidator } from '~root/shared/forms-validators/same-value.val
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsQuery } from '~root/core/wallets/state';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-confirm-phrase-password',
@@ -26,6 +27,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     private readonly cryptoService: CryptoService,
     private readonly walletsService: WalletsService,
     private readonly walletsQuery: WalletsQuery,
+    private readonly router: Router,
   ) { }
 
   checkPasswordWithGloablPassword: Subscription = this.form.controls.confirmPassword.valueChanges
@@ -77,6 +79,8 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
 
     // TODO: filter if password is already saved
     this.walletsService.savePasswordHash(this.form.value.confirmPassword);
+
+    await this.router.navigate(['/wallet', 'assets']);
   }
 
 }

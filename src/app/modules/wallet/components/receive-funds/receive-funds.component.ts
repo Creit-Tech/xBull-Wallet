@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import QRCode from 'qrcode';
-import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { WalletsAccountsQuery } from '~root/core/wallets/state';
 
 @Component({
   selector: 'app-receive-funds',
@@ -9,12 +9,17 @@ import { map, switchMap } from 'rxjs/operators';
   styleUrls: ['./receive-funds.component.scss']
 })
 export class ReceiveFundsComponent implements OnInit {
-  publicKey$: Observable<string> = of('GBQ32RYN2KMC2ZT7RJM5GIROVMKZWI254XZROD6I42G7GEAYIY4CQZR3');
+  selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
+
+  publicKey$: Observable<string> = this.selectedAccount$
+    .pipe(map(selectedAccount => selectedAccount._id));
 
   qrCode$: Observable<string> = this.publicKey$
     .pipe(switchMap(publicKey => QRCode.toDataURL(publicKey)));
 
-  constructor() { }
+  constructor(
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+  ) { }
 
   ngOnInit(): void {
   }

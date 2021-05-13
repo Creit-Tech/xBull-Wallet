@@ -1,0 +1,27 @@
+<section class="rounded-xl flex items-center h-14 px-6 py-1.5"
+         [class.bg-ash]="mode === 'light'"
+         [class.bg-body]="mode === 'dark'">
+  <div *ngIf="!!iconPath" class="w-auto mr-4">
+    <img [src]="iconPath" alt="unlock-icon">
+  </div>
+
+  <div class="w-auto">
+    <label class="w-full">
+      <span class="text-line font-semibold text-sm">
+        {{ title }}
+      </span>
+
+      <select class="cursor-pointer form-select w-full text-line border-none p-0 text-sm font-normal"
+              [class.bg-ash]="mode === 'light'"
+              [class.bg-body]="mode === 'dark'"
+              #control
+              [value]="value"
+              (input)="onInput(control.value)"
+              [disabled]="disabled">
+        <option *ngIf="placeholder" value="" selected disabled>{{ placeholder }}</option>
+        <option *ngFor="let option of options" [value]="option.value">{{ option.name }}</option>
+      </select>
+    </label>
+  </div>
+</section>
+

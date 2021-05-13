@@ -1,51 +1,101 @@
-<div class="w-full text-center mb-4">
-  <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-    Asset: CREIT
-  </h2>
-</div>
+<ng-container *ngIf="(asset$ | async) as asset">
 
-<section class="w-full mb-8">
-  <dl>
-    <dt class="text-off-black text-base font-bold mb-1">Issuer:</dt>
-    <dd class="break-all text-label text-sm mb-3">GCUQHK6HKPBP24RL5VK73BFAFAQ5IYDQ4TJGDUBW2UU52PIWTJAUBWJC</dd>
+  <section class="relative w-full h-full">
+    <div class="w-full text-center mb-4">
+      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+        Asset: {{ asset.assetCode }}
+      </h2>
+    </div>
 
-    <dt class="text-off-black text-base font-bold mb-1">Name:</dt>
-    <dd class="text-label text-sm mb-3">Crypto Real State Investment Token</dd>
+    <section class="w-full mb-8">
+      <dl>
 
-    <dt class="text-off-black text-base font-bold mb-1">Description:</dt>
-    <dd class="text-label text-sm mb-3">CREIT is Creit Tech's coin and is used to buy tokenized properties around the world offered by the company.</dd>
+        <ng-container *ngIf="issuedAsset$ | async as issuedAsset; else nativeAssetTemplate">
+          <ng-container *ngIf="fullDataLoaded$ | async; else loadingFullData">
+            <dt *ngIf="!!issuedAsset.assetIssuer" class="text-off-black text-base font-bold mb-1">Issuer:</dt>
+            <dd class="break-all text-label text-sm mb-3">{{ issuedAsset.assetIssuer }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Condition:</dt>
-    <dd class="text-label text-sm mb-3">
-      There will only ever be 1,000,000,000 CREIT tokens in existence. Owners of property tokens adquired with CREIT
-      tokens will receive income every time a property generates profit.
-    </dd>
+            <dt *ngIf="!!issuedAsset.name" class="text-off-black text-base font-bold mb-1">Name:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.name }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Organization:</dt>
-    <dd class="text-label text-sm mb-3">Creit Tech Solutions SpA</dd>
+            <dt *ngIf="!!issuedAsset.description" class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.description }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Doing business as:</dt>
-    <dd class="text-label text-sm mb-3">Creit Tech</dd>
+            <dt *ngIf="!!issuedAsset.conditions" class="text-off-black text-base font-bold mb-1">Condition:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.conditions }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Description:</dt>
-    <dd class="text-label text-sm mb-3">Creit Tech is the company who wants to break the breach that limit the mayority of people who try to invest in the real state market by removing the multiple limitations the banks and goverments have created </dd>
+            <dt *ngIf="!!issuedAsset.numAccount" class="text-off-black text-base font-bold mb-1">Total of holders:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.numAccount }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Website:</dt>
-    <dd class="text-label text-sm mb-3">https://creit.tech/</dd>
+            <dt *ngIf="!!issuedAsset.amountIssued" class="text-off-black text-base font-bold mb-1">Amount issued:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.amountIssued | number: '0.0-7' }}</dd>
 
-    <dt class="text-off-black text-base font-bold mb-1">Address: </dt>
-    <dd class="text-label text-sm mb-3">4 Norte #1154 501, Talca, Maule 346000, Chile</dd>
+            <div class="w-full py-2"></div>
 
-    <dt class="text-off-black text-base font-bold mb-1">E-mail address:</dt>
-    <dd class="text-label text-sm mb-3">soporte@creit.tech</dd>
-  </dl>
-</section>
+            <dt *ngIf="!!issuedAsset.orgName" class="text-off-black text-base font-bold mb-1">Organization:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgName }}</dd>
 
-<section class="w-full flex">
-  <div class="flex-1 pr-2">
-    <button class="w-full btn btn--small btn-error-alternative">Remove</button>
-  </div>
-  <div class="flex-1 pl-2">
-    <button class="w-full btn btn--small btn-off-black">Send</button>
-  </div>
-</section>
+            <dt *ngIf="!!issuedAsset.orgDba" class="text-off-black text-base font-bold mb-1">Doing business as:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgDba }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgDescription" class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgDescription }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgWebsite" class="text-off-black text-base font-bold mb-1">Website:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgWebsite }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgAddress" class="text-off-black text-base font-bold mb-1">Address:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgAddress }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgOfficialEmail" class="text-off-black text-base font-bold mb-1">E-mail address:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgOfficialEmail }}</dd>
+          </ng-container>
+
+          <ng-template #loadingFullData>
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-8/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-3/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-9/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-5/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-10/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-6/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-11/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-2/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-5/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-7/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-6/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-4/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-5/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-full">Data</dd>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #nativeAssetTemplate>
+          <ng-container *ngIf="nativeAsset$ | async as nativeAsset">
+            <dt class="text-off-black text-base font-bold mb-1">Name:</dt>
+            <dd class="text-label text-sm mb-3">Lumens</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">Native token of the Stellar Blockchain</dd>
+          </ng-container>
+        </ng-template>
+
+      </dl>
+    </section>
+
+    <section class="w-full flex">
+      <div *ngIf="issuedAsset$ | async" class="flex-1 pr-2">
+        <button (click)="onRemove()" class="w-full btn btn--small btn-error-alternative">Remove</button>
+      </div>
+      <div class="flex-1 pl-2">
+        <button class="w-full btn btn--small btn-off-black">Send</button>
+      </div>
+    </section>
+  </section>
+
+</ng-container>

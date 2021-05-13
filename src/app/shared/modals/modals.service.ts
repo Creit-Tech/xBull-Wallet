@@ -1,13 +1,13 @@
 import {
   ApplicationRef,
-  Component, ComponentFactory,
   ComponentFactoryResolver,
-  ComponentRef, EmbeddedViewRef,
+  ComponentRef,
+  EmbeddedViewRef,
   Inject,
   Injectable,
   Injector,
   Renderer2,
-  RendererFactory2, ViewContainerRef,
+  RendererFactory2,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { ModalContainerComponent } from '~root/shared/modals/modal-container/modal-container.component';
@@ -16,7 +16,6 @@ import { take } from 'rxjs/operators';
 @Injectable()
 export class ModalsService {
   private renderer: Renderer2;
-  private modals: Array<{ id: number, component: Component }> = [];
 
   constructor(
     @Inject(DOCUMENT)
@@ -30,7 +29,7 @@ export class ModalsService {
   }
 
 
-  open<T>(data: IModalOpenServices): void {
+  async open<T = any>(data: IModalOpenParams): Promise<IModalOpenReturns<T>> {
     const componentRef = this.componentFactoryResolver
       .resolveComponentFactory(ModalContainerComponent)
       .create(this.injector);
@@ -43,16 +42,37 @@ export class ModalsService {
 
     componentRef.instance.childComponent = data.component;
 
+    if (!!data.componentInputs) {
+      componentRef.instance.childComponentInputs = data.componentInputs;
+    }
+
     componentRef.instance.closeModal$
       .pipe(take(1))
       .subscribe(() => {
         this.appRef.detachView(componentRef.hostView);
         componentRef.destroy();
       });
+
+    return componentRef.instance.createdComponent$
+      .pipe(take(1))
+      .toPromise()
+      .then(childComponentRef => ({
+        modalContainer: componentRef,
+        componentRef: childComponentRef
+      }));
   }
 }
 
-export interface IModalOpenServices {
+export interface IModalOpenParams {
   id?: string | number;
   component: any;
+  componentInputs?: Array<{
+    input: string;
+    value: any;
+  }>;
+}
+
+export interface IModalOpenReturns<T> {
+  modalContainer: ComponentRef<ModalContainerComponent>;
+  componentRef: ComponentRef<T>;
 }

@@ -1,4 +1,4 @@
-<section class="flex flex-col h-full">
+<section *ngIf="accountCreated$ | async; else accountNotCreated" class="flex flex-col h-full">
   <section class="w-full px-6 pt-5 pb-1">
     <app-segment [buttons]="[{
     text: 'Asset',
@@ -15,7 +15,25 @@
   }]"></app-segment>
   </section>
 
-  <section class="w-full overflow-y-auto">
+  <section class="w-full h-full overflow-y-auto">
     <router-outlet></router-outlet>
   </section>
 </section>
+
+<ng-template #accountNotCreated>
+  <section [appLoading]="showLoading$ | async" class="flex h-full items-center justify-center relative">
+    <div class="w-10/12 text-center">
+      <h1 class="text-off-white text-2xl mb-2">
+        Your account <br> hasn't been created
+      </h1>
+
+      <p class="text-placeholder mb-8">
+        Every account in the Stellar network needs at least <br> 1 XLM to be created.
+      </p>
+
+      <button (click)="openReceiveFundsModal()" class="btn btn-primary btn--small w-full">
+        Receive funds
+      </button>
+    </div>
+  </section>
+</ng-template>

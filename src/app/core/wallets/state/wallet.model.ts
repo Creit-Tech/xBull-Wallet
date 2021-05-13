@@ -1,15 +1,6 @@
-import { ServerApi } from 'stellar-sdk';
-
-export interface IWalletAccount {
-  publicKey: string;
-  privateKey: string;
-  stellarAccount?: ServerApi.AccountRecord;
-}
-
 export interface IBaseWallet {
   _id: number;
   name: string;
-  accounts: IWalletAccount[];
 }
 
 export interface IWalletWithMnemonicPhrase extends IBaseWallet {
@@ -17,6 +8,7 @@ export interface IWalletWithMnemonicPhrase extends IBaseWallet {
   mnemonicPhrase: string;
 }
 
+// This is because we want to support more kind of wallets in the future like Trezor wallets, ledger, etc
 export type IWallet = IWalletWithMnemonicPhrase;
 
 export function createWallet(params: IWallet): IWallet {
@@ -25,6 +17,5 @@ export function createWallet(params: IWallet): IWallet {
     name: params.name,
     type: params.type,
     mnemonicPhrase: params.mnemonicPhrase,
-    accounts: params.accounts || [],
   };
 }

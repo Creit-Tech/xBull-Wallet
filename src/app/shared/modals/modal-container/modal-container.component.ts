@@ -1,9 +1,9 @@
 import {
   AfterViewInit,
-  Component, ComponentFactoryResolver,
+  Component, ComponentFactoryResolver, ComponentRef,
   ElementRef,
   EventEmitter, Injector,
-  Input,
+  Input, OnDestroy,
   OnInit,
   Output,
   Renderer2,
@@ -18,9 +18,13 @@ import { delay, take } from 'rxjs/operators';
   templateUrl: './modal-container.component.html',
   styleUrls: ['./modal-container.component.scss']
 })
-export class ModalContainerComponent implements OnInit, AfterViewInit {
+export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() closeModal$: EventEmitter<void> = new EventEmitter<void>();
+  @Output() createdComponent$: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input() loading = false;
   @Input() childComponent: any;
+  @Input() childComponentInputs: Array<{ input: string; value: any }> = [];
   @ViewChild('modalContentContainer', { read: ViewContainerRef }) modalContentContainer!: ViewContainerRef;
 
   showModal$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -39,11 +43,23 @@ export class ModalContainerComponent implements OnInit, AfterViewInit {
     .pipe(delay(10)) // TODO: This is a hack to avoid doing the check of the view, let's change this in the future
     .subscribe(() => {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.childComponent);
-      const component = this.modalContentContainer.createComponent(componentFactory);
+      const component: ComponentRef<any> = this.modalContentContainer.createComponent(componentFactory);
+
+      if (this.childComponentInputs) {
+        for (const componentInput of this.childComponentInputs) {
+          component.instance[componentInput.input] = componentInput.value;
+        }
+      }
+
+      this.createdComponent$.next(component);
       this.showModal$.next(true);
     });
 
   ngOnInit(): void {
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    await this.onClose();
   }
 
   ngAfterViewInit(): void {

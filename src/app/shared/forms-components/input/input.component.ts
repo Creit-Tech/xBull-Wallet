@@ -14,6 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class InputComponent implements OnInit, ControlValueAccessor {
+  @Input() mask = '';
   @Input() disabled = false;
   @Input() title = 'Input';
   @Input() type: 'text' | 'number' | 'password' = 'text';
