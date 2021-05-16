@@ -13,6 +13,8 @@ const storage = persistState({
     'UI/wallets-accounts',
     'wallets-assets',
     'UI/wallets-assets',
+    'wallets-operations',
+    'UI/wallets-operations',
   ],
   preStorageUpdate(storeName: string, state: any): any {
 
@@ -22,6 +24,7 @@ const storage = persistState({
         updatedEntities[entityId] = {
           ...state.entities[entityId],
           streamCreated: false,
+          operationsStreamCreated: false,
         };
       });
 

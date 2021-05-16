@@ -5,7 +5,7 @@ import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { parse } from 'toml';
-import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 
 @Injectable({
   providedIn: 'root'

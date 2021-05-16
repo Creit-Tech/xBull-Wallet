@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { WalletsOperation } from './wallets-operation.model';
+import { IWalletsOperation } from './wallets-operation.model';
 
-export interface WalletsOperationsState extends EntityState<WalletsOperation> {
+export interface WalletsOperationsState extends EntityState<IWalletsOperation> {
   sendingPayment: boolean;
+  gettingAccountRecords: boolean;
 }
 
 function createInitialState(): WalletsOperationsState {
   return {
     sendingPayment: false,
+    gettingAccountRecords: false,
   };
 }
 

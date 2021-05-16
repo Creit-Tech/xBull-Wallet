@@ -1,43 +1,9 @@
 <section class="w-full pt-4 pb-6">
   <ul>
-    <li (click)="onSelected()" class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
-      <div class="w-7/12">
-        <p class="text-base text-off-white m-0">GBQ32RYN...IY4CQZR3</p>
-        <p class="text-xs text-line m-0">CHCHTA (Apr 27th 2021)</p>
-      </div>
-
-      <div class="w-5/12 flex justify-end items-center">
-        <p class="m-0 text-base text-error truncate">- 123,323.2345048</p>
-      </div>
-    </li>
-
-    <li (click)="onSelected()" class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
-      <div class="w-7/12">
-        <p class="text-base text-off-white m-0">GBQ32RYN...IY4CQZR3</p>
-        <p class="text-xs text-line m-0">CHCHTA (Apr 23th 2021)</p>
-      </div>
-
-      <div class="w-5/12 flex justify-end items-center">
-        <p class="m-0 text-base text-success truncate">+ 123,323.2345048</p>
-      </div>
-    </li>
-
-    <li (click)="onSelected()" class="w-full border-label hover:border-placeholder border-b-2 transition flex flex-col py-4 px-6 cursor-pointer">
-      <div class="w-full">
-        <p class="text-base text-off-white m-0 truncate">
-          <span class="text-error">1122.5043582</span>
-          ->
-          <span class="text-success">123,323.2345048</span>
-        </p>
-      </div>
-
-      <div class="w-full">
-        <p class="text-xs text-line m-0">
-          <span>3NIWS6TF</span>
-          ->
-          <span>HN72MULS (Apr 20th 2021)</span>
-        </p>
-      </div>
-    </li>
+    <ng-container *ngFor="let operation of (accountOperations$ | async)">
+      <app-wallet-transaction-item (click)="onSelected()"
+                                   [operation]="operation">
+      </app-wallet-transaction-item>
+    </ng-container>
   </ul>
 </section>
