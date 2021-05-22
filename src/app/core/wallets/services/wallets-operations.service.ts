@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { createWalletsOperation, IWalletsAccount, WalletsOperationsStore } from '~root/core/wallets/state';
-import { Horizon, Operation, ServerApi, Transaction } from 'stellar-sdk';
+import { Horizon, Operation, ServerApi, Transaction, Memo } from 'stellar-sdk';
 import OperationRecord = ServerApi.OperationRecord;
 import { applyTransaction } from '@datorama/akita';
 
@@ -42,6 +42,14 @@ export class WalletsOperationsService {
     }
   }
 
+  parseMemo(memo: Memo): string | undefined {
+    if (!memo.value) {
+      return;
+    }
+
+    return Buffer.from(memo.value).toString();
+  }
+
   parseFromXDRToTransactionInterface(xdr: string): ITransaction {
     const transaction = new Transaction(xdr, this.stellarSdkService.networkPassphrase);
     return {
@@ -49,7 +57,7 @@ export class WalletsOperationsService {
       baseAccount: transaction.source,
       operations: transaction.operations.map(operation => this.parseOperation(operation)),
       passphrase: transaction.networkPassphrase,
-      // memo: transaction.memo.type === 'text' ?
+      memo: this.parseMemo(transaction.memo),
     };
   }
 

@@ -18,13 +18,13 @@
 
     <ng-container *ngIf="payment$ | async as payment">
       <dt class="text-off-black text-base font-bold mb-1">To:</dt>
-      <dd class="text-label text-sm mb-3 break-all">
-        {{ payment.publicAddress }}
+      <dd appClipboard [textToCopy]="payment.operationRecord.to" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ payment.operationRecord.to }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">From:</dt>
-      <dd class="text-label text-sm mb-3 break-all">
-        {{ payment.ownerAccount }}
+      <dd appClipboard [textToCopy]="payment.operationRecord.from" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ payment.operationRecord.from }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Amount:</dt>

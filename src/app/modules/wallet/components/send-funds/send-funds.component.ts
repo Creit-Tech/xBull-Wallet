@@ -11,6 +11,7 @@ import { Account, Asset, TransactionBuilder, Operation } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import { merge, Subject } from 'rxjs';
 import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
+import { Memo } from 'stellar-sdk';
 
 @Component({
   selector: 'app-send-funds',
@@ -98,7 +99,7 @@ export class SendFundsComponent implements OnInit, OnDestroy {
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 
-    const formattedXDR = new TransactionBuilder(targetAccount, {
+    const transaction = new TransactionBuilder(targetAccount, {
       fee: this.stellarSdkService.fee,
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     })
@@ -111,7 +112,13 @@ export class SendFundsComponent implements OnInit, OnDestroy {
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
       )
-      .setTimeout(this.stellarSdkService.defaultTimeout)
+      .setTimeout(this.stellarSdkService.defaultTimeout);
+
+    if (!!this.form.value.memo) {
+      transaction.addMemo(new Memo('text', this.form.value.memo));
+    }
+
+    const formattedXDR = transaction
       .build()
       .toXDR();
 

@@ -19,15 +19,15 @@
   </div>
 </form>
 
-<div *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset" class="w-full text-center text-label mb-7">
-  Available: 45,345.2123 {{ selectedAsset.assetCode }}
-</div>
+<div class="w-full text-center text-label mb-7">
+  <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
+    Available: 45,345.2123 {{ selectedAsset.assetCode }}
+  </ng-container>
 
-<ng-template #notSelectedAsset>
-  <div class="w-full text-center text-label mb-7">
+  <ng-template #notSelectedAsset>
     Available: Asset not selected
-  </div>
-</ng-template>
+  </ng-template>
+</div>
 
 <div class="w-full">
   <button (click)="onSubmit()" [disabled]="form.invalid" class="w-full btn btn-success-alternative btn--small">
