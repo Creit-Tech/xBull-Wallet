@@ -11,7 +11,7 @@ import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
-import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
 
 @Component({

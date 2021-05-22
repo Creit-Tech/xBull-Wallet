@@ -20,6 +20,8 @@ import { TransactionDetailsComponent } from './components/transaction-details/tr
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NgxMaskModule } from 'ngx-mask';
+import { WalletTransactionItemComponent } from './components/wallet-transaction-item/wallet-transaction-item.component';
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 
 
 @NgModule({
@@ -34,7 +36,8 @@ import { NgxMaskModule } from 'ngx-mask';
     WalletComponent,
     OfferDetailsComponent,
     WalletTransactionsComponent,
-    TransactionDetailsComponent
+    TransactionDetailsComponent,
+    WalletTransactionItemComponent
   ],
   imports: [
     CommonModule,
@@ -43,6 +46,7 @@ import { NgxMaskModule } from 'ngx-mask';
     FormsComponentsModule,
     LoadingModule,
     ClipboardModule,
+    SharedPipesModule,
   ],
 })
 export class WalletModule { }

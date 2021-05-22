@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { StellarParserService } from './stellar-parser.service';
+import { GlobalsService } from './globals.service';
 
-describe('StellarParserService', () => {
-  let service: StellarParserService;
+describe('GlobalsService', () => {
+  let service: GlobalsService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(StellarParserService);
+    service = TestBed.inject(GlobalsService);
   });
 
   it('should be created', () => {

@@ -1,6 +1,6 @@
 <section class="h-full overscroll-contain overflow-y-scroll no-scrollbar">
   <ul>
-    <app-asset-item *ngFor="let balanceRecord of (selectedAccount$ | async)?.accountRecord?.balances"
+    <app-asset-item *ngFor="let balanceRecord of (accountBalances$ | async)"
                     [balanceLine]="balanceRecord"
                     (click)="assetDetails(balanceRecord)">
     </app-asset-item>

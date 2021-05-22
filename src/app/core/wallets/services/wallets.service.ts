@@ -37,6 +37,7 @@ export class WalletsService {
           _id: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
           streamCreated: false,
+          operationsStreamCreated: false,
           isCreated: false,  // We assume all accounts aren't created but then if it's actually created, we just set it correctly
         });
 

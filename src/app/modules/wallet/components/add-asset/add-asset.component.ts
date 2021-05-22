@@ -1,12 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { StellarTransactionBuilderService } from '~root/libs/stellar/stellar-transaction-builder.service';
-import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { StellarParserService } from '~root/libs/stellar/stellar-parser.service';
 import { TransactionBuilder, Operation, Asset, Account } from 'stellar-sdk';
 import { merge, Subject, Subscription } from 'rxjs';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -39,10 +37,8 @@ export class AddAssetComponent implements OnInit, OnDestroy {
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
-    private readonly stellarTransactionBuilderService: StellarTransactionBuilderService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
-    private readonly stellarParserService: StellarParserService,
     private readonly walletsAssetsService: WalletsAssetsService,
   ) { }
 

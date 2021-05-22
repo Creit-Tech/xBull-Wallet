@@ -1,16 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { IOperation, ITransaction, StellarTransactionBuilderService } from '~root/libs/stellar/stellar-transaction-builder.service';
 import { BehaviorSubject, from, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsAccountsQuery, WalletsAssetsQuery, WalletsQuery } from '~root/core/wallets/state';
-import { StellarSdkService } from '~root/libs/stellar/stellar-sdk.service';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import BigNumber from 'bignumber.js';
-import { StellarParserService } from '~root/libs/stellar/stellar-parser.service';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { PasswordFormComponent } from '~root/shared/modals/components/password-form/password-form.component';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { Transaction, Keypair } from 'stellar-sdk';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
+import { ITransaction, WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 
 @Component({
   selector: 'app-sign-request',
@@ -33,7 +31,7 @@ export class SignRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   xdrParsed$: Observable<ITransaction> = this.xdr$.asObservable()
     .pipe(map(xdr =>
-      this.stellarParserService.parseFromXDRToTransactionInterface(xdr)
+      this.walletsOperationsService.parseFromXDRToTransactionInterface(xdr)
     ));
 
   // This is actually IOperation[] but I used "any" so the compiler stops complaining
@@ -55,13 +53,12 @@ export class SignRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
-    private readonly stellarTransactionBuilderService: StellarTransactionBuilderService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
-    private readonly stellarParserService: StellarParserService,
     private readonly cryptoService: CryptoService,
     private readonly walletsAccountQuery: WalletsAccountsQuery,
     private readonly toastrService: ToastrService,
+    private readonly walletsOperationsService: WalletsOperationsService,
   ) { }
 
   passwordProvided$: Subject<string> = new Subject<string>();

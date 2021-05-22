@@ -28,23 +28,22 @@ export class ModalsService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-
   async open<T = any>(data: IModalOpenParams): Promise<IModalOpenReturns<T>> {
     const componentRef = this.componentFactoryResolver
       .resolveComponentFactory(ModalContainerComponent)
       .create(this.injector);
-
-    this.appRef.attachView(componentRef.hostView);
-
-    const rootNode = (componentRef.hostView as EmbeddedViewRef<ApplicationRef>).rootNodes[0] as HTMLElement;
-
-    this.renderer.appendChild(this.document.body, rootNode);
 
     componentRef.instance.childComponent = data.component;
 
     if (!!data.componentInputs) {
       componentRef.instance.childComponentInputs = data.componentInputs;
     }
+
+    this.appRef.attachView(componentRef.hostView);
+
+    const rootNode = (componentRef.hostView as EmbeddedViewRef<ApplicationRef>).rootNodes[0] as HTMLElement;
+
+    this.renderer.appendChild(this.document.body, rootNode);
 
     componentRef.instance.closeModal$
       .pipe(take(1))
