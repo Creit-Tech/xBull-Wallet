@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IWalletsOperation, IWalletsPaymentOperation } from '~root/core/wallets/state';
 import { ReplaySubject, Subject } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
-import { ServerApi } from 'stellar-sdk';
 
 @Component({
   selector: 'app-wallet-transaction-item',

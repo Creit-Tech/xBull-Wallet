@@ -40,8 +40,8 @@ export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy
 
   insertComponentSubscription: Subscription = this.insertComponent$.asObservable()
     .pipe(take(1))
-    .pipe(delay(10)) // TODO: This is a hack to avoid doing the check of the view, let's change this in the future
-    .subscribe(() => {
+    .pipe(delay(50)) // TODO: This is a hack to avoid doing the check of the view, let's change this in the future
+    .subscribe(async () => {
       const componentFactory = this.componentFactoryResolver.resolveComponentFactory(this.childComponent);
       const component: ComponentRef<any> = this.modalContentContainer.createComponent(componentFactory);
 
@@ -63,8 +63,8 @@ export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
+    console.log('ngAfterViewInit')
     this.insertComponent$.next();
-    this.insertComponent$.complete();
   }
 
   async onClose(): Promise<void> {

@@ -55,7 +55,7 @@ export function createWalletsOperation(params: ServerApi.OperationRecord & Pick<
         assetId: operationRecord.asset_type === 'native' ? 'native' : `${operationRecord.asset_code}_${operationRecord.asset_issuer}`,
         type: operationRecord.type,
         paymentType: ownerAccount === operationRecord.source_account ? 'send' : 'receive',
-        publicAddress: operationRecord.to,
+        publicAddress: ownerAccount === operationRecord.source_account ? operationRecord.to : operationRecord.from,
         amount: operationRecord.amount,
         assetCode: operationRecord.asset_type === 'native' ? 'XLM' : operationRecord.asset_code,
         assetIssuer: operationRecord.asset_issuer,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, pluck, switchMap, take } from 'rxjs/operators';
+import { exhaustMap, map, pluck, switchMap, take } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { IWalletsAccount, WalletsAccountsQuery } from '~root/core/wallets/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
@@ -35,7 +35,7 @@ export class WalletComponent implements OnInit {
   ngOnInit(): void {
     this.selectedAccount$
       .pipe(take(1))
-      .pipe(switchMap(account => this.walletsAccountsService.getAccountData(account._id)))
+      .pipe(exhaustMap(account => this.walletsAccountsService.getAccountData(account._id)))
       .subscribe();
   }
 

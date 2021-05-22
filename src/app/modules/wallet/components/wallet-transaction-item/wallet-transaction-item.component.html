@@ -1,4 +1,4 @@
-<li class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+<section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
   <ng-container *ngIf="payment$ | async as operation">
     <div class="w-7/12">
       <p class="text-base text-off-white m-0">
@@ -9,11 +9,16 @@
       </p>
     </div>
 
-    <div class="w-5/12 flex flex-wrap justify-end items-center">
-      <p class="m-0 text-base text-error truncate">- 123,323.2345048</p>
+    <div class="w-5/12 flex flex-col justify-center items-end">
+      <p [class.text-success]="operation.paymentType === 'receive'"
+         [class.text-error]="operation.paymentType === 'send'"
+         class="m-0 text-base truncate">
+        {{ operation.paymentType === 'receive' ? '+' : '-' }}
+        {{ operation.amount | number: '0.0-7' }}
+      </p>
       <p class="text-xs text-line m-0">
         {{ operation.createdAt | date: 'MMM dd, yyyy' }}
       </p>
     </div>
   </ng-container>
-</li>
+</section>

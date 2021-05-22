@@ -1,9 +1,8 @@
 <section class="w-full pt-4 pb-6">
-  <ul>
-    <ng-container *ngFor="let operation of (accountOperations$ | async)">
-      <app-wallet-transaction-item (click)="onSelected()"
-                                   [operation]="operation">
-      </app-wallet-transaction-item>
-    </ng-container>
-  </ul>
+  <ng-container *ngFor="let operation of (accountOperations$ | async)">
+    <app-wallet-transaction-item
+      (click)="onSelected(operation)"
+      [operation]="operation">
+    </app-wallet-transaction-item>
+  </ng-container>
 </section>

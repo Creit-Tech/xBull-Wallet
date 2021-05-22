@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
@@ -9,7 +9,7 @@ import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
-import { switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -21,18 +21,27 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
   reloadSelectedAccount$: Subject<void> = new Subject<void>();
 
+  accountBalances$ = this.selectedAccount$
+    .pipe(filter(account => !!account))
+    .pipe(map(account => account?.accountRecord?.balances || []))
+
+    // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
+    // TODO: We need to update this
+    // .pipe(tap(() => setTimeout(() => this.cdr.detectChanges(), 10)));
+
   constructor(
     private readonly modalsService: ModalsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   reloadSelectedAccountSubscription: Subscription = this.reloadSelectedAccount$
     .asObservable()
     .pipe(withLatestFrom(this.selectedAccount$))
-    .pipe(switchMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount._id)))
+    .pipe(exhaustMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount._id)))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe();
 
