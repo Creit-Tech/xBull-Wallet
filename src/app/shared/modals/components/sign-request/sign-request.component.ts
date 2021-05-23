@@ -49,6 +49,11 @@ export class SignRequestComponent implements OnInit, AfterViewInit, OnDestroy {
         .toString()
     ));
 
+  memoText$: Observable<string> = this.xdrParsed$
+    .pipe(filter<ITransaction>(data => !!data))
+    .pipe(tap(console.log))
+    .pipe(pluck<ITransaction, string>('memo'));
+
   selectedAccount$ = this.walletsAccountQuery.getSelectedAccount$;
 
   constructor(

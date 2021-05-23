@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/core/wallets/state';
-import { map, shareReplay, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { ModalsService } from '~root/shared/modals/modals.service';
@@ -11,6 +11,8 @@ import { Account, Asset, TransactionBuilder, Operation } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import { merge, Subject } from 'rxjs';
 import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
+import { Memo } from 'stellar-sdk';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 
 @Component({
   selector: 'app-send-funds',
@@ -63,6 +65,20 @@ export class SendFundsComponent implements OnInit, OnDestroy {
       return heldAssets.find(({ _id }) => assetId === _id);
     }));
 
+  availableFunds$ = this.selectedAsset$
+    .pipe(filter(selectedAsset => !!selectedAsset))
+    .pipe(withLatestFrom(this.selectedAccount$))
+    .pipe(map(([selectedAsset, selectedAccount]) => {
+      if (!selectedAsset || !selectedAccount.accountRecord) {
+        console.warn('Balance or Account record is undefined');
+        return new BigNumber(0).toNumber();
+      }
+
+      return this.stellarSdkService
+        .calculateAvailableBalance(selectedAccount.accountRecord, selectedAsset.assetCode)
+        .toNumber();
+    }));
+
   constructor(
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
@@ -71,6 +87,7 @@ export class SendFundsComponent implements OnInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsOperationsService: WalletsOperationsService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
+    private readonly walletsAccountsService: WalletsAccountsService,
   ) { }
 
   ngOnInit(): void {
@@ -98,7 +115,7 @@ export class SendFundsComponent implements OnInit, OnDestroy {
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 
-    const formattedXDR = new TransactionBuilder(targetAccount, {
+    const transaction = new TransactionBuilder(targetAccount, {
       fee: this.stellarSdkService.fee,
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     })
@@ -111,7 +128,13 @@ export class SendFundsComponent implements OnInit, OnDestroy {
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
       )
-      .setTimeout(this.stellarSdkService.defaultTimeout)
+      .setTimeout(this.stellarSdkService.defaultTimeout);
+
+    if (!!this.form.value.memo) {
+      transaction.addMemo(new Memo('text', this.form.value.memo));
+    }
+
+    const formattedXDR = transaction
       .build()
       .toXDR();
 

@@ -22,8 +22,10 @@
             <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
             <dd class="break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
 
-            <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
+            <ng-container *ngIf="operation.assetIssuer">
+              <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
+            </ng-container>
 
             <dt class="text-base font-bold mb-1 w-full">Limit:</dt>
             <dd class="break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
@@ -64,6 +66,11 @@
 
       <dt class="text-base font-bold mb-1 w-full">Fee:</dt>
       <dd class="break-all text-sm mb-3 w-full">{{ (fee$ | async) }} XLM</dd>
+
+      <ng-container *ngIf="memoText$ | async">
+        <dt class="text-base font-bold mb-1 w-full">Memo:</dt>
+        <dd class="break-all text-sm mb-3 w-full">{{ (memoText$ | async) }}</dd>
+      </ng-container>
     </dl>
   </section>
 
