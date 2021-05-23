@@ -21,7 +21,7 @@
 
 <div class="w-full text-center text-label mb-7">
   <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
-    Available: 45,345.2123 {{ selectedAsset.assetCode }}
+    Available: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
   </ng-container>
 
   <ng-template #notSelectedAsset>

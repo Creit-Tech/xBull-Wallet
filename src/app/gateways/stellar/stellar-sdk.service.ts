@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Transaction, Server, Networks } from 'stellar-sdk';
+import { Keypair, Transaction, Server, Networks, ServerApi, Horizon } from 'stellar-sdk';
+import BigNumber from 'bignumber.js';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,32 @@ export class StellarSdkService {
     );
 
     return this.Server.submitTransaction(transaction);
+  }
+
+  calculateAvailableBalance(account: ServerApi.AccountRecord, code: 'native' | string): BigNumber {
+    let balanceLine: Horizon.BalanceLine;
+    let finalAmount = new BigNumber(0);
+
+    if (code === 'XLM') {
+      const minimumBase = new BigNumber(2)
+        .plus(account.subentry_count)
+        .plus(account.num_sponsoring)
+        .minus(account.num_sponsored)
+        .multipliedBy(0.5);
+
+      finalAmount = finalAmount.minus(minimumBase);
+    }
+
+    balanceLine = code === 'XLM'
+      ? account.balances
+        .find(balance => balance.asset_type === 'native') as Horizon.BalanceLineNative
+      : account.balances
+        .find(balance => balance.asset_type !== 'native' && balance.asset_code === code) as Horizon.BalanceLineAsset;
+
+    finalAmount = finalAmount.plus(new BigNumber(balanceLine.balance))
+      .minus(new BigNumber(balanceLine.selling_liabilities));
+
+    return finalAmount.isLessThanOrEqualTo(0) ? new BigNumber(0) : finalAmount;
   }
 
 
