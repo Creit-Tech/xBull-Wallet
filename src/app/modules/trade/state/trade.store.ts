@@ -3,11 +3,13 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 export interface TradeState {
   sendingPathPaymentStrictSend: boolean;
+  sendingPathPaymentStrictReceive: boolean;
 }
 
 export function createInitialState(): TradeState {
   return {
     sendingPathPaymentStrictSend: false,
+    sendingPathPaymentStrictReceive: false,
   };
 }
 
