@@ -6,6 +6,7 @@ import { TradeStore, TradeState } from './trade.store';
 export class TradeQuery extends Query<TradeState> {
   sendingPathPaymentStrictSend$ = this.select(state => state.sendingPathPaymentStrictSend);
   sendingPathPaymentStrictReceive$ = this.select(state => state.sendingPathPaymentStrictReceive);
+  sendingOffer$ = this.select(state => state.sendingOffer);
 
   constructor(protected store: TradeStore) {
     super(store);

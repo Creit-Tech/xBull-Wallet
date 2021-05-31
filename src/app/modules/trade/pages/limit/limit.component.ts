@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
 import { map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
@@ -19,7 +19,7 @@ import { TradeQuery } from '~root/modules/trade/state';
   templateUrl: './limit.component.html',
   styleUrls: ['./limit.component.scss']
 })
-export class LimitComponent implements OnInit {
+export class LimitComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
 
   form: FormGroupTyped<ILimitForm> = new FormGroup({
@@ -78,6 +78,11 @@ export class LimitComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
   }
 
   async onConfirm(): Promise<void> {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
 import { debounceTime, filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
@@ -19,7 +19,7 @@ import { ToastrService } from '~root/shared/toastr/toastr.service';
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.scss']
 })
-export class SwapComponent implements OnInit {
+export class SwapComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
 
   form: FormGroupTyped<ISwapForm> = new FormGroup({
@@ -94,6 +94,11 @@ export class SwapComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
   }
 
   async onConfirm(): Promise<void> {

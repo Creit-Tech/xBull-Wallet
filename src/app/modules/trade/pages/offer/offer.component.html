@@ -1,67 +1,71 @@
-<section class="w-full flex flex-col">
-  <div class="w-full px-6 mb-4">
+<section [appLoading]="sendingOffer$ | async" class="w-full h-full flex flex-col justify-between px-6 pb-6">
+  <section [formGroup]="form" class="w-full flex flex-col">
     <div class="w-full mb-4">
-      <p class="m-0 text-label font-semibold">
-        TRADE FROM
+      <div class="w-full mb-4">
+        <p class="m-0 text-label font-semibold">
+          TRADE FROM
+        </p>
+      </div>
+
+      <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
+        <div class="w-6/12 pr-1">
+          <app-select [options]="selectOptions"
+                      formControlName="fromAsset"
+                      placeholder="Select..."
+                      mode="light" title="From Asset">
+          </app-select>
+        </div>
+
+        <div class="w-6/12 pl-1">
+          <app-input mask="0*.0000000"
+                     formControlName="fromValue"
+                     mode="light" title="Amount">
+          </app-input>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full mb-8">
+      <div class="w-full mb-4">
+        <p class="m-0 text-label font-semibold">
+          EXCHANGE FOR
+        </p>
+      </div>
+
+      <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
+        <div class="w-6/12 pr-1">
+          <app-select [options]="selectOptions"
+                      formControlName="toAsset"
+                      placeholder="Select..."
+                      mode="light" title="To Asset">
+          </app-select>
+        </div>
+
+        <div class="w-6/12 pl-1">
+          <app-input mask="0*.0000000"
+                     formControlName="toValue"
+                     mode="light" title="Amount">
+          </app-input>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full mb-8 flex">
+    <div class="w-full text-center">
+      <p *ngIf="currentRateText$ | async as currentRateText" class="m-0 text-label font-semibold mb-2">
+        Your rate is:
+        <br>
+        {{ currentRateText }}
       </p>
     </div>
+  </section>
 
-    <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
-      <div class="w-6/12 pr-1">
-        <app-select [options]="selectOptions"
-                    mode="light" title="From Asset">
-        </app-select>
-      </div>
-
-      <div class="w-6/12 pl-1">
-        <app-input mask="0*.0000000" mode="light" title="Amount">
-        </app-input>
-      </div>
-    </div>
-  </div>
-
-  <div class="w-full px-6 mb-8">
-    <div class="w-full mb-4">
-      <p class="m-0 text-label font-semibold">
-        EXCHANGE FOR
-      </p>
-    </div>
-
-    <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
-      <div class="w-6/12 pr-1">
-        <app-select [options]="selectOptions"
-                    mode="light" title="To Asset">
-        </app-select>
-      </div>
-
-      <div class="w-6/12 pl-1">
-        <app-input mask="0*.0000000" mode="light" title="Amount">
-        </app-input>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="w-full px-6 mb-8 flex">
-  <div class="w-6/12 pr-2">
-    <p class="m-0 text-label font-semibold mb-2">
-      Your rate is:
-      <br>
-      1 BTC = 15,307.92308 SOL
-    </p>
-  </div>
-
-  <div class="w-6/12 pl-2 text-right">
-    <p class="m-0 text-label font-semibold mb-2">
-      Recommended rate:
-      <br>
-      1 BTC = 13,307.92308 SOL
-    </p>
-  </div>
-</section>
-
-<section class="w-full px-6">
-  <button class="w-full btn btn--small btn-success-alternative">
-    Place offer
-  </button>
+  <section class="w-full">
+    <button [disabled]="form.invalid || (sendingOffer$ | async)"
+            (click)="onConfirm()"
+            class="w-full btn btn--small btn-success-alternative">
+      Place offer
+    </button>
+  </section>
 </section>

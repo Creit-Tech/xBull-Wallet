@@ -50,7 +50,9 @@
 
         <ng-container *ngIf="operation.type === 'pathPaymentStrictSend' || operation.type === 'pathPaymentStrictReceive'">
           <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
-          <dd class="break-all text-sm mb-3 w-full">Path payment strict send</dd>
+          <dd class="break-all text-sm mb-3 w-full">
+            Path payment strict  {{ operation.type === 'pathPaymentStrictSend' ? 'send' : 'receive' }}
+          </dd>
 
           <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
           <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
@@ -82,6 +84,47 @@
           <dd class="break-all text-sm mb-3 w-full">{{ operation.destAsset.code }}</dd>
 
 <!--          TODO: add the path-->
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'manageBuyOffer' || operation.type === 'manageSellOffer'">
+          <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class="break-all text-sm mb-3 w-full">
+            {{ operation.type === 'manageBuyOffer' ? 'Buy' : 'Sell' }} Offer
+          </dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Asset Selling:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.selling.code }}</dd>
+
+          <ng-container *ngIf="operation.selling.issuer">
+            <dt class="text-base font-bold mb-1 w-full">Selling Asset Issuer:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.selling.issuer }}</dd>
+          </ng-container>
+
+          <dt class="text-base font-bold mb-1 w-full">Asset Buying:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.buying.code }}</dd>
+
+          <ng-container *ngIf="operation.buying.issuer">
+            <dt class="text-base font-bold mb-1 w-full">Buying Asset Issuer:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.buying.issuer }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'manageBuyOffer'">
+            <dt class="text-base font-bold mb-1 w-full">Amount to Buy:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.buyAmount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'manageSellOffer'">
+            <dt class="text-base font-bold mb-1 w-full">Amount to Sell:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <dt class="text-base font-bold mb-1 w-full">Price per unit to Buy:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.price | number: '0.0-7' }}</dd>
+
+          <ng-container *ngIf="operation.offerId && operation.offerId != '0'">
+            <dt class="text-base font-bold mb-1 w-full">Offer ID:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
+          </ng-container>
         </ng-container>
 
         <ng-container *ngIf="!!operation.source">

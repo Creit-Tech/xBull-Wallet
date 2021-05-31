@@ -33,4 +33,12 @@ export class TradeService {
   sendPathPaymentStrictReceive(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingPathPaymentStrictReceive');
   }
+
+  sendManageBuyOffer(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    return this.submitAndUpdateStore(xdr, 'sendingOffer');
+  }
+
+  sendManageSellOffer(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    return this.submitAndUpdateStore(xdr, 'sendingOffer');
+  }
 }
