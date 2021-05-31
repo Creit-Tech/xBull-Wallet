@@ -51,6 +51,7 @@ export class SendFundsComponent implements OnInit, OnDestroy {
     }));
 
   selectOptions$: Observable<ISelectOptions[]> = this.heldAssets$
+    .pipe(take(1))
     .pipe(map(assets =>
       assets.map(asset => ({
         name: asset.assetCode,

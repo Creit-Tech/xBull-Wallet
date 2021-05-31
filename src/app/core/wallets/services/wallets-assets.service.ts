@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { Horizon, Server, ServerApi, TransactionBuilder, Networks } from 'stellar-sdk';
+import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset } from 'stellar-sdk';
 import { IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/core/wallets/state';
 import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
@@ -141,5 +141,17 @@ export class WalletsAssetsService {
       domain: 'stellar.org',
       image: '/assets/images/stellar-logo.svg',
     };
+  }
+
+  /*
+  * This method helps to generate an sdk Asset using the _id of the asset in our store
+  * */
+  sdkAssetFromAssetId(assetId: IWalletAsset['_id']): Asset {
+    if (assetId === 'native') {
+      return Asset.native();
+    } else {
+      const [assetCode, assetIssuer] = assetId.split('_');
+      return new Asset(assetCode, assetIssuer);
+    }
   }
 }

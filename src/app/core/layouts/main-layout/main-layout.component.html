@@ -14,6 +14,7 @@
 
   <footer *ngIf="activeIcon$ | async as activeIcon" class="bg-ash flex items-center justify-between px-6 py-2">
     <button class="flex flex-col items-center transition outline-none focus:outline-none font-medium py-1 px-2"
+            routerLink="/wallet"
             [class.text-label]="activeIcon !== 'wallet'"
             [class.text-primary]="activeIcon === 'wallet'">
 
@@ -26,6 +27,7 @@
     </button>
 
     <button class="flex flex-col items-center transition outline-none focus:outline-none font-medium text-label py-1 px-2"
+            routerLink="/trade"
             [class.text-label]="activeIcon !== 'trade'"
             [class.hover:text-off-white]="activeIcon !== 'trade'"
             [class.text-primary]="activeIcon === 'trade'">

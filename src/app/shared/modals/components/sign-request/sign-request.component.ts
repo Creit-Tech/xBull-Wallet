@@ -9,6 +9,8 @@ import { PasswordFormComponent } from '~root/shared/modals/components/password-f
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ITransaction, WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
+import { ServerApi, Operation } from 'stellar-sdk';
+import OperationRecord = ServerApi.OperationRecord;
 
 @Component({
   selector: 'app-sign-request',
@@ -36,7 +38,7 @@ export class SignRequestComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // This is actually IOperation[] but I used "any" so the compiler stops complaining
   // TODO: Handle this and a better way for the compiler understand the different types of operations
-  operations$: Observable<any> = this.xdrParsed$
+  operations$: Observable<Operation[]> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
 
   // TODO: Make this dynamic with a config store

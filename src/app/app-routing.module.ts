@@ -25,8 +25,23 @@ const routes: Routes = [
       .then(m => m.WalletModule)
   },
   {
+    path: 'trade',
+    component: MainLayoutComponent,
+    data: {
+      activeIcon: 'trade'
+    },
+    canActivate: [
+      IsThereWalletsGuard
+    ],
+    canActivateChild: [
+      IsThereWalletsGuard
+    ],
+    loadChildren: () => import('./modules/trade/trade.module')
+      .then(m => m.TradeModule)
+  },
+  {
     path: '**', // TODO: update this once we have complete with the basic development of the welcome and dashboard
-    redirectTo: 'wallet',
+    redirectTo: 'trade',
   }
 ];
 

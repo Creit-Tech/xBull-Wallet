@@ -1,0 +1,69 @@
+<section class="w-full flex flex-col">
+  <div class="w-full px-6 mb-4">
+    <div class="w-full mb-4 flex justify-between">
+      <p class="m-0 text-label font-semibold">
+        FROM ASSET
+      </p>
+      <p class="m-0 text-label font-semibold">
+        TO ASSET
+      </p>
+    </div>
+
+    <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
+      <div class="w-6/12 pr-1">
+        <app-select [options]="selectOptions"
+                    mode="light" title="To Asset">
+        </app-select>
+      </div>
+
+      <div class="w-6/12 pl-1">
+        <app-select [options]="selectOptions"
+                    mode="light" title="To Asset">
+        </app-select>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full px-6 mb-8">
+    <div class="w-full mb-4 flex justify-between">
+      <p class="m-0 text-label font-semibold">
+        AMOUNT
+      </p>
+      <p class="m-0 text-label font-semibold">
+        MAX PER UNIT
+      </p>
+    </div>
+
+    <div class="w-full flex">
+      <div class="w-6/12 pr-1">
+        <app-input mask="0*.0000000" mode="light" title="Amount">
+        </app-input>
+      </div>
+
+      <div class="w-6/12 pl-1">
+        <app-input mask="0*.0000000" mode="light" title="Price">
+        </app-input>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="w-full px-6 mb-8">
+  <div class="w-full text-center">
+    <p class="m-0 text-label font-semibold mb-2">
+      Max amount to pay is: 2.1124988 BTC
+    </p>
+  </div>
+
+  <div class="w-full text-center">
+    <p class="m-0 text-line font-bold mb-2">
+      If the price set isn’t enough, the trade will fail
+    </p>
+  </div>
+</section>
+
+<section class="w-full px-6">
+  <button class="w-full btn btn--small btn-success-alternative">
+    Confirm trade
+  </button>
+</section>

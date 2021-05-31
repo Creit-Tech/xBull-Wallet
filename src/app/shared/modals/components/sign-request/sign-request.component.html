@@ -13,51 +13,66 @@
     <dl>
       <ng-container *ngFor="let operation of (operations$ | async)">
 
-        <ng-container [ngSwitch]="operation.type">
+        <ng-container *ngIf="operation.type === 'payment'">
+          <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class="break-all text-sm mb-3 w-full">Payment</dd>
 
-          <ng-container *ngSwitchCase="'changeTrust'">
-            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
-            <dd class="break-all text-sm mb-3 w-full">Change trust</dd>
+          <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
 
-            <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
+          <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
 
-            <ng-container *ngIf="operation.assetIssuer">
-              <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-              <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
-            </ng-container>
-
-            <dt class="text-base font-bold mb-1 w-full">Limit:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
-
-            <ng-container *ngIf="!!operation.source">
-              <dt class="text-base font-bold mb-1 w-full">Source:</dt>
-              <dd class="break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
-            </ng-container>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="'payment'">
-            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
-            <dd class="break-all text-sm mb-3 w-full">Payment</dd>
-
-            <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
-
-            <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
-
+          <ng-container *ngIf="operation.asset.issuer">
             <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.assetIssuer }}</dd>
-
-            <dt class="text-base font-bold mb-1 w-full">Amount to send:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
-
-            <ng-container *ngIf="!!operation.source">
-              <dt class="text-base font-bold mb-1 w-full">Source:</dt>
-              <dd class="break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
-            </ng-container>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
           </ng-container>
 
+          <dt class="text-base font-bold mb-1 w-full">Amount to send:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'changeTrust'">
+          <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class="break-all text-sm mb-3 w-full">Change trust</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.line.code }}</dd>
+
+          <ng-container *ngIf="operation.line.issuer">
+            <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.line.issuer }}</dd>
+          </ng-container>
+
+          <dt class="text-base font-bold mb-1 w-full">Limit:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
+          <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class="break-all text-sm mb-3 w-full">Path payment strict send</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Sending amount:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.sendAmount | number: '0.0-7' }}</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Sending Asset:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.sendAsset.code }}</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Destination minimum:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.destMin | number: '0.0-7' }}</dd>
+
+          <dt class="text-base font-bold mb-1 w-full">Destination Asset:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.destAsset.code }}</dd>
+
+<!--          TODO: add the path-->
+        </ng-container>
+
+        <ng-container *ngIf="!!operation.source">
+          <dt class="text-base font-bold mb-1 w-full">Source:</dt>
+          <dd class="break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
         </ng-container>
 
       </ng-container>

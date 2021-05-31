@@ -53,6 +53,22 @@
     text-off-white;
 }
 
+.btn-success {
+  @apply bg-success
+    text-off-white;
+}
+
+.btn-success:hover {
+  @apply bg-transparent
+    text-success
+    border-success;
+}
+
+.btn-success:active {
+  @apply bg-success
+    text-off-white;
+}
+
 .btn-error-alternative {
   @apply bg-error-alternative
     text-off-white;

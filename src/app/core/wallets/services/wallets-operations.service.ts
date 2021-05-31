@@ -16,31 +16,31 @@ export class WalletsOperationsService {
   ) { }
 
   // TODO: Rethink the operations flow we have used
-  parseOperation(operation: Operation): IOperation {
-    switch (operation.type) {
-      case 'changeTrust':
-        return {
-          type: 'changeTrust',
-          source: operation.source,
-          limit: operation.limit,
-          assetCode: operation.line.code,
-          assetIssuer: operation.line.issuer,
-        };
-
-      case 'payment':
-        return {
-          type: 'payment',
-          destination: operation.destination,
-          assetCode: operation.asset.code,
-          assetIssuer: operation.asset.issuer,
-          amount: operation.amount,
-          source: operation.source,
-        };
-
-      default:
-        throw new Error('We can not handle this kind of operation');
-    }
-  }
+  // parseOperation(operation: Operation): IOperation {
+  //   switch (operation.type) {
+  //     case 'changeTrust':
+  //       return {
+  //         type: 'changeTrust',
+  //         source: operation.source,
+  //         limit: operation.limit,
+  //         assetCode: operation.line.code,
+  //         assetIssuer: operation.line.issuer,
+  //       };
+  //
+  //     case 'payment':
+  //       return {
+  //         type: 'payment',
+  //         destination: operation.destination,
+  //         assetCode: operation.asset.code,
+  //         assetIssuer: operation.asset.issuer,
+  //         amount: operation.amount,
+  //         source: operation.source,
+  //       };
+  //
+  //     default:
+  //       throw new Error('We can not handle this kind of operation');
+  //   }
+  // }
 
   parseMemo(memo: Memo): string | undefined {
     if (!memo.value) {
@@ -55,7 +55,7 @@ export class WalletsOperationsService {
     return {
       fee: transaction.fee,
       baseAccount: transaction.source,
-      operations: transaction.operations.map(operation => this.parseOperation(operation)),
+      operations: transaction.operations,
       passphrase: transaction.networkPassphrase,
       memo: this.parseMemo(transaction.memo),
     };
@@ -70,46 +70,6 @@ export class WalletsOperationsService {
       })
       .catch(error => {
         this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: false }));
-        return Promise.reject(error);
-      });
-  }
-
-  getAccountOperations(params: {
-    walletAccount: IWalletsAccount,
-    order: 'asc' | 'desc'
-    cursor?: string,
-    limit?: number,
-  }) {
-    this.walletsOperationsStore.update(state => ({ ...state, gettingAccountRecords: true }));
-    const promise = this.stellarSdkService.Server.operations()
-      .forAccount(params.walletAccount._id)
-      .order(params.order)
-      .includeFailed(false);
-
-    if (!!params.cursor) {
-      promise.cursor(params.cursor);
-    }
-
-    if (typeof params.limit !== 'undefined') {
-      promise.limit(params.limit);
-    }
-
-    return promise.call()
-      .then(response => {
-        const operations = response.records.map(record => createWalletsOperation({
-          ...record,
-          ownerAccount: params.walletAccount._id,
-        }));
-
-        applyTransaction(() => {
-          this.walletsOperationsStore.upsertMany(operations);
-          this.walletsOperationsStore.update(state => ({ ...state, gettingAccountRecords: false }));
-        });
-
-        return response;
-      })
-      .catch(error => {
-        this.walletsOperationsStore.update(state => ({ ...state, gettingAccountRecords: false }));
         return Promise.reject(error);
       });
   }
@@ -146,32 +106,33 @@ export class WalletsOperationsService {
 }
 
 
-export type IOperationType = 'changeTrust' | 'payment';
-
-export interface IChangeTrustOperation {
-  type: 'changeTrust';
-  assetCode: string;
-  assetIssuer: string;
-  limit?: string;
-  source?: string;
-}
-
-export interface IPaymentOperation {
-  type: 'payment';
-  destination: string;
-  assetCode: string;
-  assetIssuer: string;
-  amount: string;
-  source?: string;
-}
-
-export type IOperation = IChangeTrustOperation |
-  IPaymentOperation;
+// export type IOperationType = 'changeTrust' | 'payment';
+//
+// export interface IChangeTrustOperation {
+//   type: 'changeTrust';
+//   assetCode: string;
+//   assetIssuer: string;
+//   limit?: string;
+//   source?: string;
+// }
+//
+// export interface IPaymentOperation {
+//   type: 'payment';
+//   destination: string;
+//   assetCode: string;
+//   assetIssuer: string;
+//   amount: string;
+//   source?: string;
+// }
+//
+// export type IOperation = IChangeTrustOperation |
+//   IPaymentOperation;
 
 export interface ITransaction {
   baseAccount: string;
   passphrase: string;
-  operations: IOperation[];
+  // operations: IOperation[];
+  operations: Operation[];
   fee: string;
   memo?: string;
 }

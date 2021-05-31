@@ -1,0 +1,81 @@
+<section [appLoading]="sendingPathPaymentStrictSend$ | async" class="w-full h-full flex flex-col pb-5 px-6">
+  <section [formGroup]="form" class="w-full flex flex-col">
+    <div class="w-full mb-4">
+      <div class="w-full mb-4 flex justify-between">
+        <p class="m-0 text-label font-semibold">
+          FROM ASSET
+        </p>
+        <p class="m-0 text-label font-semibold">
+          TO ASSET
+        </p>
+      </div>
+
+      <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
+        <div class="w-6/12 pr-1">
+          <app-select [options]="selectOptions"
+                      formControlName="fromAsset"
+                      placeholder="Select..."
+                      mode="light" title="From Asset">
+          </app-select>
+        </div>
+
+        <div class="w-6/12 pl-1">
+          <app-select [options]="selectOptions"
+                      formControlName="toAsset"
+                      placeholder="Select..."
+                      mode="light" title="To Asset">
+          </app-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full mb-8">
+      <div class="w-full mb-4">
+        <p class="m-0 text-label font-semibold">
+          AMOUNT
+        </p>
+      </div>
+
+      <div class="w-full flex">
+        <div class="w-full">
+          <app-input mask="0*.0000000"
+                     formControlName="amountToSwap"
+                     mode="light" title="Amount to swap">
+          </app-input>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full mb-auto">
+    <ng-container *ngIf="shouldReceive$ | async as shouldReceive">
+      <div class="w-full text-center">
+        <p class="m-0 text-label font-semibold mb-2">
+          <span *ngIf="shouldReceive.toNumber() === 0; else expected">
+            There are no offers available
+          </span>
+
+          <ng-template #expected>
+            <span>
+              Expected amount to receive: {{ shouldReceive.toNumber() | number: '0.0-7' }}
+            </span>
+          </ng-template>
+        </p>
+      </div>
+
+      <div class="w-full text-center">
+        <p class="m-0 text-line font-bold">
+          If the price changes before sending the transaction, it will be cancelled if the minimal amount is not met.
+        </p>
+      </div>
+    </ng-container>
+  </section>
+
+  <section class="w-full">
+    <button [disabled]="form.invalid || (shouldReceive$ | async)?.toNumber() === 0 || (sendingPathPaymentStrictSend$ | async)"
+            (click)="onConfirm()"
+            class="w-full btn btn--small btn-success-alternative">
+      Confirm swap
+    </button>
+  </section>
+</section>
