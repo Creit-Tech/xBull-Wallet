@@ -1,7 +1,7 @@
 import { Horizon, ServerApi } from 'stellar-sdk';
-import { IWalletsAccount } from '~root/core/wallets/state/wallets-account.model';
+import { IWalletsAccount } from '~root/state/wallets-account.model';
 import PaymentOperationRecord = ServerApi.PaymentOperationRecord;
-import { IWalletAsset } from '~root/core/wallets/state/wallets-asset.model';
+import { IWalletAsset } from '~root/state/wallets-asset.model';
 import ChangeTrustOperationRecord = ServerApi.ChangeTrustOperationRecord;
 import OperationRecord = ServerApi.OperationRecord;
 

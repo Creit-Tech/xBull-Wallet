@@ -1,46 +1,40 @@
-<section class="h-full flex flex-col">
-  <section class="my-8 text-center">
-    <h1 class="text-off-white text-2xl">Your active offers</h1>
-  </section>
+<section class="w-full p-6 h-full flex flex-col">
+  <ul class="w-full">
+    <li *ngFor="let accountOffer of parsedAccountOffers$ | async;"
+        (click)="onOfferSelected(accountOffer)"
+        class="w-full h-16 mb-8 bg-ash rounded-xl flex px-4 cursor-pointer">
+      <div class="w-5/12 flex justify-start items-center">
+        <figure class="mr-2 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
+          <img class="w-6 h-6" [src]="accountOffer.sellingAssetImage" alt="">
+        </figure>
 
-  <section class="w-full px-6 pb-6 h-full overflow-y-auto no-scrollbar">
-    <ul class="w-full">
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl flex px-4 cursor-pointer">
-        <div class="w-5/12 flex justify-start items-center">
-          <figure class="mr-2">
-            <img class="w-8 h-8" src="https://creit-tech-stellar.s3-sa-east-1.amazonaws.com/asset-images/CREIT.png" alt="">
-          </figure>
-
-          <div class="text-left">
-            <p class="text-off-white font-bold text-sm">BTC</p>
-            <small class="text-placeholder text-xs overflow-ellipsis">0.0432165</small>
-          </div>
+        <div class="text-left">
+          <p class="text-off-white font-bold text-sm">
+            {{ accountOffer.buyingAssetCode }}
+          </p>
+          <small class="text-placeholder text-xs overflow-ellipsis">
+            {{ accountOffer.sellingAmount | number: '0.0-7' }}
+          </small>
         </div>
+      </div>
 
-        <div class="w-2/12 flex justify-center items-center">
-          <img src="/assets/icons/forward-arrow.svg" alt="forward-arrow">
-        </div>
+      <div class="w-2/12 flex justify-center items-center">
+        <img src="/assets/icons/forward-arrow.svg" alt="forward-arrow">
+      </div>
 
-        <div class="w-5/12 flex justify-end items-center">
-          <div class="text-right">
-            <p class="text-off-white font-bold text-sm">EURT</p>
-            <small class="text-placeholder text-xs overflow-ellipsis">1966.23</small>
-          </div>
-          <figure class="ml-2">
-            <img class="w-8 h-8" src="https://k.tempocrypto.com/static/images/tempo144.png" alt="">
-          </figure>
+      <div class="w-5/12 flex justify-end items-center">
+        <div class="text-right">
+          <p class="text-off-white font-bold text-sm">
+            {{ accountOffer.buyingAssetCode }}
+          </p>
+          <small class="text-placeholder text-xs overflow-ellipsis">
+            {{ accountOffer.buyingAmount | number: '0.0-7' }}
+          </small>
         </div>
-      </li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-      <li (click)="onOfferSelected()" class="w-full h-16 mb-8 bg-ash rounded-xl"></li>
-    </ul>
-  </section>
+        <figure class="ml-2 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
+          <img class="w-6 h-6" [src]="accountOffer.buyingAssetImage" alt="">
+        </figure>
+      </div>
+    </li>
+  </ul>
 </section>

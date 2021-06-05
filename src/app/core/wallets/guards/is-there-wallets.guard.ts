@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { WalletsQuery } from '~root/core/wallets/state';
+import { WalletsQuery } from '~root/state';
 import { switchMap } from 'rxjs/operators';
 
 @Injectable({

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EntityUIQuery, QueryEntity } from '@datorama/akita';
 import { WalletsAccountsStore, WalletsAccountsState, WalletsAccountsUIState, IWalletsAccountUI } from './wallets-accounts.store';
-import { IWalletsAccount } from '~root/core/wallets/state/wallets-account.model';
+import { IWalletsAccount } from '~root/state/wallets-account.model';
 import { pluck, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })

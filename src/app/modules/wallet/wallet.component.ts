@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { exhaustMap, map, pluck, switchMap, take } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { IWalletsAccount, WalletsAccountsQuery } from '~root/core/wallets/state';
+import { IWalletsAccount, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { combineLatest, pipe, Subject } from 'rxjs';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
-import { IWalletsAccountUI } from '~root/core/wallets/state/wallets-accounts.store';
+import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
 
 @Component({
   selector: 'app-wallet',

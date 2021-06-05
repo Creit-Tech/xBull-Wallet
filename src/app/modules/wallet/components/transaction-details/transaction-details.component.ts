@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { IWalletsOperation, IWalletsPaymentOperation } from '~root/core/wallets/state';
+import { IWalletsOperation, IWalletsPaymentOperation } from '~root/state';
 import { ReplaySubject } from 'rxjs';
 import { filter, map, pluck, take } from 'rxjs/operators';
 import { GlobalsService } from '~root/lib/globals/globals.service';

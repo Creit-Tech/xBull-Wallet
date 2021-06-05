@@ -37,7 +37,7 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     OfferDetailsComponent,
     WalletTransactionsComponent,
     TransactionDetailsComponent,
-    WalletTransactionItemComponent
+    WalletTransactionItemComponent,
   ],
   imports: [
     CommonModule,

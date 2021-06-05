@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { WalletsAccountsQuery, WalletsOperationsQuery } from '~root/core/wallets/state';
+import { WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
 import { of, pipe, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilKeyChanged, filter, switchMap, withLatestFrom } from 'rxjs/operators';
 import { Order, selectPersistStateInit } from '@datorama/akita';

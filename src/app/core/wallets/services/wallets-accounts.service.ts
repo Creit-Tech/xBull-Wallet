@@ -7,12 +7,12 @@ import {
   WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsAssetsStore,
-} from '~root/core/wallets/state';
+} from '~root/state';
 import { catchError, map, withLatestFrom } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { IWalletsAccountUI } from '~root/core/wallets/state/wallets-accounts.store';
+import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
 import BalanceLine = Horizon.BalanceLine;
 import BigNumber from 'bignumber.js';
 

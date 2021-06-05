@@ -5,7 +5,7 @@ import {
   IWalletNativeAsset,
   WalletsAccountsQuery,
   WalletsAssetsQuery,
-} from '~root/core/wallets/state';
+} from '~root/state';
 import { merge, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';

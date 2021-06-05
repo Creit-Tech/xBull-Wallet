@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
-import { IWalletAsset, WalletsAssetsQuery } from '~root/core/wallets/state';
+import { IWalletAsset, WalletsAssetsQuery } from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';

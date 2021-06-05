@@ -1,11 +1,12 @@
 import { Inject, Injectable } from '@angular/core';
 import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset } from 'stellar-sdk';
-import { IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/state';
 import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { parse } from 'toml';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import OfferAsset = ServerApi.OfferAsset;
 
 @Injectable({
   providedIn: 'root'
@@ -118,7 +119,7 @@ export class WalletsAssetsService {
   /*
   * This method helps to generate de _id we use to identify assets in the store
   * */
-  formatBalanceLineId(data: Horizon.BalanceLine): IWalletAsset['_id'] {
+  formatBalanceLineId(data: Horizon.BalanceLine | OfferAsset): IWalletAsset['_id'] {
     switch (data.asset_type) {
       case 'native':
         return 'native';

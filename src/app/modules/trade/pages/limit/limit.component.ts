@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -11,8 +11,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { TradeService } from '~root/modules/trade/services/trade.service';
-import { TradeQuery } from '~root/modules/trade/state';
+import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 
 @Component({
   selector: 'app-limit',
@@ -64,7 +63,7 @@ export class LimitComponent implements OnInit, OnDestroy {
       }))
     ));
 
-  sendingPathPaymentStrictReceive$ = this.tradeQuery.sendingPathPaymentStrictReceive$;
+  sendingPathPaymentStrictReceive$ = this.walletsOffersQuery.sendingPathPaymentStrictReceive$;
 
   constructor(
     private readonly walletsAssetsService: WalletsAssetsService,
@@ -73,8 +72,8 @@ export class LimitComponent implements OnInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
     private readonly toastrService: ToastrService,
-    private readonly tradeService: TradeService,
-    private readonly tradeQuery: TradeQuery,
+    private readonly walletsOffersService: WalletsOffersService,
+    private readonly walletsOffersQuery: WalletsOffersQuery,
   ) { }
 
   ngOnInit(): void {
@@ -164,7 +163,7 @@ export class LimitComponent implements OnInit, OnDestroy {
 
   async sendTradeOrder(signedXdr: string): Promise<void> {
     try {
-      await this.tradeService.sendPathPaymentStrictReceive(signedXdr);
+      await this.walletsOffersService.sendPathPaymentStrictReceive(signedXdr);
       this.toastrService.open({
         message: 'The asset trade were successful',
         status: 'success',

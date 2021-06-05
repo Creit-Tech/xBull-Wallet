@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { debounceTime, filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -10,9 +10,8 @@ import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { Subject } from 'rxjs';
-import { TradeService } from '~root/modules/trade/services/trade.service';
-import { TradeQuery } from '~root/modules/trade/state';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
+import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 
 @Component({
   selector: 'app-swap',
@@ -80,7 +79,7 @@ export class SwapComponent implements OnInit, OnDestroy {
       }
     }));
 
-  sendingPathPaymentStrictSend$ = this.tradeQuery.sendingPathPaymentStrictSend$;
+  sendingPathPaymentStrictSend$ = this.walletsOffersQuery.sendingPathPaymentStrictSend$;
 
   constructor(
     private readonly walletsAssetsService: WalletsAssetsService,
@@ -88,8 +87,8 @@ export class SwapComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
-    private readonly tradeService: TradeService,
-    private readonly tradeQuery: TradeQuery,
+    private readonly walletsOffersService: WalletsOffersService,
+    private readonly walletsOffersQuery: WalletsOffersQuery,
     private readonly toastrService: ToastrService,
   ) { }
 
@@ -177,7 +176,7 @@ export class SwapComponent implements OnInit, OnDestroy {
 
   async sendSwapOrder(signedXdr: string): Promise<void> {
     try {
-      await this.tradeService.sendPathPaymentStrictSend(signedXdr);
+      await this.walletsOffersService.sendPathPaymentStrictSend(signedXdr);
       this.toastrService.open({
         message: 'The swap of the assets were successful',
         status: 'success',
