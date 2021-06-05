@@ -63,7 +63,6 @@ export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit')
     this.insertComponent$.next();
   }
 

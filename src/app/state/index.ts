@@ -13,3 +13,7 @@ export { WalletsAssetsState, WalletsAssetsStore } from './wallets-assets.store';
 export * from './wallets-operation.model';
 export * from './wallets-operations.query';
 export { WalletsOperationsState, WalletsOperationsStore } from './wallets-operations.store';
+
+export * from './wallets-offer.model';
+export * from './wallets-offers.query';
+export { WalletsOffersState, WalletsOffersStore } from './wallets-offers.store';

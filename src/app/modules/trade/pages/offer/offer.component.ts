@@ -1,18 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/core/wallets/state';
+import {
+  IWalletAsset,
+  IWalletsAccount,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+  WalletsOffersQuery,
+  WalletsOperationsQuery,
+} from '~root/state';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { TradeService } from '~root/modules/trade/services/trade.service';
-import { TradeQuery } from '~root/modules/trade/state';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { TransactionBuilder, Operation, Account } from 'stellar-sdk';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { Subject } from 'rxjs';
+import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 
 @Component({
   selector: 'app-offer',
@@ -61,15 +67,15 @@ export class OfferComponent implements OnInit, OnDestroy {
       return `1 ${aCode} = ${bRate.toFixed(7)} ${bCode}`;
     }));
 
-  sendingOffer$ = this.tradeQuery.sendingOffer$;
+  sendingOffer$ = this.walletsOffersQuery.sendingOffer$;
 
   constructor(
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly modalsService: ModalsService,
-    private readonly tradeService: TradeService,
-    private readonly tradeQuery: TradeQuery,
+    private readonly walletsOffersService: WalletsOffersService,
+    private readonly walletsOffersQuery: WalletsOffersQuery,
     private readonly toastrService: ToastrService,
     private readonly stellarSdkService: StellarSdkService,
   ) { }
@@ -130,7 +136,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   async sendOffer(signedXdr: string): Promise<void> {
     try {
-      await this.tradeService.sendManageSellOffer(signedXdr);
+      await this.walletsOffersService.sendManageSellOffer(signedXdr);
       this.toastrService.open({
         message: 'We placed the offer correctly',
         status: 'success',

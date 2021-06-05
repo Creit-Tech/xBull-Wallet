@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
 import { filter, map, shareReplay, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';

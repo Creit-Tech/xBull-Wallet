@@ -5,7 +5,7 @@ import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
-import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
+import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';

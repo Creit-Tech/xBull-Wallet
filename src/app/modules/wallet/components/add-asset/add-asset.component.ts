@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/core/wallets/state';
+import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';

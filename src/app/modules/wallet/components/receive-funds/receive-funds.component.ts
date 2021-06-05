@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import QRCode from 'qrcode';
 import { map, switchMap } from 'rxjs/operators';
-import { WalletsAccountsQuery } from '~root/core/wallets/state';
+import { WalletsAccountsQuery } from '~root/state';
 
 @Component({
   selector: 'app-receive-funds',

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Keypair } from 'stellar-base';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { createWallet, createWalletsAccount, IWallet, IWalletsAccount, WalletsAccountsStore, WalletsStore } from '~root/core/wallets/state';
+import { createWallet, createWalletsAccount, IWallet, IWalletsAccount, WalletsAccountsStore, WalletsStore } from '~root/state';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 
 @Injectable({

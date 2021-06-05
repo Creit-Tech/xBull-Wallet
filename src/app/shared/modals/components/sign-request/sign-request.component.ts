@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, from, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { WalletsAccountsQuery, WalletsAssetsQuery, WalletsQuery } from '~root/core/wallets/state';
+import { WalletsAccountsQuery, WalletsAssetsQuery, WalletsQuery } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import BigNumber from 'bignumber.js';

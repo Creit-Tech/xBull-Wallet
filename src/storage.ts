@@ -1,7 +1,7 @@
 import { persistState, PersistStateSelectFn } from '@datorama/akita';
 import { storageAkitaMiddleware } from './storage-akita.middleware';
 import { debounceTime } from 'rxjs/operators';
-import { IWallet, IWalletsAccount, WalletsAccountsState } from '~root/core/wallets/state';
+import { IWallet, IWalletsAccount, WalletsAccountsState } from '~root/state';
 
 const storage = persistState({
   storage: storageAkitaMiddleware,

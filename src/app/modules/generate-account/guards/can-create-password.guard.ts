@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Observable, of } from 'rxjs';
 import { selectPersistStateInit } from '@datorama/akita';
 import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
-import { WalletsQuery } from '~root/core/wallets/state';
+import { WalletsQuery } from '~root/state';
 
 @Injectable({
   providedIn: 'root'

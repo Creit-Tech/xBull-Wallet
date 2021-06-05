@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { createWalletsOperation, IWalletsAccount, WalletsOperationsStore } from '~root/core/wallets/state';
+import { createWalletsOperation, IWalletsAccount, WalletsOperationsStore } from '~root/state';
 import { Horizon, Operation, ServerApi, Transaction, Memo } from 'stellar-sdk';
 import OperationRecord = ServerApi.OperationRecord;
 import { applyTransaction } from '@datorama/akita';

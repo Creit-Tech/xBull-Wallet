@@ -6,7 +6,7 @@ import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { sameValueValidator } from '~root/shared/forms-validators/same-value.validator';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { WalletsQuery } from '~root/core/wallets/state';
+import { WalletsQuery } from '~root/state';
 import { Router } from '@angular/router';
 
 @Component({

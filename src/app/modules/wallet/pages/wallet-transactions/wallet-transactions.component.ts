@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
 import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
-import { IWalletsAccount, IWalletsOperation, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/core/wallets/state';
+import { IWalletsAccount, IWalletsOperation, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
 import { debounceTime, distinctUntilKeyChanged, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Order } from '@datorama/akita';
 
