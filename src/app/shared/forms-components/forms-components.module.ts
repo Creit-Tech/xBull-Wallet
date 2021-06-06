@@ -5,18 +5,21 @@ import { InputComponent } from './input/input.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgxMaskModule } from 'ngx-mask';
 import { SelectComponent } from './select/select.component';
+import { ToggleComponent } from './toggle/toggle.component';
 
 @NgModule({
   declarations: [
     TextareaComponent,
     InputComponent,
-    SelectComponent
+    SelectComponent,
+    ToggleComponent,
   ],
   exports: [
     ReactiveFormsModule,
     TextareaComponent,
     InputComponent,
     SelectComponent,
+    ToggleComponent,
   ],
   imports: [
     CommonModule,
