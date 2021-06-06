@@ -1,5 +1,5 @@
 import { Component, forwardRef, Input, OnInit } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -14,6 +14,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ]
 })
 export class InputComponent implements OnInit, ControlValueAccessor {
+
+  constructor() { }
   @Input() mask = '';
   @Input() disabled = false;
   @Input() title = 'Input';
@@ -24,19 +26,19 @@ export class InputComponent implements OnInit, ControlValueAccessor {
 
   value = '';
 
+  control = new FormControl('');
+
   onChange: (quantity: any) => void = (quantity) => {};
 
   onTouched: () => void = () => {};
-
-  constructor() { }
 
   ngOnInit(): void {
   }
 
   onInput(value: any): void {
-    this.writeValue(value);
+    this.writeValue(this.control.value);
     this.onTouched();
-    this.onChange(this.value);
+    this.onChange(this.control.value);
   }
 
   registerOnChange(fn: any): void {
@@ -49,6 +51,7 @@ export class InputComponent implements OnInit, ControlValueAccessor {
 
   writeValue(value: any): void {
     if (!!value) {
+      this.control.setValue(value);
       this.value = value;
     } else {
       this.value = '';

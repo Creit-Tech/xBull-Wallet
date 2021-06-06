@@ -17,3 +17,6 @@ export { WalletsOperationsState, WalletsOperationsStore } from './wallets-operat
 export * from './wallets-offer.model';
 export * from './wallets-offers.query';
 export { WalletsOffersState, WalletsOffersStore } from './wallets-offers.store';
+
+export * from './settings.query';
+export { SettingsState, SettingsStore } from './settings.store';

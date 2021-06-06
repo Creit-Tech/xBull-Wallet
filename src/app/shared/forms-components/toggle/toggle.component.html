@@ -1,0 +1,14 @@
+<label class="rounded-full flex items-center h-8 w-16"
+       [class.bg-ash]="mode === 'light'"
+       [class.bg-body]="mode === 'dark'">
+  <input #input type="checkbox"
+         class="invisible absolute w-0 h-0"
+         [checked]="value" (change)="onInput(input.checked)">
+
+  <span class="transition w-full h-full cursor-pointer rounded-full p-1 flex"
+        [class.bg-primary]="value"
+        [class.bg-ash]="mode === 'light' && !value"
+        [class.bg-body]="mode === 'dark' && !value">
+    <span class="transition h-full w-6/12 bg-off-white rounded-full" [class.ml-auto]="value"></span>
+  </span>
+</label>
