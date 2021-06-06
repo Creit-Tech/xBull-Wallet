@@ -2,12 +2,20 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 export interface SettingsState {
-  key: string;
+  UIState: {
+    gettingRecommendedFee: boolean;
+  };
+  advanceMode: boolean;
+  defaultFee: string;
 }
 
 export function createInitialState(): SettingsState {
   return {
-    key: ''
+    UIState: {
+      gettingRecommendedFee: false,
+    },
+    advanceMode: false,
+    defaultFee: '100',
   };
 }
 
@@ -17,6 +25,23 @@ export class SettingsStore extends Store<SettingsState> {
 
   constructor() {
     super(createInitialState());
+  }
+
+  updateState(updatedState: Partial<Omit<SettingsState, 'UIState'>>): void {
+    this.update(state => ({
+      ...state,
+      ...updatedState
+    }));
+  }
+
+  updateUIState(updatedUIState: Partial<SettingsState['UIState']>): void {
+    this.update(state => ({
+      ...state,
+      UIState: {
+        ...state.UIState,
+        ...updatedUIState
+      }
+    }));
   }
 
 }

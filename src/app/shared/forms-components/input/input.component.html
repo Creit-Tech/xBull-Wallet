@@ -12,20 +12,22 @@
 
     <label class="w-full">
       <input *ngIf="!!mask; else noMask" class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
-             #control
+             #controlTemplate
              [mask]="mask"
              [type]="type"
              [value]="value"
-             (input)="onInput(control.value)"
+             [formControl]="control"
+             (input)="onInput(controlTemplate.value)"
              [placeholder]="placeholder"
              [disabled]="disabled"/>
 
       <ng-template #noMask>
         <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
-               #control
+               #controlTemplate
                [type]="type"
                [value]="value"
-               (input)="onInput(control.value)"
+               [formControl]="control"
+               (input)="onInput(controlTemplate.value)"
                [placeholder]="placeholder"
                [disabled]="disabled"/>
       </ng-template>

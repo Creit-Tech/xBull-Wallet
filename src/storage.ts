@@ -5,7 +5,7 @@ import { IWallet, IWalletsAccount, WalletsAccountsState } from '~root/state';
 
 const storage = persistState({
   storage: storageAkitaMiddleware,
-  preStorageUpdateOperator: () => debounceTime(1000),
+  preStorageUpdateOperator: () => debounceTime(500),
   include: [
     'wallets',
     'UI/wallets',
@@ -15,8 +15,12 @@ const storage = persistState({
     'UI/wallets-assets',
     'wallets-operations',
     'UI/wallets-operations',
+    'settings',
   ],
   preStorageUpdate(storeName: string, state: any): any {
+    if (!!state.UIState) {
+      delete state.UIState;
+    }
 
     if (storeName === 'wallets-accounts') {
       const updatedEntities: any = {};

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Keypair, Transaction, Server, Networks, ServerApi, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
+import { SettingsQuery } from '~root/state';
 
 @Injectable({
   providedIn: 'root'
@@ -18,15 +19,20 @@ export class StellarSdkService {
 
   // TODO: Make this optional before launching the app IE add a settings store
   get fee(): string {
-    return '100';
+    const { defaultFee } = this.settingsQuery.getValue();
+    return defaultFee;
   }
+
+  fee$: Observable<string> = this.settingsQuery.defaultFee$;
 
   // TODO: Make this optional before launching the app IE add a settings store
   get defaultTimeout(): number {
     return 60;
   }
 
-  constructor() { }
+  constructor(
+    private readonly settingsQuery: SettingsQuery,
+  ) { }
 
   signTransaction(data: { xdr: string, secret: string }): string {
     const keypair = Keypair.fromSecret(data.secret);
