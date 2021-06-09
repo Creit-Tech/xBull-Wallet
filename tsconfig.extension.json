@@ -1,14 +1,16 @@
 {
   "compileOnSave": false,
   "files": [
-    "./src/sw.ts"
+    "./src/extension/background.ts",
+    "./src/extension/xbull-sdk.ts",
+    "./src/extension/content-script.ts"
   ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
@@ -21,11 +23,6 @@
     ],
     "types": [
       "chrome"
-    ],
-    "paths": {
-      "~root/*": [
-        "./src/service-workers/*"
-      ]
-    }
+    ]
   }
 }

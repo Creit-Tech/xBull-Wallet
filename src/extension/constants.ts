@@ -1,0 +1,1 @@
+export const XBULL_CONNECT = 'XBULL_CONNECT';
