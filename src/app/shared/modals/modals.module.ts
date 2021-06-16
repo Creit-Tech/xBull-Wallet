@@ -6,9 +6,11 @@ import { SignRequestComponent } from '~root/shared/modals/components/sign-reques
 import { PasswordFormComponent } from './components/password-form/password-form.component';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
+import { ModalWrapperComponent } from './modal-wrapper/modal-wrapper.component';
 
 const COMPONENTS = [
   SignRequestComponent,
+  ModalWrapperComponent,
 ];
 
 @NgModule({
@@ -21,7 +23,6 @@ const COMPONENTS = [
   imports: [
     CommonModule,
     FormsComponentsModule,
-    LoadingModule,
     LoadingModule,
   ],
 })

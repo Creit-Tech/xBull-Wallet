@@ -25,12 +25,15 @@
       "chrome"
     ],
     "paths": {
+      "~extension/*": [
+        "./src/extension/*"
+      ],
       "~root/*": [
         "./src/app/*"
       ],
       "~env": [
         "./src/environments/environment.ts"
-      ]
+      ],
     }
   },
   "angularCompilerOptions": {

@@ -1,9 +1,9 @@
 {
   "compileOnSave": false,
   "files": [
-    "./src/extension/background.ts",
-    "./src/extension/xbull-sdk.ts",
-    "./src/extension/content-script.ts"
+    "./src/extension/background/background.ts",
+    "./src/extension/sdk/sdk.ts",
+    "./src/extension/content-script/content-script.ts"
   ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
@@ -23,6 +23,17 @@
     ],
     "types": [
       "chrome"
-    ]
+    ],
+    "paths": {
+      "~root/*": [
+        "./src/app/*"
+      ],
+      "~env": [
+        "./src/environments/environment.ts"
+      ],
+      "~extension/*": [
+        "./src/extension/*"
+      ]
+    }
   }
 }

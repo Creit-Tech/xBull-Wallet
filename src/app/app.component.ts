@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
 import { of, pipe, Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { WalletsOperationsService } from '~root/core/wallets/services/wallets-op
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit {
   title = 'xBull - Wallet';
 
   constructor(
@@ -51,12 +51,7 @@ export class AppComponent implements AfterViewInit {
       this.walletsAccountsService.createStream(account);
     });
 
-  ngAfterViewInit(): void {
-    chrome
-      .runtime
-      .sendMessage({ command: 'fetch' }, response => {
-        console.log({response});
-      });
+  ngOnInit(): void {
   }
 
 
