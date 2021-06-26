@@ -1,3 +1,5 @@
+// @ DEPRECATED
+// Migrate everything from this one to the modal-wrapper one
 import {
   AfterViewInit,
   Component, ComponentFactoryResolver, ComponentRef,
@@ -63,9 +65,6 @@ export class ModalContainerComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-  }
-
-  onShow(): void {
     this.insertComponent$.next();
   }
 

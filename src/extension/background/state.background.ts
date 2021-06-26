@@ -1,7 +1,7 @@
 import { SitesConnectionsState } from '~root/state';
 import { ISitePermissions } from '~extension/interfaces';
 
-const getStore = () => new Promise<{ 'sites-connection': SitesConnectionsState }>((resolve, reject) => {
+const getStore = () => new Promise<{ 'sites-connections': SitesConnectionsState }>((resolve, reject) => {
   chrome.storage.local.get(['AkitaStores'], (items: { [key: string]: any }) => {
     if (chrome.runtime.lastError) {
       return reject(chrome.runtime.lastError);
@@ -13,7 +13,7 @@ const getStore = () => new Promise<{ 'sites-connection': SitesConnectionsState }
 
 export const getSitePermissions = async (host: string): Promise<ISitePermissions | undefined> => {
   const store = await getStore();
-  const sitesConnections = store['sites-connection'];
+  const sitesConnections = store['sites-connections'];
 
   if (!sitesConnections) {
     return;

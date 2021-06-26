@@ -1,4 +1,11 @@
-import { EventTypes, IConnectRequestPayload, IRuntimeConnectResponse, ISitePermissions, XBULL_CONNECT } from '../interfaces';
+import {
+  EventTypes,
+  IConnectRequestPayload,
+  IRuntimeConnectResponse,
+  IRuntimeErrorResponse,
+  ISitePermissions,
+  XBULL_CONNECT,
+} from '../interfaces';
 
 class Sdk {
   isConnected = false;
@@ -7,7 +14,7 @@ class Sdk {
 
   sendEventToContentScript<T, R>(eventName: EventTypes, payload: T): Promise<CustomEvent<R>> {
     return new Promise<CustomEvent<R>>((resolve) => {
-      // We use this id to create a unique event listener and avoid mixing messages
+      // We use this id to create a random event listener and avoid mixing messages
       const eventId = (new Date().getTime() + Math.random()).toString(16);
 
       const eventListener = (event: any) => {
@@ -42,12 +49,16 @@ class Sdk {
       permissions,
     };
 
-    const results = await this.sendEventToContentScript<IConnectRequestPayload, IRuntimeConnectResponse>(XBULL_CONNECT, dispatchEventParams);
-    console.log(results);
+    // tslint:disable-next-line:max-line-length
+    const { detail } = await this.sendEventToContentScript<IConnectRequestPayload, IRuntimeConnectResponse | IRuntimeErrorResponse>(XBULL_CONNECT, dispatchEventParams);
+
+    if (detail.error) {
+      throw new Error(detail.errorMessage);
+    }
 
     this.isConnected = true;
 
-    return results.detail;
+    return detail;
   }
 
 }

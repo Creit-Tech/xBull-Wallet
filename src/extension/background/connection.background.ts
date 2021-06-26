@@ -9,7 +9,7 @@ import { getSitePermissions } from '~extension/background/state.background';
 
 export const requestConnection = async (message: IRuntimeConnectMessage): Promise<IRuntimeConnectResponse | IRuntimeErrorResponse> => {
   const payload = message.payload;
-  const savedPermissions = await getSitePermissions(payload.host);
+  const savedPermissions = await getSitePermissions(payload.origin + '_' + payload.host);
 
   if (!!savedPermissions) {
     return {
@@ -18,7 +18,7 @@ export const requestConnection = async (message: IRuntimeConnectMessage): Promis
     };
   }
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     chrome.windows.create({
       type: 'popup',
       url: 'index.html',
@@ -33,14 +33,39 @@ export const requestConnection = async (message: IRuntimeConnectMessage): Promis
       const extensionTab = popup?.tabs && popup.tabs[0].id;
 
       if (!extensionTab) {
-        return reject(new Error(`We couldn't open the extension`));
+        return resolve({
+          error: true,
+          errorMessage: `We couldn't open the extension`
+        });
       }
 
-      chrome.tabs.sendMessage(extensionTab, message,
-        (response: ISitePermissions) => {
-          resolve({ error: false, payload: response });
+      chrome.tabs.sendMessage(extensionTab, message, (response: IRuntimeConnectResponse | IRuntimeErrorResponse) => {
+        // Check if the response is formatted as expected
+        if (!response.error) {
+          if (
+            typeof response.payload.canRequestPublicKey === 'undefined'
+            || typeof response.payload.canRequestSign === 'undefined'
+          ) {
+            resolve({
+              error: true,
+              errorMessage: 'Response from extension was not the expected one'
+            });
+          } else {
+            resolve({
+              error: false,
+              payload: {
+                canRequestPublicKey: response.payload.canRequestPublicKey,
+                canRequestSign: response.payload.canRequestSign
+              }
+            });
+          }
+        } else {
+          resolve({
+            error: true,
+            errorMessage: response.errorMessage,
+          });
         }
-      );
+      });
     });
   });
 

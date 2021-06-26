@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import {
   IConnectRequestPayload,
@@ -11,6 +11,7 @@ import { SiteRequestComponent } from '~root/modules/background/components/site-r
 import { take, takeUntil } from 'rxjs/operators';
 import { merge, Subject } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 
 @Component({
   selector: 'app-background',
@@ -22,7 +23,9 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly modalsService: ModalsService,
+    private readonly componentCreatorService: ComponentCreatorService,
     private readonly sitesConnectionsService: SitesConnectionsService,
+    private readonly cd: ChangeDetectorRef,
   ) { }
 
   ngOnInit(): void {
@@ -68,56 +71,46 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async connectHandler(params: IConnectRequestPayload): Promise<IRuntimeConnectResponse | IRuntimeErrorResponse> {
-    const modalData = await this.modalsService.open<SiteRequestComponent>({
-      component: SiteRequestComponent,
-      componentInputs: [{
-        value: params.host, input: 'host'
-      }, {
-        value: params.origin, input: 'origin'
-      }, {
-        value: params.permissions, input: 'permissions'
-      }]
-    });
+    const ref = await this.componentCreatorService.createOnBody<SiteRequestComponent>(SiteRequestComponent);
+    ref.component.instance.host = params.host;
+    ref.component.instance.origin = params.origin;
+    ref.component.instance.permissions = params.permissions;
 
-    await new Promise(r => setTimeout(r, 500));
+    ref.open();
 
     return new Promise(resolve => {
-      modalData.modalContainer.instance.closeModal$
+      ref.component.instance.deny
         .asObservable()
         .pipe(take(1))
         .pipe(takeUntil(this.componentDestroyed$))
         .subscribe(() => {
           resolve({
             error: true,
-            errorMessage: 'Request denied',
+            errorMessage: 'Connection denied'
           });
-          modalData.modalContainer.instance.onClose();
+          ref.close();
         });
 
-      modalData.componentRef.instance.accept
+      ref.component.instance.accept
         .asObservable()
         .pipe(take(1))
-        .pipe(takeUntil(merge(
-          modalData.modalContainer.instance.closeModal$,
-          this.componentDestroyed$
-        )))
+        .pipe(takeUntil(this.componentDestroyed$))
         .subscribe(() => {
-          const siteConnection = {
-            _id: `${params.origin}_${params.host}`,
-            createdAt: new Date().getTime(),
-            canRequestPublicKey: params.permissions.canRequestPublicKey,
+          this.sitesConnectionsService.saveSiteConnection({
+            _id: params.origin + '_' + params.host,
             canRequestSign: params.permissions.canRequestSign,
-          };
+            canRequestPublicKey: params.permissions.canRequestPublicKey,
+            createdAt: new Date().getTime(),
+          });
 
-          this.sitesConnectionsService.saveSiteConnection(siteConnection);
           resolve({
             error: false,
             payload: {
-              canRequestPublicKey: siteConnection.canRequestPublicKey,
-              canRequestSign: siteConnection.canRequestSign,
+              canRequestPublicKey: params.permissions.canRequestPublicKey,
+              canRequestSign: params.permissions.canRequestSign,
             },
           });
-          modalData.modalContainer.instance.onClose();
+          ref.close();
         });
     });
   }

@@ -16,6 +16,7 @@ const storage = persistState({
     'wallets-operations',
     'UI/wallets-operations',
     'settings',
+    'sites-connections',
   ],
   preStorageUpdate(storeName: string, state: any): any {
     if (!!state.UIState) {
