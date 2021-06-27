@@ -1,10 +1,13 @@
 import {
   EventTypes,
   IConnectRequestPayload,
+  IGetPublicKeyRequestPayload,
   IRuntimeConnectResponse,
   IRuntimeErrorResponse,
+  IRuntimeGetPublicKeyResponse,
   ISitePermissions,
   XBULL_CONNECT,
+  XBULL_GET_PUBLIC_KEY,
 } from '../interfaces';
 
 class Sdk {
@@ -35,7 +38,7 @@ class Sdk {
     });
   }
 
-  async connect(permissions: IConnectRequestPayload['permissions']): Promise<IRuntimeConnectResponse> {
+  async connect(permissions: IConnectRequestPayload['permissions']): Promise<IRuntimeConnectResponse['payload']> {
     if (
       !permissions ||
       !permissions.canRequestPublicKey && !permissions.canRequestSign
@@ -58,7 +61,25 @@ class Sdk {
 
     this.isConnected = true;
 
-    return detail;
+    return detail.payload;
+  }
+
+  async getPublicKey(): Promise<string> {
+    const dispatchEventParams: IGetPublicKeyRequestPayload = {
+      origin: window.origin,
+      host: window.location.host,
+    };
+
+    const { detail } = await this.sendEventToContentScript<
+      IGetPublicKeyRequestPayload,
+      IRuntimeGetPublicKeyResponse | IRuntimeErrorResponse
+    >(XBULL_GET_PUBLIC_KEY, dispatchEventParams);
+
+    if (detail.error) {
+      throw new Error(detail.errorMessage);
+    }
+
+    return detail.payload;
   }
 
 }

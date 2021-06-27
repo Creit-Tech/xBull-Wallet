@@ -1,7 +1,7 @@
-import { SitesConnectionsState } from '~root/state';
+import { SitesConnectionsState, WalletsAccountsState } from '~root/state';
 import { ISitePermissions } from '~extension/interfaces';
 
-const getStore = () => new Promise<{ 'sites-connections': SitesConnectionsState }>((resolve, reject) => {
+const getStore = () => new Promise<{ 'sites-connections': SitesConnectionsState, 'wallets-accounts': WalletsAccountsState }>((resolve, reject) => {
   chrome.storage.local.get(['AkitaStores'], (items: { [key: string]: any }) => {
     if (chrome.runtime.lastError) {
       return reject(chrome.runtime.lastError);
@@ -25,4 +25,21 @@ export const getSitePermissions = async (host: string): Promise<ISitePermissions
     canRequestPublicKey: targetSite.canRequestPublicKey,
     canRequestSign: targetSite.canRequestSign,
   };
+};
+
+export const getActiveAccount = async () => {
+  const store = await getStore();
+  const walletsAccounts = store['wallets-accounts'];
+
+  if (walletsAccounts.active === null) {
+    throw new Error('There are no active account');
+  }
+
+  const activeAccount = walletsAccounts.entities && walletsAccounts.entities[walletsAccounts.active]
+
+  if (!activeAccount) {
+    throw new Error('There are no active account');
+  } else {
+    return activeAccount;
+  }
 };
