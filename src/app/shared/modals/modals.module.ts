@@ -7,10 +7,14 @@ import { PasswordFormComponent } from './components/password-form/password-form.
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ModalWrapperComponent } from './modal-wrapper/modal-wrapper.component';
+import { SignXdrComponent } from './components/sign-xdr/sign-xdr.component';
+import { SignPasswordComponent } from './components/sign-password/sign-password.component';
 
 const COMPONENTS = [
   SignRequestComponent,
   ModalWrapperComponent,
+  SignXdrComponent,
+  SignPasswordComponent
 ];
 
 @NgModule({

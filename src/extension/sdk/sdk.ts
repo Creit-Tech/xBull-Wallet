@@ -5,9 +5,11 @@ import {
   IRuntimeConnectResponse,
   IRuntimeErrorResponse,
   IRuntimeGetPublicKeyResponse,
+  IRuntimeSignXDRResponse,
+  ISignXDRRequestPayload,
   ISitePermissions,
   XBULL_CONNECT,
-  XBULL_GET_PUBLIC_KEY,
+  XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
 } from '../interfaces';
 
 class Sdk {
@@ -74,6 +76,25 @@ class Sdk {
       IGetPublicKeyRequestPayload,
       IRuntimeGetPublicKeyResponse | IRuntimeErrorResponse
     >(XBULL_GET_PUBLIC_KEY, dispatchEventParams);
+
+    if (detail.error) {
+      throw new Error(detail.errorMessage);
+    }
+
+    return detail.payload;
+  }
+
+  async signXDR(xdr: string): Promise<string> {
+    const dispatchEventParams: ISignXDRRequestPayload = {
+      origin: window.origin,
+      host: window.location.host,
+      xdr
+    };
+
+    const { detail } = await this.sendEventToContentScript<
+      ISignXDRRequestPayload,
+      IRuntimeSignXDRResponse | IRuntimeErrorResponse
+    >(XBULL_SIGN_XDR, dispatchEventParams);
 
     if (detail.error) {
       throw new Error(detail.errorMessage);

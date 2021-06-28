@@ -8,6 +8,7 @@ import {
   RendererFactory2, Type,
 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { ReplaySubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -27,16 +28,29 @@ export class ComponentCreatorService {
     this.renderer = rendererFactory.createRenderer(null, null);
   }
 
-  async createOnBody<T = any>(component: Type<T>): Promise<{ component: ComponentRef<T>; open: () => void; close: () => void }> {
+  async createOnBody<T = any>(component: Type<T>): Promise<{
+    component: ComponentRef<T>;
+    open: () => void;
+    close: () => Promise<any>,
+    destroyed$: ReplaySubject<void>
+  }> {
     const componentRef = this.componentFactoryResolver
       .resolveComponentFactory(component)
       .create(this.injector);
 
-    return {
+    const responseObject = {
+      destroyed$: new ReplaySubject<void>(),
       close: () => {
-        this.ngZone.run(() => {
-          this.appRef.detachView(componentRef.hostView);
-          componentRef.destroy();
+        return new Promise(resolve => {
+          this.ngZone.run(() => {
+            this.appRef.detachView(componentRef.hostView);
+            componentRef.onDestroy(() => {
+              responseObject.destroyed$.next();
+              responseObject.destroyed$.complete();
+              resolve(true);
+            });
+            componentRef.destroy();
+          });
         });
       },
       open: () => {
@@ -50,5 +64,7 @@ export class ComponentCreatorService {
       },
       component: componentRef,
     };
+
+    return responseObject;
   }
 }

@@ -1,3 +1,5 @@
+// @@ Deprecated, we will stop using this and use the sign-xdr instead
+
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, from, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsAccountsQuery, WalletsAssetsQuery, WalletsQuery } from '~root/state';
