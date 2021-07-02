@@ -47,6 +47,7 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     LoadingModule,
     ClipboardModule,
     SharedPipesModule,
+    ModalsModule,
   ],
 })
 export class WalletModule { }

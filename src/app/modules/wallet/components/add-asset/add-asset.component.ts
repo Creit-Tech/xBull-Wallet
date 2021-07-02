@@ -1,24 +1,28 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { TransactionBuilder, Operation, Asset, Account } from 'stellar-sdk';
 import { merge, Subject, Subscription } from 'rxjs';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 
 @Component({
   selector: 'app-add-asset',
   templateUrl: './add-asset.component.html',
   styleUrls: ['./add-asset.component.scss']
 })
-export class AddAssetComponent implements OnInit, OnDestroy {
+export class AddAssetComponent implements OnInit, AfterViewInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   addingAsset$ = this.walletsAssetsQuery.addingAsset$;
 
   @Output() assetAdded: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
+
+  showModal = false;
 
   form: FormGroupTyped<IAddAssetForm> = new FormGroup({
     assetIssuer: new FormControl('', [
@@ -40,9 +44,15 @@ export class AddAssetComponent implements OnInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
+    this.showModal = true;
   }
 
   ngOnDestroy(): void {
@@ -58,7 +68,7 @@ export class AddAssetComponent implements OnInit, OnDestroy {
     this.walletsAccountsQuery.getSelectedAccount$
       .pipe(take(1))
       .pipe(switchMap(selectedAccount => this.stellarSdkService.Server.loadAccount(selectedAccount._id)))
-      .pipe(switchMap(loadedAccount => {
+      .pipe(switchMap(async loadedAccount => {
         const account = new Account(loadedAccount.accountId(), loadedAccount.sequence);
         const transaction = new TransactionBuilder(account, {
           networkPassphrase: this.stellarSdkService.networkPassphrase,
@@ -73,47 +83,46 @@ export class AddAssetComponent implements OnInit, OnDestroy {
           .setTimeout(this.stellarSdkService.defaultTimeout)
           .build();
 
+        const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-        return this.modalsService.open<SignRequestComponent>({
-          component: SignRequestComponent,
-          componentInputs: [{
-            input: 'xdr',
-            value: transaction.toXDR()
-          }]
-        });
+        ref.component.instance.xdr = transaction.toXDR();
+
+        return ref;
       }))
       .pipe(take(1))
-      .subscribe(modalData => {
+      .subscribe(ref => {
 
-        modalData.componentRef.instance.accepted
+        ref.component.instance.accept
           .asObservable()
-          .pipe(switchMap(signedXDR => this.walletsAssetsService.addAssetToAccount(signedXDR)))
           .pipe(take(1))
           .pipe(takeUntil(this.componentDestroyed$))
+          .pipe(tap(async () => {
+            await ref.component.instance.onClose();
+            await ref.close();
+          }))
+          .pipe(switchMap(signedXDR => this.walletsAssetsService.addAssetToAccount(signedXDR)))
           .subscribe(() => {
-            modalData.modalContainer.instance.onClose();
             this.assetAdded.emit();
           });
 
-        modalData.componentRef.instance.deny
+        ref.component.instance.deny
           .asObservable()
           .pipe(take(1))
-          .pipe(takeUntil(this.componentDestroyed$))
+          .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
           .subscribe(() => {
-            modalData.modalContainer.instance.onClose();
+            ref.component.instance.onClose()
+              .then(() => ref.close());
           });
 
-        this.addingAsset$
-          .pipe(takeUntil(
-            merge(
-              modalData.modalContainer.instance.closeModal$,
-              modalData.componentRef.instance.deny,
-              this.componentDestroyed$
-            )
-          ))
-          .subscribe(addingAssetStatus => modalData.modalContainer.instance.loading = addingAssetStatus);
+        ref.open();
       });
 
+  }
+
+  async onClose(): Promise<void> {
+    this.showModal = false;
+    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
+    this.closed.emit();
   }
 
 }

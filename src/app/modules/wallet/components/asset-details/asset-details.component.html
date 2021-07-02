@@ -1,6 +1,6 @@
 <ng-container *ngIf="(asset$ | async) as asset">
-
-  <section class="relative w-full h-full">
+  <app-modal-wrapper [loading]="!!(removingAssets$ | async)" [showModal]="showModal" (close)="onClose()">
+    <section class="relative w-full h-full">
     <div class="w-full text-center mb-4">
       <h2 class="m-0 p-0 text-off-black font-bold text-xl">
         Asset: {{ asset.assetCode }}
@@ -97,5 +97,5 @@
 <!--      </div>-->
     </section>
   </section>
-
+  </app-modal-wrapper>
 </ng-container>

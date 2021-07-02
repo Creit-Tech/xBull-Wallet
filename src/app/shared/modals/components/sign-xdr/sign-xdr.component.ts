@@ -1,11 +1,9 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, from, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { ITransaction, WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
-import { filter, map, mergeAll, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { Operation } from 'stellar-base';
-import { PasswordFormComponent } from '~root/shared/modals/components/password-form/password-form.component';
-import { ModalsService } from '~root/shared/modals/modals.service';
 import { WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -91,17 +89,18 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
         this.signing$.next(true);
       }))
       .pipe(map(([password, selectedAccount]) => {
-        return this.cryptoService.decryptText(selectedAccount.secretKey, password)
+        return this.cryptoService.decryptText(selectedAccount.secretKey, password);
       }))
       .pipe(withLatestFrom(this.xdr$))
       .pipe(map(([secret, xdr]) => {
-        return this.stellarSdkService.signTransaction({ xdr, secret })
+        return this.stellarSdkService.signTransaction({ xdr, secret });
       }))
       .pipe(takeUntil(merge( this.componentDestroyed$, ref.destroyed$.asObservable() )))
       .subscribe(xdr => {
         this.signing$.next(false);
         this.accept.emit(xdr);
-        ref.close();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       }, error => {
         console.log(error);
         this.toastrService.open({

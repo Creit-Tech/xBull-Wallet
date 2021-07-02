@@ -1,11 +1,10 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
-import { filter, map, shareReplay, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { Account, Asset, TransactionBuilder, Operation } from 'stellar-base';
 import BigNumber from 'bignumber.js';
@@ -13,18 +12,22 @@ import { merge, Subject } from 'rxjs';
 import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 
 @Component({
   selector: 'app-send-funds',
   templateUrl: './send-funds.component.html',
   styleUrls: ['./send-funds.component.scss']
 })
-export class SendFundsComponent implements OnInit, OnDestroy {
+export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   @Output() paymentSent: EventEmitter<void> = new EventEmitter<void>();
+  @Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
+  showModal = false;
 
   form: FormGroupTyped<ISendFundsForm> = new FormGroup({
     publicKey: new FormControl('', [
@@ -89,9 +92,15 @@ export class SendFundsComponent implements OnInit, OnDestroy {
     private readonly walletsOperationsService: WalletsOperationsService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
+    this.showModal = true;
   }
 
   ngOnDestroy(): void {
@@ -139,39 +148,41 @@ export class SendFundsComponent implements OnInit, OnDestroy {
       .build()
       .toXDR();
 
-    const modalData = await this.modalsService.open<SignRequestComponent>({ component: SignRequestComponent });
+    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-    modalData.componentRef.instance.xdr = formattedXDR;
+    ref.component.instance.xdr = formattedXDR;
 
-    modalData.componentRef.instance.accepted
+    ref.component.instance.accept
       .asObservable()
       .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(tap(async () => {
+        await ref.component.instance.onClose();
+        await ref.close();
+      }))
       .pipe(switchMap((signedXdr) =>
         this.walletsOperationsService.sendPayment(signedXdr)
       ))
-      .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
         this.paymentSent.emit();
       });
 
-    modalData.componentRef.instance.deny
+    ref.component.instance.deny
       .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
 
-    this.sendingPayment$
-      .pipe(takeUntil(
-        merge(
-          modalData.modalContainer.instance.closeModal$,
-          modalData.componentRef.instance.deny,
-          this.componentDestroyed$
-        )
-      ))
-      .subscribe((removingAsset: boolean) => modalData.modalContainer.instance.loading = removingAsset);
+    ref.open();
+  }
+
+  async onClose(): Promise<void> {
+    this.showModal = false;
+    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
+    this.closed.emit();
   }
 
 }
