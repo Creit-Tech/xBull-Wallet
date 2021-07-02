@@ -17,6 +17,24 @@
     "storage"
   ],
   "background": {
-    "service_worker": "sw.js"
-  }
+    "service_worker": "background.js"
+  },
+  "content_scripts": [{
+    "js": [
+      "content-script.js"
+    ],
+    "matches": [
+      "https://*/*"
+    ],
+    "match_about_blank": true,
+    "all_frames": true
+  }],
+  "web_accessible_resources": [{
+    "resources": [
+      "sdk.js"
+    ],
+    "matches": [
+      "https://*/*"
+    ]
+  }]
 }

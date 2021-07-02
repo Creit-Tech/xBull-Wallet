@@ -1,14 +1,16 @@
 {
   "compileOnSave": false,
   "files": [
-    "./src/sw.ts"
+    "./src/extension/background/background.ts",
+    "./src/extension/sdk/sdk.ts",
+    "./src/extension/content-script/content-script.ts"
   ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
@@ -24,7 +26,13 @@
     ],
     "paths": {
       "~root/*": [
-        "./src/service-workers/*"
+        "./src/app/*"
+      ],
+      "~env": [
+        "./src/environments/environment.ts"
+      ],
+      "~extension/*": [
+        "./src/extension/*"
       ]
     }
   }

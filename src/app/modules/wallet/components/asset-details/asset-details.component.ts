@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   IWalletAsset,
   IWalletIssuedAsset,
@@ -10,16 +10,17 @@ import { merge, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 
 @Component({
   selector: 'app-asset-details',
   templateUrl: './asset-details.component.html',
   styleUrls: ['./asset-details.component.scss']
 })
-export class AssetDetailsComponent implements OnInit, OnDestroy {
+export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
   assetId$: ReplaySubject<IWalletAsset['_id']> = new ReplaySubject<IWalletAsset['_id']>();
   @Input() set assetId(data: IWalletAsset['_id']) {
@@ -27,6 +28,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
   }
 
   @Output() assetRemoved: EventEmitter<void> = new EventEmitter<void>();
+  @Output() close: EventEmitter<void> = new EventEmitter<void>();
 
   asset$ = this.assetId$
     .pipe(switchMap(assetId => this.walletsAssetsQuery.getAssetsById([assetId])))
@@ -42,6 +44,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
     .pipe(map(asset => !!asset && asset.assetFullDataLoaded));
 
   removingAssets$ = this.walletsAssetsQuery.removingAsset$;
+  showModal = false;
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
@@ -49,6 +52,7 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
     private readonly modalsService: ModalsService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
@@ -71,6 +75,11 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
         });
       }))
       .subscribe();
+  }
+
+  async ngAfterViewInit(): Promise<void> {
+    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
+    this.showModal = true;
   }
 
   ngOnDestroy(): void {
@@ -109,38 +118,39 @@ export class AssetDetailsComponent implements OnInit, OnDestroy {
       .build()
       .toXDR();
 
-    const modalData = await this.modalsService.open<SignRequestComponent>({ component: SignRequestComponent });
+    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-    modalData.componentRef.instance.xdr = formattedXDR;
+    ref.component.instance.xdr = formattedXDR;
 
-    modalData.componentRef.instance.accepted
+    ref.component.instance.accept
       .asObservable()
-      .pipe(switchMap(signedXdr => this.walletsAssetsService.removeAssetFromAccount(signedXdr)))
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(tap(async () => {
+        await ref.component.instance.onClose();
+        await ref.close();
+      }))
+      .pipe(switchMap(signedXdr => this.walletsAssetsService.removeAssetFromAccount(signedXdr)))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
         this.assetRemoved.emit();
       });
 
-    modalData.componentRef.instance.deny
+    ref.component.instance.deny
       .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
 
-    this.removingAssets$
-      .pipe(takeUntil(
-        merge(
-          modalData.modalContainer.instance.closeModal$,
-          modalData.componentRef.instance.deny,
-          this.componentDestroyed$
-        )
-      ))
-      .subscribe((removingAsset: boolean) => modalData.modalContainer.instance.loading = removingAsset);
+    ref.open();
+  }
 
+  async onClose(): Promise<void> {
+    this.showModal = false;
+    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
+    this.close.emit();
   }
 
 }

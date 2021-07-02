@@ -1,37 +1,40 @@
-<div class="w-full text-center mb-4">
-  <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-    Send Funds
-  </h2>
-</div>
+<app-modal-wrapper [loading]="!!(sendingPayment$ | async)" [showModal]="showModal" (close)="onClose()">
+  <div class="w-full text-center mb-4">
+    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+      Send Funds
+    </h2>
+  </div>
 
-<form [formGroup]="form" class="mb-2">
-  <div class="w-full mb-4">
-    <app-input mode="light" title="Public key" formControlName="publicKey" iconPath="/assets/icons/key.svg"></app-input>
+  <form [formGroup]="form" class="mb-2">
+    <div class="w-full mb-4">
+      <app-input mode="light" title="Public key" formControlName="publicKey" iconPath="/assets/icons/key.svg"></app-input>
+    </div>
+    <div class="w-full mb-4">
+      <app-input mode="light" title="Memo (optional)" formControlName="memo" iconPath="/assets/icons/tag.svg"></app-input>
+    </div>
+    <div *ngIf="selectOptions$ | async as selectOptions" class="w-full mb-4">
+      <app-select [options]="selectOptions" mode="light" title="Asset" formControlName="assetCode" iconPath="/assets/icons/type.svg"></app-select>
+    </div>
+    <div class="w-full">
+      <app-input mask="separator.8" mode="light" title="Amount" formControlName="amount" iconPath="/assets/icons/world-net.svg"></app-input>
+    </div>
+  </form>
+
+  <div class="w-full text-center text-label mb-7">
+    <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
+      Available: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
+    </ng-container>
+
+    <ng-template #notSelectedAsset>
+      Available: Asset not selected
+    </ng-template>
   </div>
-  <div class="w-full mb-4">
-    <app-input mode="light" title="Memo (optional)" formControlName="memo" iconPath="/assets/icons/tag.svg"></app-input>
-  </div>
-  <div *ngIf="selectOptions$ | async as selectOptions" class="w-full mb-4">
-    <app-select [options]="selectOptions" mode="light" title="Asset" formControlName="assetCode" iconPath="/assets/icons/type.svg"></app-select>
-  </div>
+
   <div class="w-full">
-    <app-input mask="0*.0000000" mode="light" title="Amount" formControlName="amount" iconPath="/assets/icons/world-net.svg"></app-input>
+    <button (click)="onSubmit()" [disabled]="form.invalid" class="w-full btn btn-success-alternative btn--small">
+      Send
+    </button>
   </div>
-</form>
 
-<div class="w-full text-center text-label mb-7">
-  <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
-    Available: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
-  </ng-container>
 
-  <ng-template #notSelectedAsset>
-    Available: Asset not selected
-  </ng-template>
-</div>
-
-<div class="w-full">
-  <button (click)="onSubmit()" [disabled]="form.invalid" class="w-full btn btn-success-alternative btn--small">
-    Send
-  </button>
-</div>
-
+</app-modal-wrapper>

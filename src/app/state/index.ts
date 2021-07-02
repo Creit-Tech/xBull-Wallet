@@ -20,3 +20,7 @@ export { WalletsOffersState, WalletsOffersStore } from './wallets-offers.store';
 
 export * from './settings.query';
 export { SettingsState, SettingsStore } from './settings.store';
+
+export * from './site-connection.model';
+export * from './sites-connections.query';
+export { SitesConnectionsState, SitesConnectionsStore } from './sites-connections.store';

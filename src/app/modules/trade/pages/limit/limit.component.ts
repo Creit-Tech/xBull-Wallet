@@ -8,10 +8,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import BigNumber from 'bignumber.js';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 
 @Component({
   selector: 'app-limit',
@@ -74,6 +75,7 @@ export class LimitComponent implements OnInit, OnDestroy {
     private readonly toastrService: ToastrService,
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletsOffersQuery: WalletsOffersQuery,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
@@ -139,26 +141,29 @@ export class LimitComponent implements OnInit, OnDestroy {
       .build()
       .toXDR();
 
-    const modalData = await this.modalsService.open<SignRequestComponent>({ component: SignRequestComponent });
+    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-    modalData.componentRef.instance.xdr = formattedXDR;
+    ref.component.instance.xdr = formattedXDR;
 
-    modalData.componentRef.instance.accepted
+    ref.component.instance.accept
       .asObservable()
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe((signedXdr) => {
         this.sendTradeOrder(signedXdr);
-        modalData.modalContainer.instance.onClose();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
 
-    modalData.componentRef.instance.deny
+    ref.component.instance.deny
       .asObservable()
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
+        ref.close();
       });
+
+    ref.open();
   }
 
   async sendTradeOrder(signedXdr: string): Promise<void> {

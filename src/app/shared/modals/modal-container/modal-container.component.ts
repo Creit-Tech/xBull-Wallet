@@ -1,3 +1,5 @@
+// @ DEPRECATED
+// Migrate everything from this one to the modal-wrapper one
 import {
   AfterViewInit,
   Component, ComponentFactoryResolver, ComponentRef,

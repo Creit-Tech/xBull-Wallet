@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
+import { merge, Subject, Subscription } from 'rxjs';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
@@ -10,6 +10,7 @@ import { WalletsAccountsService } from '~root/core/wallets/services/wallets-acco
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
 import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -35,6 +36,7 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly componentCreatorService: ComponentCreatorService,
     private readonly cdr: ChangeDetectorRef,
   ) { }
 
@@ -54,29 +56,39 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   }
 
   async addAsset(): Promise<void> {
-    const modalData = await this.modalsService.open<AddAssetComponent>({ component: AddAssetComponent });
+    const ref = await this.componentCreatorService.createOnBody<AddAssetComponent>(AddAssetComponent);
 
-    modalData.componentRef.instance.assetAdded
-      .asObservable()
+    merge(
+      ref.component.instance.assetAdded.asObservable(),
+      ref.component.instance.closed.asObservable()
+    )
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
         this.reloadSelectedAccount$.next();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
+
+    ref.open();
   }
 
   async sendFunds(): Promise<void> {
-    const modalData = await this.modalsService.open<SendFundsComponent>({ component: SendFundsComponent });
+    const ref = await this.componentCreatorService.createOnBody<SendFundsComponent>(SendFundsComponent);
 
-    modalData.componentRef.instance.paymentSent
-      .asObservable()
+    merge(
+      ref.component.instance.paymentSent.asObservable(),
+      ref.component.instance.closed.asObservable()
+    )
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
         this.reloadSelectedAccount$.next();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
+
+    ref.open();
   }
 
   receiveFunds(): void {
@@ -84,22 +96,23 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   }
 
   async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
-    const modalData = await this.modalsService.open<AssetDetailsComponent>({
-      component: AssetDetailsComponent,
-      componentInputs: [{
-        input: 'assetId',
-        value: this.walletsAssetsService.formatBalanceLineId(balanceLine)
-      }]
-    });
+    const ref = await this.componentCreatorService.createOnBody<AssetDetailsComponent>(AssetDetailsComponent);
 
-    modalData.componentRef.instance.assetRemoved
-      .asObservable()
+    ref.component.instance.assetId = this.walletsAssetsService.formatBalanceLineId(balanceLine);
+
+    merge(
+      ref.component.instance.assetRemoved.asObservable(),
+      ref.component.instance.close.asObservable(),
+    )
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
         this.reloadSelectedAccount$.next();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
+
+    ref.open();
   }
 
 }

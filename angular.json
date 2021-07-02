@@ -30,7 +30,9 @@
               "src/favicon.png",
               "src/assets",
               "src/manifest.json",
-              "src/sw.js"
+              "src/background.js",
+              "src/content-script.js",
+              "src/xbull-sdk.js"
             ],
             "styles": [
               "src/styles.scss"

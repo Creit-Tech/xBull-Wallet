@@ -11,6 +11,7 @@ import { ModalsModule } from '~root/shared/modals/modals.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from '~root/shared/toastr/toastr.module';
 import { NgxMaskModule } from 'ngx-mask';
+import { BackgroundModule } from '~root/modules/background/background.module';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { NgxMaskModule } from 'ngx-mask';
     HttpClientModule,
     ToastrModule.forRoot(),
     NgxMaskModule.forRoot(),
+    BackgroundModule,
   ],
   bootstrap: [AppComponent]
 })

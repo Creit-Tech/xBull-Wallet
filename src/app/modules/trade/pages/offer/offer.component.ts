@@ -6,7 +6,6 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery,
   WalletsOffersQuery,
-  WalletsOperationsQuery,
 } from '~root/state';
 import { filter, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
@@ -16,9 +15,10 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { TransactionBuilder, Operation, Account } from 'stellar-sdk';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
-import { Subject } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 
 @Component({
   selector: 'app-offer',
@@ -78,6 +78,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     private readonly walletsOffersQuery: WalletsOffersQuery,
     private readonly toastrService: ToastrService,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
@@ -112,26 +113,28 @@ export class OfferComponent implements OnInit, OnDestroy {
       .build()
       .toXDR();
 
-    const modalData = await this.modalsService.open<SignRequestComponent>({ component: SignRequestComponent });
+    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-    modalData.componentRef.instance.xdr = formattedXDR;
+    ref.component.instance.xdr = formattedXDR;
 
-    modalData.componentRef.instance.accepted
+    ref.component.instance.accept
       .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
       .subscribe((signedXdr) => {
         this.sendOffer(signedXdr);
-        modalData.modalContainer.instance.onClose();
+        ref.close();
       });
 
-    modalData.componentRef.instance.deny
+    ref.component.instance.deny
       .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
+        ref.close();
       });
+
+    ref.open();
   }
 
   async sendOffer(signedXdr: string): Promise<void> {

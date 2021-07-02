@@ -7,11 +7,12 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
-import { SignRequestComponent } from '~root/shared/modals/components/sign-request/sign-request.component';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { Subject } from 'rxjs';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 
 @Component({
   selector: 'app-swap',
@@ -24,7 +25,7 @@ export class SwapComponent implements OnInit, OnDestroy {
   form: FormGroupTyped<ISwapForm> = new FormGroup({
     fromAsset: new FormControl('', [Validators.required]),
     toAsset: new FormControl('', [Validators.required]),
-    amountToSwap: new FormControl('', [Validators.required, Validators.min(0)]),
+    amountToSwap: new FormControl('', [Validators.required]),
   }) as FormGroupTyped<ISwapForm>;
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
@@ -90,6 +91,7 @@ export class SwapComponent implements OnInit, OnDestroy {
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletsOffersQuery: WalletsOffersQuery,
     private readonly toastrService: ToastrService,
+    private readonly componentCreatorService: ComponentCreatorService,
   ) { }
 
   ngOnInit(): void {
@@ -152,26 +154,29 @@ export class SwapComponent implements OnInit, OnDestroy {
       .build()
       .toXDR();
 
-    const modalData = await this.modalsService.open<SignRequestComponent>({ component: SignRequestComponent });
+    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
-    modalData.componentRef.instance.xdr = formattedXDR;
+    ref.component.instance.xdr = formattedXDR;
 
-    modalData.componentRef.instance.accepted
+    ref.component.instance.accept
       .asObservable()
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe((signedXdr) => {
         this.sendSwapOrder(signedXdr);
-        modalData.modalContainer.instance.onClose();
+        ref.component.instance.onClose()
+          .then(() => ref.close());
       });
 
-    modalData.componentRef.instance.deny
+    ref.component.instance.deny
       .asObservable()
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(() => {
-        modalData.modalContainer.instance.onClose();
+        ref.close();
       });
+
+    ref.open()
   }
 
   async sendSwapOrder(signedXdr: string): Promise<void> {

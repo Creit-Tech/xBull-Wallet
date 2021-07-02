@@ -16,7 +16,6 @@ export const storageAkitaMiddleware: PersistStateStorage = {
   getItem(key: string): Promise<any> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(key, (items: { [key: string]: any }) => {
-        console.log({key, items})
         if (chrome.runtime.lastError) {
           return reject(chrome.runtime.lastError);
         } else {

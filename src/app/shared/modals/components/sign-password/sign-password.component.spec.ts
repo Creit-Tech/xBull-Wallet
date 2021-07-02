@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SignRequestComponent } from './sign-request.component';
+import { SignPasswordComponent } from './sign-password.component';
 
-describe('SignRequestComponent', () => {
-  let component: SignRequestComponent;
-  let fixture: ComponentFixture<SignRequestComponent>;
+describe('SignPasswordComponent', () => {
+  let component: SignPasswordComponent;
+  let fixture: ComponentFixture<SignPasswordComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SignRequestComponent ]
+      declarations: [ SignPasswordComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SignRequestComponent);
+    fixture = TestBed.createComponent(SignPasswordComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
