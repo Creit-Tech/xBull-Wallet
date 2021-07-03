@@ -16,6 +16,17 @@
 
           <div class="w-full" *ngIf="i !== 0"></div>
 
+          <ng-container *ngIf="operation.type === 'createAccount'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Create Acccount</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Amount to send:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.startingBalance | number: '0.0-7' }}</dd>
+          </ng-container>
+
           <ng-container *ngIf="operation.type === 'payment'">
             <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="break-all text-sm mb-3 w-full">Payment</dd>
