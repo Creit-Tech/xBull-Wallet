@@ -14,6 +14,7 @@ import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { ToastrService } from '~root/shared/toastr/toastr.service';
 
 @Component({
   selector: 'app-send-funds',
@@ -93,6 +94,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly toastrService: ToastrService,
   ) { }
 
   ngOnInit(): void {
@@ -128,8 +130,11 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     const transaction = new TransactionBuilder(targetAccount, {
       fee: this.stellarSdkService.fee,
       networkPassphrase: this.stellarSdkService.networkPassphrase,
-    })
-      .addOperation(
+    }).setTimeout(this.stellarSdkService.defaultTimeout);
+
+    try {
+      await this.stellarSdkService.Server.loadAccount(this.form.value.publicKey);
+      transaction.addOperation(
         Operation.payment({
           asset: selectedAsset._id === 'native'
             ? Asset.native()
@@ -137,8 +142,23 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
           destination: this.form.value.publicKey,
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
-      )
-      .setTimeout(this.stellarSdkService.defaultTimeout);
+      );
+    } catch (e) {
+      if (selectedAsset._id !== 'native') {
+        this.toastrService.open({
+          status: 'error',
+          message: `We can't send custom assets to an account that hasn't been created yet.`,
+          title: 'Oops!'
+        });
+        return;
+      }
+      transaction.addOperation(
+        Operation.createAccount({
+          destination: this.form.value.publicKey,
+          startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
+        })
+      );
+    }
 
     if (!!this.form.value.memo) {
       transaction.addMemo(new Memo('text', this.form.value.memo));
