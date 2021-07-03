@@ -14,7 +14,7 @@
       <dl>
         <ng-container *ngFor="let operation of (operations$ | async); let i = index">
 
-          <div class="w-full" *ngIf="i !== 0"></div>
+          <div class="w-full pt-2 mb-6 border-placeholder border-b-1 border-b-2" *ngIf="i !== 0"></div>
 
           <ng-container *ngIf="operation.type === 'createAccount'">
             <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
