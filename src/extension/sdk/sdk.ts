@@ -17,7 +17,7 @@ class Sdk {
 
   constructor() { }
 
-  sendEventToContentScript<T, R>(eventName: EventTypes, payload: T): Promise<CustomEvent<R>> {
+  private sendEventToContentScript<T, R>(eventName: EventTypes, payload: T): Promise<CustomEvent<R>> {
     return new Promise<CustomEvent<R>>((resolve) => {
       // We use this id to create a random event listener and avoid mixing messages
       const eventId = (new Date().getTime() + Math.random()).toString(16);
@@ -45,7 +45,7 @@ class Sdk {
       !permissions ||
       !permissions.canRequestPublicKey && !permissions.canRequestSign
     ) {
-      throw new Error('Value sent is not a valid');
+      throw new Error('Value sent is not valid');
     }
 
     const dispatchEventParams: IConnectRequestPayload = {

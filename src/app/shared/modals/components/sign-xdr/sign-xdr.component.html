@@ -100,10 +100,10 @@
             <!--          TODO: add the path-->
           </ng-container>
 
-          <ng-container *ngIf="operation.type === 'manageBuyOffer' || operation.type === 'manageSellOffer'">
+          <ng-container *ngIf="operation.type === 'manageBuyOffer' || operation.type === 'manageSellOffer' || operation.type === 'createPassiveSellOffer'">
             <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="break-all text-sm mb-3 w-full">
-              {{ operation.type === 'manageBuyOffer' ? 'Buy' : 'Sell' }} Offer
+              <ng-container *ngIf="operation.type === 'createPassiveSellOffer'">Passive</ng-container> {{ operation.type === 'manageBuyOffer' ? 'Buy' : 'Sell' }} Offer
             </dd>
 
             <dt class="text-base font-bold mb-1 w-full">Asset Selling:</dt>
@@ -135,10 +135,159 @@
             <dt class="text-base font-bold mb-1 w-full">Price per unit to Buy:</dt>
             <dd class="break-all text-sm mb-3 w-full">{{ operation.price | number: '0.0-7' }}</dd>
 
-            <ng-container *ngIf="operation.offerId && operation.offerId != '0'">
+            <ng-container *ngIf="operation.type !== 'createPassiveSellOffer' && operation.offerId && operation.offerId != '0'">
               <dt class="text-base font-bold mb-1 w-full">Offer ID:</dt>
               <dd class="break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
             </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'setOptions'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Set Options</dd>
+
+            <ng-container *ngIf="!!operation.inflationDest">
+              <dt class="text-base font-bold mb-1 w-full">Inflation destination:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.inflationDest }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.clearFlags">
+              <dt class="text-base font-bold mb-1 w-full">Clear flags:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.clearFlags }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.setFlags">
+              <dt class="text-base font-bold mb-1 w-full">Set flags:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.setFlags }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.masterWeight || operation.masterWeight == 0">
+              <dt class="text-base font-bold mb-1 w-full">Master Weight:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.masterWeight }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.lowThreshold || operation.lowThreshold == 0">
+              <dt class="text-base font-bold mb-1 w-full">Low Threshold:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.lowThreshold }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.medThreshold || operation.medThreshold == 0">
+              <dt class="text-base font-bold mb-1 w-full">Medium Threshold:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.medThreshold }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.highThreshold || operation.highThreshold == 0">
+              <dt class="text-base font-bold mb-1 w-full">High Threshold:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.highThreshold }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.homeDomain || operation.homeDomain === ''">
+              <dt class="text-base font-bold mb-1 w-full">Home Domain:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.homeDomain }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="!!operation.signer">
+              <dt class="text-base font-bold mb-1 w-full">Signer:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.signer | json }}</dd>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'allowTrust' || operation.type === 'setTrustLineFlags'">
+            <ng-container *ngIf="operation.type === 'allowTrust'">
+              <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+              <dd class="break-all text-sm mb-3 w-full">Allow Trust</dd>
+
+              <dt class="text-base font-bold mb-1 w-full">Authorized:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.authorize }}</dd>
+
+              <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.type === 'setTrustLineFlags'">
+              <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+              <dd class="break-all text-sm mb-3 w-full">Set Trust Line Flags</dd>
+
+              <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
+              <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+
+              <ng-container *ngIf="operation.flags.authorized">
+                <dt class="text-base font-bold mb-1 w-full">Authorized:</dt>
+                <dd class="break-all text-sm mb-3 w-full">{{ operation.flags.authorized }}</dd>
+              </ng-container>
+
+              <ng-container *ngIf="operation.flags.authorizedToMaintainLiabilities">
+                <dt class="text-base font-bold mb-1 w-full">Authorized To Maintain Liabilities:</dt>
+                <dd class="break-all text-sm mb-3 w-full">{{ operation.flags.authorizedToMaintainLiabilities }}</dd>
+              </ng-container>
+
+              <ng-container *ngIf="operation.flags.clawbackEnabled">
+                <dt class="text-base font-bold mb-1 w-full">Clawback Enabled:</dt>
+                <dd class="break-all text-sm mb-3 w-full">{{ operation.flags.clawbackEnabled }}</dd>
+              </ng-container>
+            </ng-container>
+
+            <dt class="text-base font-bold mb-1 w-full">Trustor:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.trustor }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'accountMerge'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Account Merge</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Destination:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'manageData'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Manage Data</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Name:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Value:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.value }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'bumpSequence'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Bump Sequence</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Bump to:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.bumpTo }}</dd>
+          </ng-container>
+
+<!--          <ng-container *ngIf="operation.type === 'createClaimableBalance'">-->
+<!--            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>-->
+<!--            <dd class="break-all text-sm mb-3 w-full">Create Claimable Balance</dd>-->
+
+<!--            <dt class="text-base font-bold mb-1 w-full">Amount:</dt>-->
+<!--            <dd class="break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>-->
+
+<!--            <dt class="text-base font-bold mb-1 w-full">Asset code:</dt>-->
+<!--            <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>-->
+
+<!--            <ng-container *ngIf="operation.asset.issuer">-->
+<!--              <dt class="text-base font-bold mb-1 w-full">Asset issuer:</dt>-->
+<!--              <dd class="break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>-->
+<!--            </ng-container>-->
+
+<!--          </ng-container>-->
+
+          <ng-container *ngIf="operation.type === 'beginSponsoringFutureReserves'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Begin Sponsoring Future Reserves</dd>
+
+            <dt class="text-base font-bold mb-1 w-full">Sponsored Id:</dt>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.sponsoredId }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'endSponsoringFutureReserves'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">End Sponsoring Future Reserves</dd>
           </ng-container>
 
           <ng-container *ngIf="!!operation.source">
