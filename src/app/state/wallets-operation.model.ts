@@ -11,7 +11,7 @@ export interface IWalletsOperationBase {
   createdAt: number; // Unix time
   pagingToken?: OperationRecord['paging_token'];
   operationRecord?: OperationRecord;
-  operationHandled: boolean; // this is a flag to be aware idf we can handle this type operation IE we know how to parse it.
+  operationHandled: boolean; // this is a flag to be aware if we can handle this type operation IE we know how to parse it.
 }
 
 export interface IWalletsPaymentOperation extends IWalletsOperationBase {
@@ -49,6 +49,13 @@ export function createWalletsOperation(params: ServerApi.OperationRecord & Pick<
   };
 
   switch (operationRecord.type) {
+    case Horizon.OperationResponseType.createAccount:
+      finalObj = {
+        ...finalObj,
+        operationHandled: true,
+      };
+      break;
+
     case Horizon.OperationResponseType.payment:
       finalObj = {
         ...finalObj,
