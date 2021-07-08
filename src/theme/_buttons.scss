@@ -69,6 +69,22 @@
     text-off-white;
 }
 
+.btn-error {
+  @apply bg-error
+    text-off-white;
+}
+
+.btn-error:hover {
+  @apply bg-transparent
+    text-error
+    border-error;
+}
+
+.btn-error:active {
+  @apply bg-error
+    text-off-white;
+}
+
 .btn-error-alternative {
   @apply bg-error-alternative
     text-off-white;

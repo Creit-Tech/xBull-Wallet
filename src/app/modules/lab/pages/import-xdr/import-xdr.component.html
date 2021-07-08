@@ -1,0 +1,31 @@
+<section class="w-full flex flex-col justify-center items-center py-8">
+  <div class="w-full px-6 mb-4">
+    <app-textarea title="XDR String" placeholder="Paste it here..."
+                  [formControl]="signControl"></app-textarea>
+  </div>
+
+  <div class="w-full flex flex-wrap px-4">
+    <div class="w-7/12 px-2 mb-4">
+      <button [disabled]="signedControl.invalid"
+              appClipboard
+              [textToCopy]="signedControl.value"
+              class="btn btn-primary btn--small w-full">
+        Copy Signed XDR
+      </button>
+    </div>
+
+    <div class="w-5/12 px-2 mb-4">
+      <button [disabled]="signControl.invalid"
+              (click)="onSing()"
+              class="btn btn-primary btn--small w-full">
+        Sign XDR
+      </button>
+    </div>
+
+    <div class="w-full px-2">
+      <button (click)="onBack()" class="btn btn-primary btn-primary--outline btn--small w-full">
+        Back
+      </button>
+    </div>
+  </div>
+</section>

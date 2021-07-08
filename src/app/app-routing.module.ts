@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from '~root/core/layouts/main-layout/main-layout.component';
 import { IsThereWalletsGuard } from '~root/core/wallets/guards/is-there-wallets.guard';
+import { LabComponent } from '~root/modules/lab/lab.component';
 
 const routes: Routes = [
   {
@@ -40,6 +41,21 @@ const routes: Routes = [
       .then(m => m.TradeModule)
   },
   {
+    path: 'lab',
+    component: MainLayoutComponent,
+    data: {
+      activeIcon: 'lab'
+    },
+    canActivate: [
+      IsThereWalletsGuard
+    ],
+    canActivateChild: [
+      IsThereWalletsGuard
+    ],
+    loadChildren: () => import('./modules/lab/lab.module')
+      .then(m => m.LabModule)
+  },
+  {
     path: 'settings',
     component: MainLayoutComponent,
     data: {
@@ -56,7 +72,7 @@ const routes: Routes = [
   },
   {
     path: '**', // TODO: update this once we have complete with the basic development of the welcome and dashboard
-    redirectTo: 'settings',
+    redirectTo: 'wallet',
   }
 ];
 
