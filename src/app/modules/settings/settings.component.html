@@ -4,6 +4,33 @@
   </p>
 
   <ul>
+    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+        routerLink="/settings/registered-wallets">
+      <div class="w-8/12 mr-auto">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Wallets
+        </p>
+      </div>
+      <div class="w-auto">
+        <p class="text-label text-sm text-bold">
+          {{ (selectedWallet$ | async)?.name }} >
+        </p>
+      </div>
+    </li>
+
+    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
+      <div class="w-8/12 mr-auto">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Horizon APIs
+        </p>
+      </div>
+      <div class="w-auto">
+        <p class="text-label text-sm text-bold">
+          Public Node
+        </p>
+      </div>
+    </li>
+
     <li class="flex w-full items-center justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
       <div class="w-8/12">
         <p class="m-0 text-sm font-bold text-off-white">

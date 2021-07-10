@@ -6,6 +6,7 @@ import { CheckboxControlValueAccessor, FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
+import { WalletsAccountsQuery, WalletsQuery } from '~root/state';
 
 @Component({
   selector: 'app-settings',
@@ -19,10 +20,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   advanceModeControl: FormControlTyped<boolean> = new FormControl(false);
 
+  selectedWallet$ = this.walletsQuery.getSelectedWallet$;
+  selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
+
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
     private readonly modalsService: ModalsService,
+    private readonly walletsQuery: WalletsQuery,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
   ) { }
 
   advanceModeStateSubscription: Subscription = this.advanceMode$

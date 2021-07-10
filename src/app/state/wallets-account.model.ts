@@ -7,6 +7,7 @@ export interface IWalletsAccount  {
   accountRecord?: ServerApi.AccountRecord;
   streamCreated: boolean;
   operationsStreamCreated: boolean;
+  name: string
 }
 
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
@@ -17,5 +18,6 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
     accountRecord: params.accountRecord,
     streamCreated: params.streamCreated,
     operationsStreamCreated: params.operationsStreamCreated,
+    name: params.name,
   };
 }

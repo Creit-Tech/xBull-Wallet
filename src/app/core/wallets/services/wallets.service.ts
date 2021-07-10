@@ -37,6 +37,7 @@ export class WalletsService {
           _id: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
           streamCreated: false,
+          name: `Account 0`,
           operationsStreamCreated: false,
           isCreated: false,  // We assume all accounts aren't created but then if it's actually created, we just set it correctly
         });
@@ -61,6 +62,10 @@ export class WalletsService {
       ...state,
       globalPasswordHash: hash,
     }));
+  }
+
+  updateWalletName(walletId: IWallet['_id'], name: string): void {
+    this.walletsStore.upsert(walletId, { name });
   }
 }
 

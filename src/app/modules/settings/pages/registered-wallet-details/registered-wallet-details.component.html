@@ -1,0 +1,66 @@
+<section class="w-full h-full flex flex-col py-4">
+  <div class="w-full px-4 mb-4">
+    <button routerLink="/settings/wallets" class="text-label font-semibold text-sm px-2">
+      Wallet details
+    </button>
+  </div>
+
+  <ul class="w-full flex flex-col h-full">
+    <li class="pointer-events-none flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
+      <div class="w-auto px-2">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Wallet Name:
+        </p>
+      </div>
+      <div class="w-auto px-2">
+        <p class="text-label text-sm text-bold">
+          {{ (wallet$ | async)?.name }}
+        </p>
+      </div>
+    </li>
+
+    <li class="pointer-events-none flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
+      <div class="w-auto px-2">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Wallet Type:
+        </p>
+      </div>
+      <div class="w-auto px-2">
+        <p class="text-label text-sm text-bold">
+          {{ (wallet$ | async)?.type }}
+        </p>
+      </div>
+    </li>
+
+    <li class="flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5 mb-auto">
+      <div class="w-auto px-2">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Wallet accounts:
+        </p>
+      </div>
+      <div class="w-auto px-2">
+        <p class="text-label text-sm text-bold">
+          {{ (selectedAccount$ | async)?.name }} >
+        </p>
+      </div>
+    </li>
+
+    <li class="w-full px-4 flex flex-wrap">
+      <div class="w-6/12 px-2 mb-4">
+        <button class="w-full btn btn-error btn--small">
+          Remove
+        </button>
+      </div>
+      <div class="w-6/12 px-2 mb-4">
+        <button (click)="onEditName()" class="w-full btn btn-primary btn--small">
+          Edit name
+        </button>
+      </div>
+      <div class="w-full px-2 mb-4">
+        <button routerLink="/settings/wallets" class="w-full btn btn-primary btn-primary--outline btn--small">
+          Go back
+        </button>
+      </div>
+    </li>
+  </ul>
+</section>
