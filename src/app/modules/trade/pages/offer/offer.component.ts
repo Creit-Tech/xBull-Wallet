@@ -95,7 +95,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     }
 
     const selectedAccount = await this.selectedAccount$.pipe(take(1)).toPromise();
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount._id);
+    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
 
     const transaction = new TransactionBuilder(new Account(loadedAccount.accountId(), loadedAccount.sequence), {
       fee: this.stellarSdkService.fee,

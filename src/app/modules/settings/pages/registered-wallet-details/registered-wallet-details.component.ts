@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { EditWalletNameComponent } from '~root/modules/settings/components/edit-wallet-name/edit-wallet-name.component';
-import { BehaviorSubject, forkJoin, merge, of, Subject } from 'rxjs';
 import { HardConfirmComponent } from '~root/shared/modals/components/hard-confirm/hard-confirm.component';
 import { withTransaction } from '@datorama/akita';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';

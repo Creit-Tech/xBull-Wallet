@@ -66,28 +66,28 @@ export class WalletsAccountsService {
     }
   }
 
-  getAccountData(accountId: string): Observable<IWalletsAccount> {
-    this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: true }));
-    const accountPromise = this.Server.accounts().accountId(accountId).call();
+  getAccountData(account: IWalletsAccount): Observable<IWalletsAccount> {
+    this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: true }));
+    const accountPromise = this.Server.accounts().accountId(account.publicKey).call();
 
     // TODO: change this IE remove the select entity logic and return the record instead
-    const walletAccount = this.walletsAccountsQuery.selectEntity(accountId);
+    const walletAccount = this.walletsAccountsQuery.selectEntity(account._id);
 
     return from(accountPromise)
       .pipe(catchError(error => {
-        this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: false }));
+        this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: false }));
         return (error instanceof NotFoundError)
           ? of(undefined)
           : throwError(error);
       }))
       .pipe(withLatestFrom(walletAccount))
       .pipe(map(([accountRecord, entity]) => {
-        this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: false }));
+        this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: false }));
         if (!entity) {
           throw new Error('This account does not exists in our wallet');
         }
 
-        this.saveAccountAndAssets(accountId, accountRecord);
+        this.saveAccountAndAssets(account._id, accountRecord);
 
         return entity;
       }));
@@ -106,11 +106,11 @@ export class WalletsAccountsService {
   createStream(account: IWalletsAccount): void {
     if (account && !account.streamCreated) {
       this.stellarSdkService.Server.accounts()
-        .accountId(account._id)
+        .accountId(account.publicKey)
         .stream({
           onmessage: accountRecord => {
-            this.saveAccountAndAssets(account._id, accountRecord);
-            this.walletsAccountsStore.upsert(account._id, state => ({ ...state, streamCreated: true }));
+            this.saveAccountAndAssets(account.publicKey, accountRecord);
+            this.walletsAccountsStore.upsert(account.publicKey, state => ({ ...state, streamCreated: true }));
           }
         });
     }

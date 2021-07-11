@@ -81,7 +81,7 @@ export class WalletsOperationsService {
   }): void {
     if (params.account && !params.account.operationsStreamCreated) {
       const streamBuilder = this.stellarSdkService.Server.operations()
-        .forAccount(params.account._id)
+        .forAccount(params.account.publicKey)
         .limit(10)
         .includeFailed(false);
 
@@ -96,7 +96,7 @@ export class WalletsOperationsService {
           onmessage: (operationRecord: any) => {
             this.walletsOperationsStore.upsertMany([createWalletsOperation({
               ...operationRecord,
-              ownerAccount: params.account._id,
+              ownerAccount: params.account.publicKey,
             })]);
           }
         });

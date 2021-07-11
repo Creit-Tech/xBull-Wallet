@@ -3,6 +3,7 @@ import { IWallet } from '~root/state/wallet.model';
 
 export interface IWalletsAccount  {
   _id: string; // this is the public key
+  publicKey: string;
   secretKey: string;
   isCreated: boolean;
   accountRecord?: ServerApi.AccountRecord;
@@ -15,6 +16,7 @@ export interface IWalletsAccount  {
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
   return {
     _id: params._id,
+    publicKey: params.publicKey,
     secretKey: params.secretKey,
     isCreated: params.isCreated,
     accountRecord: params.accountRecord,

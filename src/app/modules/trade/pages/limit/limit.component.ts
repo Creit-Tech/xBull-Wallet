@@ -94,7 +94,7 @@ export class LimitComponent implements OnInit, OnDestroy {
       this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.assetToBuy),
       this.form.value.amount,
     ).call();
-    const loadedAccountPromise = this.stellarSdkService.Server.loadAccount(selectedAccount._id);
+    const loadedAccountPromise = this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
 
     const [
       updatedPath,

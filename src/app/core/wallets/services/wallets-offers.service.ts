@@ -14,8 +14,8 @@ export class WalletsOffersService {
     private readonly walletsOffersStore: WalletsOffersStore,
   ) { }
 
-  async getAccountActiveOffers(accountId: IWalletsAccount['_id']) {
-    const response = await this.stellarSdkService.Server.offers().forAccount(accountId).call();
+  async getAccountActiveOffers(publicKey: IWalletsAccount['publicKey']) {
+    const response = await this.stellarSdkService.Server.offers().forAccount(publicKey).call();
     this.walletsOffersStore.add(response.records);
 
     return response;

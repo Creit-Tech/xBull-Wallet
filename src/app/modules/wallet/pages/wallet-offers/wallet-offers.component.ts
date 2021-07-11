@@ -23,7 +23,7 @@ export class WalletOffersComponent implements OnInit, OnDestroy {
   accountOffers$ = this.selectedAccount$
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(switchMap(selectedAccount => {
-      return this.walletsOffersQuery.getOffersByPublicKey(selectedAccount._id);
+      return this.walletsOffersQuery.getOffersByPublicKey(selectedAccount.publicKey);
     }));
 
   parsedAccountOffers$: Observable<Array<IParsedAccountOffer>> = this.accountOffers$
@@ -84,7 +84,7 @@ export class WalletOffersComponent implements OnInit, OnDestroy {
   requestOffersSubscription: Subscription = this.selectedAccount$
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(switchMap(selectedAccount => {
-      return this.walletsOffersService.getAccountActiveOffers(selectedAccount._id);
+      return this.walletsOffersService.getAccountActiveOffers(selectedAccount.publicKey);
     }))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe();

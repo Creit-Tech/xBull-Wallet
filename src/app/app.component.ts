@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
     .pipe(switchMap(account => {
       return of(account)
         .pipe(withLatestFrom(this.walletsOperationsQuery.selectAll({
-          filterBy: entity => entity.ownerAccount === account._id,
+          filterBy: entity => entity.ownerAccount === account.publicKey,
           sortBy: (entityA, entityB) => entityA.createdAt - entityB.createdAt,
         })));
     }))

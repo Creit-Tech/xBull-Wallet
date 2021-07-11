@@ -67,7 +67,7 @@ export class AddAssetComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.walletsAccountsQuery.getSelectedAccount$
       .pipe(take(1))
-      .pipe(switchMap(selectedAccount => this.stellarSdkService.Server.loadAccount(selectedAccount._id)))
+      .pipe(switchMap(selectedAccount => this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey)))
       .pipe(switchMap(async loadedAccount => {
         const account = new Account(loadedAccount.accountId(), loadedAccount.sequence);
         const transaction = new TransactionBuilder(account, {

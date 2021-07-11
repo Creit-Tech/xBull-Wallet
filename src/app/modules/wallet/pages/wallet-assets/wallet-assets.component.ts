@@ -43,7 +43,7 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   reloadSelectedAccountSubscription: Subscription = this.reloadSelectedAccount$
     .asObservable()
     .pipe(withLatestFrom(this.selectedAccount$))
-    .pipe(exhaustMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount._id)))
+    .pipe(exhaustMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount)))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe();
 

@@ -35,7 +35,7 @@ export class WalletComponent implements OnInit {
   ngOnInit(): void {
     this.selectedAccount$
       .pipe(take(1))
-      .pipe(exhaustMap(account => this.walletsAccountsService.getAccountData(account._id)))
+      .pipe(exhaustMap(account => this.walletsAccountsService.getAccountData(account)))
       .subscribe();
   }
 

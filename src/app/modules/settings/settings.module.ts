@@ -6,24 +6,27 @@ import { SettingsComponent } from './settings.component';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { DefaultFeeFormComponent } from './components/default-fee-form/default-fee-form.component';
 import { LoadingModule } from '~root/shared/loading/loading.module';
-import { AccountsComponent } from './pages/accounts/accounts.component';
 import { HorizonApisComponent } from './pages/horizon-apis/horizon-apis.component';
 import { RegisteredWalletsComponent } from './pages/registered-wallets/registered-wallets.component';
 import { RegisteredWalletDetailsComponent } from './pages/registered-wallet-details/registered-wallet-details.component';
 import { EditWalletNameComponent } from './components/edit-wallet-name/edit-wallet-name.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
-import { PressButtonModule } from '~root/shared/press-button/press-button.module';
+import { WalletsAccountsComponent } from './pages/wallets-accounts/wallets-accounts.component';
+import { HorizonApiDetailsComponent } from './components/horizon-api-details/horizon-api-details.component';
+import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon-api.component';
 
 
 @NgModule({
   declarations: [
     SettingsComponent,
     DefaultFeeFormComponent,
-    AccountsComponent,
     HorizonApisComponent,
     RegisteredWalletsComponent,
     RegisteredWalletDetailsComponent,
-    EditWalletNameComponent
+    EditWalletNameComponent,
+    WalletsAccountsComponent,
+    HorizonApiDetailsComponent,
+    AddHorizonApiComponent
   ],
   imports: [
     CommonModule,

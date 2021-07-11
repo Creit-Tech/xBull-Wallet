@@ -19,7 +19,7 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(exhaustMap(account => {
       return this.walletsOperationsQuery.selectAll({
-        filterBy: entity => entity.ownerAccount === account._id && entity.operationHandled,
+        filterBy: entity => entity.ownerAccount === account.publicKey && entity.operationHandled,
         sortBy: (entityA, entityB) => entityB.createdAt - entityA.createdAt,
       });
     }))
