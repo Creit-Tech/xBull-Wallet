@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
-  createWalletsAccount, IWalletAsset,
+  createWalletsAccount, IWallet, IWalletAsset,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAccountsStore,
@@ -114,6 +114,10 @@ export class WalletsAccountsService {
           }
         });
     }
+  }
+
+  removeAccounts(walletIds: Array<IWalletsAccount['_id']>): void {
+    this.walletsAccountsStore.remove(walletIds);
   }
 }
 

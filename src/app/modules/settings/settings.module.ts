@@ -12,6 +12,7 @@ import { RegisteredWalletsComponent } from './pages/registered-wallets/registere
 import { RegisteredWalletDetailsComponent } from './pages/registered-wallet-details/registered-wallet-details.component';
 import { EditWalletNameComponent } from './components/edit-wallet-name/edit-wallet-name.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
+import { PressButtonModule } from '~root/shared/press-button/press-button.module';
 
 
 @NgModule({

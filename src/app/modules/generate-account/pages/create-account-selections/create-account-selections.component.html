@@ -10,8 +10,8 @@
     <button (click)="restoreWallet()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
       Restore Wallet
     </button>
-    <button routerLink="/wallets" class="w-full btn btn-primary btn--small btn-primary--ghost">
-      Got back to wallets
+    <button *ngIf="isThereWallet$ | async" routerLink="/wallets" class="w-full btn btn-primary btn--small btn-primary--ghost">
+      Go back to wallets
     </button>
   </div>
 

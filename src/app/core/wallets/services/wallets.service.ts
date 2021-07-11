@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Keypair } from 'stellar-base';
+import { randomBytes } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { createWallet, createWalletsAccount, IWallet, IWalletsAccount, WalletsAccountsStore, WalletsStore } from '~root/state';
@@ -21,7 +22,7 @@ export class WalletsService {
     let keypair: Keypair;
     let newWallet: IWallet;
     let newWalletAccount: IWalletsAccount;
-    const newWalletId: number = this.walletsStore.getValue().ids?.length || 0;
+    const newWalletId: string = randomBytes(4).toString('hex');
 
     switch (params.type) {
       case 'mnemonic_phrase':
@@ -29,7 +30,7 @@ export class WalletsService {
         newWallet = createWallet({
           _id: newWalletId,
           type: 'mnemonic_phrase',
-          name: `Wallet ${newWalletId}`,
+          name: newWalletId,
           mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
         });
 
@@ -38,6 +39,7 @@ export class WalletsService {
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
           streamCreated: false,
           name: `Account 0`,
+          walletId: newWalletId,
           operationsStreamCreated: false,
           isCreated: false,  // We assume all accounts aren't created but then if it's actually created, we just set it correctly
         });
@@ -66,6 +68,10 @@ export class WalletsService {
 
   updateWalletName(walletId: IWallet['_id'], name: string): void {
     this.walletsStore.upsert(walletId, { name });
+  }
+
+  async removeWallets(walletId: Array<IWallet['_id']>): Promise<void> {
+    this.walletsStore.remove(walletId);
   }
 }
 

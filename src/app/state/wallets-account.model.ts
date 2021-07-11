@@ -1,4 +1,5 @@
 import { ServerApi } from 'stellar-sdk';
+import { IWallet } from '~root/state/wallet.model';
 
 export interface IWalletsAccount  {
   _id: string; // this is the public key
@@ -7,7 +8,8 @@ export interface IWalletsAccount  {
   accountRecord?: ServerApi.AccountRecord;
   streamCreated: boolean;
   operationsStreamCreated: boolean;
-  name: string
+  name: string;
+  walletId: IWallet['_id'];
 }
 
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
@@ -19,5 +21,6 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
     streamCreated: params.streamCreated,
     operationsStreamCreated: params.operationsStreamCreated,
     name: params.name,
+    walletId: params.walletId,
   };
 }
