@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Keypair } from 'stellar-base';
+import { Keypair, Networks } from 'stellar-base';
 import { randomBytes, createHash } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -30,9 +30,9 @@ export class WalletsService {
   async generateNewWallet(params: INewWalletType): Promise<string> {
     const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
     let keypair: Keypair;
-    let newWallet: IWallet;
-    let newWalletAccount: IWalletsAccount;
     const newWalletId: string = randomBytes(4).toString('hex');
+    let newWallet: IWallet;
+    let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
 
     switch (params.type) {
       case 'mnemonic_phrase':
@@ -44,21 +44,33 @@ export class WalletsService {
           mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
         });
 
-        newWalletAccount = createWalletsAccount({
-          _id: createHash('md5')
-            .update(`${activeHorizonApi.networkPassphrase}_${keypair.publicKey()}`)
-            .digest('hex'),
+        const newWalletAccount: Omit<IWalletsAccount, '_id'> = {
           publicKey: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
           streamCreated: false,
           name: randomBytes(4).toString('hex'),
           walletId: newWalletId,
           operationsStreamCreated: false,
-          isCreated: false,  // We assume all accounts aren't created but then if it's actually created, we just set it correctly
-        });
+          isCreated: false,
+        };
+
+        newWalletAccounts = {
+          mainnet: createWalletsAccount({
+            _id: createHash('md5')
+              .update(`${Networks.PUBLIC}_${keypair.publicKey()}`)
+              .digest('hex'),
+            ...newWalletAccount
+          }),
+          testnet: createWalletsAccount({
+            _id: createHash('md5')
+              .update(`${Networks.TESTNET}_${keypair.publicKey()}`)
+              .digest('hex'),
+            ...newWalletAccount
+          }),
+        };
 
         this.walletsStore.upsert(newWallet._id, newWallet);
-        this.walletsAccountsStore.upsert(newWalletAccount._id, newWalletAccount);
+        this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
         break;
 
       default:
@@ -66,7 +78,11 @@ export class WalletsService {
     }
 
     this.walletsStore.setActive(newWallet._id);
-    this.walletsAccountsStore.setActive(newWalletAccount._id);
+    this.walletsAccountsStore.setActive(
+      createHash('md5')
+        .update(`${activeHorizonApi.networkPassphrase}_${keypair.publicKey()}`)
+        .digest('hex')
+    );
 
     return keypair.publicKey();
   }

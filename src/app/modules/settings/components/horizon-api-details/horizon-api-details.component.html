@@ -28,7 +28,7 @@
     </dl>
   </section>
 
-  <div class="w-full">
+  <div *ngIf="(horizonApi$ | async)?.canRemove" class="w-full">
     <button (click)="onRemove()"
             class="w-full btn btn-error-alternative btn--small">
       Remove

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { IHorizonApi } from '~root/state';
 import { ReplaySubject } from 'rxjs';
-import { pluck } from 'rxjs/operators';
+import { pluck, take } from 'rxjs/operators';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 
 @Component({
@@ -33,10 +33,12 @@ export class HorizonApiDetailsComponent implements OnInit, AfterViewInit {
   async onRemove(): Promise<void> {
     const horizonApiId = await this.horizonApi$
       .asObservable()
+      .pipe(take(1))
       .pipe(pluck('_id'))
       .toPromise();
 
     this.horizonApisService.removeHorizonApi(horizonApiId);
+    this.close.emit();
   }
 
   async onClose(): Promise<void> {

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
+import { Networks } from 'stellar-sdk';
 
 @Component({
   selector: 'app-add-horizon-api',
@@ -11,6 +12,14 @@ import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 export class AddHorizonApiComponent implements OnInit, AfterViewInit {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
   showModal = false;
+
+  passphraseOptions = [{
+    name: 'Mainnet',
+    value: Networks.PUBLIC
+  }, {
+    name: 'Testnet',
+    value: Networks.TESTNET
+  }];
 
   form: FormGroupTyped<IAddHorizonApiForm> = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -42,6 +51,7 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
       networkPassphrase: this.form.value.passphrase,
       url: this.form.value.url,
       name: this.form.value.name,
+      canRemove: true,
     });
 
     this.close.emit();
