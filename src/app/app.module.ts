@@ -12,11 +12,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from '~root/shared/toastr/toastr.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundModule } from '~root/modules/background/background.module';
+import { SelectAccountComponent } from './core/layouts/main-layout/components/select-account/select-account.component';
+import { SelectHorizonApiComponent } from './core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
+import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainLayoutComponent
+    MainLayoutComponent,
+    SelectAccountComponent,
+    SelectHorizonApiComponent
   ],
   imports: [
     BrowserModule,
@@ -28,6 +34,8 @@ import { BackgroundModule } from '~root/modules/background/background.module';
     ToastrModule.forRoot(),
     NgxMaskModule.forRoot(),
     BackgroundModule,
+    FormsComponentsModule,
+    SharedPipesModule,
   ],
   providers: [
     {

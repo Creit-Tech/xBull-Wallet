@@ -13,6 +13,7 @@ import {
   WalletsStore,
 } from '~root/state';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
+import { transaction } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
@@ -27,29 +28,19 @@ export class WalletsService {
     private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
-  async generateNewWallet(params: INewWalletType): Promise<string> {
-    const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
-    let keypair: Keypair;
-    const newWalletId: string = randomBytes(4).toString('hex');
-    let newWallet: IWallet;
+  async createNewAccount(params: INewAccountType): Promise<Keypair> {
     let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
+    let keypair: Keypair;
 
     switch (params.type) {
       case 'mnemonic_phrase':
         keypair = await this.mnemonicPhraseService.getKeypairFromMnemonicPhrase(params.mnemonicPhrase, params.path);
-        newWallet = createWallet({
-          _id: newWalletId,
-          type: 'mnemonic_phrase',
-          name: newWalletId,
-          mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
-        });
-
         const newWalletAccount: Omit<IWalletsAccount, '_id'> = {
           publicKey: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
           streamCreated: false,
           name: randomBytes(4).toString('hex'),
-          walletId: newWalletId,
+          walletId: params.walletId,
           operationsStreamCreated: false,
           isCreated: false,
         };
@@ -69,8 +60,35 @@ export class WalletsService {
           }),
         };
 
-        this.walletsStore.upsert(newWallet._id, newWallet);
         this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
+        break;
+
+      default:
+        throw new Error(`We can not handle the type: ${params.type}`);
+    }
+
+    return keypair;
+  }
+
+  async generateNewWallet(params: INewWalletType): Promise<string> {
+    const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
+    const newWalletId: string = randomBytes(4).toString('hex');
+    let newWallet: IWallet;
+    let keypair: Keypair;
+
+    switch (params.type) {
+      case 'mnemonic_phrase':
+        newWallet = createWallet({
+          _id: newWalletId,
+          type: 'mnemonic_phrase',
+          name: newWalletId,
+          mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
+        });
+        this.walletsStore.upsert(newWallet._id, newWallet);
+        keypair = await this.createNewAccount({
+          ...params,
+          walletId: newWalletId,
+        });
         break;
 
       default:
@@ -85,6 +103,17 @@ export class WalletsService {
     );
 
     return keypair.publicKey();
+  }
+
+  @transaction()
+  async selectAccount(params: { publicKey: IWalletsAccount['publicKey']; walletId: IWallet['_id'] }): Promise<void> {
+    const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
+    this.walletsStore.setActive(params.walletId);
+    this.walletsAccountsStore.setActive(
+      createHash('md5')
+        .update(`${activeHorizonApi.networkPassphrase}_${params.publicKey}`)
+        .digest('hex')
+    );
   }
 
   savePasswordHash(password: string): void {
@@ -104,11 +133,21 @@ export class WalletsService {
   }
 }
 
+export type INewAccountType = INewAccountMnemonicPhraseType;
+
+export interface INewAccountMnemonicPhraseType {
+  type: 'mnemonic_phrase';
+  mnemonicPhrase: string;
+  path?: string;
+  walletId: IWallet['_id'];
+  password: string;
+}
+
 export type INewWalletType = INewWalletMnemonicPhraseType;
 
 export interface INewWalletMnemonicPhraseType {
   type: 'mnemonic_phrase';
   mnemonicPhrase: string;
-  password: string;
   path?: string;
+  password: string;
 }

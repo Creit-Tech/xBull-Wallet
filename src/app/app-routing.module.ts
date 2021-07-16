@@ -72,7 +72,7 @@ const routes: Routes = [
   },
   {
     path: '**', // TODO: update this once we have complete with the basic development of the welcome and dashboard
-    redirectTo: '/settings/horizon-apis',
+    redirectTo: '/wallet/assets',
   }
 ];
 

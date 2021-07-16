@@ -5,7 +5,7 @@
     </h2>
   </div>
 
-  <form class="mb-2">
+  <form (ngSubmit)="onConfirm()" class="mb-2">
     <div class="w-full">
       <app-input type="text" mode="light" title="Wallet Name"
                  [formControl]="nameField"

@@ -14,6 +14,8 @@ import { ModalsModule } from '~root/shared/modals/modals.module';
 import { WalletsAccountsComponent } from './pages/wallets-accounts/wallets-accounts.component';
 import { HorizonApiDetailsComponent } from './components/horizon-api-details/horizon-api-details.component';
 import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon-api.component';
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import { AddAccountComponent } from './components/add-account/add-account.component';
 
 
 @NgModule({
@@ -26,7 +28,8 @@ import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon
     EditWalletNameComponent,
     WalletsAccountsComponent,
     HorizonApiDetailsComponent,
-    AddHorizonApiComponent
+    AddHorizonApiComponent,
+    AddAccountComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +37,7 @@ import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon
     FormsComponentsModule,
     LoadingModule,
     ModalsModule,
+    SharedPipesModule,
   ],
 })
 export class SettingsModule { }

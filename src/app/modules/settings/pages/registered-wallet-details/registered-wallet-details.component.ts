@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
-import { WalletsAccountsQuery, WalletsQuery } from '~root/state';
+import { BehaviorSubject, pipe, Subject } from 'rxjs';
+import { filter, map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { EditWalletNameComponent } from '~root/modules/settings/components/edit-wallet-name/edit-wallet-name.component';
 import { HardConfirmComponent } from '~root/shared/modals/components/hard-confirm/hard-confirm.component';
 import { withTransaction } from '@datorama/akita';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { AddAccountComponent } from '~root/modules/settings/components/add-account/add-account.component';
 
 @Component({
   selector: 'app-registered-wallet-details',
@@ -25,6 +26,22 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
 
   wallet$ = this.walletId$
     .pipe(switchMap(walletId => this.walletsQuery.selectEntity(walletId)));
+
+  walletAccounts$: Observable<IWalletsAccount[]> = this.wallet$
+    .pipe(filter<any>(wallet => !!wallet))
+    .pipe(switchMap((wallet: IWallet) =>
+      this.walletsAccountsQuery.selectAll({ filterBy: entity => entity.walletId === wallet._id })
+    ));
+
+  groupedWalletAccounts$: Observable<IWalletsAccount[]> = this.walletAccounts$
+    .pipe(map(accounts =>
+      accounts.reduce((all: { [publicKey: string]: IWalletsAccount }, current) => {
+        return !all[current.publicKey]
+          ? ({ ...all, [current.publicKey]: current })
+          : all;
+      }, {})
+    ))
+    .pipe(map(obj => Object.values(obj)));
 
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
@@ -44,6 +61,33 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  async onCreateAccount(): Promise<void> {
+    const [
+      ref,
+      wallet
+    ] = await Promise.all([
+      this.componentCreatorService.createOnBody<AddAccountComponent>(AddAccountComponent),
+      this.wallet$.pipe(take(1)).toPromise()
+    ]);
+
+    if (!wallet) {
+      return;
+    }
+
+    ref.component.instance.parentWallet = wallet;
+
+    ref.component.instance.close
+      .asObservable()
+      .pipe(pipe(take(1)))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        ref.component.instance.onClose()
+          .then(() => ref.close());
+      });
+
+    ref.open();
   }
 
   async onEditName(): Promise<void> {
