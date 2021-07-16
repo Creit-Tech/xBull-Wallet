@@ -30,8 +30,9 @@
 
   <div *ngIf="(horizonApi$ | async)?.canRemove" class="w-full">
     <button (click)="onRemove()"
+            [disabled]="(selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id"
             class="w-full btn btn-error-alternative btn--small">
-      Remove
+      {{ (selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id ? "Horizon API being used" : 'Remove' }}
     </button>
   </div>
 </app-modal-wrapper>

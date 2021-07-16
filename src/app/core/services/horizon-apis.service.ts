@@ -19,4 +19,8 @@ export class HorizonApisService {
   removeHorizonApi(horizonId: IHorizonApi['_id']): void {
     this.horizonApisStore.remove(horizonId);
   }
+
+  selectHorizonApi(horizonId: IHorizonApi['_id']): void {
+    this.horizonApisStore.setActive(horizonId);
+  }
 }

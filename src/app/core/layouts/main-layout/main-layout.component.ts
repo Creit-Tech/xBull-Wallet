@@ -6,6 +6,7 @@ import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SelectAccountComponent } from '~root/core/layouts/main-layout/components/select-account/select-account.component';
 import { Subject } from 'rxjs';
+import { SelectHorizonApiComponent } from '~root/core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -39,6 +40,21 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
 
   async onAccountClicked(): Promise<void> {
     const ref = await this.componentCreatorService.createOnBody<SelectAccountComponent>(SelectAccountComponent);
+
+    ref.component.instance.close
+      .asObservable()
+      .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        ref.component.instance.onClose()
+          .then(() => ref.close());
+      });
+
+    ref.open();
+  }
+
+  async onHorizonApiClicked(): Promise<void> {
+    const ref = await this.componentCreatorService.createOnBody<SelectHorizonApiComponent>(SelectHorizonApiComponent);
 
     ref.component.instance.close
       .asObservable()

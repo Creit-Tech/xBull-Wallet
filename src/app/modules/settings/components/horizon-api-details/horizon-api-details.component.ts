@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { IHorizonApi } from '~root/state';
+import { HorizonApisQuery, IHorizonApi } from '~root/state';
 import { ReplaySubject } from 'rxjs';
 import { pluck, take } from 'rxjs/operators';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
@@ -18,8 +18,11 @@ export class HorizonApiDetailsComponent implements OnInit, AfterViewInit {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
   showModal = false;
 
+  selectedHorizonApi$: Observable<IHorizonApi> = this.horizonApisQuery.getSelectedHorizonApi$;
+
   constructor(
     private readonly horizonApisService: HorizonApisService,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   ngOnInit(): void {

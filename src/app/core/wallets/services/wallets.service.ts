@@ -106,7 +106,7 @@ export class WalletsService {
   }
 
   @transaction()
-  async selectAccount(params: { publicKey: IWalletsAccount['publicKey']; walletId: IWallet['_id'] }): Promise<void> {
+  async selectAccount(params: { publicKey: IWalletsAccount['publicKey']; walletId: IWallet['_id']; }): Promise<void> {
     const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
     this.walletsStore.setActive(params.walletId);
     this.walletsAccountsStore.setActive(

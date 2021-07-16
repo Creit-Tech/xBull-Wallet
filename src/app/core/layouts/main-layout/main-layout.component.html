@@ -4,7 +4,7 @@
 
     <div class="flex flex-col items-end pr-2 border-r-2 transition border-transparent hover:border-placeholder">
       <p (click)="onAccountClicked()" class="cursor-pointer m-0 mb-2 text-off-white font-bold">Account {{ (activeAccount$ | async)?.name }}</p>
-      <p class="cursor-pointer m-0 text-placeholder">{{ (activeHorizonApi$ | async)?.name }}</p>
+      <p (click)="onHorizonApiClicked()" class="cursor-pointer m-0 text-placeholder">{{ (activeHorizonApi$ | async)?.name }}</p>
     </div>
   </header>
 
