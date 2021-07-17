@@ -6,13 +6,15 @@
   </div>
 
   <ul class="w-full mb-8">
-    <li class="w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-4 text-body hover:text-placeholder"
-        *ngFor="let horizonApi of (horizonApis | async); let i = index"
-        (click)="onHorizonApiSelected(horizonApi)"
-        [class.pointer-events-none]="(selectedHorizonApi$ | async)?._id === horizonApi?._id">
-      <p class="m-0 text-sm font-bold text-label">
-        {{ i }}: {{ horizonApi.name }} <ng-container *ngIf="(selectedHorizonApi$ | async)?._id === horizonApi?._id">(Active)</ng-container>
-      </p>
-    </li>
+    <ng-container *ngFor="let horizonApi of (horizonApis | async); let i = index">
+      <li class="w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-4 text-body hover:text-placeholder"
+          *ngIf="(advanceMode$ | async) || !horizonApi.canRemove"
+          (click)="onHorizonApiSelected(horizonApi)"
+          [class.pointer-events-none]="(selectedHorizonApi$ | async)?._id === horizonApi?._id">
+        <p class="m-0 text-sm font-bold text-label">
+          {{ i }}: {{ horizonApi.name }} <ng-container *ngIf="(selectedHorizonApi$ | async)?._id === horizonApi?._id">(Active)</ng-container>
+        </p>
+      </li>
+    </ng-container>
   </ul>
 </app-modal-wrapper>

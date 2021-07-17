@@ -1,10 +1,19 @@
 <section class="w-full h-full flex flex-col justify-between">
-  <header class="h-20 bg-ash flex items-center justify-between pl-6 pr-4">
+  <header class="h-20 bg-ash flex items-center justify-between px-6">
     <img src="/assets/images/xbull-no-background.svg" class="h-11" alt="xbull-logo">
 
-    <div class="flex flex-col items-end pr-2 border-r-2 transition border-transparent hover:border-placeholder">
-      <p (click)="onAccountClicked()" class="cursor-pointer m-0 mb-2 text-off-white font-bold">Account {{ (activeAccount$ | async)?.name }}</p>
-      <p (click)="onHorizonApiClicked()" class="cursor-pointer m-0 text-placeholder">{{ (activeHorizonApi$ | async)?.name }}</p>
+    <div class="flex flex-col items-end">
+      <p (click)="onAccountClicked()"
+         *ngIf="advanceMode$ | async"
+         class="border-b-2 border-transparent hover:border-placeholder transition cursor-pointer m-0 mb-1 text-off-white font-bold">
+        Account {{ (activeAccount$ | async)?.name }}
+      </p>
+
+      <p (click)="onHorizonApiClicked()"
+         [class.text-sm]="!(advanceMode$ | async)"
+         class="border-b-2 border-transparent hover:border-placeholder transition cursor-pointer m-0 text-placeholder">
+        {{ (activeHorizonApi$ | async)?.name }}
+      </p>
     </div>
   </header>
 

@@ -20,7 +20,7 @@ export class ToastrComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    timer(5000)
+    timer(2500)
       .subscribe(() => this.onClose());
   }
 

@@ -2,9 +2,10 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
 import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
-import { IWalletsAccount, IWalletsOperation, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { debounceTime, distinctUntilKeyChanged, exhaustMap, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { HorizonApisQuery, IWalletsAccount, IWalletsOperation, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
+import { debounceTime, distinctUntilKeyChanged, exhaustMap, filter, map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Order } from '@datorama/akita';
+import { Networks } from 'stellar-base';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -13,7 +14,7 @@ import { Order } from '@datorama/akita';
 })
 export class WalletTransactionsComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
-  selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
+  selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
   accountOperations$: Observable<IWalletsOperation[]> = this.selectedAccount$
     .pipe(filter(account => !!account))
     .pipe(distinctUntilKeyChanged('_id'))
@@ -25,15 +26,16 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     }))
     .pipe(debounceTime(10))
 
-    // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
-    // TODO: We need to update this
-    //.pipe(tap(() => setTimeout(() => this.cdr.detectChanges(), 10)));
+  weAreInTestNet$ = this.horizonApisQuery.getSelectedHorizonApi$
+    .pipe(pluck('networkPassphrase'))
+    .pipe(map(networkPassphrase => networkPassphrase === Networks.TESTNET));
 
   constructor(
     private readonly modalsService: ModalsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly cdr: ChangeDetectorRef,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   ngOnInit(): void {

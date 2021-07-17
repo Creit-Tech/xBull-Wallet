@@ -36,35 +36,36 @@ export class BackgroundComponent implements OnInit, OnDestroy {
       .runtime
       .onMessage
       .addListener((message: RuntimeMessage, sender, sendResponse) => {
-        console.log(message);
+        const sendResponseAndClose = (response: RuntimeResponse) => {
+          sendResponse(response);
+          window.close();
+        };
+
         let runtimeResponse: RuntimeResponse;
         switch (message.event) {
           case XBULL_CONNECT_BACKGROUND:
             this.connectHandler(message.payload)
-              .then((response) => {
-                runtimeResponse = response;
-                sendResponse(runtimeResponse);
-              })
+              .then(sendResponseAndClose)
               .catch(e => {
                 console.error(e);
                 runtimeResponse = {
                   error: true,
                   errorMessage: 'Connection failed',
                 };
-                sendResponse(runtimeResponse);
+                sendResponseAndClose(runtimeResponse);
               });
             break;
 
           case XBULL_SIGN_XDR_BACKGROUND:
             this.signXDRHandler(message.payload)
-              .then(sendResponse)
+              .then(sendResponseAndClose)
               .catch(e => {
                 console.error(e);
                 runtimeResponse = {
                   error: true,
                   errorMessage: 'Connection failed',
                 };
-                sendResponse(runtimeResponse);
+                sendResponseAndClose(runtimeResponse);
               });
             break;
 
@@ -73,7 +74,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
               error: true,
               errorMessage: 'Message event from background not supported',
             };
-            sendResponse(runtimeResponse);
+            sendResponseAndClose(runtimeResponse);
             break;
         }
 

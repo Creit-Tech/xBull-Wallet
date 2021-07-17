@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { HorizonApisQuery, IHorizonApi, WalletsAccountsQuery } from '~root/state';
+import { HorizonApisQuery, IHorizonApi, SettingsQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
@@ -22,12 +22,15 @@ export class SelectHorizonApiComponent implements OnInit, AfterViewInit, OnDestr
 
   selectedWalletAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
+  advanceMode$ = this.settingsQuery.advanceMode$;
+
   constructor(
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly horizonApisService: HorizonApisService,
     private readonly walletsService: WalletsService,
     private readonly toastrService: ToastrService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngOnInit(): void {

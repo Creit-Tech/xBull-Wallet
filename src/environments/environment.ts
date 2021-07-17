@@ -1,7 +1,9 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-import { Networks } from 'stellar-base';  // Included with Angular CLI.
+// Included with Angular CLI.
+
+import { Networks } from 'stellar-base';
 
 export const ENV = 'ENVIRONMENT';
 
