@@ -1,3 +1,5 @@
+import { Server } from 'stellar-sdk';
+
 export interface IHorizonApi {
   _id: string;
   name: string;
@@ -6,7 +8,7 @@ export interface IHorizonApi {
   canRemove: boolean;
 }
 
-export function createHorizonApi(params: IHorizonApi): IHorizonApi {
+export function createHorizonApi(params: Omit<IHorizonApi, 'Server'>): IHorizonApi {
   return {
     _id: params._id,
     name: params.name,

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
-  createWalletsAccount, IWallet, IWalletAsset,
+  createWalletsAccount, IHorizonApi, IWallet, IWalletAsset,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAccountsStore,
@@ -20,13 +20,6 @@ import BigNumber from 'bignumber.js';
   providedIn: 'root'
 })
 export class WalletsAccountsService {
-  // TODO: Make this optional before launching the app IE add a settings store
-  get Server(): Server {
-    return new Server('https://horizon-testnet.stellar.org');
-  }
-
-  accountStream?: () => void;
-
   constructor(
     private readonly walletsAccountsStore: WalletsAccountsStore,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -66,9 +59,9 @@ export class WalletsAccountsService {
     }
   }
 
-  getAccountData(account: IWalletsAccount): Observable<IWalletsAccount> {
+  getAccountData({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): Observable<IWalletsAccount> {
     this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: true }));
-    const accountPromise = this.Server.accounts().accountId(account.publicKey).call();
+    const accountPromise = new Server(horizonApi.url).accounts().accountId(account.publicKey).call();
 
     // TODO: change this IE remove the select entity logic and return the record instead
     const walletAccount = this.walletsAccountsQuery.selectEntity(account._id);
@@ -103,14 +96,14 @@ export class WalletsAccountsService {
     }));
   }
 
-  createStream(account: IWalletsAccount): void {
+  createStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
     if (account && !account.streamCreated) {
-      this.stellarSdkService.Server.accounts()
+      new Server(horizonApi.url).accounts()
         .accountId(account.publicKey)
         .stream({
           onmessage: accountRecord => {
-            this.saveAccountAndAssets(account.publicKey, accountRecord);
-            this.walletsAccountsStore.upsert(account.publicKey, state => ({ ...state, streamCreated: true }));
+            this.saveAccountAndAssets(account._id, accountRecord);
+            this.walletsAccountsStore.upsert(account._id, state => ({ ...state, streamCreated: true }));
           }
         });
     }

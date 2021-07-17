@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { of, pipe, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilKeyChanged, filter, switchMap, withLatestFrom } from 'rxjs/operators';
+import { HorizonApisQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
+import { combineLatest, of, pipe, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilKeyChanged, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Order, selectPersistStateInit } from '@datorama/akita';
 import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 
@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsOperationsService: WalletsOperationsService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   createWalletsOperationsQuery: Subscription = selectPersistStateInit()
@@ -43,12 +44,23 @@ export class AppComponent implements OnInit {
     });
 
   createWalletsAccountsQuery: Subscription = selectPersistStateInit()
-    .pipe(switchMap(() => this.walletsAccountsQuery.getSelectedAccount$))
-    .pipe(filter(account => !!account))
-    .pipe(distinctUntilKeyChanged('_id'))
+    .pipe(switchMap(() => {
+      const selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$
+        .pipe(filter(account => !!account))
+        .pipe(distinctUntilKeyChanged('_id'));
+
+      const selectedHorizonApi$ = this.horizonApisQuery.getSelectedHorizonApi$
+        .pipe(filter(horizon => !!horizon))
+        .pipe(distinctUntilKeyChanged('_id'));
+
+      return combineLatest([
+        selectedAccount$,
+        selectedHorizonApi$
+      ]);
+    }))
     .pipe(debounceTime(100))
-    .subscribe((account) => {
-      this.walletsAccountsService.createStream(account);
+    .subscribe(([account, horizonApi]) => {
+      this.walletsAccountsService.createStream({ account, horizonApi });
     });
 
   ngOnInit(): void {
