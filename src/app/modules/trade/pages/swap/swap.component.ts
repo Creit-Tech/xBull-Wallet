@@ -110,7 +110,7 @@ export class SwapComponent implements OnInit, OnDestroy {
       this.form.value.amountToSwap,
       [this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.toAsset)]
     ).call();
-    const loadedAccountPromise = this.stellarSdkService.Server.loadAccount(selectedAccount._id);
+    const loadedAccountPromise = this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
 
     const [
       updatedPath,

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset } from 'stellar-sdk';
-import { IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/state';
+import { IHorizonApi, IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/state';
 import { from, of } from 'rxjs';
 import { map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -13,9 +13,6 @@ import { OfferAsset } from 'stellar-sdk/lib/types/offer';
 })
 export class WalletsAssetsService {
   // TODO: Make this optional before launching the app IE add a settings store
-  get Server(): Server {
-    return new Server('https://horizon-testnet.stellar.org');
-  }
 
   constructor(
     private readonly walletsAssetsStore: WalletsAssetsStore,
@@ -40,8 +37,9 @@ export class WalletsAssetsService {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
+    horizonApi: IHorizonApi,
   }): Observable<ServerApi.AssetRecord> {
-    const recordPromise = this.Server.assets()
+    const recordPromise = new Server(data.horizonApi.url).assets()
       .forCode(data.assetCode)
       .forIssuer(data.assetIssuer)
       .call();
@@ -69,8 +67,9 @@ export class WalletsAssetsService {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
+    horizonApi: IHorizonApi,
   }): Observable<ServerApi.AccountRecord> {
-    const recordPromise = this.Server.accounts()
+    const recordPromise = new Server(data.horizonApi.url).accounts()
       .accountId(data.assetIssuer)
       .call();
 

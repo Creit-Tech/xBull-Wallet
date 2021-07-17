@@ -7,7 +7,7 @@ import OperationRecord = ServerApi.OperationRecord;
 
 export interface IWalletsOperationBase {
   _id: string;
-  ownerAccount: IWalletsAccount['_id'];
+  ownerAccount: IWalletsAccount['publicKey'];
   createdAt: number; // Unix time
   pagingToken?: OperationRecord['paging_token'];
   operationRecord?: OperationRecord;

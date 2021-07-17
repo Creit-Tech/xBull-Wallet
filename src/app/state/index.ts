@@ -24,3 +24,7 @@ export { SettingsState, SettingsStore } from './settings.store';
 export * from './site-connection.model';
 export * from './sites-connections.query';
 export { SitesConnectionsState, SitesConnectionsStore } from './sites-connections.store';
+
+export * from './horizon-api.model';
+export * from './horizon-apis.query';
+export { HorizonApisState, HorizonApisStore } from './horizon-apis.store';

@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
+  HorizonApisQuery,
   IWalletAsset,
   IWalletIssuedAsset,
   IWalletNativeAsset,
@@ -7,7 +8,7 @@ import {
   WalletsAssetsQuery,
 } from '~root/state';
 import { merge, ReplaySubject, Subject } from 'rxjs';
-import { filter, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -53,25 +54,30 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly horizonApiQuery: HorizonApisQuery,
   ) { }
 
   ngOnInit(): void {
     this.issuedAsset$
       .pipe(filter((asset) => !!asset))
       .pipe(take(1))
-      .pipe(switchMap((asset) => {
+      .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
+      .pipe(switchMap(([asset, horizonApi]) => {
         return this.walletsAssetsService.getAssetExtraRecord({
           _id: asset._id,
           assetCode: asset.assetCode,
           assetIssuer: asset.assetIssuer,
+          horizonApi,
         })
           .pipe(map(() => asset));
       }))
-      .pipe(switchMap((asset) => {
+      .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
+      .pipe(switchMap(([asset, horizonApi]) => {
         return this.walletsAssetsService.getAssetFullRecord({
           _id: asset._id,
           assetCode: asset.assetCode,
           assetIssuer: asset.assetIssuer,
+          horizonApi
         });
       }))
       .subscribe();
@@ -100,7 +106,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount._id);
+    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 

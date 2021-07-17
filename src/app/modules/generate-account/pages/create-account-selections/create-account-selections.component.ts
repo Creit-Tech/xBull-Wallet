@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GenerateAccountService } from '../../state';
 import { ActivatedRoute, Router } from '@angular/router';
+import { WalletsQuery } from '~root/state';
 
 @Component({
   selector: 'app-create-account-selections',
@@ -8,11 +9,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./create-account-selections.component.scss']
 })
 export class CreateAccountSelectionsComponent implements OnInit {
+  isThereWallet$ = this.walletsQuery.isThereWallet$;
 
   constructor(
     private readonly generateAccountService: GenerateAccountService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly walletsQuery: WalletsQuery,
   ) { }
 
   ngOnInit(): void {

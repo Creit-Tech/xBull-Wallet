@@ -1,9 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
-import { IWalletAsset, WalletsAssetsQuery } from '~root/state';
+import { HorizonApisQuery, IWalletAsset, WalletsAssetsQuery } from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
-import { filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 
 @Component({
   selector: 'app-asset-item',
@@ -47,18 +47,27 @@ export class AssetItemComponent implements OnInit, OnDestroy {
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   ngOnInit(): void {
     this.asset$
       .pipe(filter(asset => !!asset && asset._id !== 'native'))
       .pipe(take(1))
-      .pipe(switchMap<any, Observable<IWalletAsset<'issued'>>>((asset) => {
-        return this.walletsAssetsService.getAssetExtraRecord(asset)
+      .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
+      .pipe(switchMap<any, Observable<IWalletAsset<'issued'>>>(([asset, horizonApi]) => {
+        return this.walletsAssetsService.getAssetExtraRecord({
+          ...asset,
+          horizonApi,
+        })
           .pipe(map(() => asset));
       }))
-      .pipe(switchMap((asset) => {
-        return this.walletsAssetsService.getAssetFullRecord(asset);
+      .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
+      .pipe(switchMap(([asset, horizonApi]) => {
+        return this.walletsAssetsService.getAssetFullRecord({
+          ...asset,
+          horizonApi
+        });
       }))
       .subscribe();
   }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Keypair, Transaction, Server, Networks, ServerApi, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
-import { SettingsQuery } from '~root/state';
+import { HorizonApisQuery, IHorizonApi, SettingsQuery } from '~root/state';
 
 @Injectable({
   providedIn: 'root'
@@ -9,12 +9,14 @@ import { SettingsQuery } from '~root/state';
 export class StellarSdkService {
   // TODO: Make this optional before launching the app IE add a settings store
   get Server(): Server {
-    return new Server('https://horizon-testnet.stellar.org');
+    const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
+    return new Server(activeValue.url);
   }
 
   // TODO: Make this optional before launching the app IE add a settings store
   get networkPassphrase(): string {
-    return Networks.TESTNET;
+    const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
+    return activeValue.networkPassphrase;
   }
 
   // TODO: Make this optional before launching the app IE add a settings store
@@ -32,6 +34,7 @@ export class StellarSdkService {
 
   constructor(
     private readonly settingsQuery: SettingsQuery,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   signTransaction(data: { xdr: string, secret: string }): string {

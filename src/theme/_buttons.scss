@@ -1,6 +1,5 @@
 .btn {
-  @apply poppins-family
-    font-semibold
+  @apply font-semibold
     tracking-wide
     transition
     outline-none
@@ -35,6 +34,12 @@
     text-primary
     border-primary
     border-2;
+}
+
+.btn-primary--ghost {
+  @apply bg-transparent
+    text-primary
+    border-transparent;
 }
 
 .btn-success-alternative {

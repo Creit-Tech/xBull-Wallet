@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
-  createWalletsAccount, IWalletAsset,
+  createWalletsAccount, IHorizonApi, IWallet, IWalletAsset,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAccountsStore,
@@ -20,13 +20,6 @@ import BigNumber from 'bignumber.js';
   providedIn: 'root'
 })
 export class WalletsAccountsService {
-  // TODO: Make this optional before launching the app IE add a settings store
-  get Server(): Server {
-    return new Server('https://horizon-testnet.stellar.org');
-  }
-
-  accountStream?: () => void;
-
   constructor(
     private readonly walletsAccountsStore: WalletsAccountsStore,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -66,28 +59,28 @@ export class WalletsAccountsService {
     }
   }
 
-  getAccountData(accountId: string): Observable<IWalletsAccount> {
-    this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: true }));
-    const accountPromise = this.Server.accounts().accountId(accountId).call();
+  getAccountData({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): Observable<IWalletsAccount> {
+    this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: true }));
+    const accountPromise = new Server(horizonApi.url).accounts().accountId(account.publicKey).call();
 
     // TODO: change this IE remove the select entity logic and return the record instead
-    const walletAccount = this.walletsAccountsQuery.selectEntity(accountId);
+    const walletAccount = this.walletsAccountsQuery.selectEntity(account._id);
 
     return from(accountPromise)
       .pipe(catchError(error => {
-        this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: false }));
+        this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: false }));
         return (error instanceof NotFoundError)
           ? of(undefined)
           : throwError(error);
       }))
       .pipe(withLatestFrom(walletAccount))
       .pipe(map(([accountRecord, entity]) => {
-        this.walletsAccountsStore.ui.upsert(accountId, state => ({ ...state, requesting: false }));
+        this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: false }));
         if (!entity) {
           throw new Error('This account does not exists in our wallet');
         }
 
-        this.saveAccountAndAssets(accountId, accountRecord);
+        this.saveAccountAndAssets(account._id, accountRecord);
 
         return entity;
       }));
@@ -103,10 +96,10 @@ export class WalletsAccountsService {
     }));
   }
 
-  createStream(account: IWalletsAccount): void {
+  createStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
     if (account && !account.streamCreated) {
-      this.stellarSdkService.Server.accounts()
-        .accountId(account._id)
+      new Server(horizonApi.url).accounts()
+        .accountId(account.publicKey)
         .stream({
           onmessage: accountRecord => {
             this.saveAccountAndAssets(account._id, accountRecord);
@@ -114,6 +107,10 @@ export class WalletsAccountsService {
           }
         });
     }
+  }
+
+  removeAccounts(walletIds: Array<IWalletsAccount['_id']>): void {
+    this.walletsAccountsStore.remove(walletIds);
   }
 }
 

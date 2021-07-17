@@ -12,7 +12,7 @@ export class ReceiveFundsComponent implements OnInit {
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
   publicKey$: Observable<string> = this.selectedAccount$
-    .pipe(map(selectedAccount => selectedAccount._id));
+    .pipe(map(selectedAccount => selectedAccount.publicKey));
 
   qrCode$: Observable<string> = this.publicKey$
     .pipe(switchMap(publicKey => QRCode.toDataURL(publicKey)));

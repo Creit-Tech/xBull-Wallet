@@ -17,6 +17,7 @@ const storage = persistState({
     'UI/wallets-operations',
     'settings',
     'sites-connections',
+    'horizon-apis'
   ],
   preStorageUpdate(storeName: string, state: any): any {
     if (!!state.UIState) {
@@ -28,6 +29,7 @@ const storage = persistState({
       Object.keys(state.entities).forEach(entityId => {
         updatedEntities[entityId] = {
           ...state.entities[entityId],
+          // We do want to always think we haven't created the streams
           streamCreated: false,
           operationsStreamCreated: false,
         };

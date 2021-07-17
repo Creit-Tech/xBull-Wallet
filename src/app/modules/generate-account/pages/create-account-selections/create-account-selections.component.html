@@ -7,8 +7,11 @@
     <button (click)="generateWallet()" class="w-full btn btn-primary btn--small mb-6">
       Generate new Wallet
     </button>
-    <button (click)="restoreWallet()" class="w-full btn btn-primary btn--small btn-primary--outline">
+    <button (click)="restoreWallet()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
       Restore Wallet
+    </button>
+    <button *ngIf="isThereWallet$ | async" routerLink="/wallets" class="w-full btn btn-primary btn--small btn-primary--ghost">
+      Go back to wallets
     </button>
   </div>
 

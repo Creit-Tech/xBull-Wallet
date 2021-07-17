@@ -7,23 +7,25 @@ import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ModalWrapperComponent } from './modal-wrapper/modal-wrapper.component';
 import { SignXdrComponent } from './components/sign-xdr/sign-xdr.component';
 import { SignPasswordComponent } from './components/sign-password/sign-password.component';
+import { HardConfirmComponent } from './components/hard-confirm/hard-confirm.component';
+import { PressButtonModule } from '~root/shared/press-button/press-button.module';
 
 const COMPONENTS = [
+  ModalContainerComponent,
   ModalWrapperComponent,
   SignXdrComponent,
-  SignPasswordComponent
+  SignPasswordComponent,
+  HardConfirmComponent,
 ];
 
 @NgModule({
-  declarations: [
-    ModalContainerComponent,
-    ...COMPONENTS,
-  ],
+  declarations: COMPONENTS,
   exports: COMPONENTS,
   imports: [
     CommonModule,
     FormsComponentsModule,
     LoadingModule,
+    PressButtonModule,
   ],
 })
 export class ModalsModule {

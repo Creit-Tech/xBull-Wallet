@@ -1,0 +1,22 @@
+<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
+  <div class="w-full text-center mb-4">
+    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+      {{ title }}
+    </h2>
+  </div>
+
+  <div class="w-full text-center text-label mb-7">
+    {{ alertMessage }}
+  </div>
+
+  <div class="w-full">
+    <button appPressButton (completed)="onConfirm()"
+            [secondsToFinish]="5"
+            (started)="pressLoading = true"
+            (cancelled)="pressLoading = false"
+            [class.press-loading--loading]="pressLoading"
+            class="w-full btn btn-success-alternative btn--small transition relative press-loading">
+      Press during 5 seconds to confirm
+    </button>
+  </div>
+</app-modal-wrapper>

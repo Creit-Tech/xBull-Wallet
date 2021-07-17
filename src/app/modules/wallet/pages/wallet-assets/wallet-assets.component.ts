@@ -5,7 +5,7 @@ import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
-import { IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
+import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
@@ -37,13 +37,18 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly horizonApiQuery: HorizonApisQuery,
     private readonly cdr: ChangeDetectorRef,
   ) { }
 
   reloadSelectedAccountSubscription: Subscription = this.reloadSelectedAccount$
     .asObservable()
-    .pipe(withLatestFrom(this.selectedAccount$))
-    .pipe(exhaustMap(([_, selectedAccount]) => this.walletsAccountsService.getAccountData(selectedAccount._id)))
+    .pipe(switchMap(() => this.selectedAccount$.pipe(take(1))))
+    .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
+    .pipe(exhaustMap(([selectedAccount, selectedHorizonApi]) => this.walletsAccountsService.getAccountData({
+      horizonApi: selectedHorizonApi,
+      account: selectedAccount,
+    })))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe();
 

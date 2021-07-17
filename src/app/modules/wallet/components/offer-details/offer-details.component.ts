@@ -51,7 +51,7 @@ export class OfferDetailsComponent implements OnInit, OnDestroy {
 
   async onCancel(): Promise<void> {
     const selectedAccount = await this.selectedAccount$.pipe(take(1)).toPromise();
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount._id);
+    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
     const transactionXDR = new TransactionBuilder(new Account(loadedAccount.accountId(), loadedAccount.sequence), {
       networkPassphrase: this.stellarSdkService.networkPassphrase,
       fee: this.stellarSdkService.fee,
