@@ -4,7 +4,7 @@
     <a class="text-primary"
        *ngIf="!(weAreInTestNet$ | async)"
        target="_blank"
-       href="https://stellar.expert/explorer/testnet/account/{{ (selectedAccount$ | async)?.publicKey }}">
+       href="https://stellar.expert/explorer/public/account/{{ (selectedAccount$ | async)?.publicKey }}">
       here
     </a>
 

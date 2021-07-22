@@ -1,18 +1,31 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
-import { debounceTime, filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  exhaustMap,
+  filter,
+  map,
+  pluck,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+} from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
+import { TransactionBuilder, Account, Operation, Asset, ServerApi } from 'stellar-sdk';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import PaymentPathRecord = ServerApi.PaymentPathRecord;
 
 @Component({
   selector: 'app-swap',
@@ -21,6 +34,7 @@ import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-x
 })
 export class SwapComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
+  gettingPath$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   form: FormGroupTyped<ISwapForm> = new FormGroup({
     fromAsset: new FormControl('', [Validators.required]),
@@ -50,25 +64,7 @@ export class SwapComponent implements OnInit, OnDestroy {
       }))
     ));
 
-  pathPaymentRecords$ = this.form.valueChanges
-    .pipe(filter<ISwapForm>(formValue => {
-      return this.form.valid;
-      // return Object.values(formValue).every(assetId => assetId !== '')
-      //   && new BigNumber(formValue.amountToSwap).isGreaterThan(0);
-    }))
-    .pipe(debounceTime(1000))
-    .pipe(switchMap(({fromAsset, toAsset, amountToSwap}) => {
-      return this.stellarSdkService.Server.strictSendPaths(
-        this.walletsAssetsService.sdkAssetFromAssetId(fromAsset),
-        amountToSwap,
-        [this.walletsAssetsService.sdkAssetFromAssetId(toAsset)]
-      ).call().catch(error => {
-        console.error(error);
-        // TODO: Add an error handler and show a toast with the error message
-        return { records: [] };
-      });
-    }))
-    .pipe(pluck('records'));
+  pathPaymentRecords$: BehaviorSubject<PaymentPathRecord[]> = new BehaviorSubject<PaymentPathRecord[]>([]);
 
   shouldReceive$: Observable<BigNumber> = this.pathPaymentRecords$
     .pipe(map(records => records[0]))
@@ -95,6 +91,12 @@ export class SwapComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.form.valueChanges
+      .pipe(filter(() => this.form.valid))
+      .pipe(debounceTime(1000))
+      .pipe(exhaustMap(() => this.updatePathPaymentValue()))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe();
   }
 
   ngOnDestroy(): void {
@@ -104,23 +106,10 @@ export class SwapComponent implements OnInit, OnDestroy {
 
   async onConfirm(): Promise<void> {
     const selectedAccount = await this.selectedAccount$.pipe(take(1)).toPromise();
+    const updatedPath = await this.pathPaymentRecords$.pipe(take(1)).toPromise();
+    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
 
-    const updatedPathPromise = this.stellarSdkService.Server.strictSendPaths(
-      this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.fromAsset),
-      this.form.value.amountToSwap,
-      [this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.toAsset)]
-    ).call();
-    const loadedAccountPromise = this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
-
-    const [
-      updatedPath,
-      loadedAccount
-    ] = await Promise.all([
-      updatedPathPromise,
-      loadedAccountPromise
-    ]);
-
-    const cheapestPath = updatedPath.records.shift();
+    const cheapestPath = updatedPath.shift();
 
     if (!cheapestPath) {
       // TODO: add an error alert
@@ -176,7 +165,7 @@ export class SwapComponent implements OnInit, OnDestroy {
         ref.close();
       });
 
-    ref.open()
+    ref.open();
   }
 
   async sendSwapOrder(signedXdr: string): Promise<void> {
@@ -194,6 +183,27 @@ export class SwapComponent implements OnInit, OnDestroy {
         title: 'Oops!'
       });
     }
+  }
+
+  async updatePathPaymentValue(): Promise<void> {
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.gettingPath$.next(true);
+
+    const response = await this.stellarSdkService.Server.strictSendPaths(
+      this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.fromAsset),
+      this.form.value.amountToSwap,
+      [this.walletsAssetsService.sdkAssetFromAssetId(this.form.value.toAsset)]
+    ).call().catch(error => {
+      console.error(error);
+      // TODO: Add an error handler and show a toast with the error message
+      return { records: [] };
+    });
+
+    this.pathPaymentRecords$.next(response.records);
+    this.gettingPath$.next(false);
   }
 
 }

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { GenerateAccountService } from '../../state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WalletsQuery } from '~root/state';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-create-account-selections',
@@ -11,11 +12,14 @@ import { WalletsQuery } from '~root/state';
 export class CreateAccountSelectionsComponent implements OnInit {
   isThereWallet$ = this.walletsQuery.isThereWallet$;
 
+  walletVersion = this.env.version;
+
   constructor(
     private readonly generateAccountService: GenerateAccountService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly walletsQuery: WalletsQuery,
+    @Inject(ENV) private readonly env: typeof environment,
   ) { }
 
   ngOnInit(): void {

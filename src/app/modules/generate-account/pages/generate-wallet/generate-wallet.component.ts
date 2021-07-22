@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GenerateAccountService } from '~root/modules/generate-account/state';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-generate-wallet',
@@ -12,11 +13,14 @@ import { GenerateAccountService } from '~root/modules/generate-account/state';
 export class GenerateWalletComponent implements OnInit {
   mnemonicPhraseFormControl: FormControlTyped<string> = new FormControl('', [Validators.required]);
 
+  walletVersion = this.env.version;
+
   constructor(
     private readonly mnemonicPhraseService: MnemonicPhraseService,
     private readonly generateAccountService: GenerateAccountService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    @Inject(ENV) private readonly env: typeof environment,
   ) { }
 
   ngOnInit(): void {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { Subject, Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsQuery } from '~root/state';
 import { Router } from '@angular/router';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-confirm-phrase-password',
@@ -22,12 +23,15 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     confirmPassword: new FormControl('', [Validators.required]),
   }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
 
+  walletVersion = this.env.version;
+
   constructor(
     private readonly generateAccountQuery: GenerateAccountQuery,
     private readonly cryptoService: CryptoService,
     private readonly walletsService: WalletsService,
     private readonly walletsQuery: WalletsQuery,
     private readonly router: Router,
+    @Inject(ENV) private readonly env: typeof environment,
   ) { }
 
   checkPasswordWithGloablPassword: Subscription = this.form.controls.confirmPassword.valueChanges

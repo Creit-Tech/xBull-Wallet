@@ -27,7 +27,8 @@ export const environment = {
     url: 'https://horizon.publicnode.org',
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
-  }]
+  }],
+  version: '0.0.1'
 };
 
 /*
