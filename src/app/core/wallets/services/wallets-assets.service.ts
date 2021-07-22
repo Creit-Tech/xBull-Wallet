@@ -1,10 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
-import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset } from 'stellar-sdk';
+import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset, StellarTomlResolver } from 'stellar-sdk';
 import { IHorizonApi, IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/state';
 import { from, of } from 'rxjs';
-import { map, switchMap, withLatestFrom } from 'rxjs/operators';
+import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-import { parse } from 'toml';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
 
@@ -74,16 +73,14 @@ export class WalletsAssetsService {
       .call();
 
     return from(recordPromise)
+      .pipe(filter(accountRecord => !!accountRecord))
       .pipe(switchMap(accountRecord => {
-        return this.http.get(`https://${accountRecord.home_domain}/.well-known/stellar.toml`, {
-          responseType: 'text'
-        })
+        return from(StellarTomlResolver.resolve((accountRecord as any).home_domain))
           .pipe(withLatestFrom(of(accountRecord)));
       }))
-      .pipe(map(([tolm, accountRecord]) => {
-        const parsedTolm = parse(tolm);
-        const currencies = parsedTolm.CURRENCIES || parsedTolm.currencies;
-        const documentation = parsedTolm.DOCUMENTATION || parsedTolm.documentation;
+      .pipe(map(([parsedToml, accountRecord]) => {
+        const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
+        const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
         const currency = currencies.find((c: any) => c.code === data.assetCode);
 
         this.walletsAssetsStore.upsert(

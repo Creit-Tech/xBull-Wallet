@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,7 +15,6 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 })
 export class InputComponent implements OnInit, ControlValueAccessor {
 
-  constructor() { }
   @Input() mask = '';
   @Input() disabled = false;
   @Input() title = 'Input';
@@ -23,6 +22,8 @@ export class InputComponent implements OnInit, ControlValueAccessor {
   @Input() placeholder = 'Write here...';
   @Input() mode: 'dark' | 'light' = 'dark';
   @Input() iconPath?: string;
+
+  @Output() enter: EventEmitter<InputEvent> = new EventEmitter<InputEvent>();
 
   value = '';
 
@@ -60,6 +61,10 @@ export class InputComponent implements OnInit, ControlValueAccessor {
 
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+  }
+
+  onEnter(event: InputEvent): void {
+    this.enter.emit(event);
   }
 
 }

@@ -12,6 +12,7 @@
 
     <label class="w-full">
       <input *ngIf="!!mask; else noMask" class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+             (keydown.enter)="$event.preventDefault(); onEnter($event)"
              #controlTemplate
              [mask]="mask"
              thousandSeparator=""
@@ -24,6 +25,7 @@
 
       <ng-template #noMask>
         <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+               (keydown.enter)="$event.preventDefault(); onEnter($event)"
                #controlTemplate
                [type]="type"
                [value]="value"

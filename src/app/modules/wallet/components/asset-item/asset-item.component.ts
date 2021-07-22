@@ -1,9 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
-import { HorizonApisQuery, IWalletAsset, WalletsAssetsQuery } from '~root/state';
+import { HorizonApisQuery, IWalletAsset, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
 import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import BigNumber from 'bignumber.js';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 
 @Component({
   selector: 'app-asset-item',
@@ -12,7 +14,6 @@ import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operator
 })
 export class AssetItemComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
-  sellingLiabilities$: ReplaySubject<string> = new ReplaySubject<string>();
 
   skeleton$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   @Input() set skeleton(status: boolean) {
@@ -44,10 +45,26 @@ export class AssetItemComponent implements OnInit, OnDestroy {
   amount$: Observable<string> = this.balanceLine$
     .pipe(map(data => data.balance));
 
+  availableFunds$: Observable<string> = this.asset$
+    .pipe(filter(selectedAsset => !!selectedAsset))
+    .pipe(withLatestFrom(this.walletsAccountsQuery.getSelectedAccount$))
+    .pipe(map(([selectedAsset, selectedAccount]) => {
+      if (!selectedAsset || !selectedAccount.accountRecord) {
+        console.warn('Balance or Account record is undefined');
+        return new BigNumber(0).toString();
+      }
+
+      return this.stellarSdkService
+        .calculateAvailableBalance(selectedAccount.accountRecord, selectedAsset.assetCode)
+        .toString();
+    }));
+
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
   ) { }
 
   ngOnInit(): void {
