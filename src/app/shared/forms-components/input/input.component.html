@@ -1,0 +1,40 @@
+<section class="rounded-xl flex items-center h-14 px-6 py-1.5"
+         [class.bg-ash]="mode === 'light'"
+         [class.bg-body]="mode === 'dark'">
+  <div *ngIf="!!iconPath" class="w-auto mr-4">
+    <img [src]="iconPath" alt="unlock-icon">
+  </div>
+
+  <div class="w-auto">
+    <div class="text-line font-semibold text-sm">
+      <span>{{ title }}</span>
+    </div>
+
+    <label class="w-full">
+      <input *ngIf="!!mask; else noMask" class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+             (keydown.enter)="$event.preventDefault(); onEnter($event)"
+             #controlTemplate
+             [mask]="mask"
+             thousandSeparator=""
+             [type]="type"
+             [value]="value"
+             [formControl]="control"
+             (input)="onInput(controlTemplate.value)"
+             [placeholder]="placeholder"
+             [disabled]="disabled"/>
+
+      <ng-template #noMask>
+        <input class="form-input bg-transparent w-full text-line border-none p-0 text-sm font-normal"
+               (keydown.enter)="$event.preventDefault(); onEnter($event)"
+               #controlTemplate
+               [type]="type"
+               [value]="value"
+               [formControl]="control"
+               (input)="onInput(controlTemplate.value)"
+               [placeholder]="placeholder"
+               [disabled]="disabled"/>
+      </ng-template>
+    </label>
+  </div>
+</section>
+

@@ -1,0 +1,21 @@
+.press-loading::after {
+  transition: ease width 0.1s;
+  content: ".";
+  background: transparent;
+  width: 0.1%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: transparent;
+  opacity: 0.5;
+  border-radius: .25rem;
+  pointer-events: none;
+}
+
+.press-loading--loading::after {
+  transition: ease width 5s;
+  background: white;
+  width: 100%;
+  pointer-events: none;
+}

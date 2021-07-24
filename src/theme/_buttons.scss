@@ -1,0 +1,117 @@
+.btn {
+  @apply font-semibold
+    tracking-wide
+    transition
+    outline-none
+    focus:outline-none
+    rounded-lg
+    border-transparent
+    border-2;
+}
+
+.btn[disabled] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.btn-primary {
+  @apply bg-primary
+    text-off-white;
+}
+
+.btn-primary:hover {
+  @apply bg-input
+    text-primary;
+}
+
+.btn-primary:active {
+  @apply bg-line
+    text-body;
+}
+
+.btn-primary--outline {
+  @apply bg-transparent
+    text-primary
+    border-primary
+    border-2;
+}
+
+.btn-primary--ghost {
+  @apply bg-transparent
+    text-primary
+    border-transparent;
+}
+
+.btn-success-alternative {
+  @apply bg-success-alternative
+    text-off-white;
+}
+
+.btn-success-alternative:hover {
+  @apply bg-transparent
+    text-success-alternative
+    border-success-alternative;
+}
+
+.btn-success-alternative:active {
+  @apply bg-success-alternative
+    text-off-white;
+}
+
+.btn-success {
+  @apply bg-success
+    text-off-white;
+}
+
+.btn-success:hover {
+  @apply bg-transparent
+    text-success
+    border-success;
+}
+
+.btn-success:active {
+  @apply bg-success
+    text-off-white;
+}
+
+.btn-error {
+  @apply bg-error
+    text-off-white;
+}
+
+.btn-error:hover {
+  @apply bg-transparent
+    text-error
+    border-error;
+}
+
+.btn-error:active {
+  @apply bg-error
+    text-off-white;
+}
+
+.btn-error-alternative {
+  @apply bg-error-alternative
+    text-off-white;
+}
+
+.btn-error-alternative:hover {
+  @apply bg-transparent
+    border-error-alternative
+    text-error-alternative;
+}
+
+.btn-off-black {
+  @apply bg-off-black
+    text-off-white;
+}
+
+.btn-off-black:hover {
+  @apply bg-transparent
+    border-off-black
+    text-off-black;
+}
+
+.btn--small {
+  @apply h-10 text-sm;
+}

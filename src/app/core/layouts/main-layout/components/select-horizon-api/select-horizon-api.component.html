@@ -1,0 +1,20 @@
+<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
+  <div class="w-full text-center mb-4 flex flex-col">
+    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+      Select Horizon API
+    </h2>
+  </div>
+
+  <ul class="w-full mb-8">
+    <ng-container *ngFor="let horizonApi of (horizonApis | async); let i = index">
+      <li class="w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-4 text-body hover:text-placeholder"
+          *ngIf="(advanceMode$ | async) || !horizonApi.canRemove"
+          (click)="onHorizonApiSelected(horizonApi)"
+          [class.pointer-events-none]="(selectedHorizonApi$ | async)?._id === horizonApi?._id">
+        <p class="m-0 text-sm font-bold text-label">
+          {{ i }}: {{ horizonApi.name }} <ng-container *ngIf="(selectedHorizonApi$ | async)?._id === horizonApi?._id">(Active)</ng-container>
+        </p>
+      </li>
+    </ng-container>
+  </ul>
+</app-modal-wrapper>

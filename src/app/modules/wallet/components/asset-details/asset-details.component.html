@@ -1,0 +1,101 @@
+<ng-container *ngIf="(asset$ | async) as asset">
+  <app-modal-wrapper [loading]="!!(removingAssets$ | async)" [showModal]="showModal" (close)="onClose()">
+    <section class="relative w-full h-full">
+    <div class="w-full text-center mb-4">
+      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+        Asset: {{ asset.assetCode }}
+      </h2>
+    </div>
+
+    <section class="w-full mb-8">
+      <dl>
+
+        <ng-container *ngIf="issuedAsset$ | async as issuedAsset; else nativeAssetTemplate">
+          <ng-container *ngIf="fullDataLoaded$ | async; else loadingFullData">
+            <dt *ngIf="!!issuedAsset.assetIssuer" class="text-off-black text-base font-bold mb-1">Issuer:</dt>
+            <dd class="break-all text-label text-sm mb-3">{{ issuedAsset.assetIssuer }}</dd>
+
+            <dt *ngIf="!!issuedAsset.name" class="text-off-black text-base font-bold mb-1">Name:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.name }}</dd>
+
+            <dt *ngIf="!!issuedAsset.description" class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.description }}</dd>
+
+            <dt *ngIf="!!issuedAsset.conditions" class="text-off-black text-base font-bold mb-1">Condition:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.conditions }}</dd>
+
+            <dt *ngIf="!!issuedAsset.numAccount" class="text-off-black text-base font-bold mb-1">Total of holders:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.numAccount }}</dd>
+
+            <dt *ngIf="!!issuedAsset.amountIssued" class="text-off-black text-base font-bold mb-1">Amount issued:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.amountIssued | number: '0.0-7' }}</dd>
+
+            <div class="w-full py-2"></div>
+
+            <dt *ngIf="!!issuedAsset.orgName" class="text-off-black text-base font-bold mb-1">Organization:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgName }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgDba" class="text-off-black text-base font-bold mb-1">Doing business as:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgDba }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgDescription" class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgDescription }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgWebsite" class="text-off-black text-base font-bold mb-1">Website:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgWebsite }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgAddress" class="text-off-black text-base font-bold mb-1">Address:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgAddress }}</dd>
+
+            <dt *ngIf="!!issuedAsset.orgOfficialEmail" class="text-off-black text-base font-bold mb-1">E-mail address:</dt>
+            <dd class="text-label text-sm mb-3">{{ issuedAsset.orgOfficialEmail }}</dd>
+          </ng-container>
+
+          <ng-template #loadingFullData>
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-8/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-3/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-9/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-5/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-10/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-6/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-11/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-2/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-5/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-7/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-6/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-4/12">Data</dd>
+
+            <dt class="skeleton-box text-transparent text-base font-bold mb-1 w-5/12">Title:</dt>
+            <dd class="skeleton-box break-all text-transparent text-sm mb-3 w-full">Data</dd>
+          </ng-template>
+        </ng-container>
+
+        <ng-template #nativeAssetTemplate>
+          <ng-container *ngIf="nativeAsset$ | async as nativeAsset">
+            <dt class="text-off-black text-base font-bold mb-1">Name:</dt>
+            <dd class="text-label text-sm mb-3">Lumens</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1">Description:</dt>
+            <dd class="text-label text-sm mb-3">Native token of the Stellar Blockchain</dd>
+          </ng-container>
+        </ng-template>
+
+      </dl>
+    </section>
+
+    <section class="w-full flex">
+      <div *ngIf="issuedAsset$ | async" class="flex-1 pr-2">
+        <button (click)="onRemove()" class="w-full btn btn--small btn-error-alternative">Remove</button>
+      </div>
+<!--      <div class="flex-1 pl-2">-->
+<!--        <button class="w-full btn btn&#45;&#45;small btn-off-black">Send</button>-->
+<!--      </div>-->
+    </section>
+  </section>
+  </app-modal-wrapper>
+</ng-container>

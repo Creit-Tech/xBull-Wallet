@@ -1,0 +1,81 @@
+<section [appLoading]="sendingPathPaymentStrictReceive$ | async" class="flex flex-col justify-between w-full h-full px-6 pb-6">
+  <section [formGroup]="form" class="w-full flex flex-col">
+    <div class="w-full mb-8">
+      <div class="w-full mb-4 flex justify-between">
+        <p class="m-0 text-label font-semibold">
+          PAYING WITH
+        </p>
+        <p class="m-0 text-label font-semibold">
+          ASSET TO BUY
+        </p>
+      </div>
+
+      <div *ngIf="selectOptions$ | async as selectOptions" class="w-full flex">
+        <div class="w-6/12 pr-1">
+          <app-select [options]="selectOptions"
+                      placeholder="Select..."
+                      formControlName="assetToPayWith"
+                      mode="light" title="Asset">
+          </app-select>
+        </div>
+
+        <div class="w-6/12 pl-1">
+          <app-select [options]="selectOptions"
+                      placeholder="Select..."
+                      formControlName="assetToBuy"
+                      mode="light" title="Asset">
+          </app-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full mb-8">
+      <div class="w-full mb-4 flex justify-between">
+        <p class="m-0 text-label font-semibold">
+          AMOUNT TO BUY
+        </p>
+        <p class="m-0 text-label font-semibold">
+          MAX PER UNIT
+        </p>
+      </div>
+
+      <div class="w-full flex">
+        <div class="w-6/12 pr-1">
+          <app-input mask="separator.8"
+                     formControlName="amount"
+                     mode="light" title="Amount">
+          </app-input>
+        </div>
+
+        <div class="w-6/12 pl-1">
+          <app-input mask="separator.8"
+                     formControlName="price"
+                     mode="light" title="Price">
+          </app-input>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full mb-4">
+    <div class="w-full text-center">
+      <p class="m-0 text-label font-semibold mb-2">
+        Max amount to pay is: {{ (maxAmountToPay$ | async)?.toString() | number: '0.0-7' }}
+      </p>
+    </div>
+
+    <div class="w-full text-center">
+      <p class="m-0 text-line font-bold mb-2">
+        If the price set isn’t enough, the trade will fail
+      </p>
+    </div>
+  </section>
+
+  <section class="w-full">
+    <button [disabled]="form.invalid || (sendingPathPaymentStrictReceive$ | async)"
+            (click)="onConfirm()"
+            class="w-full btn btn--small btn-success-alternative">
+      Confirm trade
+    </button>
+  </section>
+</section>

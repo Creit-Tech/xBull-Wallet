@@ -1,0 +1,23 @@
+<section class="h-full w-full flex flex-col px-6 py-8">
+  <div class="w-full flex justify-center items-center">
+    <img src="/assets/icons/xbull-icon.svg" class="h-40" alt="xbull-logo">
+  </div>
+
+  <div class="w-full flex flex-wrap my-auto">
+    <button (click)="generateWallet()" class="w-full btn btn-primary btn--small mb-6">
+      Generate new Wallet
+    </button>
+    <button (click)="restoreWallet()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
+      Restore Wallet
+    </button>
+    <button *ngIf="isThereWallet$ | async" routerLink="/wallets" class="w-full btn btn-primary btn--small btn-primary--ghost">
+      Go back to wallets
+    </button>
+  </div>
+
+  <div class="w-full text-center">
+    <small class="text-label text-base">
+      xBull Wallet {{ walletVersion }}
+    </small>
+  </div>
+</section>

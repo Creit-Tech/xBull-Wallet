@@ -1,0 +1,60 @@
+<ng-container *ngIf="(asset$ | async) as asset; else skeletonTemplate">
+
+  <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-label hover:border-placeholder py-4"
+    *ngIf="!(skeleton$ | async); else skeletonTemplate">
+    <section class="w-12 mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
+      <img *ngIf="assetImg$ | async as assetImg; else imgSkeleton" [src]="assetImg" alt=""/>
+      <ng-template #imgSkeleton>
+        <div class="w-full h-full rounded-3xl skeleton-box"></div>
+      </ng-template>
+    </section>
+
+    <section class="w-full">
+      <div class="w-full flex justify-between mb-1">
+        <p class="m-0 p-0 mr-2 text-off-white text-sm font-bold">
+          {{ assetCode$ | async }}
+        </p>
+
+        <p class="m-0 p-0 ml-2 text-off-white text-sm font-bold">
+          {{ amount$ | async | number: '1.2-7' }}
+        </p>
+      </div>
+
+      <div class="w-full flex justify-between">
+        <p *ngIf="domain$ | async as domain; else domainSkeleton" class="m-0 p-0 mr-2 text-placeholder text-xs">
+          {{ domain }}
+        </p>
+        <ng-template #domainSkeleton>
+          <div class="w-3/12 h-3 skeleton-box"></div>
+        </ng-template>
+
+        <p *ngIf="availableFunds$ | async as availableFunds" class="text-placeholder text-xs m-0 p-0">
+          Available: {{ availableFunds | number: '1.2-7' }}
+        </p>
+      </div>
+    </section>
+  </li>
+
+</ng-container>
+
+<ng-template #skeletonTemplate>
+
+  <li class="flex w-full px-6 border-b-2 transition border-label py-4">
+    <section class="w-12 mr-4">
+      <div class="w-full h-full rounded-3xl skeleton-box"></div>
+    </section>
+
+    <section class="w-full">
+      <div class="w-full flex justify-between mb-2">
+        <div class="w-4/12 h-4 skeleton-box"></div>
+        <div class="w-3/12 h-4 skeleton-box"></div>
+      </div>
+
+      <div class="w-full flex justify-between">
+        <div class="w-3/12 h-3 skeleton-box"></div>
+        <div class="w-2/12 h-3 skeleton-box"></div>
+      </div>
+    </section>
+  </li>
+
+</ng-template>

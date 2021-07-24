@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+// @import "assets/fonts/poppins/styles";
+
+@import "theme/buttons";
+@import "theme/utils";
+@import "theme/skeleton";
+
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body, html {
+  height: 600px;
+  width: 375px;
+}

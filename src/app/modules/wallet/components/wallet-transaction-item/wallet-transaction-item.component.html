@@ -1,0 +1,24 @@
+<section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+  <ng-container *ngIf="payment$ | async as operation">
+    <div class="w-7/12">
+      <p class="text-base text-off-white m-0">
+        {{ operation.assetCode }}
+      </p>
+      <p class="text-xs text-line m-0">
+        {{ operation.publicAddress | publicKey }}
+      </p>
+    </div>
+
+    <div class="w-5/12 flex flex-col justify-center items-end">
+      <p [class.text-success]="operation.paymentType === 'receive'"
+         [class.text-error]="operation.paymentType === 'send'"
+         class="m-0 text-base truncate">
+        {{ operation.paymentType === 'receive' ? '+' : '-' }}
+        {{ operation.amount | number: '0.0-7' }}
+      </p>
+      <p class="text-xs text-line m-0">
+        {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+      </p>
+    </div>
+  </ng-container>
+</section>
