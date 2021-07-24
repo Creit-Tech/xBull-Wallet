@@ -2,6 +2,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
@@ -19,12 +20,46 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "types": [
+      "chrome"
+    ],
+    "paths": {
+      "~extension/*": [
+        "./src/extension/*"
+      ],
+      "~root/*": [
+        "./src/app/*"
+      ],
+      "~env": [
+        "./src/environments/environment.ts"
+      ],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": true,
+    "paths": {
+      "~root/*": [
+        "./src/app/*"
+      ],
+      "~env": [
+        "./src/environments/environment.ts"
+      ],
+      "crypto": [
+        "node_modules/crypto-browserify"
+      ],
+      "stream": [
+        "./node_modules/readable-stream"
+      ],
+      "http": [
+        "./node_modules/@angular/common/http"
+      ],
+      "https": [
+        "./node_modules/@angular/common/http"
+      ]
+    }
   }
 }

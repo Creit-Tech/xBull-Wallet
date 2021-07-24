@@ -1,9 +1,14 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Random files
+temp
+
 # compiled output
 /dist
 /tmp
 /out-tsc
+/src/**.js
+/src/**.js.map
 # Only exists if Bazel was run
 /bazel-out
 

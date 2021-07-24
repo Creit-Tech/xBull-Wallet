@@ -3,16 +3,46 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
+import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
+import { ENV, environment } from '~env';
+import { MainLayoutComponent } from './core/layouts/main-layout/main-layout.component';
+import { ModalsModule } from '~root/shared/modals/modals.module';
+import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from '~root/shared/toastr/toastr.module';
+import { NgxMaskModule } from 'ngx-mask';
+import { BackgroundModule } from '~root/modules/background/background.module';
+import { SelectAccountComponent } from './core/layouts/main-layout/components/select-account/select-account.component';
+import { SelectHorizonApiComponent } from './core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
+import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MainLayoutComponent,
+    SelectAccountComponent,
+    SelectHorizonApiComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    environment.production ? [] : AkitaNgDevtools.forRoot(),
+    AkitaNgRouterStoreModule,
+    ModalsModule.forRoot(),
+    HttpClientModule,
+    ToastrModule.forRoot(),
+    NgxMaskModule.forRoot(),
+    BackgroundModule,
+    FormsComponentsModule,
+    SharedPipesModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ENV,
+      useValue: environment,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,0 +1,25 @@
+<section class="w-full pt-4 pb-6">
+  <p class="w-8/12 text-sm text-off-white text-center mx-auto">
+    Currently this section is being completed, you can check your past transactions
+    <a class="text-primary"
+       *ngIf="!(weAreInTestNet$ | async)"
+       target="_blank"
+       href="https://stellar.expert/explorer/public/account/{{ (selectedAccount$ | async)?.publicKey }}">
+      here
+    </a>
+
+    <a class="text-primary"
+       *ngIf="(weAreInTestNet$ | async)"
+       target="_blank"
+       href="https://stellar.expert/explorer/testnet/account/{{ (selectedAccount$ | async)?.publicKey }}">
+      here
+    </a>
+  </p>
+
+<!--  <ng-container *ngFor="let operation of (accountOperations$ | async)">-->
+<!--    <app-wallet-transaction-item-->
+<!--      (click)="onSelected(operation)"-->
+<!--      [operation]="operation">-->
+<!--    </app-wallet-transaction-item>-->
+<!--  </ng-container>-->
+</section>

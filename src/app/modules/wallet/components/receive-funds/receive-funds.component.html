@@ -1,0 +1,18 @@
+<section class="w-full text-center mb-4">
+  <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+    Receive funds
+  </h2>
+</section>
+
+<section class="w-full mb-4">
+  <figure class="mx-auto bg-off-black p-5 rounded-2xl w-44 h-44">
+    <img [src]="qrCode$ | async" alt="public_key" class="m-0 p-0" />
+  </figure>
+</section>
+
+<div class="w-full">
+  <p class="w-full break-all cursor-pointer m-0 p-0 text-center text-label text-base"
+     appClipboard [textToCopy]="publicKey$ | async">
+    {{ publicKey$ | async }}
+  </p>
+</div>
