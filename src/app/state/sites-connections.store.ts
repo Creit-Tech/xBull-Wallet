@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { ISiteConnection } from './site-connection.model';
+import { ISiteConnection, siteConnectionDocVersion } from './site-connection.model';
 
-export interface SitesConnectionsState extends EntityState<ISiteConnection> {}
+export interface SitesConnectionsState extends EntityState<ISiteConnection> {
+  siteConnectionDocVersion: number;
+}
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({
@@ -12,7 +14,9 @@ export interface SitesConnectionsState extends EntityState<ISiteConnection> {}
 export class SitesConnectionsStore extends EntityStore<SitesConnectionsState> {
 
   constructor() {
-    super();
+    super({
+      siteConnectionDocVersion,
+    });
   }
 
 }
