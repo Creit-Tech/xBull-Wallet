@@ -1,17 +1,16 @@
 import {
-  IConnectRequestPayload, IRuntimeConnectMessage,
+  IRuntimeConnectMessage,
   IRuntimeConnectResponse,
   IRuntimeErrorResponse,
-  ISitePermissions, RuntimeMessage,
-  XBULL_CONNECT_BACKGROUND,
 } from '~extension/interfaces';
+import { isEqual } from 'lodash';
 import { getSitePermissions } from '~extension/background/state.background';
 
 export const requestConnection = async (message: IRuntimeConnectMessage): Promise<IRuntimeConnectResponse | IRuntimeErrorResponse> => {
   const payload = message.payload;
   const savedPermissions = await getSitePermissions(payload.origin + '_' + payload.host);
 
-  if (!!savedPermissions) {
+  if (!!savedPermissions && isEqual(savedPermissions, payload.permissions)) {
     return {
       payload: savedPermissions,
       error: false,
