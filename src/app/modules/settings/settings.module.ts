@@ -16,6 +16,7 @@ import { HorizonApiDetailsComponent } from './components/horizon-api-details/hor
 import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon-api.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { AddAccountComponent } from './components/add-account/add-account.component';
+import { SitesConnectedComponent } from './pages/sites-connected/sites-connected.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { AddAccountComponent } from './components/add-account/add-account.compon
     WalletsAccountsComponent,
     HorizonApiDetailsComponent,
     AddHorizonApiComponent,
-    AddAccountComponent
+    AddAccountComponent,
+    SitesConnectedComponent
   ],
   imports: [
     CommonModule,

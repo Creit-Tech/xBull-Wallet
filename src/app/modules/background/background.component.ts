@@ -15,6 +15,7 @@ import { merge, Subject } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { createSiteConnection } from '~root/state';
 
 @Component({
   selector: 'app-background',
@@ -38,7 +39,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
       .addListener((message: RuntimeMessage, sender, sendResponse) => {
         const sendResponseAndClose = (response: RuntimeResponse) => {
           sendResponse(response);
-          window.close();
+
+          // We wait because we need to wait 500ms before the site saves into the storage
+          // The modal already adds 300ms so the user only experience 500ms
+          setTimeout(() => window.close(), 800);
         };
 
         let runtimeResponse: RuntimeResponse;
@@ -105,7 +109,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             error: true,
             errorMessage: 'Connection denied'
           });
-          ref.close();
+          ref.component.instance.onClose()
+            .then(() => ref.close());
         });
 
       ref.component.instance.accept
@@ -113,12 +118,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
         .pipe(take(1))
         .pipe(takeUntil(this.componentDestroyed$))
         .subscribe(() => {
-          this.sitesConnectionsService.saveSiteConnection({
+          this.sitesConnectionsService.saveSiteConnection(createSiteConnection({
             _id: params.origin + '_' + params.host,
+            host: params.host,
+            origin: params.origin,
             canRequestSign: params.permissions.canRequestSign,
             canRequestPublicKey: params.permissions.canRequestPublicKey,
             createdAt: new Date().getTime(),
-          });
+          }));
 
           resolve({
             error: false,
@@ -127,7 +134,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
               canRequestSign: params.permissions.canRequestSign,
             },
           });
-          ref.close();
+          ref.component.instance.onClose()
+            .then(() => ref.close());
         });
     });
   }
@@ -149,7 +157,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             error: true,
             errorMessage: 'Sign request denied'
           });
-          ref.close();
+          ref.component.instance.onClose()
+            .then(() => ref.close());
         });
 
       ref.component.instance.accept
@@ -160,7 +169,8 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             error: false,
             payload: signedXDR
           });
-          ref.close();
+          ref.component.instance.onClose()
+            .then(() => ref.close());
         });
     });
   }

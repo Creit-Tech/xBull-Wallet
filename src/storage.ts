@@ -2,6 +2,7 @@ import { persistState, PersistStateSelectFn } from '@datorama/akita';
 import { storageAkitaMiddleware } from './storage-akita.middleware';
 import { debounceTime } from 'rxjs/operators';
 import { IWallet, IWalletsAccount, WalletsAccountsState } from '~root/state';
+import { migrationsHandler } from './migrations/migrations';
 
 const storage = persistState({
   storage: storageAkitaMiddleware,
@@ -43,8 +44,8 @@ const storage = persistState({
 
     return state;
   },
-  preStoreUpdate(storeName: string, state: any): any {
-    return state;
+  preStoreUpdate(storeName: string, state: any, initialState: any): any {
+    return migrationsHandler(storeName, state, initialState);
   }
 });
 
