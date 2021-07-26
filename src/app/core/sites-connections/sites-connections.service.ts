@@ -13,4 +13,8 @@ export class SitesConnectionsService {
   saveSiteConnection(data: ISiteConnection): void {
     this.sitesConnections.upsert(data._id, data);
   }
+
+  removeSiteConnection(documentId: ISiteConnection['_id']): void {
+    this.sitesConnections.remove(documentId);
+  }
 }

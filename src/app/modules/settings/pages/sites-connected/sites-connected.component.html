@@ -4,13 +4,13 @@
   </p>
 
   <ul class="flex flex-col w-full h-full mb-full overflow-y-scroll no-scrollbar">
-    <li *ngFor="let sitesConnected of sitesConnected$ | async"
-
+    <li *ngFor="let siteConnected of sitesConnected$ | async"
+        (click)="onSiteConnected(siteConnected)"
         class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5 justify-between">
 
       <div class="w-auto px-2">
         <p class="m-0 text-sm font-bold text-off-white">
-          {{ sitesConnected.host }}
+          {{ siteConnected.host }}
         </p>
       </div>
       <div class="w-auto px-2">
