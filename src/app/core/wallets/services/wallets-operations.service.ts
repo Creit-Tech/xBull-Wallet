@@ -74,35 +74,6 @@ export class WalletsOperationsService {
       });
   }
 
-  createStream(params: {
-    account: IWalletsAccount,
-    order: 'asc' | 'desc',
-    cursor?: string,
-  }): void {
-    if (params.account && !params.account.operationsStreamCreated) {
-      const streamBuilder = this.stellarSdkService.Server.operations()
-        .forAccount(params.account.publicKey)
-        .limit(10)
-        .includeFailed(false);
-
-      streamBuilder.order(params.order);
-
-      if (!!params.cursor) {
-        streamBuilder.cursor(params.cursor);
-      }
-
-      streamBuilder
-        .stream({
-          onmessage: (operationRecord: any) => {
-            this.walletsOperationsStore.upsertMany([createWalletsOperation({
-              ...operationRecord,
-              ownerAccount: params.account.publicKey,
-            })]);
-          }
-        });
-    }
-  }
-
 }
 
 

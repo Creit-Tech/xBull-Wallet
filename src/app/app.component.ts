@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { HorizonApisQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { combineLatest, of, pipe, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilKeyChanged, filter, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, forkJoin, of, pipe, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilKeyChanged, filter, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { Order, selectPersistStateInit } from '@datorama/akita';
 import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 
@@ -11,8 +11,7 @@ import { WalletsOperationsService } from '~root/core/wallets/services/wallets-op
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
-  title = 'xBull - Wallet';
+export class AppComponent {
 
   constructor(
     private readonly walletsAccountsService: WalletsAccountsService,
@@ -22,28 +21,8 @@ export class AppComponent implements OnInit {
     private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
-  createWalletsOperationsQuery: Subscription = selectPersistStateInit()
-    .pipe(switchMap(() => this.walletsAccountsQuery.getSelectedAccount$))
-    .pipe(filter(account => !!account))
-    .pipe(distinctUntilKeyChanged('_id'))
-    .pipe(switchMap(account => {
-      return of(account)
-        .pipe(withLatestFrom(this.walletsOperationsQuery.selectAll({
-          filterBy: entity => entity.ownerAccount === account.publicKey,
-          sortBy: (entityA, entityB) => entityA.createdAt - entityB.createdAt,
-        })));
-    }))
-    .subscribe(([account, operations]) => {
-      const lastValue = operations[operations.length - 1];
-      const firstNonHandled = operations.find(operation => !operation.operationHandled);
-      this.walletsOperationsService.createStream({
-        account,
-        order: 'asc',
-        cursor: firstNonHandled?.pagingToken || lastValue?.pagingToken,
-      });
-    });
 
-  createWalletsAccountsQuery: Subscription = selectPersistStateInit()
+  accountWithHorizonQuery$ = selectPersistStateInit()
     .pipe(switchMap(() => {
       const selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$
         .pipe(filter(account => !!account))
@@ -57,14 +36,34 @@ export class AppComponent implements OnInit {
         selectedAccount$,
         selectedHorizonApi$
       ]);
+    }));
+
+  createWalletsOperationsQuery: Subscription = this.accountWithHorizonQuery$
+    .pipe(switchMap(([account, horizonApi]) => {
+      return combineLatest([
+        of(account),
+        of(horizonApi),
+        this.walletsOperationsQuery.selectAll({
+          filterBy: entity => entity.ownerAccount === account.publicKey,
+          sortBy: (entityA, entityB) => entityA.createdAt - entityB.createdAt,
+        }).pipe(take(1))
+      ]);
     }))
-    .pipe(debounceTime(100))
-    .subscribe(([account, horizonApi]) => {
-      this.walletsAccountsService.createStream({ account, horizonApi });
+    .subscribe(([account, horizonApi, operations]) => {
+      const lastValue = operations[operations.length - 1];
+      const firstNonHandled = operations.find(operation => !operation.operationHandled);
+      this.walletsAccountsService.createOperationsStream({
+        account,
+        order: 'asc',
+        cursor: firstNonHandled?.pagingToken || lastValue?.pagingToken,
+        horizonApi
+      });
     });
 
-  ngOnInit(): void {
-  }
-
+  createWalletsAccountsQuery: Subscription = this.accountWithHorizonQuery$
+    .pipe(debounceTime(100))
+    .subscribe(([account, horizonApi]) => {
+      this.walletsAccountsService.createAccountStream({ account, horizonApi });
+    });
 
 }
