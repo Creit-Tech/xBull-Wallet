@@ -2,7 +2,7 @@ import { ServerApi } from 'stellar-sdk';
 import { IWallet } from '~root/state/wallet.model';
 
 export interface IWalletsAccount  {
-  _id: string; // this is the public key
+  _id: string; // this is a hashed string from the public key and the network passphrase
   publicKey: string;
   secretKey: string;
   isCreated: boolean;

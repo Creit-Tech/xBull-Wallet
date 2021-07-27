@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
-  createWalletsAccount, IHorizonApi, IWallet, IWalletAsset,
+  createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAccountsStore,
-  WalletsAssetsStore,
+  WalletsAssetsStore, WalletsOperationsStore,
 } from '~root/state';
 import { catchError, map, withLatestFrom } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
@@ -20,12 +20,16 @@ import BigNumber from 'bignumber.js';
   providedIn: 'root'
 })
 export class WalletsAccountsService {
+  private activeAccountsStreams: Array<{ account: IWalletsAccount['_id']; stream: () => void }> = [];
+  private activeOperationsStreams: Array<{ account: IWalletsAccount['_id']; stream: () => void }> = [];
+
   constructor(
     private readonly walletsAccountsStore: WalletsAccountsStore,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly walletsOperationsStore: WalletsOperationsStore,
   ) { }
 
   private saveAccountAndAssets(accountId: IWalletsAccount['_id'], accountRecord: ServerApi.AccountRecord | undefined): void {
@@ -96,9 +100,10 @@ export class WalletsAccountsService {
     }));
   }
 
-  createStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
-    if (account && !account.streamCreated) {
-      new Server(horizonApi.url).accounts()
+  createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
+    const index = this.activeAccountsStreams.findIndex(record => record.account === account._id);
+    if (account && !account.streamCreated && index === -1) {
+      const newStream = new Server(horizonApi.url).accounts()
         .accountId(account.publicKey)
         .stream({
           onmessage: accountRecord => {
@@ -106,11 +111,66 @@ export class WalletsAccountsService {
             this.walletsAccountsStore.upsert(account._id, state => ({ ...state, streamCreated: true }));
           }
         });
+
+      this.activeAccountsStreams.push({
+        account: account._id,
+        stream: newStream,
+      });
+    }
+  }
+
+  createOperationsStream(params: {
+    account: IWalletsAccount,
+    order: 'asc' | 'desc',
+    cursor?: string,
+    horizonApi: IHorizonApi
+  }): void {
+    const index = this.activeOperationsStreams.findIndex(record => record.account === params.account._id);
+    if (params.account && !params.account.operationsStreamCreated && index === -1) {
+      const streamBuilder = new Server(params.horizonApi.url).operations()
+        .forAccount(params.account.publicKey)
+        .limit(10)
+        .includeFailed(false);
+
+      streamBuilder.order(params.order);
+
+      if (!!params.cursor) {
+        streamBuilder.cursor(params.cursor);
+      }
+
+      const newStream = streamBuilder
+        .stream({
+          onmessage: (operationRecord: any) => {
+            this.walletsOperationsStore.upsertMany([createWalletsOperation({
+              ...operationRecord,
+              ownerAccount: params.account.publicKey,
+            })]);
+          }
+        });
+
+      this.activeOperationsStreams.push({
+        account: params.account._id,
+        stream: newStream,
+      });
     }
   }
 
   removeAccounts(walletIds: Array<IWalletsAccount['_id']>): void {
     this.walletsAccountsStore.remove(walletIds);
+    for (const walletId of walletIds) {
+      const accountStreamIndex = this.activeAccountsStreams.findIndex(record => record.account === walletId);
+      const accountOperationsIndex = this.activeOperationsStreams.findIndex(record => record.account === walletId);
+
+      if (accountStreamIndex !== -1) {
+        this.activeAccountsStreams[accountStreamIndex].stream();
+        this.activeAccountsStreams.splice(accountStreamIndex, 1);
+      }
+
+      if (accountOperationsIndex !== -1) {
+        this.activeOperationsStreams[accountOperationsIndex].stream();
+        this.activeOperationsStreams.splice(accountOperationsIndex, 1);
+      }
+    }
   }
 }
 
