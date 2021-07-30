@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, merge, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { ITransaction, WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
@@ -10,6 +10,7 @@ import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -36,7 +37,22 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       this.walletsOperationsService.parseFromXDRToTransactionInterface(xdr)
     ));
 
-  // This is actually IOperation[] but I used "any" so the compiler stops complaining
+  unhandledXdrCheckerSubscription: Subscription = this.xdrParsed$
+    .pipe(take(1))
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(xdr => {
+      try {
+        this.walletsService.checkIfAllOperationsAreHandled(xdr.operations);
+      } catch (e) {
+        this.toastrService.open({
+          title: `Can't continue`,
+          message: e.message,
+          status: 'error',
+        });
+        this.onClose();
+      }
+    });
+
   // TODO: Handle this and a better way for the compiler understand the different types of operations
   operations$: Observable<Operation[]> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
@@ -63,7 +79,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly walletsAccountQuery: WalletsAccountsQuery,
     private readonly toastrService: ToastrService,
     private readonly walletsOperationsService: WalletsOperationsService,
-    private readonly componentCreatorService: ComponentCreatorService
+    private readonly componentCreatorService: ComponentCreatorService,
+    private readonly walletsService: WalletsService,
   ) { }
 
   async ngAfterViewInit(): Promise<void> {

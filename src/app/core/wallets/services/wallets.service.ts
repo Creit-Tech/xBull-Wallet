@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Networks } from 'stellar-base';
+import { Keypair, Networks, Operation } from 'stellar-base';
 import { randomBytes, createHash } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -19,6 +19,31 @@ import { transaction } from '@datorama/akita';
   providedIn: 'root'
 })
 export class WalletsService {
+  // TODO: Think a better way of doing this
+  private handledOperations: Array<Operation['type']> = [
+    'createAccount',
+    'payment',
+    'pathPaymentStrictReceive',
+    'pathPaymentStrictSend',
+    'createPassiveSellOffer',
+    'manageSellOffer',
+    'manageBuyOffer',
+    'setOptions',
+    'changeTrust',
+    'allowTrust',
+    'accountMerge',
+    'inflation',
+    'manageData',
+    'bumpSequence',
+    // 'createClaimableBalance',
+    // 'claimClaimableBalance',
+    'beginSponsoringFutureReserves',
+    'endSponsoringFutureReserves',
+    // 'revokeSponsorship',
+    // 'clawback',
+    // 'clawbackClaimableBalance',
+    'setTrustLineFlags',
+  ];
 
   constructor(
     private readonly walletsStore: WalletsStore,
@@ -130,6 +155,17 @@ export class WalletsService {
 
   async removeWallets(walletId: Array<IWallet['_id']>): Promise<void> {
     this.walletsStore.remove(walletId);
+  }
+
+  checkIfAllOperationsAreHandled(operations: Operation[]): true {
+    for (const operation of operations) {
+      if (this.handledOperations.indexOf(operation.type) === -1) {
+        throw new Error(`Operation type "${operation.type}" is not handled by this wallet yet.`);
+      }
+    }
+
+    return true;
+
   }
 }
 
