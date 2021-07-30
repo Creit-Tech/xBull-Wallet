@@ -13,7 +13,7 @@ export class SiteRequestComponent implements OnInit, AfterViewInit {
 
   @Input() host!: string;
   @Input() origin!: string;
-  @Input() permissions!: Omit<ISiteConnection, '_id' | 'createdAt' | 'updatedAt'>;
+  @Input() permissions!: Pick<ISiteConnection, 'canRequestSign' | 'canRequestPublicKey'>;
   now: Date = new Date();
 
   constructor() { }

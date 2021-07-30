@@ -5,6 +5,7 @@ import { RegisteredWalletsComponent } from '~root/modules/settings/pages/registe
 import { RegisteredWalletDetailsComponent } from '~root/modules/settings/pages/registered-wallet-details/registered-wallet-details.component';
 import { WalletsAccountsComponent } from '~root/modules/settings/pages/wallets-accounts/wallets-accounts.component';
 import { HorizonApisComponent } from '~root/modules/settings/pages/horizon-apis/horizon-apis.component';
+import { SitesConnectedComponent } from '~root/modules/settings/pages/sites-connected/sites-connected.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'horizon-apis',
     component: HorizonApisComponent,
+  },
+  {
+    path: 'sites-connected',
+    component: SitesConnectedComponent,
   }
 ];
 

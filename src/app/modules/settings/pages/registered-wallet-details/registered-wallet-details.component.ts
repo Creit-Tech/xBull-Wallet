@@ -137,7 +137,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     }).pipe(take(1)).toPromise();
 
     ref.component.instance.title = 'Remove Wallet';
-    ref.component.instance.alertMessage = `You're going to remove this wallet from this extension, your assets is safe in the blockchain but make sure you have a way to recover your private keys. Once it's remove we can't get it back until you create it again with your recover method`;
+    ref.component.instance.alertMessage = `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's remove we can't get it back until you create it again with your recover method`;
 
     ref.component.instance.confirmed
       .asObservable()

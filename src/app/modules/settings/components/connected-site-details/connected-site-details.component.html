@@ -1,0 +1,37 @@
+<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
+  <section class="w-full h-full relative">
+    <div class="w-full text-center mb-4">
+      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+        {{ (connectedSite$ | async)?.host }}
+      </h2>
+
+      <p class="pt-4 text-xs text-label">
+        {{ (connectedSite$ | async)?.origin }}
+      </p>
+    </div>
+
+    <section class="w-full mb-8">
+      <dl>
+        <dt class="text-base font-bold mb-1 w-full">Created at:</dt>
+        <dd class="break-all text-sm mb-3 w-full">
+          {{ (connectedSite$ | async)?.createdAt | date: 'MMM dd, yyyy' }}
+        </dd>
+
+        <dt class="text-base font-bold mb-1 w-full">Permissions:</dt>
+        <dd *ngIf="(connectedSite$ | async)?.canRequestPublicKey" class="break-all text-sm mb-3 w-full">
+          Get public key
+        </dd>
+        <dd *ngIf="(connectedSite$ | async)?.canRequestSign" class="break-all text-sm mb-3 w-full">
+          Ask to sign transactions
+        </dd>
+      </dl>
+    </section>
+
+    <section class="w-full flex">
+      <div class="flex-1 pl-2">
+        <button (click)="removeSiteRecords()" class="w-full btn btn--small btn-error-alternative">Remove</button>
+      </div>
+    </section>
+
+  </section>
+</app-modal-wrapper>
