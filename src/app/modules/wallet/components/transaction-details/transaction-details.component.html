@@ -5,31 +5,90 @@
 </div>
 
 <section class="w-full mb-8">
-  <dl>
+  <dl *ngIf="operation$ | async as operation">
     <dt class="text-off-black text-base font-bold mb-1">Type:</dt>
     <dd class="text-label text-sm mb-3">
-      {{ operationType$ | async }}
+      {{ operation.operationRecord.type }}
     </dd>
 
     <dt class="text-off-black text-base font-bold mb-1">Date:</dt>
     <dd class="text-label text-sm mb-3">
-      Pushed at {{ operationDate$ | async | date: 'MMM dd, yyyy' }}
+      Pushed at {{ operation.createdAt | date: 'MMM dd, yyyy' }}
     </dd>
 
-    <ng-container *ngIf="payment$ | async as payment">
+    <ng-container *ngIf="operation.operationRecord.type === 'payment'">
       <dt class="text-off-black text-base font-bold mb-1">To:</dt>
-      <dd appClipboard [textToCopy]="payment.operationRecord.to" class="text-label cursor-pointer text-sm mb-3 break-all">
-        {{ payment.operationRecord.to }}
+      <dd appClipboard [textToCopy]="operation.operationRecord.to" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ operation.operationRecord.to }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">From:</dt>
-      <dd appClipboard [textToCopy]="payment.operationRecord.from" class="text-label cursor-pointer text-sm mb-3 break-all">
-        {{ payment.operationRecord.from }}
+      <dd appClipboard [textToCopy]="operation.operationRecord.from" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ operation.operationRecord.from }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Amount:</dt>
       <dd class="text-label text-sm mb-3">
-        {{ payment.amount | number: '0.0-7' }} {{ payment.assetCode }}
+        {{ operation.operationRecord.amount | number: '0.0-7' }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
+      <dt class="text-off-black text-base font-bold mb-1">To:</dt>
+      <dd appClipboard [textToCopy]="operation.operationRecord.to" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ operation.operationRecord.to }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">From:</dt>
+      <dd appClipboard [textToCopy]="operation.operationRecord.from" class="text-label cursor-pointer text-sm mb-3 break-all">
+        {{ operation.operationRecord.from }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Source amount:</dt>
+      <dd class="text-label text-sm mb-3 break-all">
+        {{ operation.operationRecord.source_amount | number: '0.0-7' }}
+        {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Destination amount:</dt>
+      <dd class="text-label text-sm mb-3 break-all">
+        {{ operation.operationRecord.amount | number: '0.0-7' }}
+        {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+      </dd>
+
+<!--      TODO: Decide if we should show this later-->
+<!--      <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send'">-->
+<!--        <dt class="text-off-black text-base font-bold mb-1">Min amount to receive:</dt>-->
+<!--        <dd class="text-label cursor-pointer text-sm mb-3 break-all">-->
+<!--          {{ operation.operationRecord.destination_min | number: '0.0-7' }}-->
+<!--          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}-->
+<!--        </dd>-->
+<!--      </ng-container>-->
+
+<!--      <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_receive'">-->
+<!--        <dt class="text-off-black text-base font-bold mb-1">Max amount to send:</dt>-->
+<!--        <dd class="text-label cursor-pointer text-sm mb-3 break-all">-->
+<!--          {{ operation.operationRecord.source_max | number: '0.0-7' }}-->
+<!--          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}-->
+<!--        </dd>-->
+<!--      </ng-container>-->
+
+      <dt class="text-off-black text-base font-bold mb-1">Payment path:</dt>
+      <dd class="text-label text-sm mb-3 break-all">
+        0: {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+      </dd>
+      <ng-container *ngFor="let pathStep of operation.operationRecord.path; let i = index">
+        <dd class="text-label text-sm mb-3 break-all">
+          {{ i + 1 }} {{ pathStep.asset_type === 'native' ? 'XLM' : pathStep.asset_code }}
+        </dd>
+      </ng-container>
+      <dd class="text-label text-sm mb-3 break-all">
+        {{ operation.operationRecord.path.length + 1}}: {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
       </dd>
     </ng-container>
   </dl>

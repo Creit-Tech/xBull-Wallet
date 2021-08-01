@@ -9,12 +9,12 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { Account, Asset, TransactionBuilder, Operation } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import { merge, Subject } from 'rxjs';
-import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
 
 @Component({
   selector: 'app-send-funds',
@@ -90,11 +90,11 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly modalsService: ModalsService,
     private readonly stellarSdkService: StellarSdkService,
-    private readonly walletsOperationsService: WalletsOperationsService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly toastrService: ToastrService,
+    private readonly walletsService: WalletsService,
   ) { }
 
   ngOnInit(): void {
@@ -181,7 +181,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
         await ref.close();
       }))
       .pipe(switchMap((signedXdr) =>
-        this.walletsOperationsService.sendPayment(signedXdr)
+        this.walletsService.sendPayment(signedXdr)
       ))
       .subscribe(() => {
         this.paymentSent.emit();

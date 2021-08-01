@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Order, QueryEntity } from '@datorama/akita';
+import { QueryEntity } from '@datorama/akita';
 import { WalletsOperationsState, WalletsOperationsStore } from './wallets-operations.store';
 
 @Injectable({ providedIn: 'root' })

@@ -1,24 +1,95 @@
-<section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
-  <ng-container *ngIf="payment$ | async as operation">
-    <div class="w-7/12">
-      <p class="text-base text-off-white m-0">
-        {{ operation.assetCode }}
-      </p>
-      <p class="text-xs text-line m-0">
-        {{ operation.publicAddress | publicKey }}
-      </p>
-    </div>
+<ng-container *ngIf="operation$ | async as operation">
 
-    <div class="w-5/12 flex flex-col justify-center items-end">
-      <p [class.text-success]="operation.paymentType === 'receive'"
-         [class.text-error]="operation.paymentType === 'send'"
-         class="m-0 text-base truncate">
-        {{ operation.paymentType === 'receive' ? '+' : '-' }}
-        {{ operation.amount | number: '0.0-7' }}
-      </p>
-      <p class="text-xs text-line m-0">
-        {{ operation.createdAt | date: 'MMM dd, yyyy' }}
-      </p>
-    </div>
+  <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+      <div class="w-7/12">
+        <p class="text-base text-off-white m-0">
+          XLM
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.account | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-5/12 flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.account"
+           [class.text-error]="operation.ownerPublicKey !== operation.operationRecord.account"
+           class="m-0 text-base truncate">
+            {{ operation.ownerPublicKey === operation.operationRecord.account ? '+' : '-' }}
+            {{ operation.operationRecord.starting_balance | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
   </ng-container>
-</section>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'payment'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+      <div class="w-7/12">
+        <p class="text-base text-off-white m-0">
+          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.to | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-5/12 flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.to"
+           [class.text-error]="operation.ownerPublicKey !== operation.operationRecord.to"
+           class="m-0 text-base truncate">
+          {{ operation.ownerPublicKey === operation.operationRecord.to ? '+' : '-' }}
+          {{ operation.operationRecord.amount | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base m-0 text-error">
+          - {{ operation.operationRecord.source_amount | number: '0.0-7' }}
+          {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else receiverPublicKey">
+            Exchange
+          </ng-container>
+          <ng-template #receiverPublicKey>
+            {{ operation.operationRecord.to | publicKey }}
+          </ng-template>
+        </p>
+      </div>
+
+      <div class="w-auto pointer-events-none flex items-center justify-center">
+        <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else pathPaymentArrow">
+          <img src="/assets/icons/exchange-transfer.svg" alt="path_payment">
+        </ng-container>
+        <ng-template #pathPaymentArrow>
+          <img src="/assets/icons/path-payment.svg" alt="path_payment">
+        </ng-template>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.to"
+           [class.text-off-white]="operation.ownerPublicKey !== operation.operationRecord.to"
+           class="text-base m-0">
+          <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to">+</ng-container>
+          {{ operation.operationRecord.amount | number: '0.0-7' }}
+          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+
+</ng-container>
