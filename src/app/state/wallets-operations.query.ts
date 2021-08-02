@@ -4,8 +4,8 @@ import { WalletsOperationsState, WalletsOperationsStore } from './wallets-operat
 
 @Injectable({ providedIn: 'root' })
 export class WalletsOperationsQuery extends QueryEntity<WalletsOperationsState> {
-  sendingPayment$ = this.select(state => state.sendingPayment);
-  gettingAccountRecords$ = this.select(state => state.gettingAccountRecords);
+  sendingPayment$ = this.select(state => state.UIState.sendingPayment);
+  gettingAccountRecords$ = this.select(state => state.UIState.gettingAccountRecords);
 
   constructor(protected store: WalletsOperationsStore) {
     super(store);

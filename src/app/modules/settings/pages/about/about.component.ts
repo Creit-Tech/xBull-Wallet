@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { SettingsQuery } from '~root/state';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-about',
@@ -6,8 +8,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./about.component.scss']
 })
 export class AboutComponent implements OnInit {
+  walletVersion: string = this.env.version;
 
-  constructor() { }
+  constructor(
+    @Inject(ENV)
+    private readonly env: typeof environment,
+  ) { }
 
   ngOnInit(): void {
   }

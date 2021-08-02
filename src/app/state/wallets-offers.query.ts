@@ -6,9 +6,9 @@ import OfferRecord = ServerApi.OfferRecord;
 
 @Injectable({ providedIn: 'root' })
 export class WalletsOffersQuery extends QueryEntity<WalletsOffersState> {
-  sendingPathPaymentStrictSend$ = this.select(state => state.sendingPathPaymentStrictSend);
-  sendingPathPaymentStrictReceive$ = this.select(state => state.sendingPathPaymentStrictReceive);
-  sendingOffer$ = this.select(state => state.sendingOffer);
+  sendingPathPaymentStrictSend$ = this.select(state => state.UIState.sendingPathPaymentStrictSend);
+  sendingPathPaymentStrictReceive$ = this.select(state => state.UIState.sendingPathPaymentStrictReceive);
+  sendingOffer$ = this.select(state => state.UIState.sendingOffer);
 
   constructor(protected store: WalletsOffersStore) {
     super(store);
