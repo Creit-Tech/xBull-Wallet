@@ -16,6 +16,18 @@
       Pushed at {{ operation.createdAt | date: 'MMM dd, yyyy' }}
     </dd>
 
+    <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
+      <dt class="text-off-black text-base font-bold mb-1">Account:</dt>
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.account">
+        {{ operation.operationRecord.account | publicKey }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Initial amount:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.starting_balance | number: '0.0-7' }}
+      </dd>
+    </ng-container>
+
     <ng-container *ngIf="operation.operationRecord.type === 'payment'">
       <dt class="text-off-black text-base font-bold mb-1">To:</dt>
       <dd appClipboard [textToCopy]="operation.operationRecord.to" class="text-label cursor-pointer text-sm mb-3 break-all">
