@@ -121,5 +121,27 @@
     </section>
   </ng-container>
 
+  <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          {{ (operation.operationRecord.limit | number: '0.0-0') === '0' ? 'Remove' : 'Trust' }} Asset
+        </p>
+        <p class="text-xs text-line m-0">
+          Issuer: {{ operation.operationRecord.asset_issuer | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
 
 </ng-container>

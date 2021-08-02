@@ -133,6 +133,23 @@
         {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
       </dd>
     </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
+      <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+        {{ operation.operationRecord.asset_issuer | publicKey }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Limit:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.limit | number: '0.0-7' }}
+      </dd>
+    </ng-container>
   </dl>
 </section>
 
