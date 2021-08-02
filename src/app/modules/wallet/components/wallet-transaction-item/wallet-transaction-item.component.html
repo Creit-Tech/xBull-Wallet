@@ -54,15 +54,11 @@
       <div class="w-auto">
         <p class="text-base m-0 text-error">
           - {{ operation.operationRecord.source_amount | number: '0.0-7' }}
-          {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
         </p>
         <p class="text-xs text-line m-0">
-          <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else receiverPublicKey">
-            Exchange
-          </ng-container>
-          <ng-template #receiverPublicKey>
-            {{ operation.operationRecord.to | publicKey }}
-          </ng-template>
+          {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+          ->
+          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
         </p>
       </div>
 
@@ -81,7 +77,6 @@
            class="text-base m-0">
           <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to">+</ng-container>
           {{ operation.operationRecord.amount | number: '0.0-7' }}
-          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
         </p>
         <p class="text-xs text-line m-0">
           {{ operation.createdAt | date: 'MMM dd, yyyy' }}
