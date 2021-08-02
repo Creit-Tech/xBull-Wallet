@@ -150,6 +150,18 @@
         {{ operation.operationRecord.limit | number: '0.0-7' }}
       </dd>
     </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
+      <dt class="text-off-black text-base font-bold mb-1">Data name:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.name }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Data value:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ !operation.operationRecord.value ? 'Value removed' : operation.operationRecord.value | base64Parse }}
+      </dd>
+    </ng-container>
   </dl>
 </section>
 
