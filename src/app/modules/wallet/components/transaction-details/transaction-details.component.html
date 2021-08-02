@@ -84,11 +84,41 @@
       </dd>
       <ng-container *ngFor="let pathStep of operation.operationRecord.path; let i = index">
         <dd class="text-label text-sm mb-3 break-all">
-          {{ i + 1 }} {{ pathStep.asset_type === 'native' ? 'XLM' : pathStep.asset_code }}
+          {{ i + 1 }}: {{ pathStep.asset_type === 'native' ? 'XLM' : pathStep.asset_code }}
         </dd>
       </ng-container>
       <dd class="text-label text-sm mb-3 break-all">
         {{ operation.operationRecord.path.length + 1}}: {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'create_passive_sell_offer' || operation.operationRecord.type === 'manage_sell_offer' || operation.operationRecord.type === 'manage_buy_offer'">
+      <dt class="text-off-black text-base font-bold mb-1">Offer ID:</dt>
+      <dd class="text-label text-sm mb-3">
+        <ng-container *ngIf="(operation.operationRecord.amount | number: '0.0-0') == '0'; else updateOffer">
+          Close offer: {{ operation.operationRecord.offer_id }}
+        </ng-container>
+        <ng-template #updateOffer>
+          {{ !operation.operationRecord.offer_id || operation.operationRecord.offer_id == '0' ? 'New offer' : 'Update offer: ' + operation.operationRecord.offer_id }}
+        </ng-template>
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Selling:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.amount | number: '0.0-7' }} {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Buying:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Pair rate:</dt>
+      <dd class="text-label text-sm mb-3">
+        1 {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+        =
+        {{ operation.operationRecord.price | number: '0.0-7' }}
+        {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
       </dd>
     </ng-container>
   </dl>
