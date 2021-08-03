@@ -1,7 +1,8 @@
 ![](https://xbull.app/logo.svg)
 
-# ***Still in ALPHA stage***
-*This version is still in Alpha stage, please be aware of this and use it with precaution. We are still making lots of changes and it's possible that future versions won't be compatible with this one. Some features might not work currently but the app is pretty stable.*
+---
+# ***Still in BETA stage***
+*This version is still in BETA stage and we are updating it constantly, please be aware of this and use it with precaution.*
 
 *Security is a priority but we can't promise it in this early stage, all your private keys are encrypted but please use this wallet with secondary accounts or with test accounts. If you use accounts created by the wallet, please always keep your Mnemonic phrases to be able to restore them later.*
 
