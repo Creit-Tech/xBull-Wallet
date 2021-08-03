@@ -163,8 +163,8 @@
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
-      <dd class="text-label text-sm mb-3">
-        {{ operation.operationRecord.asset_issuer }}
+      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+        {{ operation.operationRecord.asset_issuer | publicKey }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Authorize:</dt>
@@ -206,8 +206,8 @@
 
     <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
       <dt class="text-off-black text-base font-bold mb-1">Sponsored ID:</dt>
-      <dd class="text-label text-sm mb-3">
-        {{ operation.operationRecord.sponsored_id }}
+      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.sponsored_id">
+        {{ operation.operationRecord.sponsored_id | publicKey }}
       </dd>
     </ng-container>
 
@@ -216,6 +216,32 @@
       <dd class="text-label text-sm mb-3">
         {{ operation.operationRecord.begin_sponsor }}
       </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'set_trust_line_flags'">
+      <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
+      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.trustor">
+        {{ operation.operationRecord.trustor | publicKey }}
+      </dd>
+
+      <ng-container *ngIf="operation.operationRecord.set_flags">
+        <dt class="text-off-black text-base font-bold mb-1">Set flags:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.set_flags }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.clear_flags">
+        <dt class="text-off-black text-base font-bold mb-1">Clear flags:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.clear_flags }}
+        </dd>
+      </ng-container>
     </ng-container>
   </dl>
 </section>

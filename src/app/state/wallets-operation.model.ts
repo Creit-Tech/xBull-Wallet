@@ -22,13 +22,29 @@ interface ManageBuyOfferOperationResponse {
   selling_asset_issuer?: string;
 }
 
+interface SetTrustLineFlagsOperationResponse {
+  id: string;
+  paging_token: string;
+  source_account: string;
+  type: 'set_trust_line_flags';
+  type_i: 21;
+  created_at: string;
+  transaction_hash: string;
+  asset_type: AssetType;
+  asset_code: string;
+  asset_issuer: string;
+  trustor: string;
+  set_flags: Array<1 | 2 | 4>;
+  clear_flags: Array<1 | 2 | 4>;
+}
+
 export interface IWalletsOperation {
   _id: string;
   ownerAccount: IWalletsAccount['_id'];
   ownerPublicKey: IWalletsAccount['publicKey'];
   createdAt: number; // Unix time
   pagingToken: OperationRecord['paging_token'];
-  operationRecord: OperationRecord | ManageBuyOfferOperationResponse;
+  operationRecord: OperationRecord | ManageBuyOfferOperationResponse | SetTrustLineFlagsOperationResponse;
 }
 
 export function createWalletsOperation(params: {
