@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Networks, Operation } from 'stellar-base';
+import { Keypair, Memo, Networks, Operation, Transaction } from 'stellar-base';
 import { randomBytes, createHash } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -9,11 +9,13 @@ import {
   HorizonApisQuery, IHorizonApi,
   IWallet,
   IWalletsAccount,
-  WalletsAccountsStore,
+  WalletsAccountsStore, WalletsOperationsStore,
   WalletsStore,
 } from '~root/state';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { transaction } from '@datorama/akita';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import { Horizon, ServerApi } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +53,8 @@ export class WalletsService {
     private readonly cryptoService: CryptoService,
     private readonly mnemonicPhraseService: MnemonicPhraseService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly walletsOperationsStore: WalletsOperationsStore,
   ) { }
 
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
@@ -167,6 +171,38 @@ export class WalletsService {
     return true;
 
   }
+
+  parseMemo(memo: Memo): string | undefined {
+    if (!memo.value) {
+      return;
+    }
+
+    return Buffer.from(memo.value).toString();
+  }
+
+  parseFromXDRToTransactionInterface(xdr: string): ITransaction {
+    const createdTransaction = new Transaction(xdr, this.stellarSdkService.networkPassphrase);
+    return {
+      fee: createdTransaction.fee,
+      baseAccount: createdTransaction.source,
+      operations: createdTransaction.operations,
+      passphrase: createdTransaction.networkPassphrase,
+      memo: this.parseMemo(createdTransaction.memo),
+    };
+  }
+
+  sendPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: true }));
+    return this.stellarSdkService.submitTransaction(xdr)
+      .then(response => {
+        this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: false }));
+        return response;
+      })
+      .catch(error => {
+        this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: false }));
+        return Promise.reject(error);
+      });
+  }
 }
 
 export type INewAccountType = INewAccountMnemonicPhraseType;
@@ -186,4 +222,12 @@ export interface INewWalletMnemonicPhraseType {
   mnemonicPhrase: string;
   path?: string;
   password: string;
+}
+
+export interface ITransaction {
+  baseAccount: string;
+  passphrase: string;
+  operations: Operation[];
+  fee: string;
+  memo?: string;
 }

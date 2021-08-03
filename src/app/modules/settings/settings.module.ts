@@ -18,6 +18,7 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
 import { AddAccountComponent } from './components/add-account/add-account.component';
 import { SitesConnectedComponent } from './pages/sites-connected/sites-connected.component';
 import { ConnectedSiteDetailsComponent } from './components/connected-site-details/connected-site-details.component';
+import { AboutComponent } from './pages/about/about.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { ConnectedSiteDetailsComponent } from './components/connected-site-detai
     AddHorizonApiComponent,
     AddAccountComponent,
     SitesConnectedComponent,
-    ConnectedSiteDetailsComponent
+    ConnectedSiteDetailsComponent,
+    AboutComponent
   ],
   imports: [
     CommonModule,

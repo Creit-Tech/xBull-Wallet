@@ -1,24 +1,319 @@
-<section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
-  <ng-container *ngIf="payment$ | async as operation">
-    <div class="w-7/12">
-      <p class="text-base text-off-white m-0">
-        {{ operation.assetCode }}
-      </p>
-      <p class="text-xs text-line m-0">
-        {{ operation.publicAddress | publicKey }}
-      </p>
-    </div>
+<ng-container *ngIf="operation$ | async as operation">
+  <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+      <div class="w-7/12">
+        <p class="text-base text-off-white m-0">
+          XLM
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.account | publicKey }}
+        </p>
+      </div>
 
-    <div class="w-5/12 flex flex-col justify-center items-end">
-      <p [class.text-success]="operation.paymentType === 'receive'"
-         [class.text-error]="operation.paymentType === 'send'"
-         class="m-0 text-base truncate">
-        {{ operation.paymentType === 'receive' ? '+' : '-' }}
-        {{ operation.amount | number: '0.0-7' }}
-      </p>
-      <p class="text-xs text-line m-0">
-        {{ operation.createdAt | date: 'MMM dd, yyyy' }}
-      </p>
-    </div>
+      <div class="w-5/12 flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.account"
+           [class.text-error]="operation.ownerPublicKey !== operation.operationRecord.account"
+           class="m-0 text-base truncate">
+            {{ operation.ownerPublicKey === operation.operationRecord.account ? '+' : '-' }}
+            {{ operation.operationRecord.starting_balance | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
   </ng-container>
-</section>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'payment'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+      <div class="w-7/12">
+        <p class="text-base text-off-white m-0">
+          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.to | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-5/12 flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.to"
+           [class.text-error]="operation.ownerPublicKey !== operation.operationRecord.to"
+           class="m-0 text-base truncate">
+          {{ operation.ownerPublicKey === operation.operationRecord.to ? '+' : '-' }}
+          {{ operation.operationRecord.amount | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base m-0 text-error">
+          - {{ operation.operationRecord.source_amount | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+          ->
+          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+        </p>
+      </div>
+
+      <div class="w-auto pointer-events-none flex items-center justify-center">
+        <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else pathPaymentArrow">
+          <img src="/assets/icons/exchange-transfer.svg" alt="exchange">
+        </ng-container>
+        <ng-template #pathPaymentArrow>
+          <img src="/assets/icons/path-payment.svg" alt="path_payment">
+        </ng-template>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.to"
+           [class.text-off-white]="operation.ownerPublicKey !== operation.operationRecord.to"
+           class="text-base m-0">
+          <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to">+</ng-container>
+          {{ operation.operationRecord.amount | number: '0.0-7' }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'create_passive_sell_offer' || operation.operationRecord.type === 'manage_sell_offer' || operation.operationRecord.type === 'manage_buy_offer'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-5/12">
+        <p class="text-base text-off-white m-0">
+          Sell: {{ operation.operationRecord.amount | number: '0.0-7' }}
+          {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          <ng-container *ngIf="(operation.operationRecord.amount | number: '0.0-0') == '0'; else updateOffer">
+            Close offer: {{ operation.operationRecord.offer_id }}
+          </ng-container>
+          <ng-template #updateOffer>
+            {{ !operation.operationRecord.offer_id || operation.operationRecord.offer_id == '0' ? 'Place new offer' : 'Update offer: ' + operation.operationRecord.offer_id }}
+          </ng-template>
+        </p>
+      </div>
+
+      <div class="w-7/12 flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          1 {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+          =
+          {{ operation.operationRecord.price | number: '0.0-7' }}
+          {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'set_options'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Set options operation
+        </p>
+        <p class="text-xs text-line m-0">
+          Data updated
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          {{ (operation.operationRecord.limit | number: '0.0-0') === '0' ? 'Remove' : 'Trust' }} Asset
+        </p>
+        <p class="text-xs text-line m-0">
+          Issuer: {{ operation.operationRecord.asset_issuer | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Allow trust
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.trustor | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Merge account
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.into | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          {{ !operation.operationRecord.value ? 'Remove' : 'Set' }}
+          data
+        </p>
+        <p class="text-xs text-line m-0">
+          Manage Data
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.name }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'bump_sequence'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Bump to
+        </p>
+        <p class="text-xs text-line m-0">
+          Bump sequence
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.bump_to }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Begin Sponsoring
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.sponsored_id }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'end_sponsoring_future_reserves'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          End Sponsoring
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.begin_sponsor }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'set_trust_line_flags'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Set trustline flags
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.trustor | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.asset_code }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+
+</ng-container>

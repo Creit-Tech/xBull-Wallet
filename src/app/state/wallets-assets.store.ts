@@ -3,14 +3,18 @@ import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { IWalletAsset } from './wallets-asset.model';
 
 export interface WalletsAssetsState extends EntityState<IWalletAsset> {
-  addingAsset: boolean;
-  removingAsset: boolean;
+  UIState: {
+    addingAsset: boolean;
+    removingAsset: boolean;
+  };
 }
 
 function createInitialState(): WalletsAssetsState {
   return {
-    addingAsset: false,
-    removingAsset: false,
+    UIState: {
+      addingAsset: false,
+      removingAsset: false,
+    },
   };
 }
 
@@ -23,6 +27,16 @@ export class WalletsAssetsStore extends EntityStore<WalletsAssetsState> {
 
   constructor() {
     super(createInitialState());
+  }
+
+  updateUIState(newState: Partial<WalletsAssetsState['UIState']>): void {
+    this.update(state => ({
+      ...state,
+      UIState: {
+        ...state.UIState,
+        ...newState,
+      },
+    }));
   }
 
 }

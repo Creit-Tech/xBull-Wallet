@@ -20,11 +20,11 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(exhaustMap(account => {
       return this.walletsOperationsQuery.selectAll({
-        filterBy: entity => entity.ownerAccount === account.publicKey && entity.operationHandled,
+        filterBy: entity => entity.ownerAccount === account._id,
         sortBy: (entityA, entityB) => entityB.createdAt - entityA.createdAt,
       });
     }))
-    .pipe(debounceTime(10))
+    .pipe(debounceTime(10));
 
   weAreInTestNet$ = this.horizonApisQuery.getSelectedHorizonApi$
     .pipe(pluck('networkPassphrase'))

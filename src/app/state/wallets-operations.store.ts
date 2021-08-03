@@ -3,14 +3,20 @@ import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { IWalletsOperation } from './wallets-operation.model';
 
 export interface WalletsOperationsState extends EntityState<IWalletsOperation> {
-  sendingPayment: boolean;
-  gettingAccountRecords: boolean;
+  UIState: {
+    sendingPayment: boolean;
+    gettingAccountRecords: boolean;
+  };
+  storeVersion: number;
 }
 
 function createInitialState(): WalletsOperationsState {
   return {
-    sendingPayment: false,
-    gettingAccountRecords: false,
+    UIState: {
+      sendingPayment: false,
+      gettingAccountRecords: false,
+    },
+    storeVersion: 1,
   };
 }
 
@@ -23,6 +29,16 @@ export class WalletsOperationsStore extends EntityStore<WalletsOperationsState> 
 
   constructor() {
     super(createInitialState());
+  }
+
+  updateUIState(newState: Partial<WalletsOperationsState['UIState']>): void {
+    this.update(state => ({
+      ...state,
+      UIState: {
+        ...state.UIState,
+        ...newState,
+      },
+    }));
   }
 
 }

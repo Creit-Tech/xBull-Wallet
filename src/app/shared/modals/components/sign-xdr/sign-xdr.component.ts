@@ -1,6 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { ITransaction, WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { Operation } from 'stellar-base';
@@ -10,7 +9,7 @@ import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
-import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -34,7 +33,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
 
   xdrParsed$: Observable<ITransaction> = this.xdr$.asObservable()
     .pipe(map(xdr =>
-      this.walletsOperationsService.parseFromXDRToTransactionInterface(xdr)
+      this.walletsService.parseFromXDRToTransactionInterface(xdr)
     ));
 
   unhandledXdrCheckerSubscription: Subscription = this.xdrParsed$
@@ -78,7 +77,6 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly cryptoService: CryptoService,
     private readonly walletsAccountQuery: WalletsAccountsQuery,
     private readonly toastrService: ToastrService,
-    private readonly walletsOperationsService: WalletsOperationsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
   ) { }
