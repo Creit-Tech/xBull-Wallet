@@ -196,6 +196,13 @@
         {{ !operation.operationRecord.value ? 'Value removed' : operation.operationRecord.value | base64Parse }}
       </dd>
     </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'bump_sequence'">
+      <dt class="text-off-black text-base font-bold mb-1">Bump to:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.bump_to }}
+      </dd>
+    </ng-container>
   </dl>
 </section>
 

@@ -205,5 +205,27 @@
     </section>
   </ng-container>
 
+  <ng-container *ngIf="operation.operationRecord.type === 'bump_sequence'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Bump to
+        </p>
+        <p class="text-xs text-line m-0">
+          Bump sequence
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-off-white">
+          {{ operation.operationRecord.bump_to }}
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
 
 </ng-container>
