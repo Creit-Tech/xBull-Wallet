@@ -1,7 +1,7 @@
 const { resolve } = require('path');
 
 module.exports = {
-  // mode: 'production',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'none',
   entry: {
     background: resolve(__dirname, 'src/extension/background/background.ts'),
     'sdk': resolve(__dirname, 'src/extension/sdk/sdk.ts'),

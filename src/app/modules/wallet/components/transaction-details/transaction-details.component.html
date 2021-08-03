@@ -218,7 +218,7 @@
 
     <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
       <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
-      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.trustor">
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.trustor">
         {{ operation.operationRecord.trustor | publicKey }}
       </dd>
 
@@ -228,7 +228,7 @@
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
-      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
         {{ operation.operationRecord.asset_issuer | publicKey }}
       </dd>
 
@@ -245,7 +245,7 @@
 
     <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
       <dt class="text-off-black text-base font-bold mb-1">Receiver:</dt>
-      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.into">
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.into">
         {{ operation.operationRecord.into | publicKey }}
       </dd>
     </ng-container>
@@ -271,7 +271,7 @@
 
     <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
       <dt class="text-off-black text-base font-bold mb-1">Sponsored ID:</dt>
-      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.sponsored_id">
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.sponsored_id">
         {{ operation.operationRecord.sponsored_id | publicKey }}
       </dd>
     </ng-container>
@@ -290,7 +290,7 @@
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
-      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.trustor">
+      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.trustor">
         {{ operation.operationRecord.trustor | publicKey }}
       </dd>
 
