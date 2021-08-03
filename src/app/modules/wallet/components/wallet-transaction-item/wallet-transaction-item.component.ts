@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IWalletsOperation, IWalletsPaymentOperation } from '~root/state';
+import { IWalletsOperation } from '~root/state';
 import { ReplaySubject, Subject } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map, pluck, tap } from 'rxjs/operators';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
 
 @Component({
   selector: 'app-wallet-transaction-item',
@@ -14,11 +15,9 @@ export class WalletTransactionItemComponent implements OnInit {
     this.operation$.next(data);
   }
 
-  payment$: Observable<IWalletsPaymentOperation> = this.operation$
-    .asObservable()
-    .pipe(filter(operation => operation.type === 'payment')) as Observable<IWalletsPaymentOperation>;
-
-  constructor() { }
+  constructor(
+    private readonly walletsService: WalletsService,
+  ) { }
 
   ngOnInit(): void {
   }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { IWalletsOperation, IWalletsPaymentOperation } from '~root/state';
+import { IWalletsOperation } from '~root/state';
 import { ReplaySubject } from 'rxjs';
 import { filter, map, pluck, take } from 'rxjs/operators';
 import { GlobalsService } from '~root/lib/globals/globals.service';
@@ -16,18 +16,8 @@ export class TransactionDetailsComponent implements OnInit {
     this.operation$.next(data);
   }
 
-  operationType$: Observable<IWalletsOperation['type']> = this.operation$.asObservable()
-    .pipe(pluck('type'));
-
-  operationDate$: Observable<IWalletsOperation['createdAt']> = this.operation$.asObservable()
-    .pipe(pluck('createdAt'));
-
-  payment$: Observable<IWalletsPaymentOperation> = this.operation$.asObservable()
-    .pipe(filter(operation => !!operation)) as Observable<IWalletsPaymentOperation>;
-
   constructor(
     private readonly globalsService: GlobalsService,
-    private readonly stellarSdkService: StellarSdkService,
   ) { }
 
   ngOnInit(): void {

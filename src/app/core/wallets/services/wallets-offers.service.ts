@@ -25,15 +25,15 @@ export class WalletsOffersService {
     this.walletsOffersStore.remove(id);
   }
 
-  private submitAndUpdateStore(xdr: string, storeField: keyof WalletsOffersState): Promise<Horizon.SubmitTransactionResponse> {
-    this.walletsOffersStore.update(state => ({ ...state, [storeField]: true }));
+  private submitAndUpdateStore(xdr: string, storeField: keyof WalletsOffersState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
+    this.walletsOffersStore.updateUIState({ [storeField]: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {
-        this.walletsOffersStore.update(state => ({ ...state, [storeField]: false }));
+        this.walletsOffersStore.updateUIState({ [storeField]: false });
         return response;
       })
       .catch(error => {
-        this.walletsOffersStore.update(state => ({ ...state, [storeField]: false }));
+        this.walletsOffersStore.updateUIState({ [storeField]: false });
         return Promise.reject(error);
       });
   }

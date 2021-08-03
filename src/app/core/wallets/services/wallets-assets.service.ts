@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
 import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset, StellarTomlResolver } from 'stellar-sdk';
-import { IHorizonApi, IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsStore } from '~root/state';
+import { IHorizonApi, IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsState, WalletsAssetsStore } from '~root/state';
 import { from, of } from 'rxjs';
 import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -19,15 +19,15 @@ export class WalletsAssetsService {
     private readonly stellarSdkService: StellarSdkService,
   ) { }
 
-  private simpleStateUpdateFlow(xdr: string, stateField: string): Promise<Horizon.SubmitTransactionResponse> {
-    this.walletsAssetsStore.update(state => ({ ...state, [stateField]: true }));
+  private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
+    this.walletsAssetsStore.updateUIState({ [stateField]: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then((response) => {
-        this.walletsAssetsStore.update(state => ({ ...state, [stateField]: false }));
+        this.walletsAssetsStore.updateUIState({ [stateField]: false });
         return response;
       })
       .catch(error => {
-        this.walletsAssetsStore.update(state => ({ ...state, [stateField]: false }));
+        this.walletsAssetsStore.updateUIState({ [stateField]: false });
         return Promise.reject(error);
       });
   }

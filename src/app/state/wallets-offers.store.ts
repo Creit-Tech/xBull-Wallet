@@ -4,16 +4,20 @@ import { ServerApi } from 'stellar-sdk';
 import OfferRecord = ServerApi.OfferRecord;
 
 export interface WalletsOffersState extends EntityState<OfferRecord> {
-  sendingPathPaymentStrictSend: boolean;
-  sendingPathPaymentStrictReceive: boolean;
-  sendingOffer: boolean;
+  UIState: {
+    sendingPathPaymentStrictSend: boolean;
+    sendingPathPaymentStrictReceive: boolean;
+    sendingOffer: boolean;
+  };
 }
 
 export function createInitialState(): WalletsOffersState {
   return {
-    sendingPathPaymentStrictSend: false,
-    sendingPathPaymentStrictReceive: false,
-    sendingOffer: false,
+    UIState: {
+      sendingPathPaymentStrictSend: false,
+      sendingPathPaymentStrictReceive: false,
+      sendingOffer: false,
+    }
   };
 }
 
@@ -26,6 +30,16 @@ export class WalletsOffersStore extends EntityStore<WalletsOffersState> {
 
   constructor() {
     super(createInitialState());
+  }
+
+  updateUIState(newState: Partial<WalletsOffersState['UIState']>): void {
+    this.update(state => ({
+      ...state,
+      UIState: {
+        ...state.UIState,
+        ...newState,
+      },
+    }));
   }
 
 }

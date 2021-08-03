@@ -8,7 +8,8 @@
     "build:extension": "./node_modules/.bin/webpack-cli -c webpack.extension.js",
     "build:extension:watch": "./node_modules/.bin/webpack-cli -c webpack.extension.js --watch",
     "build:watch": "./node_modules/.bin/ng build --watch",
-    "build:prod": "cross-env NODE_ENV=production ./node_modules/.bin/ng build --prod",
+    "build:prod": "./node_modules/.bin/ng build --prod",
+    "deploy": "cross-env NODE_ENV=production npm run build:prod && npm run build:extension",
     "test": "./node_modules/.bin/ng test",
     "lint": "./node_modules/.bin/ng lint",
     "e2e": "./node_modules/.bin/ng e2e"
