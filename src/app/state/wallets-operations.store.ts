@@ -7,6 +7,7 @@ export interface WalletsOperationsState extends EntityState<IWalletsOperation> {
     sendingPayment: boolean;
     gettingAccountRecords: boolean;
   };
+  storeVersion: number;
 }
 
 function createInitialState(): WalletsOperationsState {
@@ -14,7 +15,8 @@ function createInitialState(): WalletsOperationsState {
     UIState: {
       sendingPayment: false,
       gettingAccountRecords: false,
-    }
+    },
+    storeVersion: 1,
   };
 }
 

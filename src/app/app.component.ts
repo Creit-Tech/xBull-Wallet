@@ -4,7 +4,6 @@ import { HorizonApisQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '
 import { combineLatest, forkJoin, of, pipe, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilKeyChanged, filter, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { Order, selectPersistStateInit } from '@datorama/akita';
-import { WalletsOperationsService } from '~root/core/wallets/services/wallets-operations.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +15,6 @@ export class AppComponent {
   constructor(
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
-    private readonly walletsOperationsService: WalletsOperationsService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
@@ -44,18 +42,17 @@ export class AppComponent {
         of(account),
         of(horizonApi),
         this.walletsOperationsQuery.selectAll({
-          filterBy: entity => entity.ownerAccount === account.publicKey,
+          filterBy: entity => entity.ownerAccount === account._id,
           sortBy: (entityA, entityB) => entityA.createdAt - entityB.createdAt,
         }).pipe(take(1))
       ]);
     }))
     .subscribe(([account, horizonApi, operations]) => {
       const lastValue = operations[operations.length - 1];
-      const firstNonHandled = operations.find(operation => !operation.operationHandled);
       this.walletsAccountsService.createOperationsStream({
         account,
         order: 'asc',
-        cursor: firstNonHandled?.pagingToken || lastValue?.pagingToken,
+        cursor: lastValue?.pagingToken,
         horizonApi
       });
     });

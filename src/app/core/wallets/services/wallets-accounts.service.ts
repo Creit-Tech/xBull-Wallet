@@ -15,6 +15,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
 import BalanceLine = Horizon.BalanceLine;
 import BigNumber from 'bignumber.js';
+import OperationRecord = ServerApi.OperationRecord;
 
 @Injectable({
   providedIn: 'root'
@@ -140,10 +141,11 @@ export class WalletsAccountsService {
 
       const newStream = streamBuilder
         .stream({
-          onmessage: (operationRecord: any) => {
+          onmessage: (operationRecord) => {
             this.walletsOperationsStore.upsertMany([createWalletsOperation({
-              ...operationRecord,
-              ownerAccount: params.account.publicKey,
+              ownerId: params.account._id,
+              ownerPublicKey: params.account.publicKey,
+              operation: operationRecord as any as OperationRecord,
             })]);
           }
         });
