@@ -134,6 +134,71 @@
       </dd>
     </ng-container>
 
+    <ng-container *ngIf="operation.operationRecord.type === 'set_options'">
+      <ng-container *ngIf="operation.operationRecord.signer_key">
+        <dt class="text-off-black text-base font-bold mb-1">Signer key:</dt>
+        <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.signer_key">
+          {{ operation.operationRecord.signer_key | publicKey }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.signer_weight">
+        <dt class="text-off-black text-base font-bold mb-1">Signer weight:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.signer_weight }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.master_key_weight">
+        <dt class="text-off-black text-base font-bold mb-1">Master key weight:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.master_key_weight }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.low_threshold || operation.operationRecord.low_threshold === 0">
+        <dt class="text-off-black text-base font-bold mb-1">Low threshold:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.low_threshold }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.med_threshold || operation.operationRecord.med_threshold === 0">
+        <dt class="text-off-black text-base font-bold mb-1">Medium threshold:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.med_threshold }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.high_threshold || operation.operationRecord.high_threshold === 0">
+        <dt class="text-off-black text-base font-bold mb-1">High threshold:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.high_threshold }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.home_domain">
+        <dt class="text-off-black text-base font-bold mb-1">Home domain:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.home_domain }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.set_flags_s">
+        <dt class="text-off-black text-base font-bold mb-1">Set flags:</dt>
+        <dd *ngFor="let flag of operation.operationRecord.set_flags_s" class="text-label text-sm mb-3">
+          {{ flag }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.clear_flags_s">
+        <dt class="text-off-black text-base font-bold mb-1">Clear flags:</dt>
+        <dd *ngFor="let flag of operation.operationRecord.clear_flags_s" class="text-label text-sm mb-3">
+          {{ flag }}
+        </dd>
+      </ng-container>
+    </ng-container>
+
     <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
       <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
       <dd class="text-label text-sm mb-3">
