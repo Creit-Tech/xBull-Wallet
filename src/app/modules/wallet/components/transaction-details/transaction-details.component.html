@@ -203,6 +203,20 @@
         {{ operation.operationRecord.bump_to }}
       </dd>
     </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
+      <dt class="text-off-black text-base font-bold mb-1">Sponsored ID:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.sponsored_id }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'end_sponsoring_future_reserves'">
+      <dt class="text-off-black text-base font-bold mb-1">Begin sponsor:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.begin_sponsor }}
+      </dd>
+    </ng-container>
   </dl>
 </section>
 

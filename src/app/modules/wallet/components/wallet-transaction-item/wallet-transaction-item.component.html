@@ -227,5 +227,49 @@
     </section>
   </ng-container>
 
+  <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Begin Sponsoring
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.sponsored_id }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="operation.operationRecord.type === 'end_sponsoring_future_reserves'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          End Sponsoring
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.begin_sponsor }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
 
 </ng-container>
