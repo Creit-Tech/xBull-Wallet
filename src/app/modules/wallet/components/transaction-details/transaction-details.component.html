@@ -153,7 +153,7 @@
 
     <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
       <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
-      <dd class="text-label text-sm mb-3">
+      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.trustor">
         {{ operation.operationRecord.trustor | publicKey }}
       </dd>
 
@@ -175,6 +175,13 @@
       <dt class="text-off-black text-base font-bold mb-1">Authorize to maintain liabilities:</dt>
       <dd class="text-label text-sm mb-3">
         {{ operation.operationRecord.authorize_to_maintain_liabilities }}
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
+      <dt class="text-off-black text-base font-bold mb-1">Receiver:</dt>
+      <dd class="text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.into">
+        {{ operation.operationRecord.into | publicKey }}
       </dd>
     </ng-container>
 

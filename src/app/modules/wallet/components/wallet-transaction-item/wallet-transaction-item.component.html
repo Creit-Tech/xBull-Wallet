@@ -160,6 +160,28 @@
     </section>
   </ng-container>
 
+  <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+      <div class="w-auto">
+        <p class="text-base text-off-white m-0">
+          Merge account
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.operationRecord.into | publicKey }}
+        </p>
+      </div>
+
+      <div class="w-auto flex flex-col justify-center items-end">
+        <p class="m-0 text-base truncate text-transparent">
+          -
+        </p>
+        <p class="text-xs text-line m-0">
+          {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+        </p>
+      </div>
+    </section>
+  </ng-container>
+
   <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
     <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
       <div class="w-auto">
