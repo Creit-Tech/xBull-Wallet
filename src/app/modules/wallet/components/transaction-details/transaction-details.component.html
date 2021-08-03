@@ -151,6 +151,33 @@
       </dd>
     </ng-container>
 
+    <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
+      <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.trustor | publicKey }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.asset_code }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.asset_issuer }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Authorize:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.authorize }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Authorize to maintain liabilities:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.authorize_to_maintain_liabilities }}
+      </dd>
+    </ng-container>
+
     <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
       <dt class="text-off-black text-base font-bold mb-1">Data name:</dt>
       <dd class="text-label text-sm mb-3">
