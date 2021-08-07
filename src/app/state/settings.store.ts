@@ -7,6 +7,9 @@ export interface SettingsState {
   };
   advanceMode: boolean;
   defaultFee: string;
+
+  // TODO: this should be Array<IWalletsOperation['operationRecord']['type']> but the types are getting issues, fix this later
+  operationTypesToShow: string[];
 }
 
 export function createInitialState(): SettingsState {
@@ -16,6 +19,15 @@ export function createInitialState(): SettingsState {
     },
     advanceMode: false,
     defaultFee: '100',
+    operationTypesToShow: [
+      'manage_sell_offer',
+      'manage_buy_offer',
+      'create_account',
+      'payment',
+      'path_payment_strict_send',
+      'path_payment_strict_receive',
+      'account_merge'
+    ]
   };
 }
 

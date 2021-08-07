@@ -1,8 +1,15 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
-import { BehaviorSubject, of, Subject, Subscription } from 'rxjs';
-import { HorizonApisQuery, IWalletsAccount, IWalletsOperation, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
+import { BehaviorSubject, combineLatest, of, Subject, Subscription } from 'rxjs';
+import {
+  HorizonApisQuery,
+  IWalletsAccount,
+  IWalletsOperation,
+  SettingsQuery,
+  WalletsAccountsQuery,
+  WalletsOperationsQuery,
+} from '~root/state';
 import { debounceTime, distinctUntilKeyChanged, exhaustMap, filter, map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { Order } from '@datorama/akita';
 import { Networks } from 'stellar-base';
@@ -26,6 +33,13 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     }))
     .pipe(debounceTime(10));
 
+  filteredOperations$: Observable<IWalletsOperation[]> = combineLatest([
+    this.accountOperations$,
+    this.settingsQuery.operationTypesToShow$
+  ]).pipe(map(([operations, operationTypesToShow]) => {
+    return operations.filter(operation => operationTypesToShow.indexOf(operation.operationRecord.type) !== -1);
+  }));
+
   weAreInTestNet$ = this.horizonApisQuery.getSelectedHorizonApi$
     .pipe(pluck('networkPassphrase'))
     .pipe(map(networkPassphrase => networkPassphrase === Networks.TESTNET));
@@ -36,6 +50,7 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly cdr: ChangeDetectorRef,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngOnInit(): void {
