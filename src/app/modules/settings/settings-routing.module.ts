@@ -7,6 +7,7 @@ import { WalletsAccountsComponent } from '~root/modules/settings/pages/wallets-a
 import { HorizonApisComponent } from '~root/modules/settings/pages/horizon-apis/horizon-apis.component';
 import { SitesConnectedComponent } from '~root/modules/settings/pages/sites-connected/sites-connected.component';
 import { AboutComponent } from '~root/modules/settings/pages/about/about.component';
+import { ActiveOperationsTypesComponent } from '~root/modules/settings/pages/active-operations-types/active-operations-types.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
   {
     path: 'horizon-apis',
     component: HorizonApisComponent,
+  },
+  {
+    path: 'active-operations-types',
+    component: ActiveOperationsTypesComponent,
   },
   {
     path: 'sites-connected',

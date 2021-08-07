@@ -50,7 +50,7 @@ export interface IWalletsOperation {
 export function createWalletsOperation(params: {
   ownerId: IWalletsAccount['_id'];
   ownerPublicKey: IWalletsAccount['publicKey'];
-  operation: ServerApi.OperationRecord
+  operation: OperationRecord
 }): IWalletsOperation {
   return {
     _id: params.operation.id,
