@@ -19,6 +19,7 @@ import { AddAccountComponent } from './components/add-account/add-account.compon
 import { SitesConnectedComponent } from './pages/sites-connected/sites-connected.component';
 import { ConnectedSiteDetailsComponent } from './components/connected-site-details/connected-site-details.component';
 import { AboutComponent } from './pages/about/about.component';
+import { ActiveOperationsTypesComponent } from './pages/active-operations-types/active-operations-types.component';
 
 
 @NgModule({
@@ -35,7 +36,8 @@ import { AboutComponent } from './pages/about/about.component';
     AddAccountComponent,
     SitesConnectedComponent,
     ConnectedSiteDetailsComponent,
-    AboutComponent
+    AboutComponent,
+    ActiveOperationsTypesComponent
   ],
   imports: [
     CommonModule,

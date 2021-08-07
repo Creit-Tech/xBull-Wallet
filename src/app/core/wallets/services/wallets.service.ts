@@ -192,14 +192,14 @@ export class WalletsService {
   }
 
   sendPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
-    this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: true }));
+    this.walletsOperationsStore.updateUIState({ sendingPayment: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {
-        this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: false }));
+        this.walletsOperationsStore.updateUIState({ sendingPayment: false });
         return response;
       })
       .catch(error => {
-        this.walletsOperationsStore.update(state => ({ ...state, sendingPayment: false }));
+        this.walletsOperationsStore.updateUIState({ sendingPayment: false });
         return Promise.reject(error);
       });
   }

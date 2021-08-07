@@ -21,10 +21,6 @@ const storage = persistState({
     'horizon-apis'
   ],
   preStorageUpdate(storeName: string, state: any): any {
-    if (!!state.UIState) {
-      delete state.UIState;
-    }
-
     if (storeName === 'wallets-accounts') {
       const updatedEntities: any = {};
       Object.keys(state.entities).forEach(entityId => {
@@ -38,6 +34,7 @@ const storage = persistState({
 
       return {
         ...state,
+        UIState: {},
         entities: updatedEntities,
       };
     }

@@ -1,5 +1,5 @@
 <section class="w-full pb-6">
-  <ng-container *ngFor="let operation of (accountOperations$ | async)">
+  <ng-container *ngFor="let operation of (filteredOperations$ | async)">
     <app-wallet-transaction-item
       (click)="onSelected(operation)"
       [operation]="operation">

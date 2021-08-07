@@ -35,4 +35,10 @@ export class SettingsService {
         return throwError(error);
       }));
   }
+
+  setOperationsToShow(data: SettingsState['operationTypesToShow']): void {
+    this.settingsStore.updateState({
+      operationTypesToShow: data,
+    });
+  }
 }
