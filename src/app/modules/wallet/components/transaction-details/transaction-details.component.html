@@ -294,17 +294,17 @@
         {{ operation.operationRecord.trustor | publicKey }}
       </dd>
 
-      <ng-container *ngIf="operation.operationRecord.set_flags">
+      <ng-container *ngIf="operation.operationRecord.set_flags_s">
         <dt class="text-off-black text-base font-bold mb-1">Set flags:</dt>
         <dd class="text-label text-sm mb-3">
-          {{ operation.operationRecord.set_flags }}
+          {{ operation.operationRecord.set_flags_s }}
         </dd>
       </ng-container>
 
-      <ng-container *ngIf="operation.operationRecord.clear_flags">
+      <ng-container *ngIf="operation.operationRecord.clear_flags_s">
         <dt class="text-off-black text-base font-bold mb-1">Clear flags:</dt>
         <dd class="text-label text-sm mb-3">
-          {{ operation.operationRecord.clear_flags }}
+          {{ operation.operationRecord.clear_flags_s }}
         </dd>
       </ng-container>
     </ng-container>
