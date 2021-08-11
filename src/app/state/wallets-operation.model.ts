@@ -35,7 +35,9 @@ interface SetTrustLineFlagsOperationResponse {
   asset_issuer: string;
   trustor: string;
   set_flags: Array<1 | 2 | 4>;
+  set_flags_s: Array<'auth_required_flag' | 'auth_revocable_flag' | 'auth_clawback_enabled_flag'>;
   clear_flags: Array<1 | 2 | 4>;
+  clear_flags_s: Array<'auth_required_flag' | 'auth_revocable_flag' | 'auth_clawback_enabled_flag'>;
 }
 
 export interface IWalletsOperation {
