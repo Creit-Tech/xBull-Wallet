@@ -38,7 +38,8 @@ export interface ISignXDRRequestPayload {
 
 // ----- Background and Content script types
 export type BackgroundEventTypes = typeof XBULL_CONNECT_BACKGROUND
-  | typeof XBULL_GET_PUBLIC_KEY_BACKGROUND;
+  | typeof XBULL_GET_PUBLIC_KEY_BACKGROUND
+  | typeof XBULL_SIGN_XDR_BACKGROUND;
 
 export interface IRuntimeConnectMessage {
   event: typeof XBULL_CONNECT_BACKGROUND;
