@@ -2,6 +2,7 @@ import {
   IRuntimeConnectMessage,
   IRuntimeConnectResponse,
   IRuntimeErrorResponse,
+  XBULL_CONNECT_BACKGROUND,
 } from '~extension/interfaces';
 import { isEqual } from 'lodash';
 import { getSitePermissions } from '~extension/background/state.background';
@@ -25,11 +26,17 @@ export const requestConnection = async (message: IRuntimeConnectMessage): Promis
       top: 0,
       height: 640,
       width: 380,
-    }, async popup => {
+    }, async (popup) => {
+      if (!popup) {
+        return resolve({
+          error: true,
+          errorMessage: `We couldn't open the extension`
+        });
+      }
 
       // We wait a little before the tab is open
       await new Promise(r => setTimeout(r, 500));
-      const extensionTab = popup?.tabs && popup.tabs[0].id;
+      const extensionTab = popup.tabs && popup.tabs[0];
 
       if (!extensionTab) {
         return resolve({
@@ -38,33 +45,39 @@ export const requestConnection = async (message: IRuntimeConnectMessage): Promis
         });
       }
 
-      chrome.tabs.sendMessage(extensionTab, message, (response: IRuntimeConnectResponse | IRuntimeErrorResponse) => {
-        // Check if the response is formatted as expected
-        if (!response.error) {
-          if (
-            typeof response.payload.canRequestPublicKey === 'undefined'
-            || typeof response.payload.canRequestSign === 'undefined'
-          ) {
-            resolve({
-              error: true,
-              errorMessage: 'Response from extension was not the expected one'
-            });
+      const port = chrome.runtime.connect(chrome.runtime.id, { name: XBULL_CONNECT_BACKGROUND });
+      port.onMessage.addListener((response: 'ready' | IRuntimeConnectResponse | IRuntimeErrorResponse) => {
+        if (response === 'ready') {
+          port.postMessage(message);
+        } else {
+          if (!response.error) {
+            // Check if the response is formatted as expected
+            if (
+              typeof response.payload.canRequestPublicKey === 'undefined'
+              || typeof response.payload.canRequestSign === 'undefined'
+            ) {
+              resolve({
+                error: true,
+                errorMessage: 'Response from extension was not the expected one'
+              });
+            } else {
+              resolve({
+                error: false,
+                payload: {
+                  canRequestPublicKey: response.payload.canRequestPublicKey,
+                  canRequestSign: response.payload.canRequestSign
+                }
+              });
+            }
           } else {
             resolve({
-              error: false,
-              payload: {
-                canRequestPublicKey: response.payload.canRequestPublicKey,
-                canRequestSign: response.payload.canRequestSign
-              }
+              error: true,
+              errorMessage: response.errorMessage,
             });
           }
-        } else {
-          resolve({
-            error: true,
-            errorMessage: response.errorMessage,
-          });
         }
       });
+
     });
   });
 

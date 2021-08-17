@@ -1,17 +1,18 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import {
   IConnectRequestPayload,
   IRuntimeConnectResponse,
-  IRuntimeErrorResponse, IRuntimeSignXDRResponse, ISignXDRRequestPayload,
+  IRuntimeErrorResponse,
+  IRuntimeSignXDRResponse,
+  ISignXDRRequestPayload,
   RuntimeMessage,
-  RuntimeResponse,
   XBULL_CONNECT_BACKGROUND,
   XBULL_SIGN_XDR_BACKGROUND,
 } from '../../../extension/interfaces';
 import { SiteRequestComponent } from '~root/modules/background/components/site-request/site-request.component';
-import { take, takeUntil } from 'rxjs/operators';
-import { merge, Subject } from 'rxjs';
+import { catchError, delay, filter, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
@@ -25,65 +26,66 @@ import { createSiteConnection } from '~root/state';
 export class BackgroundComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
+  connectedPort$: ReplaySubject<chrome.runtime.Port> = new ReplaySubject<chrome.runtime.Port>();
+  runtimeEvent$: ReplaySubject<RuntimeMessage> = new ReplaySubject<RuntimeMessage>();
+
   constructor(
     private readonly modalsService: ModalsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly sitesConnectionsService: SitesConnectionsService,
-    private readonly cd: ChangeDetectorRef,
   ) { }
 
-  ngOnInit(): void {
-    chrome
-      .runtime
-      .onMessage
-      .addListener((message: RuntimeMessage, sender, sendResponse) => {
-        const sendResponseAndClose = (response: RuntimeResponse) => {
-          sendResponse(response);
+  connectHandler$ = this.runtimeEvent$.asObservable()
+    .pipe(filter(message => message.event === XBULL_CONNECT_BACKGROUND))
+    .pipe(pluck('payload'))
+    .pipe(switchMap(payload => this.connectHandler(payload as IConnectRequestPayload)));
 
-          // We wait because we need to wait 500ms before the site saves into the storage
-          // The modal already adds 300ms so the user only experience 500ms
-          setTimeout(() => window.close(), 800);
-        };
 
-        let runtimeResponse: RuntimeResponse;
-        switch (message.event) {
-          case XBULL_CONNECT_BACKGROUND:
-            this.connectHandler(message.payload)
-              .then(sendResponseAndClose)
-              .catch(e => {
-                console.error(e);
-                runtimeResponse = {
-                  error: true,
-                  errorMessage: 'Connection failed',
-                };
-                sendResponseAndClose(runtimeResponse);
-              });
-            break;
+  signXDRHandler$ = this.runtimeEvent$.asObservable()
+    .pipe(filter(message => message.event === XBULL_SIGN_XDR_BACKGROUND))
+    .pipe(pluck('payload'))
+    .pipe(switchMap(payload => this.signXDRHandler(payload as ISignXDRRequestPayload)));
 
-          case XBULL_SIGN_XDR_BACKGROUND:
-            this.signXDRHandler(message.payload)
-              .then(sendResponseAndClose)
-              .catch(e => {
-                console.error(e);
-                runtimeResponse = {
-                  error: true,
-                  errorMessage: 'Connection failed',
-                };
-                sendResponseAndClose(runtimeResponse);
-              });
-            break;
-
-          default:
-            runtimeResponse = {
-              error: true,
-              errorMessage: 'Message event from background not supported',
-            };
-            sendResponseAndClose(runtimeResponse);
-            break;
-        }
-
-        return true;
+  portResponseSubscription: Subscription = merge(
+    this.connectHandler$,
+    this.signXDRHandler$
+  )
+    .pipe(catchError(error => {
+      console.error(error);
+      return of({
+        error: true,
+        errorMessage: 'Connection failed',
       });
+    }))
+    .pipe(delay(800))
+    .pipe(withLatestFrom(this.connectedPort$))
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(([response, port]) => {
+      port.postMessage(response);
+      port.disconnect();
+      window.close();
+    });
+
+  ngOnInit(): void {
+    chrome.runtime.onConnect.addListener(port => {
+      if (
+        port.sender?.id !== chrome.runtime.id
+        || [
+          XBULL_CONNECT_BACKGROUND,
+          XBULL_SIGN_XDR_BACKGROUND
+        ].indexOf(port.name) === -1
+      ) {
+        return;
+      }
+
+      this.connectedPort$.next(port);
+
+      port.onMessage.addListener((message: RuntimeMessage) => {
+        this.runtimeEvent$.next(message);
+      });
+
+      port.postMessage('ready');
+    });
   }
 
   ngOnDestroy(): void {
