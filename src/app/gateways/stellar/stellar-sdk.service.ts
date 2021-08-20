@@ -7,19 +7,16 @@ import { HorizonApisQuery, IHorizonApi, SettingsQuery } from '~root/state';
   providedIn: 'root'
 })
 export class StellarSdkService {
-  // TODO: Make this optional before launching the app IE add a settings store
   get Server(): Server {
     const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
     return new Server(activeValue.url);
   }
 
-  // TODO: Make this optional before launching the app IE add a settings store
   get networkPassphrase(): string {
     const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
     return activeValue.networkPassphrase;
   }
 
-  // TODO: Make this optional before launching the app IE add a settings store
   get fee(): string {
     const { defaultFee } = this.settingsQuery.getValue();
     return defaultFee;

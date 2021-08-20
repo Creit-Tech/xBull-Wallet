@@ -38,7 +38,7 @@ export class WalletsService {
     'manageData',
     'bumpSequence',
     // 'createClaimableBalance',
-    // 'claimClaimableBalance',
+    'claimClaimableBalance',
     'beginSponsoringFutureReserves',
     'endSponsoringFutureReserves',
     // 'revokeSponsorship',
