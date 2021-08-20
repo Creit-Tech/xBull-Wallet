@@ -1,0 +1,59 @@
+<section [appLoading]="gettingClaimableBalances$ | async" class="w-full min-h-full flex flex-col py-4">
+  <p class="text-label font-semibold text-sm px-6 mb-4">
+    Claim claimable balance
+  </p>
+
+  <ng-container *ngIf="claimableBalances$ | async as claimableBalances;">
+    <ul *ngIf="claimableBalances.length > 0; else noBalances" class="w-full px-6 mb-auto">
+      <li *ngFor="let claimableBalance of claimableBalances"
+          (click)="onItemClick(claimableBalance)"
+          class="w-full h-16 mb-4 bg-ash rounded-xl flex justify-between px-4 cursor-pointer">
+
+        <div class="w-5/12 flex justify-start items-center">
+          <div class="text-left">
+            <p class="text-off-white font-bold text-sm">
+              {{ claimableBalance.sponsor && (claimableBalance.sponsor | publicKey) }}
+            </p>
+            <small class="text-placeholder text-xs overflow-ellipsis">
+              Pending
+            </small>
+          </div>
+        </div>
+
+        <div class="w-5/12 flex justify-end items-center">
+          <div class="text-right">
+            <p class="text-off-white font-bold text-sm">
+              {{ claimableBalance.amount | number: '0.0-7' }}
+            </p>
+            <small class="text-placeholder text-xs overflow-ellipsis">
+              {{ assetToText(claimableBalance.asset) }}
+            </small>
+          </div>
+        </div>
+
+      </li>
+    </ul>
+
+    <ng-template #noBalances>
+      <section class="flex h-full items-center justify-center relative my-auto">
+        <div class="w-10/12 text-center">
+          <h1 class="text-off-white text-2xl mb-2">
+            No balances to claim at this moment
+          </h1>
+
+          <p class="text-placeholder mb-8">
+            When you have a claimable balance for your account, it will appear in this section
+          </p>
+        </div>
+      </section>
+    </ng-template>
+  </ng-container>
+
+  <div class="w-full flex flex-wrap px-4 mt-auto">
+    <div class="w-full px-2">
+      <button (click)="onBack()" class="btn btn-primary btn-primary--outline btn--small w-full">
+        Back
+      </button>
+    </div>
+  </div>
+</section>

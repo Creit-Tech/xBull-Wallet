@@ -28,3 +28,6 @@ export { SitesConnectionsState, SitesConnectionsStore } from './sites-connection
 export * from './horizon-api.model';
 export * from './horizon-apis.query';
 export { HorizonApisState, HorizonApisStore } from './horizon-apis.store';
+
+export * from './claimable-balances.query';
+export { ClaimableBalancesState, ClaimableBalancesStore } from './claimable-balances.store';

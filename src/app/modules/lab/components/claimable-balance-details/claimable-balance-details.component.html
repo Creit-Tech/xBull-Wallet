@@ -1,0 +1,130 @@
+<app-modal-wrapper [appLoading]="claimingBalance$ | async" [showModal]="showModal" (close)="onClose()">
+  <section *ngIf="claimableBalanceRecord$ | async as claimableBalanceRecord" class="w-full h-full relative pt-4">
+
+    <section class="w-full text-center mb-4">
+      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+        Claimable balance
+      </h2>
+    </section>
+
+    <section class="w-full mb-8">
+      <dl>
+        <ng-container *ngIf="claimableBalanceRecord.sponsor">
+          <dt class="text-off-black text-base font-bold mb-1">Sponsor of the balance:</dt>
+          <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="claimableBalanceRecord.sponsor">{{ claimableBalanceRecord.sponsor | publicKey }}</dd>
+        </ng-container>
+
+        <dt class="text-off-black text-base font-bold mb-1">Claimable balance ID:</dt>
+        <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="claimableBalanceRecord.id">{{ claimableBalanceRecord.id | publicKey }}</dd>
+
+        <dt class="text-off-black text-base font-bold mb-1">Amount:</dt>
+        <dd class="text-label text-sm mb-3">{{ claimableBalanceRecord.amount | number: '0.0-7' }}</dd>
+
+        <dt class="text-off-black text-base font-bold mb-1">Asset:</dt>
+        <dd class="text-label text-sm mb-3">{{ assetToText(claimableBalanceRecord.asset) }}</dd>
+
+        <dt class="text-off-black text-base font-bold mb-1">Asset Issuer:</dt>
+        <dd class="text-label text-sm mb-3">{{ assetIssuerToText(claimableBalanceRecord.asset) !== 'native' ? (assetIssuerToText(claimableBalanceRecord.asset) | publicKey) : 'Native token' }}</dd>
+      </dl>
+    </section>
+
+    <section class="w-full mb-8">
+      <h2 class="m-0 p-0 text-off-black text-base font-bold text-center mb-4">
+        Conditions
+      </h2>
+
+      <ul>
+        <li class="w-full mb-4" *ngFor="let claimant of claimableBalanceRecord.claimants">
+          <div class="w-full">
+            <p class="text-label text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
+              <span class="text-off-black text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
+            </p>
+          </div>
+
+          <ng-template #predicateTemplate let-predicateValue="predicateValue">
+            <section class="pl-4 border-label border-l-2">
+              <div *ngIf="predicateValue.unconditional" class="w-full">
+                <p class="text-label">
+                  Can claim it without conditions
+                </p>
+              </div>
+
+              <div *ngIf="predicateValue.abs_before" class="w-full">
+                <p class="text-label">
+                  <b class="text-off-black">Until:</b> {{ predicateValue.abs_before | date: 'MMM dd, yyyy' }}
+                </p>
+              </div>
+
+              <div *ngIf="predicateValue.rel_before" class="w-full">
+                <p class="text-label">
+                  <b class="text-off-black">After:</b> {{ predicateValue.rel_before | date: 'MMM dd, yyyy' }}
+                </p>
+              </div>
+
+              <ng-container *ngIf="predicateValue.and" class="w-full">
+                <div class="w-full">
+                  <b class="text-off-black">And:</b>
+
+                  <ng-container *ngFor="let predicate of predicateValue.and">
+                    <ng-template
+                      [ngTemplateOutlet]="predicateTemplate"
+                      [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                    </ng-template>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="predicateValue.or" class="w-full">
+                <div class="w-full">
+                  <b class="text-off-black">Or:</b>
+
+                  <ng-container *ngFor="let predicate of predicateValue.or">
+                    <ng-template
+                      [ngTemplateOutlet]="predicateTemplate"
+                      [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                    </ng-template>
+                  </ng-container>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="predicateValue.not" class="w-full">
+                <div class="w-full">
+                  <b class="text-off-black">Not:</b>
+
+                  <ng-template
+                    [ngTemplateOutlet]="predicateTemplate"
+                    [ngTemplateOutletContext]="{ predicateValue: predicateValue.not }">
+                  </ng-template>
+                </div>
+              </ng-container>
+            </section>
+
+          </ng-template>
+
+          <ng-template
+            [ngTemplateOutlet]="predicateTemplate"
+            [ngTemplateOutletContext]="{ predicateValue: claimant.predicate }">
+          </ng-template>
+
+        </li>
+      </ul>
+
+
+    </section>
+
+    <section class="w-full text-center mb-8">
+      <p class="w-10/12 mx-auto text-label">
+        If you claim an asset you don't trust yet, the operation will be added to the claim transaction automatically
+      </p>
+    </section>
+
+    <section class="w-full flex">
+      <div class="flex-1 pr-2">
+        <button (click)="onClaim()" class="w-full btn btn--small btn-success-alternative">
+          Claim it
+        </button>
+      </div>
+    </section>
+
+  </section>
+</app-modal-wrapper>
