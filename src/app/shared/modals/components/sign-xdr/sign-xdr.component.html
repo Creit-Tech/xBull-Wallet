@@ -261,6 +261,9 @@
           </ng-container>
 
           <ng-container *ngIf="operation.type === 'claimClaimableBalance'">
+            <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="break-all text-sm mb-3 w-full">Claim Claimable Balance</dd>
+
             <dt class="text-base font-bold mb-1 w-full">Balance ID:</dt>
             <dd class="break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
           </ng-container>
