@@ -1,4 +1,4 @@
-![](https://xbull.app/logo.svg)
+![](https://xbull.app/assets/github-wallpaper.png)
 
 ---
 # ***Still in BETA stage***
@@ -55,7 +55,7 @@ The Stellar Blockchain supports multiple kind of transactions, xBull is designed
 - [X] Manage Data
 - [X] Bump sequence
 - [ ] Create claimable Balance
-- [ ] Claim claimable Balance
+- [X] Claim claimable Balance
 - [X] Begin Sponsoring Future Reserves
 - [X] End Sponsoring Future Reserves
 - [ ] Revoke Sponsorship
