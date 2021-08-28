@@ -8,6 +8,7 @@ import { FormsComponentsModule } from '../../shared/forms-components/forms-compo
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
 import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
 import { GenerateAccountQuery, GenerateAccountService, GenerateAccountStore } from './state';
+import { ConfirmSecretPasswordComponent } from './pages/confirm-secret-password/confirm-secret-password.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { GenerateAccountQuery, GenerateAccountService, GenerateAccountStore } fr
     CreateAccountSelectionsComponent,
     GenerateWalletComponent,
     GeneratePasswordComponent,
-    ConfirmPhrasePasswordComponent
+    ConfirmPhrasePasswordComponent,
+    ConfirmSecretPasswordComponent
   ],
   imports: [
     CommonModule,

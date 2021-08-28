@@ -28,6 +28,13 @@ export class GenerateAccountService {
     }));
   }
 
+  selectImportSecretKeyPath(): void {
+    this.store.update((state): GenerateAccountState => ({
+      ...state,
+      pathType: 'import_secret_key',
+    }));
+  }
+
   saveMnemonicPhrase(phrase: string): void {
     this.store.update(state => ({
       ...state,

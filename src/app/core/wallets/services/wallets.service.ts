@@ -64,37 +64,42 @@ export class WalletsService {
     switch (params.type) {
       case 'mnemonic_phrase':
         keypair = await this.mnemonicPhraseService.getKeypairFromMnemonicPhrase(params.mnemonicPhrase, params.path);
-        const newWalletAccount: Omit<IWalletsAccount, '_id'> = {
-          publicKey: keypair.publicKey(),
-          secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
-          streamCreated: false,
-          name: randomBytes(4).toString('hex'),
-          walletId: params.walletId,
-          operationsStreamCreated: false,
-          isCreated: false,
-        };
+        break;
 
-        newWalletAccounts = {
-          mainnet: createWalletsAccount({
-            _id: createHash('md5')
-              .update(`${Networks.PUBLIC}_${keypair.publicKey()}`)
-              .digest('hex'),
-            ...newWalletAccount
-          }),
-          testnet: createWalletsAccount({
-            _id: createHash('md5')
-              .update(`${Networks.TESTNET}_${keypair.publicKey()}`)
-              .digest('hex'),
-            ...newWalletAccount
-          }),
-        };
-
-        this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
+      case 'secret_key':
+        keypair = Keypair.fromSecret(params.secretKey);
         break;
 
       default:
-        throw new Error(`We can not handle the type: ${params.type}`);
+        throw new Error(`We can not handle the type: ${(params as any).type}`);
     }
+
+    const newWalletAccount: Omit<IWalletsAccount, '_id'> = {
+      publicKey: keypair.publicKey(),
+      secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
+      streamCreated: false,
+      name: randomBytes(4).toString('hex'),
+      walletId: params.walletId,
+      operationsStreamCreated: false,
+      isCreated: false,
+    };
+
+    newWalletAccounts = {
+      mainnet: createWalletsAccount({
+        _id: createHash('md5')
+          .update(`${Networks.PUBLIC}_${keypair.publicKey()}`)
+          .digest('hex'),
+        ...newWalletAccount
+      }),
+      testnet: createWalletsAccount({
+        _id: createHash('md5')
+          .update(`${Networks.TESTNET}_${keypair.publicKey()}`)
+          .digest('hex'),
+        ...newWalletAccount
+      }),
+    };
+
+    this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
 
     return keypair;
   }
@@ -112,6 +117,19 @@ export class WalletsService {
           type: 'mnemonic_phrase',
           name: newWalletId,
           mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
+        });
+        this.walletsStore.upsert(newWallet._id, newWallet);
+        keypair = await this.createNewAccount({
+          ...params,
+          walletId: newWalletId,
+        });
+        break;
+
+      case 'secret_key':
+        newWallet = createWallet({
+          _id: newWalletId,
+          type: 'secret_key',
+          name: newWalletId,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
         keypair = await this.createNewAccount({
@@ -205,7 +223,7 @@ export class WalletsService {
   }
 }
 
-export type INewAccountType = INewAccountMnemonicPhraseType;
+export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType;
 
 export interface INewAccountMnemonicPhraseType {
   type: 'mnemonic_phrase';
@@ -215,12 +233,25 @@ export interface INewAccountMnemonicPhraseType {
   password: string;
 }
 
-export type INewWalletType = INewWalletMnemonicPhraseType;
+export interface INewAccountSecretKeyType {
+  type: 'secret_key';
+  secretKey: string;
+  walletId: IWallet['_id'];
+  password: string;
+}
+
+export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType;
 
 export interface INewWalletMnemonicPhraseType {
   type: 'mnemonic_phrase';
   mnemonicPhrase: string;
   path?: string;
+  password: string;
+}
+
+export interface INewWalletSecretKeyType {
+  type: 'secret_key';
+  secretKey: string;
   password: string;
 }
 

@@ -7,26 +7,31 @@
 
   <ng-container *ngIf="(parentWallet$ | async) as parentWallet">
 
-    <ng-container *ngIf="parentWallet.type === 'mnemonic_phrase'">
-      <form class="flex flex-wrap w-full">
-        <div class="w-full mb-4">
-          <app-input type="password" mode="light" title="Password"
-                     [formControl]="password"
-                     iconPath="/assets/icons/key.svg"></app-input>
-        </div>
-      </form>
-
-      <div class="w-full text-center text-label mb-7">
-        Write your password to decrypt your wallet and add a new account
-      </div>
-
-      <div class="w-full">
-        <button (click)="onConfirmMnemonicPhrase()" [disabled]="password.invalid"
-                class="w-full btn btn-success-alternative btn--small">
-          Confirm
-        </button>
+    <ng-container *ngIf="parentWallet.type === 'secret_key'">
+      <div class="w-full mb-4">
+        <app-input type="text" mode="light" title="Secret Key"
+                   [formControl]="secretKey"
+                   iconPath="/assets/icons/key.svg"></app-input>
       </div>
     </ng-container>
+
+    <div class="w-full mb-4">
+      <app-input type="password" mode="light" title="Password"
+                 [formControl]="password"
+                 iconPath="/assets/icons/lock-unlocked.svg"></app-input>
+    </div>
+
+    <div class="w-full text-center text-label mb-7">
+      Write your password to decrypt your wallet and add a new account
+    </div>
+
+    <div class="w-full">
+      <button (click)="onConfirm()" [disabled]="password.invalid"
+              class="w-full btn btn-success-alternative btn--small">
+        Confirm
+      </button>
+    </div>
+
 
   </ng-container>
 </app-modal-wrapper>
