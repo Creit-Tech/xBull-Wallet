@@ -42,4 +42,12 @@ export class CreateAccountSelectionsComponent implements OnInit {
       .then();
   }
 
+  importSecretKey(): void {
+    this.generateAccountService.selectImportSecretKeyPath();
+    this.router.navigate(['generate-password'], {
+      relativeTo: this.route
+    })
+      .then();
+  }
+
 }
