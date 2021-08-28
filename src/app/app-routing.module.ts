@@ -71,7 +71,7 @@ const routes: Routes = [
       .then(m => m.SettingsModule)
   },
   {
-    path: '**', // TODO: update this once we have complete with the basic development of the welcome and dashboard
+    path: '**',
     redirectTo: '/wallet/assets',
   }
 ];

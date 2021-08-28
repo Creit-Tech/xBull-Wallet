@@ -4,7 +4,7 @@ import { CreateAccountSelectionsComponent } from './pages/create-account-selecti
 import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet.component';
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
 import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
-import { CanCreatePasswordGuard } from '~root/modules/generate-account/guards/can-create-password.guard';
+import { ConfirmSecretPasswordComponent } from '~root/modules/generate-account/pages/confirm-secret-password/confirm-secret-password.component';
 
 const routes: Routes = [
   {
@@ -18,14 +18,15 @@ const routes: Routes = [
   },
   {
     path: 'generate-password',
-    canActivate: [
-      CanCreatePasswordGuard,
-    ],
     component: GeneratePasswordComponent,
   },
   {
     path: 'confirm-phrase-password',
     component: ConfirmPhrasePasswordComponent,
+  },
+  {
+    path: 'confirm-secret-password',
+    component: ConfirmSecretPasswordComponent,
   }
 ];
 

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-import { IWallet, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
+import { IWallet, IWalletsAccount, IWalletWithMnemonicPhrase, IWalletWithSecretKey, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { FormControl, Validators } from '@angular/forms';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -37,20 +37,76 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
     ))
     .pipe(map(obj => Object.values(obj)));
 
+  secretKey: FormControlTyped<string> = new FormControl('', Validators.required) as FormControlTyped<string>;
   password: FormControlTyped<string> = new FormControl('', Validators.required) as FormControlTyped<string>;
+
+  globalPasswordHash$: Observable<string | undefined> = this.walletsQuery.globalPasswordHash$;
 
   constructor(
     private readonly cryptoService: CryptoService,
     private readonly toastrService: ToastrService,
     private readonly walletsService: WalletsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsQuery: WalletsQuery,
   ) { }
 
   ngOnInit(): void {
   }
 
-  async onConfirmMnemonicPhrase() {
+  async onConfirm(): Promise<void> {
+    const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
+    const hash = this.cryptoService.hashPassword(this.password.value);
+
+    if (hash !== globalPasswordHash) {
+      this.toastrService.open({
+        status: 'error',
+        message: 'The password you just used is not your saved password',
+        title: 'Oh oh!'
+      });
+      return;
+    }
+
     const parentWallet = await this.parentWallet$.pipe(take(1)).toPromise();
+
+    switch (parentWallet.type) {
+      case 'mnemonic_phrase':
+        await this.onConfirmMnemonicPhrase(parentWallet);
+        break;
+
+      case 'secret_key':
+        await this.onConfirmSecretKey(parentWallet);
+        break;
+    }
+
+    this.toastrService.open({
+      title: 'Completed.',
+      message: `Your new account was added to the wallet ${parentWallet.name}`,
+      status: 'success',
+    });
+
+    this.close.emit();
+  }
+
+  async onConfirmSecretKey(parentWallet: IWalletWithSecretKey): Promise<void> {
+    try {
+      await this.walletsService.createNewAccount({
+        type: 'secret_key',
+        secretKey: this.secretKey.value.trim(),
+        password: this.password.value,
+        walletId: parentWallet._id,
+      });
+    } catch (e) {
+      console.error(e);
+      this.toastrService.open({
+        status: 'error',
+        message: 'We were not able to save your new account',
+        title: 'Oh oh!'
+      });
+      throw e;
+    }
+  }
+
+  async onConfirmMnemonicPhrase(parentWallet: IWalletWithMnemonicPhrase): Promise<void> {
     let decryptedPhrase: string;
 
     try {
@@ -84,14 +140,6 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
       });
       throw e;
     }
-
-    this.toastrService.open({
-      title: 'Completed.',
-      message: `Your new account was added to the wallet ${parentWallet.name}`,
-      status: 'success',
-    });
-
-    this.close.emit();
   }
 
   async ngAfterViewInit(): Promise<void> {

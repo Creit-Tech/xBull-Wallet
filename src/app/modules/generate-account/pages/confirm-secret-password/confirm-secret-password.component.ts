@@ -1,27 +1,27 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
-import { Subject, Subscription } from 'rxjs';
-import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { sameValueValidator } from '~root/shared/forms-validators/same-value.validator';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsQuery } from '~root/state';
 import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
+import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { sameValueValidator } from '~root/shared/forms-validators/same-value.validator';
 
 @Component({
-  selector: 'app-confirm-phrase-password',
-  templateUrl: './confirm-phrase-password.component.html',
-  styleUrls: ['./confirm-phrase-password.component.scss']
+  selector: 'app-confirm-secret-password',
+  templateUrl: './confirm-secret-password.component.html',
+  styleUrls: ['./confirm-secret-password.component.scss']
 })
-export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
+export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
-  form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
-    confirmPhrase: new FormControl('', [Validators.required]),
+  form: FormGroupTyped<IConfirmSecretPasswordForm> = new FormGroup({
+    secretKey: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl('', [Validators.required]),
-  }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
+  }) as unknown as FormGroupTyped<IConfirmSecretPasswordForm>;
 
   walletVersion = this.env.version;
 
@@ -54,11 +54,6 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     const generateAccountStorageSnapshot = this.generateAccountQuery.getValue();
     const accountsStoreSnapshot = this.walletsQuery.getValue();
 
-    if (generateAccountStorageSnapshot.pathType === 'new_wallet' && generateAccountStorageSnapshot.mnemonicPhrase) {
-      this.form.controls
-        .confirmPhrase.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.mnemonicPhrase)]);
-    }
-
     if (!accountsStoreSnapshot.globalPasswordHash && generateAccountStorageSnapshot.password) {
       this.form.controls
         .confirmPassword.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.password)]);
@@ -76,9 +71,9 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     }
 
     await this.walletsService.generateNewWallet({
-      type: 'mnemonic_phrase',
+      type: 'secret_key',
       password: this.form.value.confirmPassword,
-      mnemonicPhrase: this.form.value.confirmPhrase,
+      secretKey: this.form.value.secretKey,
     });
 
     // TODO: filter if password is already saved
@@ -87,9 +82,11 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     await this.router.navigate(['/wallet', 'assets']);
   }
 
+
 }
 
-export interface IConfirmPhrasePasswordForm {
-  confirmPhrase: string;
+
+export interface IConfirmSecretPasswordForm {
+  secretKey: string;
   confirmPassword: string;
 }
