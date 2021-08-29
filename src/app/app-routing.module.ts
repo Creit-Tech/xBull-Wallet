@@ -72,12 +72,14 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/wallet/assets',
+    redirectTo: '/create-account',
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    useHash: true,
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

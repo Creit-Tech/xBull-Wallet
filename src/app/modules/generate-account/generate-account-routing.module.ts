@@ -5,6 +5,7 @@ import { GenerateWalletComponent } from './pages/generate-wallet/generate-wallet
 import { GeneratePasswordComponent } from './pages/generate-password/generate-password.component';
 import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
 import { ConfirmSecretPasswordComponent } from '~root/modules/generate-account/pages/confirm-secret-password/confirm-secret-password.component';
+import { ConnectHardwareWalletComponent } from '~root/modules/generate-account/pages/connect-hardware-wallet/connect-hardware-wallet.component';
 
 const routes: Routes = [
   {
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'confirm-secret-password',
     component: ConfirmSecretPasswordComponent,
+  },
+  {
+    path: 'connect-hardware-wallet',
+    component: ConnectHardwareWalletComponent,
   }
 ];
 

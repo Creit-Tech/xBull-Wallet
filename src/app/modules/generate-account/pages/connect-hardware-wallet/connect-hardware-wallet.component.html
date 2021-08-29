@@ -1,0 +1,49 @@
+<section class="h-full w-full flex flex-col px-6 py-8 justify-start items-center">
+  <div class="w-full flex justify-center items-center mb-4">
+    <img src="/assets/icons/xbull-icon.svg" class="h-24" alt="xbull-logo">
+  </div>
+
+  <p class="text-label font-semibold text-lg px-6 mb-8">
+    Connect your hardware wallet
+  </p>
+
+  <div class="w-full flex flex-wrap mb-8 max-w-xs bg-off-white rounded-xl py-6 px-2 mb-8">
+    <div class="w-full flex items-center mb-6">
+      <div class="px-4 w-5/12">
+        <img src="/assets/images/ledger-hw-logo.svg" alt="ledger_logo">
+      </div>
+
+      <div class="px-4 w-7/12">
+        <p class="text-xs text-off-black">
+          Connect your wallet to your computer and open the Stellar App before continuing
+        </p>
+      </div>
+    </div>
+
+    <div class="w-full px-4">
+      <button (click)="importLedgerWallet()" class="w-full btn btn-success-alternative btn--small">
+        Connect
+      </button>
+    </div>
+  </div>
+
+  <div class="w-full flex flex-wrap mb-8 max-w-xs bg-off-white rounded-xl py-6 px-2 mb-8">
+    <div class="w-full flex items-center mb-6">
+      <div class="px-4 w-5/12">
+        <img src="/assets/images/trezor-hw-logo.svg" alt="ledger_logo">
+      </div>
+
+      <div class="px-4 w-7/12">
+        <p class="text-xs text-off-black">
+          Connect your wallet to your computer before continuing
+        </p>
+      </div>
+    </div>
+
+    <div class="w-full px-4">
+      <button [disabled]="true" class="w-full btn btn-success-alternative btn--small">
+        Not available at this moment
+      </button>
+    </div>
+  </div>
+</section>

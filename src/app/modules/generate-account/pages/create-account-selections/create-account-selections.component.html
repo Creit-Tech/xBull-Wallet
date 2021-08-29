@@ -13,7 +13,12 @@
     <button (click)="importSecretKey()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
       Import Secret Key
     </button>
-    <button *ngIf="isThereWallet$ | async" routerLink="/wallets" class="w-full btn btn-primary btn--small btn-primary--ghost">
+    <a href="/index.html#/create-account/connect-hardware-wallet?windowMode=true"
+       target="_blank"
+       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center">
+      Connect Hardware Wallet
+    </a>
+    <button *ngIf="isThereWallet$ | async" routerLink="/wallet/assets" class="w-full btn btn-primary btn--small btn-primary--ghost">
       Go back to wallets
     </button>
   </div>
