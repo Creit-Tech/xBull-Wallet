@@ -11,7 +11,7 @@ export class ToastrComponent implements OnInit, AfterViewInit {
   @Input() title!: string;
   @Input() message!: string;
   @Input() status?: 'success' | 'error' = 'success';
-  @Input() timer = 5000;
+  @Input() timer = 2500;
 
   @Output() closed: EventEmitter<void> = new EventEmitter<void>();
 
@@ -20,7 +20,7 @@ export class ToastrComponent implements OnInit, AfterViewInit {
   constructor() { }
 
   ngOnInit(): void {
-    timer(2500)
+    timer(this.timer)
       .subscribe(() => this.onClose());
   }
 

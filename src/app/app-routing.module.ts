@@ -72,7 +72,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/create-account',
+    redirectTo: '/wallet/assets',
   }
 ];
 

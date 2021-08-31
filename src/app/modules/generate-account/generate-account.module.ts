@@ -10,6 +10,9 @@ import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/
 import { GenerateAccountQuery, GenerateAccountService, GenerateAccountStore } from './state';
 import { ConfirmSecretPasswordComponent } from './pages/confirm-secret-password/confirm-secret-password.component';
 import { ConnectHardwareWalletComponent } from './pages/connect-hardware-wallet/connect-hardware-wallet.component';
+import { ConfirmPublicKeysComponent } from './components/confirm-public-keys/confirm-public-keys.component';
+import { ModalsModule } from '~root/shared/modals/modals.module';
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 
 
 @NgModule({
@@ -19,12 +22,15 @@ import { ConnectHardwareWalletComponent } from './pages/connect-hardware-wallet/
     GeneratePasswordComponent,
     ConfirmPhrasePasswordComponent,
     ConfirmSecretPasswordComponent,
-    ConnectHardwareWalletComponent
+    ConnectHardwareWalletComponent,
+    ConfirmPublicKeysComponent
   ],
   imports: [
     CommonModule,
     GenerateAccountRoutingModule,
     FormsComponentsModule,
+    ModalsModule,
+    SharedPipesModule,
   ],
   providers: [
     GenerateAccountStore,

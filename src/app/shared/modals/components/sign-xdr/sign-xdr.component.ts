@@ -3,7 +3,7 @@ import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscriptio
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { Operation } from 'stellar-base';
-import { WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
+import { IWalletsAccountWithSecretKey, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
@@ -90,20 +90,31 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   async onAccepted(): Promise<void> {
-    // TODO: Check if we need to sign with password or with HW once we add it
-    this.signWithPassword();
+    const selectedAccount = await this.walletsAccountQuery.getSelectedAccount$.pipe(take(1)).toPromise();
+
+    if (!selectedAccount) {
+      // TODO: Handle this case
+      return;
+    }
+
+    switch (selectedAccount.type) {
+
+      case 'with_secret_key':
+        await this.signWithPassword(selectedAccount);
+        break;
+    }
+
   }
 
-  async signWithPassword(): Promise<void> {
+  async signWithPassword(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
     const ref = await this.componentCreatorService.createOnBody<SignPasswordComponent>(SignPasswordComponent);
 
     ref.component.instance.password
-      .pipe(withLatestFrom(this.walletsAccountQuery.getSelectedAccount$))
       .pipe(take(1))
       .pipe(tap(() => {
         this.signing$.next(true);
       }))
-      .pipe(map(([password, selectedAccount]) => {
+      .pipe(map((password) => {
         return this.cryptoService.decryptText(selectedAccount.secretKey, password);
       }))
       .pipe(withLatestFrom(this.xdr$))

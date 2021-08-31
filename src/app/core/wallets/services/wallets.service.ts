@@ -6,10 +6,14 @@ import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import {
   createWallet,
   createWalletsAccount,
-  HorizonApisQuery, IHorizonApi,
+  HorizonApisQuery,
+  IHorizonApi,
   IWallet,
   IWalletsAccount,
-  WalletsAccountsStore, WalletsOperationsStore,
+  IWalletsAccountLedger,
+  IWalletsAccountWithSecretKey,
+  WalletsAccountsStore,
+  WalletsOperationsStore,
   WalletsStore,
 } from '~root/state';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
@@ -59,24 +63,10 @@ export class WalletsService {
 
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
     let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
+    let newWalletAccount: Omit<IWalletsAccount, '_id'>;
     let keypair: Keypair;
 
-    switch (params.type) {
-      case 'mnemonic_phrase':
-        keypair = await this.mnemonicPhraseService.getKeypairFromMnemonicPhrase(params.mnemonicPhrase, params.path);
-        break;
-
-      case 'secret_key':
-        keypair = Keypair.fromSecret(params.secretKey);
-        break;
-
-      default:
-        throw new Error(`We can not handle the type: ${(params as any).type}`);
-    }
-
-    const newWalletAccount: Omit<IWalletsAccount, '_id'> = {
-      publicKey: keypair.publicKey(),
-      secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
+    const baseAccount: Omit<IWalletsAccount, '_id' | 'publicKey' | 'type' | 'docVersion'> = {
       streamCreated: false,
       name: randomBytes(4).toString('hex'),
       walletId: params.walletId,
@@ -84,26 +74,62 @@ export class WalletsService {
       isCreated: false,
     };
 
+    switch (params.type) {
+      case 'mnemonic_phrase':
+        keypair = await this.mnemonicPhraseService.getKeypairFromMnemonicPhrase(params.mnemonicPhrase, params.path);
+        newWalletAccount = {
+          ...baseAccount,
+          type: 'with_secret_key',
+          publicKey: keypair.publicKey(),
+          secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
+        } as IWalletsAccountWithSecretKey;
+        break;
+
+      case 'secret_key':
+        keypair = Keypair.fromSecret(params.secretKey);
+        newWalletAccount = {
+          ...baseAccount,
+          type: 'with_secret_key',
+          publicKey: keypair.publicKey(),
+          secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
+        } as IWalletsAccountWithSecretKey;
+        break;
+
+      case 'ledger_wallet':
+        keypair = Keypair.fromPublicKey(params.publicKey);
+        newWalletAccount = {
+          ...baseAccount,
+          type: 'with_ledger_wallet',
+          publicKey: keypair.publicKey(),
+          path: params.path,
+        } as IWalletsAccountLedger;
+        break;
+
+      default:
+        throw new Error(`We can not handle the type: ${(params as any).type}`);
+    }
+
+
     newWalletAccounts = {
       mainnet: createWalletsAccount({
         _id: createHash('md5')
           .update(`${Networks.PUBLIC}_${keypair.publicKey()}`)
           .digest('hex'),
-        ...newWalletAccount
+        ...(newWalletAccount as any)
       }),
       testnet: createWalletsAccount({
         _id: createHash('md5')
           .update(`${Networks.TESTNET}_${keypair.publicKey()}`)
           .digest('hex'),
-        ...newWalletAccount
+        ...(newWalletAccount as any)
       }),
     };
 
     this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
-
     return keypair;
   }
 
+  @transaction()
   async generateNewWallet(params: INewWalletType): Promise<string> {
     const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
     const newWalletId: string = randomBytes(4).toString('hex');
@@ -136,6 +162,23 @@ export class WalletsService {
           ...params,
           walletId: newWalletId,
         });
+        break;
+
+      case 'ledger_wallet':
+        newWallet = createWallet({
+          _id: newWalletId,
+          type: 'ledger_wallet',
+          name: newWalletId,
+        });
+        this.walletsStore.upsert(newWallet._id, newWallet);
+        const keypairs = await Promise.all(params.accounts.map(account => {
+          return this.createNewAccount({
+            ...params,
+            ...account,
+            walletId: newWalletId,
+          });
+        }));
+        keypair = keypairs.shift() as Keypair;
         break;
 
       default:
@@ -223,7 +266,7 @@ export class WalletsService {
   }
 }
 
-export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType;
+export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType | INewAccountLedgerType;
 
 export interface INewAccountMnemonicPhraseType {
   type: 'mnemonic_phrase';
@@ -240,7 +283,14 @@ export interface INewAccountSecretKeyType {
   password: string;
 }
 
-export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType;
+export interface INewAccountLedgerType {
+  type: 'ledger_wallet';
+  path: string;
+  publicKey: string;
+  walletId: IWallet['_id'];
+}
+
+export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType | INewWalletLedgerType;
 
 export interface INewWalletMnemonicPhraseType {
   type: 'mnemonic_phrase';
@@ -253,6 +303,14 @@ export interface INewWalletSecretKeyType {
   type: 'secret_key';
   secretKey: string;
   password: string;
+}
+
+export interface INewWalletLedgerType {
+  type: 'ledger_wallet';
+  accounts: Array<{
+    publicKey: string;
+    path: string;
+  }>;
 }
 
 export interface ITransaction {
