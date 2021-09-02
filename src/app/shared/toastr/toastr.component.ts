@@ -10,7 +10,7 @@ import { delay, tap } from 'rxjs/operators';
 export class ToastrComponent implements OnInit, AfterViewInit {
   @Input() title!: string;
   @Input() message!: string;
-  @Input() status?: 'success' | 'error' = 'success';
+  @Input() status?: 'success' | 'error' | 'info' = 'success';
   @Input() timer = 2500;
 
   @Output() closed: EventEmitter<void> = new EventEmitter<void>();

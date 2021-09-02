@@ -61,6 +61,10 @@ export class WalletsService {
     private readonly walletsOperationsStore: WalletsOperationsStore,
   ) { }
 
+  generateLedgerWalletId(params: { productId: number; vendorId: number }): string {
+    return `${params.productId}_${params.vendorId}`
+  }
+
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
     let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
     let newWalletAccount: Omit<IWalletsAccount, '_id'>;
@@ -132,12 +136,13 @@ export class WalletsService {
   @transaction()
   async generateNewWallet(params: INewWalletType): Promise<string> {
     const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
-    const newWalletId: string = randomBytes(4).toString('hex');
+    let newWalletId: string;
     let newWallet: IWallet;
     let keypair: Keypair;
 
     switch (params.type) {
       case 'mnemonic_phrase':
+        newWalletId = randomBytes(4).toString('hex');
         newWallet = createWallet({
           _id: newWalletId,
           type: 'mnemonic_phrase',
@@ -152,6 +157,7 @@ export class WalletsService {
         break;
 
       case 'secret_key':
+        newWalletId = randomBytes(4).toString('hex');
         newWallet = createWallet({
           _id: newWalletId,
           type: 'secret_key',
@@ -165,10 +171,13 @@ export class WalletsService {
         break;
 
       case 'ledger_wallet':
+        newWalletId = this.generateLedgerWalletId(params);
         newWallet = createWallet({
           _id: newWalletId,
           type: 'ledger_wallet',
           name: newWalletId,
+          vendorId: params.vendorId,
+          productId: params.productId,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
         const keypairs = await Promise.all(params.accounts.map(account => {
@@ -306,6 +315,8 @@ export interface INewWalletSecretKeyType {
 }
 
 export interface INewWalletLedgerType {
+  productId: number;
+  vendorId: number;
   type: 'ledger_wallet';
   accounts: Array<{
     publicKey: string;

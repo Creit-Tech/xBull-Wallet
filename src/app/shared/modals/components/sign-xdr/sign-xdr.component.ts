@@ -3,13 +3,15 @@ import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscriptio
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { Operation } from 'stellar-base';
-import { IWalletsAccountWithSecretKey, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
+import { IWalletsAccountLedger, IWalletsAccountWithSecretKey, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
 import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
+import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -79,6 +81,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly toastrService: ToastrService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
+    private readonly hardwareWalletsService: HardwareWalletsService,
   ) { }
 
   async ngAfterViewInit(): Promise<void> {
@@ -98,9 +101,12 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     }
 
     switch (selectedAccount.type) {
-
       case 'with_secret_key':
         await this.signWithPassword(selectedAccount);
+        break;
+
+      case 'with_ledger_wallet':
+        await this.signWithLedger(selectedAccount);
         break;
     }
 
@@ -153,6 +159,73 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
 
 
     ref.open();
+  }
+
+  async signWithLedger(selectedAccount: IWalletsAccountLedger): Promise<void> {
+    this.signing$.next(true);
+    const xdr = await this.xdr$.pipe(take(1)).toPromise();
+    let transport: TransportWebUSB;
+    let targetDevice: USBDevice | undefined;
+
+    try {
+      const connectedDevices = await this.hardwareWalletsService.getConnectedLedgers();
+      targetDevice = connectedDevices.find(device => this.walletsService.generateLedgerWalletId(device) === selectedAccount.walletId);
+
+      if (!targetDevice) {
+        throw new Error('Target not found');
+      }
+    } catch (e) {
+      console.error(e);
+      this.toastrService.open({
+        title: `Device not found`,
+        message: `We didn't find the correct device connected, please make sure you are using the correct device.`,
+        status: 'error',
+        timer: 5000,
+      });
+      this.signing$.next(false);
+      return;
+    }
+
+    try {
+      transport = await this.hardwareWalletsService.openLedgerConnection(targetDevice);
+    } catch (e) {
+      this.signing$.next(false);
+      this.toastrService.open({
+        title: `Can't connect`,
+        message: `Please make sure your wallet is unlocked and using the Stellar App.`,
+        status: 'error',
+        timer: 5000,
+      });
+      return;
+    }
+
+    try {
+      this.toastrService.open({
+        title: `Check your wallet`,
+        message: `Please confirm the transaction in your wallet and make sure is the one you're willing to sign, if not then cancel it.`,
+        status: 'info',
+        timer: 15000,
+      });
+      const signedXDR = await this.hardwareWalletsService.signWithLedger({
+        xdr,
+        accountPath: selectedAccount.path,
+        publicKey: selectedAccount.publicKey,
+        transport,
+      });
+
+      this.signing$.next(false);
+      this.accept.emit(signedXDR);
+    } catch (e) {
+      this.signing$.next(false);
+      this.toastrService.open({
+        title: `Can't connect/sign`,
+        message: `Please make sure your wallet is unlocked and using the Stellar App.`,
+        status: 'error',
+        timer: 5000,
+      });
+      this.signing$.next(false);
+      return;
+    }
   }
 
 

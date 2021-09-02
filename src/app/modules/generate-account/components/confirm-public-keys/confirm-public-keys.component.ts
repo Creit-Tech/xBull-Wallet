@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SettingsQuery } from '~root/state';
-import Transport from '@ledgerhq/hw-transport';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 
 @Component({
   selector: 'app-confirm-public-keys',
@@ -15,7 +15,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
   showModal = false;
 
-  @Input() transport!: Transport;
+  @Input() transport!: TransportWebUSB;
   @Output() confirmed: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
 
@@ -111,6 +111,8 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
     }
 
     await this.walletsService.generateNewWallet({
+      productId: this.transport.device.productId,
+      vendorId: (this.transport.device.vendorId),
       type: 'ledger_wallet',
       accounts: selectedAccounts,
     });
