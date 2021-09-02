@@ -43,6 +43,7 @@ export class ToastrService {
     componentRef.instance.message = params.message || componentRef.instance.message;
     componentRef.instance.title = params.title || componentRef.instance.title;
     componentRef.instance.status = params.status || componentRef.instance.status;
+    componentRef.instance.timer = params.timer || componentRef.instance.timer;
 
     componentRef.instance.closed
       .pipe(take(1))
@@ -57,5 +58,5 @@ export interface IToastrParams {
   message: ToastrComponent['message'];
   title: ToastrComponent['title'];
   status?: ToastrComponent['status'];
-
+  timer?: number;
 }

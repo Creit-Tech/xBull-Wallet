@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { GenerateAccountService } from '../../state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WalletsQuery } from '~root/state';

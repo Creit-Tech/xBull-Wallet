@@ -1,5 +1,6 @@
 import { sitesConnectionsMigration } from './1.sites-connections.migration';
 import { walletsOperationsStoreMigration } from './2.wallets-operations.migration';
+import { walletsAccountsStoreMigration } from './3.wallets-accounts-type.migration';
 
 export const migrationsHandler = (storeName: string, state: any, initialState: any) => {
 
@@ -11,6 +12,10 @@ export const migrationsHandler = (storeName: string, state: any, initialState: a
 
   if (storeName === 'wallets-operations' && state.storeVersion !== initialState.storeVersion) {
     walletsOperationsStoreMigration(state);
+  }
+
+  if (storeName === 'wallets-accounts' && state.storeVersion !== initialState.storeVersion) {
+    walletsAccountsStoreMigration(state);
   }
 
   return state;
