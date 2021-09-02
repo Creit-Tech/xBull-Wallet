@@ -14,7 +14,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
-body, html {
+.popup-mode {
   height: 600px;
   width: 375px;
+}
+
+.window-mode {
+  @apply h-screen w-screen;
 }

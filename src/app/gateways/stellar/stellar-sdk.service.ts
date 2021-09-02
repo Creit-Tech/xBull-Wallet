@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Transaction, Server, Networks, ServerApi, Horizon } from 'stellar-sdk';
+import * as SDK from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { HorizonApisQuery, IHorizonApi, SettingsQuery } from '~root/state';
 
@@ -7,9 +7,11 @@ import { HorizonApisQuery, IHorizonApi, SettingsQuery } from '~root/state';
   providedIn: 'root'
 })
 export class StellarSdkService {
-  get Server(): Server {
+  SDK: typeof SDK = SDK;
+
+  get Server(): SDK.Server {
     const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
-    return new Server(activeValue.url);
+    return new this.SDK.Server(activeValue.url);
   }
 
   get networkPassphrase(): string {
@@ -35,8 +37,8 @@ export class StellarSdkService {
   ) { }
 
   signTransaction(data: { xdr: string, secret: string }): string {
-    const keypair = Keypair.fromSecret(data.secret);
-    const transaction = new Transaction(
+    const keypair = this.SDK.Keypair.fromSecret(data.secret);
+    const transaction = new this.SDK.Transaction(
       data.xdr,
       this.networkPassphrase
     );
@@ -46,7 +48,7 @@ export class StellarSdkService {
   }
 
   submitTransaction(xdr: string) {
-    const transaction = new Transaction(
+    const transaction = new this.SDK.Transaction(
       xdr,
       this.networkPassphrase
     );
@@ -54,8 +56,8 @@ export class StellarSdkService {
     return this.Server.submitTransaction(transaction);
   }
 
-  calculateAvailableBalance(account: ServerApi.AccountRecord, code: 'native' | string): BigNumber {
-    let balanceLine: Horizon.BalanceLine;
+  calculateAvailableBalance(account: SDK.ServerApi.AccountRecord, code: 'native' | string): BigNumber {
+    let balanceLine: SDK.Horizon.BalanceLine;
     let finalAmount = new BigNumber(0);
 
     if (code === 'XLM') {
@@ -70,9 +72,9 @@ export class StellarSdkService {
 
     balanceLine = code === 'XLM'
       ? account.balances
-        .find(balance => balance.asset_type === 'native') as Horizon.BalanceLineNative
+        .find(balance => balance.asset_type === 'native') as SDK.Horizon.BalanceLineNative
       : account.balances
-        .find(balance => balance.asset_type !== 'native' && balance.asset_code === code) as Horizon.BalanceLineAsset;
+        .find(balance => balance.asset_type !== 'native' && balance.asset_code === code) as SDK.Horizon.BalanceLineAsset;
 
     finalAmount = finalAmount.plus(new BigNumber(balanceLine.balance))
       .minus(new BigNumber(balanceLine.selling_liabilities));
