@@ -72,6 +72,14 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     .pipe(filter<ITransaction>(data => !!data))
     .pipe(pluck<ITransaction, string>('memo'));
 
+  sequenceNumber$: Observable<string> = this.xdrParsed$
+    .pipe(filter<ITransaction>(data => !!data))
+    .pipe(pluck<ITransaction, string>('sequence'));
+
+  source$: Observable<string> = this.xdrParsed$
+    .pipe(filter<ITransaction>(data => !!data))
+    .pipe(pluck<ITransaction, string>('source'));
+
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
