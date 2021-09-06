@@ -120,9 +120,7 @@ export class SwapComponent implements OnInit, OnDestroy {
       fee: this.stellarSdkService.fee,
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     })
-      .addOperation(Operation.pathPaymentStrictSend({
-        destMin: cheapestPath.destination_amount,
-        sendAmount: cheapestPath.source_amount,
+      .addOperation(Operation.pathPaymentStrictReceive({
         destination: loadedAccount.accountId(),
         destAsset: cheapestPath.destination_asset_type === 'native'
           ? Asset.native()
@@ -130,12 +128,14 @@ export class SwapComponent implements OnInit, OnDestroy {
         sendAsset: cheapestPath.source_asset_type === 'native'
           ? Asset.native()
           : new Asset(cheapestPath.source_asset_code, cheapestPath.source_asset_issuer),
+        destAmount: cheapestPath.destination_amount,
         path: cheapestPath.path
           .map(item =>
             item.asset_type === 'native'
               ? Asset.native()
               : new Asset(item.asset_code, item.asset_issuer)
-          )
+          ),
+        sendMax: new BigNumber(this.form.value.amountToSwap).toFixed(7),
       }))
       .setTimeout(this.stellarSdkService.defaultTimeout);
 
