@@ -72,6 +72,14 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     .pipe(filter<ITransaction>(data => !!data))
     .pipe(pluck<ITransaction, string>('memo'));
 
+  sequenceNumber$: Observable<string> = this.xdrParsed$
+    .pipe(filter<ITransaction>(data => !!data))
+    .pipe(pluck<ITransaction, string>('sequence'));
+
+  source$: Observable<string> = this.xdrParsed$
+    .pipe(filter<ITransaction>(data => !!data))
+    .pipe(pluck<ITransaction, string>('source'));
+
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
@@ -202,9 +210,9 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     try {
       this.toastrService.open({
         title: `Check your wallet`,
-        message: `Please confirm the transaction in your wallet and make sure is the one you're willing to sign, if not then cancel it.`,
+        message: `Please confirm or cancel the transaction in your device.`,
         status: 'info',
-        timer: 15000,
+        timer: 5000,
       });
       const signedXDR = await this.hardwareWalletsService.signWithLedger({
         xdr,
@@ -219,9 +227,9 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       this.signing$.next(false);
       this.toastrService.open({
         title: `Can't connect/sign`,
-        message: `Please make sure your wallet is unlocked and using the Stellar App.`,
+        message: `Please make sure your wallet is unlocked and using the Stellar App. This error also happens when your wallet does not support this kind of operation`,
         status: 'error',
-        timer: 5000,
+        timer: 10000,
       });
       this.signing$.next(false);
       return;
