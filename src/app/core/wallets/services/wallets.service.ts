@@ -254,6 +254,8 @@ export class WalletsService {
     const createdTransaction = new Transaction(xdr, this.stellarSdkService.networkPassphrase);
     return {
       fee: createdTransaction.fee,
+      sequence: createdTransaction.sequence,
+      source: createdTransaction.source,
       baseAccount: createdTransaction.source,
       operations: createdTransaction.operations,
       passphrase: createdTransaction.networkPassphrase,
@@ -326,6 +328,8 @@ export interface INewWalletLedgerType {
 
 export interface ITransaction {
   baseAccount: string;
+  sequence: string;
+  source: string;
   passphrase: string;
   operations: Operation[];
   fee: string;
