@@ -62,7 +62,7 @@ export class WalletsService {
   ) { }
 
   generateLedgerWalletId(params: { productId: number; vendorId: number }): string {
-    return `${params.productId}_${params.vendorId}`
+    return `${params.productId}_${params.vendorId}`;
   }
 
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
@@ -109,6 +109,16 @@ export class WalletsService {
         } as IWalletsAccountLedger;
         break;
 
+      case 'trezor_wallet':
+        keypair = Keypair.fromPublicKey(params.publicKey);
+        newWalletAccount = {
+          ...baseAccount,
+          type: 'with_ledger_wallet',
+          publicKey: keypair.publicKey(),
+          path: params.path,
+        } as IWalletsAccountLedger;
+        break;
+
       default:
         throw new Error(`We can not handle the type: ${(params as any).type}`);
     }
@@ -139,6 +149,7 @@ export class WalletsService {
     let newWalletId: string;
     let newWallet: IWallet;
     let keypair: Keypair;
+    let keypairs: Keypair[];
 
     switch (params.type) {
       case 'mnemonic_phrase':
@@ -180,7 +191,25 @@ export class WalletsService {
           productId: params.productId,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
-        const keypairs = await Promise.all(params.accounts.map(account => {
+        keypairs = await Promise.all(params.accounts.map(account => {
+          return this.createNewAccount({
+            ...params,
+            ...account,
+            walletId: newWalletId,
+          });
+        }));
+        keypair = keypairs.shift() as Keypair;
+        break;
+
+      case 'trezor_wallet':
+        newWalletId = params.walletId;
+        newWallet = createWallet({
+          _id: newWalletId,
+          type: 'trezor_wallet',
+          name: newWalletId,
+        });
+        this.walletsStore.upsert(newWallet._id, newWallet);
+        keypairs = await Promise.all(params.accounts.map(account => {
           return this.createNewAccount({
             ...params,
             ...account,
@@ -277,7 +306,7 @@ export class WalletsService {
   }
 }
 
-export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType | INewAccountLedgerType;
+export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType | INewAccountLedgerType | INewAccountTrezorType;
 
 export interface INewAccountMnemonicPhraseType {
   type: 'mnemonic_phrase';
@@ -301,7 +330,14 @@ export interface INewAccountLedgerType {
   walletId: IWallet['_id'];
 }
 
-export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType | INewWalletLedgerType;
+export interface INewAccountTrezorType {
+  type: 'trezor_wallet';
+  path: string;
+  publicKey: string;
+  walletId: IWallet['_id'];
+}
+
+export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType | INewWalletLedgerType | INewWalletTrezorType;
 
 export interface INewWalletMnemonicPhraseType {
   type: 'mnemonic_phrase';
@@ -320,6 +356,15 @@ export interface INewWalletLedgerType {
   productId: number;
   vendorId: number;
   type: 'ledger_wallet';
+  accounts: Array<{
+    publicKey: string;
+    path: string;
+  }>;
+}
+
+export interface INewWalletTrezorType {
+  walletId: string;
+  type: 'trezor_wallet';
   accounts: Array<{
     publicKey: string;
     path: string;

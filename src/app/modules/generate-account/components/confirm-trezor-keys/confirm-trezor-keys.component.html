@@ -1,0 +1,51 @@
+<app-modal-wrapper [loading]="!!(loading$ | async)" [showModal]="showModal" (close)="onClose()">
+  <section class="h-full w-full relative">
+    <div class="w-full text-center mb-8">
+      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+        Accounts to import
+      </h2>
+    </div>
+
+    <ul [formGroup]="form" class="w-full mb-4">
+      <ng-container formArrayName="accounts">
+        <ng-container *ngFor="let account of $any(accounts.controls); let i = index">
+          <li [formGroupName]="i" class="w-full flex justify-between items-center py-4 border-t-2 border-label">
+            <div class="w-auto">
+              <p class="text-base text-off-black">
+                <b>{{ account.value.publicKey | publicKey }} ({{ account.value.path }})</b>
+              </p>
+            </div>
+
+            <div class="w-auto">
+              <app-toggle formControlName="active"></app-toggle>
+            </div>
+          </li>
+        </ng-container>
+      </ng-container>
+    </ul>
+
+    <div [formGroup]="form" class="w-full mb-2">
+      <app-input type="text" mode="light" title="Wallet ID"
+                 formControlName="walletId"
+                 iconPath="/assets/icons/tag.svg"></app-input>
+    </div>
+
+    <div *ngIf="advanceMode$ | async" class="w-full text-center text-label mb-7">
+      If you add again a Trezor wallet with the same ID, the wallets will be merged. Updating the wallet name later does not affect the wallet ID.
+    </div>
+
+    <div class="w-full mb-4">
+      <button (click)="requestAccounts()" class="w-full btn btn-off-black btn--small">
+        Load more accounts
+      </button>
+    </div>
+
+    <div class="w-full">
+      <button (click)="onConfirm()"
+              [disabled]="form.invalid"
+              class="w-full btn btn-success-alternative btn--small">
+        Confirm
+      </button>
+    </div>
+  </section>
+</app-modal-wrapper>

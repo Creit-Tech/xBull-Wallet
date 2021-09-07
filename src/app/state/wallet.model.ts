@@ -18,8 +18,11 @@ export interface IWalletWithLedger extends IBaseWallet {
   vendorId: number;
 }
 
-// This is because we want to support more kind of wallets in the future like Trezor wallets, ledger, etc
-export type IWallet = IWalletWithMnemonicPhrase | IWalletWithSecretKey | IWalletWithLedger;
+export interface IWalletWithTrezor extends IBaseWallet {
+  type: 'trezor_wallet';
+}
+
+export type IWallet = IWalletWithMnemonicPhrase | IWalletWithSecretKey | IWalletWithLedger | IWalletWithTrezor;
 
 export function createWallet(params: IWallet): IWallet {
 
@@ -46,6 +49,13 @@ export function createWallet(params: IWallet): IWallet {
         type: params.type,
         vendorId: params.vendorId,
         productId: params.productId,
+      };
+
+    case 'trezor_wallet':
+      return {
+        _id: params._id,
+        name: params.name,
+        type: params.type,
       };
   }
 }

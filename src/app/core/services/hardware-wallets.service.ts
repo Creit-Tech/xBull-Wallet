@@ -2,15 +2,22 @@ import { Injectable } from '@angular/core';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Str from '@ledgerhq/hw-app-str';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import TrezorConnect from 'trezor-connect';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HardwareWalletsService {
+  trezorInitiated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly stellarSdk: StellarSdkService,
-  ) { }
+  ) {
+    this.configureTrezorLibrary().then(() => this.trezorInitiated$.next(true));
+  }
+
+  // -- Ledger Wallet
 
   checkIfWebUSBIsSupported(): Promise<boolean> {
     return TransportWebUSB.isSupported();
@@ -27,7 +34,6 @@ export class HardwareWalletsService {
   openLedgerConnection(device: USBDevice): Promise<TransportWebUSB> {
     return TransportWebUSB.open(device);
   }
-
 
   async getLedgerPublicKey(path = `44'/148'/0'`, transport?: TransportWebUSB): Promise<string> {
     const finalTransport = !!transport ? transport : (await TransportWebUSB.create());
@@ -54,5 +60,29 @@ export class HardwareWalletsService {
     transaction.signatures.push(decorated);
 
     return transaction.toXDR();
+  }
+
+  // -- Trezor Wallet
+
+  async configureTrezorLibrary(): Promise<void> {
+    return TrezorConnect.init({
+      lazyLoad: false,
+      manifest: {
+        email: 'xbull@creit.tech',
+        appUrl: 'https://xbull.app',
+      }
+    });
+  }
+
+  async getTrezorPublicKeys(range: { start: number; end: number }) {
+    const bundle: Array<{ path: string; showOnTrezor: boolean }> = [];
+    for (let i = range.start; i < range.end; i++) {
+      bundle.push({
+        path: `m/44'/148'/${i}'`,
+        showOnTrezor: false
+      });
+    }
+
+    return TrezorConnect.stellarGetAddress({ bundle });
   }
 }
