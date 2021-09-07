@@ -10,7 +10,7 @@ import {
   IHorizonApi,
   IWallet,
   IWalletsAccount,
-  IWalletsAccountLedger,
+  IWalletsAccountLedger, IWalletsAccountTrezor,
   IWalletsAccountWithSecretKey,
   WalletsAccountsStore,
   WalletsOperationsStore,
@@ -113,10 +113,10 @@ export class WalletsService {
         keypair = Keypair.fromPublicKey(params.publicKey);
         newWalletAccount = {
           ...baseAccount,
-          type: 'with_ledger_wallet',
+          type: 'with_trezor_wallet',
           publicKey: keypair.publicKey(),
           path: params.path,
-        } as IWalletsAccountLedger;
+        } as IWalletsAccountTrezor;
         break;
 
       default:
