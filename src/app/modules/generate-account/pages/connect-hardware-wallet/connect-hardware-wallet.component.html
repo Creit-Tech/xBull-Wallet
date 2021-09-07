@@ -41,8 +41,8 @@
     </div>
 
     <div class="w-full px-4">
-      <button [disabled]="true" class="w-full btn btn-success-alternative btn--small">
-        Not available at this moment
+      <button [disabled]="!(trezorInitiated$ | async)" (click)="importTrezorWallet()" class="w-full btn btn-success-alternative btn--small">
+        {{ (trezorInitiated$ | async) ? 'Connect' : 'Loading Trezor' }}
       </button>
     </div>
   </div>

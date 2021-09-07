@@ -29,6 +29,7 @@
     "@ledgerhq/hw-app-str": "^6.3.0",
     "@ledgerhq/hw-transport-webusb": "^6.3.0",
     "@tailwindcss/forms": "^0.3.2",
+    "@trezor/rollout": "^1.2.0",
     "bignumber.js": "^9.0.1",
     "bip39": "^3.0.3",
     "crypto-js": "^4.0.0",
@@ -37,6 +38,7 @@
     "qrcode": "^1.4.4",
     "rxjs": "~6.6.0",
     "stellar-sdk": "^8.2.3",
+    "trezor-connect": "^8.1.29",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.3"
   },

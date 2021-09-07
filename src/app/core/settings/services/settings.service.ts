@@ -41,4 +41,10 @@ export class SettingsService {
       operationTypesToShow: data,
     });
   }
+
+  turnOnWindowsMode(): void {
+    this.settingsStore.updateUIState({
+      windowsMode: true,
+    });
+  }
 }

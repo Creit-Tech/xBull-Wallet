@@ -25,7 +25,13 @@ export interface IWalletsAccountLedger extends IWalletsAccountBase {
   path: string;
 }
 
-export type IWalletsAccount = IWalletsAccountWithSecretKey | IWalletsAccountLedger;
+
+export interface IWalletsAccountTrezor extends IWalletsAccountBase {
+  type: 'with_trezor_wallet';
+  path: string;
+}
+
+export type IWalletsAccount = IWalletsAccountWithSecretKey | IWalletsAccountLedger | IWalletsAccountTrezor;
 
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
   const base: IWalletsAccountBase = {
@@ -49,9 +55,10 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
       };
 
     case 'with_ledger_wallet':
+    case 'with_trezor_wallet':
       return {
         ...base,
-        type: 'with_ledger_wallet',
+        type: params.type,
         path: params.path,
       };
   }

@@ -3,6 +3,7 @@ import { Store, StoreConfig } from '@datorama/akita';
 
 export interface SettingsState {
   UIState: {
+    windowsMode: boolean;
     gettingRecommendedFee: boolean;
   };
   advanceMode: boolean;
@@ -15,6 +16,7 @@ export interface SettingsState {
 export function createInitialState(): SettingsState {
   return {
     UIState: {
+      windowsMode: false,
       gettingRecommendedFee: false,
     },
     advanceMode: false,

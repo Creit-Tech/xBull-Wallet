@@ -14,7 +14,8 @@
     "128": "./assets/icons/extension-icon-128.png"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "*://connect.trezor.io/8/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -28,6 +29,13 @@
     ],
     "match_about_blank": true,
     "all_frames": true
+  }, {
+    "matches": [
+      "*://connect.trezor.io/8/popup.html"
+    ],
+    "js": [
+      "./assets/vendor/trezor-content-script.js"
+    ]
   }],
   "web_accessible_resources": [{
     "resources": [

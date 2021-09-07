@@ -13,6 +13,7 @@ import { ConnectHardwareWalletComponent } from './pages/connect-hardware-wallet/
 import { ConfirmPublicKeysComponent } from './components/confirm-public-keys/confirm-public-keys.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/confirm-trezor-keys.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     ConfirmPhrasePasswordComponent,
     ConfirmSecretPasswordComponent,
     ConnectHardwareWalletComponent,
-    ConfirmPublicKeysComponent
+    ConfirmPublicKeysComponent,
+    ConfirmTrezorKeysComponent
   ],
   imports: [
     CommonModule,

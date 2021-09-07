@@ -3,7 +3,13 @@ import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscriptio
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { Operation } from 'stellar-base';
-import { IWalletsAccountLedger, IWalletsAccountWithSecretKey, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
+import {
+  IWalletsAccountLedger,
+  IWalletsAccountTrezor,
+  IWalletsAccountWithSecretKey,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+} from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
@@ -115,6 +121,10 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
 
       case 'with_ledger_wallet':
         await this.signWithLedger(selectedAccount);
+        break;
+
+      case 'with_trezor_wallet':
+        await this.signWithTrezor(selectedAccount);
         break;
     }
 
@@ -231,9 +241,41 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
         status: 'error',
         timer: 10000,
       });
-      this.signing$.next(false);
       return;
     }
+  }
+
+  async signWithTrezor(selectedAccount: IWalletsAccountTrezor): Promise<void> {
+    this.signing$.next(true);
+    const xdr = await this.xdr$.pipe(take(1)).toPromise();
+
+    const transaction = new this.stellarSdkService.SDK.Transaction(
+      xdr,
+      this.stellarSdkService.networkPassphrase,
+    );
+
+    await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
+
+    try {
+      const signedXDR = await this.hardwareWalletsService.signWithTrezor({
+        path: selectedAccount.path,
+        transaction,
+        networkPassphrase: this.stellarSdkService.networkPassphrase,
+      });
+
+      this.accept.emit(signedXDR);
+    } catch (e) {
+      console.error(e);
+      this.signing$.next(false);
+      this.toastrService.open({
+        title: `Couldn't sign the transaction`,
+        message: 'There was an unexpected error, please contact support',
+        status: 'error',
+        timer: 5000,
+      });
+    }
+
+    this.signing$.next(false);
   }
 
 
