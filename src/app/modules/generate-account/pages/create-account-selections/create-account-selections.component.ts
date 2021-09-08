@@ -3,6 +3,7 @@ import { GenerateAccountService } from '../../state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WalletsQuery } from '~root/state';
 import { ENV, environment } from '~env';
+import { GlobalsService } from '~root/lib/globals/globals.service';
 
 @Component({
   selector: 'app-create-account-selections',
@@ -19,6 +20,7 @@ export class CreateAccountSelectionsComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly walletsQuery: WalletsQuery,
+    private readonly globalsService: GlobalsService,
     @Inject(ENV) private readonly env: typeof environment,
   ) { }
 
@@ -48,6 +50,10 @@ export class CreateAccountSelectionsComponent implements OnInit {
       relativeTo: this.route
     })
       .then();
+  }
+
+  connectHardwareWallet(): void {
+    this.globalsService.openWindowMode('/index.html#/create-account/connect-hardware-wallet');
   }
 
 }

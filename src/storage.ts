@@ -6,7 +6,7 @@ import { migrationsHandler } from './migrations/migrations';
 
 const storage = persistState({
   storage: storageAkitaMiddleware,
-  preStorageUpdateOperator: () => debounceTime(500),
+  preStorageUpdateOperator: () => debounceTime(150),
   include: [
     'wallets',
     'UI/wallets',
