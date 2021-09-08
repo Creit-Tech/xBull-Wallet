@@ -54,13 +54,15 @@
         </div>
       </li>
 
-      <li *ngIf="(wallet$ | async)?.type !== 'ledger_wallet'" class="flex justify-center w-full px-4 pt-5">
-        <div class="w-7/12 px-2 mb-4">
-          <button (click)="onCreateAccount()" class="w-full btn btn-success-alternative btn--small">
-            Create account
-          </button>
-        </div>
-      </li>
+      <ng-container *ngIf="wallet$ | async as wallet">
+        <li *ngIf="wallet.type !== 'ledger_wallet' && wallet.type !== 'trezor_wallet'" class="flex justify-center w-full px-4 pt-5">
+          <div class="w-7/12 px-2 mb-4">
+            <button (click)="onCreateAccount()" class="w-full btn btn-success-alternative btn--small">
+              Create account
+            </button>
+          </div>
+        </li>
+      </ng-container>
     </ul>
   </section>
 
