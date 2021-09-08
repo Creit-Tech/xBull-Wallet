@@ -14,7 +14,7 @@
       Import Secret Key
     </button>
     <a (click)="connectHardwareWallet()"
-       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center">
+       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center cursor-pointer">
       Connect Hardware Wallet
     </a>
     <button *ngIf="isThereWallet$ | async" routerLink="/wallet/assets" class="w-full btn btn-primary btn--small btn-primary--ghost">

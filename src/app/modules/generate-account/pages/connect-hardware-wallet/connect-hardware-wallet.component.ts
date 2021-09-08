@@ -58,7 +58,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
         this.toastrService.open({
           timer: 10000,
           status: 'success',
-          title: 'Accounts imported',
+          title: 'Trezor connection completed',
           message: 'Accounts imported correctly, please close this tab BEFORE continuing using your wallet'
         });
         ref.close();
@@ -88,8 +88,8 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
         this.toastrService.open({
           timer: 10000,
           status: 'success',
-          title: 'Accounts imported',
-          message: 'Accounts imported correctly, please close this tab BEFORE continuing using your wallet'
+          title: 'Trezor connection completed',
+          message: 'Accounts imported correctly'
         });
         ref.close();
       });
