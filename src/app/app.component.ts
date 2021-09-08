@@ -6,6 +6,8 @@ import { debounceTime, distinctUntilKeyChanged, filter, skip, switchMap, take, t
 import { Order, selectPersistStateInit } from '@datorama/akita';
 import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
+import { SettingsService } from '~root/core/settings/services/settings.service';
+import { GlobalsService } from '~root/lib/globals/globals.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +17,7 @@ import { DOCUMENT } from '@angular/common';
 export class AppComponent implements OnInit {
 
   constructor(
+    private readonly settingsService: SettingsService,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
@@ -23,6 +26,7 @@ export class AppComponent implements OnInit {
     @Inject(DOCUMENT)
     private readonly document: Document,
     private readonly renderer2: Renderer2,
+    private readonly globalsService: GlobalsService,
   ) { }
 
 
@@ -69,19 +73,28 @@ export class AppComponent implements OnInit {
       this.walletsAccountsService.createAccountStream({ account, horizonApi });
     });
 
+  checkIf: Subscription = this.walletsAccountsQuery.getSelectedAccount$
+    .pipe(filter(account => !!account))
+    .pipe(distinctUntilKeyChanged('_id'))
+    .pipe(debounceTime(100))
+    .subscribe(selectedAccount => {
+      const isPopup = window.opener && window.opener !== window && !window.menubar.visible;
+      if (selectedAccount.type === 'with_trezor_wallet' && !isPopup) {
+        this.globalsService.openWindowMode();
+      }
+    });
+
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(skip(1))
-      .subscribe(queryParams => {
-        if (!!queryParams?.windowMode) {
-          this.activateWindowMode();
-        }
-      });
+     this.activateWindowMode();
   }
 
   activateWindowMode(): void {
-    this.renderer2.removeClass(this.document.body, 'popup-mode');
-    this.renderer2.addClass(this.document.body, 'window-mode');
+    const isPopup = window.opener && window.opener !== window && !window.menubar.visible;
+    if (!isPopup) {
+      this.renderer2.removeClass(this.document.body, 'popup-mode');
+      this.renderer2.addClass(this.document.body, 'window-mode');
+      this.settingsService.turnOnWindowsMode();
+    }
   }
 
 }

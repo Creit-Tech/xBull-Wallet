@@ -1,4 +1,4 @@
-<section class="h-full w-full flex flex-col px-6 py-8">
+<section class="h-full w-full flex flex-col px-6 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center">
     <img src="/assets/icons/xbull-icon.svg" class="h-40" alt="xbull-logo">
   </div>
@@ -13,9 +13,8 @@
     <button (click)="importSecretKey()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
       Import Secret Key
     </button>
-    <a href="/index.html#/create-account/connect-hardware-wallet?windowMode=true"
-       target="_blank"
-       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center">
+    <a (click)="connectHardwareWallet()"
+       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center cursor-pointer">
       Connect Hardware Wallet
     </a>
     <button *ngIf="isThereWallet$ | async" routerLink="/wallet/assets" class="w-full btn btn-primary btn--small btn-primary--ghost">

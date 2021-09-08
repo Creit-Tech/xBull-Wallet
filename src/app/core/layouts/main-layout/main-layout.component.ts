@@ -7,6 +7,7 @@ import { ComponentCreatorService } from '~root/core/services/component-creator.s
 import { SelectAccountComponent } from '~root/core/layouts/main-layout/components/select-account/select-account.component';
 import { Subject } from 'rxjs';
 import { SelectHorizonApiComponent } from '~root/core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
+import { GlobalsService } from '~root/lib/globals/globals.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -28,6 +29,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly globalsService: GlobalsService,
   ) { }
 
   ngOnInit(): void {
@@ -66,6 +68,10 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       });
 
     ref.open();
+  }
+
+  onWin() {
+    this.globalsService.openWindowMode();
   }
 
 }

@@ -1,4 +1,4 @@
-<section class="h-full w-full flex flex-col px-6 py-8 justify-start items-center">
+<section class="h-full w-full flex flex-col px-6 py-8 justify-start items-center container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-4">
     <img src="/assets/icons/xbull-icon.svg" class="h-24" alt="xbull-logo">
   </div>
@@ -41,8 +41,8 @@
     </div>
 
     <div class="w-full px-4">
-      <button [disabled]="true" class="w-full btn btn-success-alternative btn--small">
-        Not available at this moment
+      <button [disabled]="!(trezorInitiated$ | async)" (click)="importTrezorWallet()" class="w-full btn btn-success-alternative btn--small">
+        {{ (trezorInitiated$ | async) ? 'Connect' : 'Loading Trezor' }}
       </button>
     </div>
   </div>

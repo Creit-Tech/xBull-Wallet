@@ -5,6 +5,7 @@ import { ComponentCreatorService } from '~root/core/services/component-creator.s
 import { ConfirmPublicKeysComponent } from '~root/modules/generate-account/components/confirm-public-keys/confirm-public-keys.component';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ConfirmTrezorKeysComponent } from '~root/modules/generate-account/components/confirm-trezor-keys/confirm-trezor-keys.component';
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -13,6 +14,8 @@ import { Subject } from 'rxjs';
 })
 export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
+
+  trezorInitiated$ = this.hardwareWalletsService.trezorInitiated$;
 
   constructor(
     private readonly hardwareWalletsService: HardwareWalletsService,
@@ -55,8 +58,38 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
         this.toastrService.open({
           timer: 10000,
           status: 'success',
-          title: 'Accounts imported',
+          title: 'Trezor connection completed',
           message: 'Accounts imported correctly, please close this tab BEFORE continuing using your wallet'
+        });
+        ref.close();
+      });
+
+    ref.component.instance.cancel
+      .asObservable()
+      .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        ref.component.instance.onClose()
+          .then(() => ref.close());
+      });
+
+    ref.open();
+  }
+
+  async importTrezorWallet(): Promise<void> {
+    const ref = await this.componentCreatorService.createOnBody<ConfirmTrezorKeysComponent>(ConfirmTrezorKeysComponent);
+
+    ref.component.instance.confirmed
+      .asObservable()
+      .pipe(switchMap(() => ref.component.instance.onClose()))
+      .pipe(take(1))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        this.toastrService.open({
+          timer: 10000,
+          status: 'success',
+          title: 'Trezor connection completed',
+          message: 'Accounts imported correctly'
         });
         ref.close();
       });
