@@ -3,7 +3,8 @@
   "files": [
     "./src/extension/background/background.ts",
     "./src/extension/sdk/sdk.ts",
-    "./src/extension/content-script/content-script.ts"
+    "./src/extension/content-script/content-script.ts",
+    "./src/extension/popup.ts"
   ],
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
