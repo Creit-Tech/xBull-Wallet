@@ -6,6 +6,7 @@ module.exports = {
     background: resolve(__dirname, 'src/extension/background/background.ts'),
     'sdk': resolve(__dirname, 'src/extension/sdk/sdk.ts'),
     'content-script': resolve(__dirname, 'src/extension/content-script/content-script.ts'),
+    'popup': resolve(__dirname, 'src/extension/popup.ts'),
   },
   output: {
     filename: '[name].js',
