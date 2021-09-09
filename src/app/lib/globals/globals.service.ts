@@ -15,6 +15,9 @@ export class GlobalsService {
 
   openWindowMode(url = '/index.html#/wallet/assets/'): void {
     new Promise(r => setTimeout(r, 200))
-      .then(() => this.window.open(url, 'xBull_Wallet'));
+      .then(() => {
+        this.window.open(url, 'xBull_Wallet');
+        this.window.close();
+      });
   }
 }

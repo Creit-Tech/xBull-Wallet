@@ -28,6 +28,8 @@
             "aot": true,
             "assets": [
               "src/favicon.png",
+              "src/popup.html",
+              "src/popup.js",
               "src/assets",
               "src/manifest.json",
               "src/background.js",
