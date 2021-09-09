@@ -15,8 +15,8 @@
         <dt class="text-base font-bold mb-1 w-full">Sequence number:</dt>
         <dd class="break-all text-sm mb-3 w-full">{{ sequenceNumber$ | async }}</dd>
 
-<!--        <dt class="text-base font-bold mb-1 w-full">Transaction source:</dt>-->
-<!--        <dd class="break-all text-sm mb-3 w-full">{{ source$ | async }}</dd>-->
+        <dt class="text-base font-bold mb-1 w-full">Transaction source:</dt>
+        <dd class="break-all text-sm mb-3 w-full">{{ source$ | async }}</dd>
 
         <ng-container *ngFor="let operation of (operations$ | async); let i = index">
 
@@ -306,7 +306,7 @@
 
           <ng-container *ngIf="!!operation.source">
             <dt class="text-base font-bold mb-1 w-full">Operation source:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.source | publicKey }}</dd>
+            <dd class="break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
           </ng-container>
 
         </ng-container>
