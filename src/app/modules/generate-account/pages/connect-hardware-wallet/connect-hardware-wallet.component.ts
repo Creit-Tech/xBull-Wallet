@@ -6,6 +6,7 @@ import { ConfirmPublicKeysComponent } from '~root/modules/generate-account/compo
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ConfirmTrezorKeysComponent } from '~root/modules/generate-account/components/confirm-trezor-keys/confirm-trezor-keys.component';
+import {GlobalsService} from "~root/lib/globals/globals.service";
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -21,6 +22,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
     private readonly hardwareWalletsService: HardwareWalletsService,
     private readonly toastrService: ToastrService,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly globalsService: GlobalsService,
   ) { }
 
   ngOnInit(): void {
@@ -55,12 +57,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(() => {
-        this.toastrService.open({
-          timer: 10000,
-          status: 'success',
-          title: 'Trezor connection completed',
-          message: 'Accounts imported correctly, please close this tab BEFORE continuing using your wallet'
-        });
+        this.showSuccessMessage();
         ref.close();
       });
 
@@ -85,12 +82,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(() => {
-        this.toastrService.open({
-          timer: 10000,
-          status: 'success',
-          title: 'Trezor connection completed',
-          message: 'Accounts imported correctly'
-        });
+        this.showSuccessMessage();
         ref.close();
       });
 
@@ -104,6 +96,19 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
       });
 
     ref.open();
+  }
+
+  async showSuccessMessage(): Promise<void> {
+    this.toastrService.open({
+      timer: 10000,
+      status: 'success',
+      title: 'Process completed!',
+      message: 'Accounts imported correctly, this window will be closed in the next 5 seconds.'
+    });
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    this.globalsService.window.close();
   }
 
 }

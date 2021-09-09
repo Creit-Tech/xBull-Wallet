@@ -73,19 +73,8 @@ export class AppComponent implements OnInit {
       this.walletsAccountsService.createAccountStream({ account, horizonApi });
     });
 
-  checkIf: Subscription = this.walletsAccountsQuery.getSelectedAccount$
-    .pipe(filter(account => !!account))
-    .pipe(distinctUntilKeyChanged('_id'))
-    .pipe(debounceTime(100))
-    .subscribe(selectedAccount => {
-      const isPopup = window.opener && window.opener !== window && !window.menubar.visible;
-      if (selectedAccount.type === 'with_trezor_wallet' && !isPopup) {
-        this.globalsService.openWindowMode();
-      }
-    });
-
   ngOnInit(): void {
-     this.activateWindowMode();
+      this.activateWindowMode();
   }
 
   activateWindowMode(): void {
