@@ -70,8 +70,4 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     ref.open();
   }
 
-  onWin() {
-    this.globalsService.openWindowMode();
-  }
-
 }
