@@ -52,8 +52,9 @@ export class CreateAccountSelectionsComponent implements OnInit {
       .then();
   }
 
-  connectHardwareWallet(): void {
-    this.globalsService.openWindowMode('/index.html#/create-account/connect-hardware-wallet');
+  async connectHardwareWallet(): Promise<void> {
+    await this.globalsService.openWindowMode('/index.html#/create-account/connect-hardware-wallet');
+    this.globalsService.window.close();
   }
 
 }
