@@ -13,11 +13,13 @@ export class GlobalsService {
     return window;
   }
 
-  openWindowMode(url = '/index.html#/wallet/assets/'): void {
-    new Promise(r => setTimeout(r, 200))
+  openWindowMode(url = '/index.html#/wallet/assets/'): Promise<void> {
+    return new Promise(r => setTimeout(r, 200))
       .then(() => {
-        this.window.open(url, 'xBull_Wallet');
-        this.window.close();
+        chrome.windows.create({
+          url,
+          focused: true
+        });
       });
   }
 }
