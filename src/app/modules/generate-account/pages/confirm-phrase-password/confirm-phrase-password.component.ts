@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { Subject, Subscription } from 'rxjs';
 import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -19,9 +19,18 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
-    confirmPhrase: new FormControl('', [Validators.required]),
+    words: new FormArray(
+      new Array(24)
+        .fill(null)
+        .map(() => new FormControl('', Validators.required))
+    ),
+    confirmPhrase: new FormControl(''),
     confirmPassword: new FormControl('', [Validators.required]),
   }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
+
+  get phraseArray(): FormArray {
+    return this.form.controls.words as FormArray;
+  }
 
   walletVersion = this.env.version;
 
@@ -33,6 +42,16 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     @Inject(ENV) private readonly env: typeof environment,
   ) { }
+
+  wordsUpdatedSubscription: Subscription = this.phraseArray.valueChanges
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe((words: string[]) => {
+      const completePhrase = words
+        .map(word => word.trim())
+        .join(' ');
+
+      this.form.controls.confirmPhrase.patchValue(completePhrase, { emitEvent: false });
+    });
 
   checkPasswordWithGloablPassword: Subscription = this.form.controls.confirmPassword.valueChanges
     .pipe(withLatestFrom(this.walletsQuery.globalPasswordHash$))
@@ -90,6 +109,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
 }
 
 export interface IConfirmPhrasePasswordForm {
+  words: FormArray;
   confirmPhrase: string;
   confirmPassword: string;
 }
