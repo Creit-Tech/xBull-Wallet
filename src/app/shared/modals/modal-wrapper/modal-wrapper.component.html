@@ -1,4 +1,5 @@
 <div class="back-background fixed top-0 left-0 h-screen w-screen transition"
+     (click)="onClose()"
      [class.bg-off-black]="showModal$ | async"
      [class.opacity-90]="showModal$ | async"></div>
 
