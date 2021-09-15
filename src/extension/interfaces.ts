@@ -1,3 +1,5 @@
+import { Networks } from 'stellar-sdk';
+
 export const XBULL_CONNECT = 'XBULL_CONNECT';
 export const XBULL_CONNECT_BACKGROUND = 'XBULL_CONNECT_BACKGROUND';
 
@@ -33,6 +35,8 @@ export interface ISignXDRRequestPayload {
   origin: string;
   host: string;
   xdr: string;
+  publicKey?: string;
+  network?: Networks;
 }
 // ----- SDK and Content script types END
 
