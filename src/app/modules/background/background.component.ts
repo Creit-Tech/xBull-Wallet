@@ -19,8 +19,9 @@ import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-x
 import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { createHash } from 'crypto';
-import { Networks } from 'stellar-base';
+import {Networks, Transaction} from 'stellar-base';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import {HorizonApisService} from "~root/core/services/horizon-apis.service";
 
 @Component({
   selector: 'app-background',
@@ -40,6 +41,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsService: WalletsService,
+    private readonly horizonApisService: HorizonApisService,
   ) { }
 
   connectHandler$ = this.runtimeEvent$.asObservable()
@@ -151,6 +153,15 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {
     if (!!params.network && !!params.publicKey) {
+      try {
+        this.horizonApisService.setHorizonByNetwork(params.network);
+      } catch (e) {
+        return {
+          error: true,
+          errorMessage: e.name,
+        };
+      }
+
       const accountId = this.walletsService.generateWalletAccountId({
         network: params.network,
         publicKey: params.publicKey,
