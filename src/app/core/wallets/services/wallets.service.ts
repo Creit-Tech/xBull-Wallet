@@ -65,6 +65,12 @@ export class WalletsService {
     return `${params.productId}_${params.vendorId}`;
   }
 
+  generateWalletAccountId(params: { network: Networks; publicKey: string }): string {
+    return createHash('md5')
+      .update(`${params.network}_${params.publicKey}`)
+      .digest('hex');
+  }
+
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
     let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
     let newWalletAccount: Omit<IWalletsAccount, '_id'>;

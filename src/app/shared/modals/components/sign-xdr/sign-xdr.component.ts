@@ -2,8 +2,11 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
-import { Operation } from 'stellar-base';
+import {Networks, Operation} from 'stellar-base';
 import {
+  HorizonApisQuery,
+  IHorizonApi,
+  IWalletsAccount,
   IWalletsAccountLedger,
   IWalletsAccountTrezor,
   IWalletsAccountWithSecretKey,
@@ -18,6 +21,7 @@ import { SignPasswordComponent } from '~root/shared/modals/components/sign-passw
 import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import {HorizonApisService} from "~root/core/services/horizon-apis.service";
 
 @Component({
   selector: 'app-sign-xdr',
@@ -86,6 +90,15 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     .pipe(filter<ITransaction>(data => !!data))
     .pipe(pluck<ITransaction, string>('source'));
 
+  selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;
+  networkBeingUsed$: Observable<'Public' | 'Testnet'> = this.horizonApisQuery.getSelectedHorizonApi$
+    .pipe(filter(horizon => !!horizon))
+    .pipe(map(horizon => {
+      return horizon.networkPassphrase === Networks.PUBLIC
+        ? 'Public'
+        : 'Testnet';
+    }));
+
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
@@ -96,6 +109,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
     private readonly hardwareWalletsService: HardwareWalletsService,
+    private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly horizonApisService: HorizonApisService,
   ) { }
 
   async ngAfterViewInit(): Promise<void> {
@@ -107,7 +122,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   async onAccepted(): Promise<void> {
-    const selectedAccount = await this.walletsAccountQuery.getSelectedAccount$.pipe(take(1)).toPromise();
+    const selectedAccount = await this.selectedAccount$.pipe(take(1)).toPromise();
 
     if (!selectedAccount) {
       // TODO: Handle this case

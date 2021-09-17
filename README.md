@@ -85,6 +85,8 @@ const publicKey = await xBullSDK.getPublicKey();
 const signedTransaction = await xBullSDK.signXDR('AAAAAgAAAQAAAAAAAAAAAOwLt5VQAsyVhQr7Ps0XaKsE99JVCRWUV0V3t+B/5iYdAAABLAAAUN4AAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAABAAAAElRoaXMgaXMgYSBuZXcgdGVzdAAAAAAAAwAAAAAAAAAAAAAAAGP4PCOshTlRoCoEFOyQZW8dCyRa4t28ju+DWOyBGWmQAAAAAACYloAAAAAAAAAAAQAAAQAAAAAAAAAAAGP4PCOshTlRoCoEFOyQZW8dCyRa4t28ju+DWOyBGWmQAAAAAAAAAAAC+vCAAAAAAAAAAAEAAAEAAAAAAAAAAABj+DwjrIU5UaAqBBTskGVvHQskWuLdvI7vg1jsgRlpkAAAAAAAAAAABycOAAAAAAAAAAAA')
 ``` 
 
+> When requesting you can also send an object as a second parameter and specify the `network` and `publicKey` (both are required), this will change the selected account and use it to sign the transaction.
+
 
 # FAQs
 

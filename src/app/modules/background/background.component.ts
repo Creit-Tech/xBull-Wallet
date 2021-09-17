@@ -16,7 +16,12 @@ import { merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
-import { createSiteConnection } from '~root/state';
+import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { createHash } from 'crypto';
+import {Networks, Transaction} from 'stellar-base';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import {HorizonApisService} from "~root/core/services/horizon-apis.service";
 
 @Component({
   selector: 'app-background',
@@ -33,6 +38,10 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private readonly modalsService: ModalsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly sitesConnectionsService: SitesConnectionsService,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly walletsService: WalletsService,
+    private readonly horizonApisService: HorizonApisService,
   ) { }
 
   connectHandler$ = this.runtimeEvent$.asObservable()
@@ -143,6 +152,36 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {
+    if (!!params.network && !!params.publicKey) {
+      try {
+        this.horizonApisService.setHorizonByNetwork(params.network);
+      } catch (e) {
+        return {
+          error: true,
+          errorMessage: e.name,
+        };
+      }
+
+      const accountId = this.walletsService.generateWalletAccountId({
+        network: params.network,
+        publicKey: params.publicKey,
+      });
+
+      const account = await this.walletsAccountsQuery.selectEntity(accountId).pipe(take(1)).toPromise();
+
+      if (!!account) {
+        await this.walletsService.selectAccount({
+          walletId: account.walletId,
+          publicKey: account.publicKey,
+        });
+      } else {
+        return {
+          error: true,
+          errorMessage: 'Combination of Network and public key is not available in this wallet',
+        };
+      }
+    }
+
     const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
 
     ref.component.instance.xdr = params.xdr;

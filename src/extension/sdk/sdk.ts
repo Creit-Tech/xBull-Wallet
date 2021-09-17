@@ -11,6 +11,7 @@ import {
   XBULL_CONNECT,
   XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
 } from '../interfaces';
+import { Networks } from 'stellar-sdk';
 
 class Sdk {
   isConnected = false;
@@ -84,10 +85,12 @@ class Sdk {
     return detail.payload;
   }
 
-  async signXDR(xdr: string): Promise<string> {
+  async signXDR(xdr: string, options: { network?: Networks; publicKey?: string }): Promise<string> {
     const dispatchEventParams: ISignXDRRequestPayload = {
       origin: window.origin,
       host: window.location.host,
+      network: options?.network,
+      publicKey: options?.publicKey,
       xdr
     };
 
