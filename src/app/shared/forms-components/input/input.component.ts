@@ -63,7 +63,7 @@ export class InputComponent implements OnInit, ControlValueAccessor {
     this.disabled = isDisabled;
   }
 
-  onEnter(event: InputEvent): void {
+  onEnter(event: any): void {
     this.enter.emit(event);
   }
 
