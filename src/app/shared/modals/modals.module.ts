@@ -10,6 +10,7 @@ import { SignPasswordComponent } from './components/sign-password/sign-password.
 import { HardConfirmComponent } from './components/hard-confirm/hard-confirm.component';
 import { PressButtonModule } from '~root/shared/press-button/press-button.module';
 import {SharedPipesModule} from "~root/shared/shared-pipes/shared-pipes.module";
+import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -22,13 +23,14 @@ const COMPONENTS = [
 @NgModule({
   declarations: COMPONENTS,
   exports: COMPONENTS,
-    imports: [
-        CommonModule,
-        FormsComponentsModule,
-        LoadingModule,
-        PressButtonModule,
-        SharedPipesModule,
-    ],
+  imports: [
+    CommonModule,
+    FormsComponentsModule,
+    LoadingModule,
+    PressButtonModule,
+    SharedPipesModule,
+    ClipboardModule,
+  ],
 })
 export class ModalsModule {
   static forRoot(): ModuleWithProviders<ModalsModule> {

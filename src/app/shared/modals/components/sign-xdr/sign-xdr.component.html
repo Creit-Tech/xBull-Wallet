@@ -8,6 +8,18 @@
       <p *ngIf="from !== 'wallet'" class="pt-4 text-xs text-label">
         From: {{ from }}
       </p>
+
+      <div class="w-full flex justify-between">
+        <p class="pt-4 text-xs text-label">
+          <b>Network: {{ networkBeingUsed$ | async }}</b>
+        </p>
+
+        <p *ngIf="selectedAccount$ | async as selectedAccount"
+           appClipboard [textToCopy]="selectedAccount.publicKey"
+           class="pt-4 text-xs text-label cursor-pointer">
+          <b>Signing with: {{ selectedAccount.publicKey | publicKey }}</b>
+        </p>
+      </div>
     </div>
 
     <section class="w-full mb-8">
@@ -15,8 +27,13 @@
         <dt class="text-base font-bold mb-1 w-full">Sequence number:</dt>
         <dd class="break-all text-sm mb-3 w-full">{{ sequenceNumber$ | async }}</dd>
 
-        <dt class="text-base font-bold mb-1 w-full">Transaction source:</dt>
-        <dd class="break-all text-sm mb-3 w-full">{{ source$ | async }}</dd>
+        <ng-container *ngIf="source$ | async as source">
+          <dt class="text-base font-bold mb-1 w-full">Transaction source:</dt>
+          <dd appClipboard [textToCopy]="source"
+              class="break-all text-sm mb-3 w-full cursor-pointer">
+            {{ source | publicKey }}
+          </dd>
+        </ng-container>
 
         <ng-container *ngFor="let operation of (operations$ | async); let i = index">
 
@@ -271,7 +288,12 @@
             <dd class="break-all text-sm mb-3 w-full">Claim Claimable Balance</dd>
 
             <dt class="text-base font-bold mb-1 w-full">Balance ID:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
+
+<!--            We understand this is not a public key but we want to hide it mostly-->
+            <dd appClipboard [textToCopy]="operation.balanceId"
+                class="break-all text-sm mb-3 w-full cursor-pointer">
+              {{ operation.balanceId | publicKey }}
+            </dd>
           </ng-container>
 
 <!--          <ng-container *ngIf="operation.type === 'createClaimableBalance'">-->
