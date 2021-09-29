@@ -73,12 +73,23 @@
             <dt class="text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="break-all text-sm mb-3 w-full">Change trust</dd>
 
-            <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
-            <dd class="break-all text-sm mb-3 w-full">{{ operation.line.code }}</dd>
+<!--            We are using $any here because the types use functions and TS can't know which one is the correct-->
+            <ng-container *ngIf="operation.line.getAssetType() === 'liquidity_pool_shares'">
+              <dt class="text-base font-bold mb-1 w-full">Asset A:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ $any(operation).assetA.line.code }}</dd>
 
-            <ng-container *ngIf="operation.line.issuer">
-              <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-              <dd class="break-all text-sm mb-3 w-full">{{ operation.line.issuer }}</dd>
+              <dt class="text-base font-bold mb-1 w-full">Asset B:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ $any(operation).assetB.line.code }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.line.getAssetType() !== 'liquidity_pool_shares'">
+              <dt class="text-base font-bold mb-1 w-full">Asset Code:</dt>
+              <dd class="break-all text-sm mb-3 w-full">{{ $any(operation.line).code }}</dd>
+
+              <ng-container *ngIf="$any(operation.line).issuer">
+                <dt class="text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+                <dd class="break-all text-sm mb-3 w-full">{{ $any(operation.line).issuer }}</dd>
+              </ng-container>
             </ng-container>
 
             <dt class="text-base font-bold mb-1 w-full">Limit:</dt>

@@ -39,7 +39,7 @@
     "ngx-mask": "^11.1.5",
     "qrcode": "^1.4.4",
     "rxjs": "~6.6.0",
-    "stellar-sdk": "^8.2.3",
+    "stellar-sdk": "8.3.0",
     "trezor-connect": "^8.1.29",
     "tslib": "^2.0.0",
     "util": "^0.12.4",
