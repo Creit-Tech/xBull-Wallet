@@ -20,6 +20,17 @@ import { SitesConnectedComponent } from './pages/sites-connected/sites-connected
 import { ConnectedSiteDetailsComponent } from './components/connected-site-details/connected-site-details.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ActiveOperationsTypesComponent } from './pages/active-operations-types/active-operations-types.component';
+import { AntiSpamOptionsComponent } from './pages/anti-spam/anti-spam-options/anti-spam-options.component';
+import {NzListModule} from "ng-zorro-antd/list";
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import {NzBreadCrumbModule} from "ng-zorro-antd/breadcrumb";
+import { AntiSpamKeysComponent } from './pages/anti-spam/anti-spam-keys/anti-spam-keys.component';
+import {NzEmptyModule} from "ng-zorro-antd/empty";
+import {NzFormModule} from "ng-zorro-antd/form";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
+import {NzPopconfirmModule} from "ng-zorro-antd/popconfirm";
 
 
 @NgModule({
@@ -37,7 +48,9 @@ import { ActiveOperationsTypesComponent } from './pages/active-operations-types/
     SitesConnectedComponent,
     ConnectedSiteDetailsComponent,
     AboutComponent,
-    ActiveOperationsTypesComponent
+    ActiveOperationsTypesComponent,
+    AntiSpamOptionsComponent,
+    AntiSpamKeysComponent
   ],
   imports: [
     CommonModule,
@@ -46,6 +59,15 @@ import { ActiveOperationsTypesComponent } from './pages/active-operations-types/
     LoadingModule,
     ModalsModule,
     SharedPipesModule,
+    NzListModule,
+    NzButtonModule,
+    NzIconModule,
+    NzBreadCrumbModule,
+    NzEmptyModule,
+    NzFormModule,
+    NzInputModule,
+    ClipboardModule,
+    NzPopconfirmModule,
   ],
 })
 export class SettingsModule { }

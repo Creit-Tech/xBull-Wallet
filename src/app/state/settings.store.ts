@@ -9,6 +9,15 @@ export interface SettingsState {
   advanceMode: boolean;
   defaultFee: string;
 
+  antiSPAM: {
+    publicKeys: string[];
+    domains: string[];
+    assets: Array<{
+      assetCode: string;
+      issuer: string;
+    }>
+  };
+
   // TODO: this should be Array<IWalletsOperation['operationRecord']['type']> but the types are getting issues, fix this later
   operationTypesToShow: string[];
 }
@@ -21,6 +30,11 @@ export function createInitialState(): SettingsState {
     },
     advanceMode: false,
     defaultFee: '100',
+    antiSPAM: {
+      assets: [],
+      domains: [],
+      publicKeys: [],
+    },
     operationTypesToShow: [
       'manage_sell_offer',
       'manage_buy_offer',
