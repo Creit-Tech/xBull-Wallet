@@ -3,6 +3,7 @@ import {FormControl, Validators} from '@angular/forms';
 import {SettingsService} from '~root/core/settings/services/settings.service';
 import {SettingsQuery} from '~root/state';
 import {map, pluck} from 'rxjs/operators';
+import {NzMessageService} from "ng-zorro-antd/message";
 
 @Component({
   selector: 'app-anti-spam-keys',
@@ -25,6 +26,7 @@ export class AntiSpamKeysComponent implements OnInit {
   constructor(
     private readonly settingsService: SettingsService,
     private readonly settingsQuery: SettingsQuery,
+    private readonly nzMessageService: NzMessageService,
     private readonly cdr: ChangeDetectorRef
   ) { }
 
@@ -42,12 +44,15 @@ export class AntiSpamKeysComponent implements OnInit {
       this.publicKeyControl.patchValue('');
       this.cdr.detectChanges();
     } catch (e) {
-
+      console.error(e);
+      this.nzMessageService.error(`We couldn't add the key, it's possible that you already saved it.`, {
+        nzDuration: 5000,
+      });
     }
   }
 
   onRemove(publicKey: string): void {
-    this.settingsService.removePublicKeyToSpamFilter(publicKey);
+    this.settingsService.removePublicKeyFromSpamFilter(publicKey);
   }
 
 }

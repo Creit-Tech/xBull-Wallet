@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
+  allAssets$ = this.selectAll();
   addingAsset$ = this.select(state => state.UIState.addingAsset);
   removingAsset$ = this.select(state => state.UIState.removingAsset);
 

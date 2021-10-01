@@ -51,14 +51,16 @@
   </ng-template>
 
   <section class="w-full flex flex-col justify-center items-center mb-4">
-    <nz-input-group class="mb-2 w-full" nzPrefixIcon="key">
-      <input class="mx-4" [formControl]="publicKeyControl" nz-input placeholder="Public key" />
+    <nz-input-group nzPrefixIcon="key" [nzSuffix]="addButton" class="mb-4">
+      <input [formControl]="publicKeyControl" nz-input placeholder="Public key" />
+    </nz-input-group>
+    <ng-template #addButton>
       <button [disabled]="publicKeyControl.invalid"
               (click)="onAdd()"
               nz-button nzType="primary">
         Add
       </button>
-    </nz-input-group>
+    </ng-template>
 
     <small class="text-center text-label">
       All transactions from the accounts listed here will be ignored in this Wallet

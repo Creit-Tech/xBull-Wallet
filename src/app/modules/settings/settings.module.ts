@@ -21,16 +21,21 @@ import { ConnectedSiteDetailsComponent } from './components/connected-site-detai
 import { AboutComponent } from './pages/about/about.component';
 import { ActiveOperationsTypesComponent } from './pages/active-operations-types/active-operations-types.component';
 import { AntiSpamOptionsComponent } from './pages/anti-spam/anti-spam-options/anti-spam-options.component';
-import {NzListModule} from "ng-zorro-antd/list";
-import {NzButtonModule} from "ng-zorro-antd/button";
-import {NzIconModule} from "ng-zorro-antd/icon";
-import {NzBreadCrumbModule} from "ng-zorro-antd/breadcrumb";
+import {NzListModule} from 'ng-zorro-antd/list';
+import {NzButtonModule} from 'ng-zorro-antd/button';
+import {NzIconModule} from 'ng-zorro-antd/icon';
+import {NzBreadCrumbModule} from 'ng-zorro-antd/breadcrumb';
 import { AntiSpamKeysComponent } from './pages/anti-spam/anti-spam-keys/anti-spam-keys.component';
-import {NzEmptyModule} from "ng-zorro-antd/empty";
-import {NzFormModule} from "ng-zorro-antd/form";
-import {NzInputModule} from "ng-zorro-antd/input";
-import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
-import {NzPopconfirmModule} from "ng-zorro-antd/popconfirm";
+import {NzEmptyModule} from 'ng-zorro-antd/empty';
+import {NzFormModule} from 'ng-zorro-antd/form';
+import {NzInputModule} from 'ng-zorro-antd/input';
+import {ClipboardModule} from '~root/shared/clipboard/clipboard.module';
+import {NzPopconfirmModule} from 'ng-zorro-antd/popconfirm';
+import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
+import {NzTableModule} from 'ng-zorro-antd/table';
+import {NzDividerModule} from 'ng-zorro-antd/divider';
+import { AntiSpamClaimableAssetsComponent } from './pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
+import {NzMessageModule} from "ng-zorro-antd/message";
 
 
 @NgModule({
@@ -50,7 +55,8 @@ import {NzPopconfirmModule} from "ng-zorro-antd/popconfirm";
     AboutComponent,
     ActiveOperationsTypesComponent,
     AntiSpamOptionsComponent,
-    AntiSpamKeysComponent
+    AntiSpamKeysComponent,
+    AntiSpamClaimableAssetsComponent
   ],
   imports: [
     CommonModule,
@@ -68,6 +74,10 @@ import {NzPopconfirmModule} from "ng-zorro-antd/popconfirm";
     NzInputModule,
     ClipboardModule,
     NzPopconfirmModule,
+    NzInputNumberModule,
+    NzTableModule,
+    NzDividerModule,
+    NzMessageModule,
   ],
 })
 export class SettingsModule { }

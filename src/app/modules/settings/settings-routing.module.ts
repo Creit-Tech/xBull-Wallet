@@ -8,8 +8,9 @@ import { HorizonApisComponent } from '~root/modules/settings/pages/horizon-apis/
 import { SitesConnectedComponent } from '~root/modules/settings/pages/sites-connected/sites-connected.component';
 import { AboutComponent } from '~root/modules/settings/pages/about/about.component';
 import { ActiveOperationsTypesComponent } from '~root/modules/settings/pages/active-operations-types/active-operations-types.component';
-import {AntiSpamOptionsComponent} from "~root/modules/settings/pages/anti-spam/anti-spam-options/anti-spam-options.component";
-import {AntiSpamKeysComponent} from "~root/modules/settings/pages/anti-spam/anti-spam-keys/anti-spam-keys.component";
+import {AntiSpamOptionsComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-options/anti-spam-options.component';
+import {AntiSpamKeysComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-keys/anti-spam-keys.component';
+import {AntiSpamClaimableAssetsComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
 
 const routes: Routes = [
   {
@@ -48,6 +49,10 @@ const routes: Routes = [
   {
     path: 'anti-spam/public-keys',
     component: AntiSpamKeysComponent,
+  },
+  {
+    path: 'anti-spam/claimable-assets',
+    component: AntiSpamClaimableAssetsComponent,
   },
   {
     path: 'about',

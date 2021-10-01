@@ -60,7 +60,7 @@ export class SettingsService {
     });
   }
 
-  removePublicKeyToSpamFilter(publicKey: string): void {
+  removePublicKeyFromSpamFilter(publicKey: string): void {
     const state = this.settingsStore.getValue();
     this.settingsStore.updateState({
       antiSPAM: {
@@ -68,6 +68,30 @@ export class SettingsService {
         publicKeys: state.antiSPAM.publicKeys
           .filter(pk => pk !== publicKey)
       }
+    });
+  }
+
+  addClaimableAssetToSpamFilter(targetAsset: string): void {
+    const state = this.settingsStore.getValue();
+
+    if (state.antiSPAMClaimableAssets.find(asset => asset === targetAsset)) {
+      throw new Error(`Public key is already registered`);
+    }
+
+    this.settingsStore.updateState({
+      antiSPAMClaimableAssets: [
+        ...state.antiSPAMClaimableAssets,
+        targetAsset
+      ],
+    });
+  }
+
+  removeClaimableAssetFromSpamFilter(targetAsset: string): void {
+    const state = this.settingsStore.getValue();
+
+    this.settingsStore.updateState({
+      antiSPAMClaimableAssets: state.antiSPAMClaimableAssets
+        .filter(asset => asset !== targetAsset)
     });
   }
 

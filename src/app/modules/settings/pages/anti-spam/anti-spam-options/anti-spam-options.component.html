@@ -6,7 +6,7 @@
           <i nz-icon nzType="home" nzTheme="outline"></i>
         </a>
       </nz-breadcrumb-item>
-      <nz-breadcrumb-item  class="flex items-center">
+      <nz-breadcrumb-item class="flex items-center">
         <a class="flex items-center" routerLink="/settings">
           Settings
         </a>
@@ -21,23 +21,15 @@
     <nz-list>
       <nz-list-item class="text-off-white">
         <p class="m-0 font-semibold">
-          Public Keys
+          Filter by Public Keys
         </p>
         <button [routerLink]="['public-keys']" nz-button class="flex items-center justify-center">
           <i nz-icon nzType="right" nzTheme="outline"></i>
         </button>
       </nz-list-item>
-      <nz-list-item class="text-off-white">
+      <nz-list-item [routerLink]="['claimable-assets']" class="text-off-white">
         <p class="m-0 font-semibold">
-          Domain names
-        </p>
-        <button nz-button class="flex items-center justify-center">
-          <i nz-icon nzType="right" nzTheme="outline"></i>
-        </button>
-      </nz-list-item>
-      <nz-list-item class="text-off-white">
-        <p class="m-0 font-semibold">
-          Assets
+          Filter Claimable Assets
         </p>
         <button nz-button class="flex items-center justify-center">
           <i nz-icon nzType="right" nzTheme="outline"></i>
@@ -48,7 +40,7 @@
 
   <section class="w-full mb-4">
     <p class="text-center text-label">
-      We can't block SPAM in the Stellar network but at least we can ignore those mfkrs!
+      We can't block SPAM in the Stellar network (yet) but at least we can ignore those mfkrs!
     </p>
   </section>
 
