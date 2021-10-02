@@ -11,8 +11,7 @@ import {NzMessageService} from "ng-zorro-antd/message";
   styleUrls: ['./anti-spam-keys.component.scss']
 })
 export class AntiSpamKeysComponent implements OnInit {
-  publicKeys$ = this.settingsQuery.antiSpam$
-    .pipe(pluck('publicKeys'));
+  publicKeys$ = this.settingsQuery.antiSpamPublicKeys$;
 
   showEmpty$: Observable<boolean> = this.publicKeys$
     .pipe(map(array => array.length === 0));

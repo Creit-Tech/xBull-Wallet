@@ -9,10 +9,7 @@ export interface SettingsState {
   advanceMode: boolean;
   defaultFee: string;
 
-  antiSPAM: {
-    publicKeys: string[];
-    domains: string[];
-  };
+  antiSPAMPublicKeys: string[];
 
   // The string follow the "CODE:ISSUER" style from the claimable balance endpoint
   antiSPAMClaimableAssets: string[];
@@ -29,10 +26,7 @@ export function createInitialState(): SettingsState {
     },
     advanceMode: false,
     defaultFee: '100',
-    antiSPAM: {
-      domains: [],
-      publicKeys: [],
-    },
+    antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],
     operationTypesToShow: [
       'manage_sell_offer',
