@@ -1,17 +1,23 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
-import { BehaviorSubject, combineLatest, of, Subject, Subscription } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import {
   HorizonApisQuery,
-  IWalletsAccount,
   IWalletsOperation,
   SettingsQuery,
   WalletsAccountsQuery,
   WalletsOperationsQuery,
 } from '~root/state';
-import { debounceTime, distinctUntilKeyChanged, exhaustMap, filter, map, pluck, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { Order } from '@datorama/akita';
+import {
+  debounceTime,
+  distinctUntilKeyChanged,
+  exhaustMap,
+  filter,
+  map,
+  pluck,
+  withLatestFrom
+} from 'rxjs/operators';
 import { Networks } from 'stellar-base';
 
 @Component({
@@ -25,9 +31,11 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
   accountOperations$: Observable<IWalletsOperation[]> = this.selectedAccount$
     .pipe(filter(account => !!account))
     .pipe(distinctUntilKeyChanged('_id'))
-    .pipe(exhaustMap(account => {
+    .pipe(withLatestFrom(this.settingsQuery.antiSpamPublicKeys$))
+    .pipe(exhaustMap(([account, antiSpamPublicKeys]) => {
       return this.walletsOperationsQuery.selectAll({
-        filterBy: entity => entity.ownerAccount === account._id,
+        filterBy: entity => entity.ownerAccount === account._id
+          && !antiSpamPublicKeys.find(key => entity.operationRecord.source_account === key),
         sortBy: (entityA, entityB) => entityB.createdAt - entityA.createdAt,
       });
     }))
@@ -54,7 +62,6 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.accountOperations$.subscribe(console.log);
   }
 
   ngOnDestroy(): void {
@@ -70,8 +77,6 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
         value: operation
       }]
     });
-
-    console.log({ modalData });
   }
 
 }

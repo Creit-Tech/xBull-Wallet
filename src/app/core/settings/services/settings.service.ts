@@ -42,6 +42,53 @@ export class SettingsService {
     });
   }
 
+  addPublicKeyToSpamFilter(publicKey: string): void {
+    const state = this.settingsStore.getValue();
+
+    if (state.antiSPAMPublicKeys.find(pk => pk === publicKey)) {
+      throw new Error(`Public key is already registered`);
+    }
+
+    this.settingsStore.updateState({
+      antiSPAMPublicKeys: [
+        ...state.antiSPAMPublicKeys,
+        publicKey,
+      ],
+    });
+  }
+
+  removePublicKeyFromSpamFilter(publicKey: string): void {
+    const state = this.settingsStore.getValue();
+    this.settingsStore.updateState({
+      antiSPAMPublicKeys: state.antiSPAMPublicKeys
+        .filter(pk => pk !== publicKey)
+    });
+  }
+
+  addClaimableAssetToSpamFilter(targetAsset: string): void {
+    const state = this.settingsStore.getValue();
+
+    if (state.antiSPAMClaimableAssets.find(asset => asset === targetAsset)) {
+      throw new Error(`Public key is already registered`);
+    }
+
+    this.settingsStore.updateState({
+      antiSPAMClaimableAssets: [
+        ...state.antiSPAMClaimableAssets,
+        targetAsset
+      ],
+    });
+  }
+
+  removeClaimableAssetFromSpamFilter(targetAsset: string): void {
+    const state = this.settingsStore.getValue();
+
+    this.settingsStore.updateState({
+      antiSPAMClaimableAssets: state.antiSPAMClaimableAssets
+        .filter(asset => asset !== targetAsset)
+    });
+  }
+
   turnOnWindowsMode(): void {
     this.settingsStore.updateUIState({
       windowsMode: true,

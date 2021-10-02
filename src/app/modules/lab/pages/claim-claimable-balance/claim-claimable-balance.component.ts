@@ -1,7 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClaimableBalancesQuery, HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
-import { catchError, distinctUntilKeyChanged, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import {ClaimableBalancesQuery, HorizonApisQuery, SettingsQuery, WalletsAccountsQuery} from '~root/state';
+import {
+  catchError,
+  distinctUntilKeyChanged,
+  map,
+  pluck,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { Server, ServerApi } from 'stellar-sdk';
 import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
@@ -24,12 +34,18 @@ export class ClaimClaimableBalanceComponent implements AfterViewInit, OnDestroy 
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$
     .pipe(distinctUntilKeyChanged('_id'));
 
+  antiSpamClaimableAssets$ = this.settingsQuery.antiSpamClaimableAssets$;
+
   claimableBalances$ = this.getBalances$
     .pipe(switchMap(() => this.selectedAccount$))
     .pipe(switchMap((selectedAccount) => {
       return this.claimableBalancesService.getClaimableBalancesForClaimant(selectedAccount.publicKey);
     }))
     .pipe(pluck('records'))
+    .pipe(withLatestFrom(this.antiSpamClaimableAssets$))
+    .pipe(map(([records, blockedAssets]) => {
+      return records.filter(record => !blockedAssets.find(blockedAsset => blockedAsset === record.asset));
+    }))
     .pipe(catchError(error => {
       console.error(error);
       this.toastrService.open({
@@ -48,6 +64,7 @@ export class ClaimClaimableBalanceComponent implements AfterViewInit, OnDestroy 
     private readonly toastrService: ToastrService,
     private readonly claimableBalancesQuery: ClaimableBalancesQuery,
     private readonly claimableBalancesService: ClaimableBalancesService,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngAfterViewInit(): void {

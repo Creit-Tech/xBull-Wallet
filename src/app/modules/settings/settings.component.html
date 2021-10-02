@@ -15,7 +15,7 @@
       </div>
     </li>
 
-    <li *ngIf="advanceMode$ | async" class="flex w-full justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/wallets">
       <div class="w-auto">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -99,14 +99,17 @@
       </div>
     </li>
 
-    <li class="opacity-50 pointer-events-none flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
+    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+        routerLink="/settings/anti-spam">
       <div class="w-8/12 mr-auto">
         <p class="m-0 text-sm font-bold text-off-white">
           Anti SPAM
         </p>
       </div>
       <div class="w-auto">
-        <button class="text-lg font-bold text-off-white">></button>
+        <p class="text-label text-sm">
+          <b>></b>
+        </p>
       </div>
     </li>
 

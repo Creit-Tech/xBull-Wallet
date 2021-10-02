@@ -9,6 +9,8 @@ export class SettingsQuery extends Query<SettingsState> {
   advanceMode$ = this.select(state => state.advanceMode);
   defaultFee$ = this.select(state => state.defaultFee);
 
+  antiSpamPublicKeys$ = this.select(state => state.antiSPAMPublicKeys);
+  antiSpamClaimableAssets$ = this.select(state => state.antiSPAMClaimableAssets);
   operationTypesToShow$ = this.select(state => state.operationTypesToShow);
 
   constructor(protected store: SettingsStore) {

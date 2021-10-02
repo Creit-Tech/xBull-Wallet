@@ -1,0 +1,75 @@
+<section class="w-full h-full px-6 py-6 flex flex-col">
+  <section class="w-full mb-4">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i nz-icon nzType="home" nzTheme="outline"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item  class="flex items-center">
+        <a class="flex items-center" routerLink="/settings">
+          Settings
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item  class="flex items-center">
+        <a class="flex items-center" routerLink="/settings/anti-spam">
+          Anti SPAM
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item  class="flex items-center">
+        Public keys
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+
+  <section *ngIf="showEmpty$ | async; else keysList" class="w-full my-auto">
+    <nz-empty [nzNotFoundContent]="emptyContent">
+    </nz-empty>
+    <ng-template #emptyContent></ng-template>
+  </section>
+
+  <ng-template #keysList>
+    <nz-list class="h-full overflow-y-auto no-scrollbar">
+      <nz-list-item *ngFor="let key of publicKeys$ | async" class="text-off-white">
+        <p appClipboard [textToCopy]="key" class=" cursor-pointer m-0 font-semibold">
+          {{ key | publicKey }}
+        </p>
+        <button nz-button nz-popconfirm
+                nzPopconfirmTitle="Are you sure?"
+                nzOkText="Remove"
+                nzCancelText="Cancel"
+                [nzIcon]="iconTpl"
+                (nzOnConfirm)="onRemove(key)"
+                class="flex items-center justify-center">
+          <i nz-icon nzType="close" nzTheme="outline"></i>
+        </button>
+        <ng-template #iconTpl>
+          <i nz-icon nzType="question-circle-o" class="text-error"></i>
+        </ng-template>
+      </nz-list-item>
+    </nz-list>
+  </ng-template>
+
+  <section class="w-full flex flex-col justify-center items-center mb-4">
+    <nz-input-group nzPrefixIcon="key" [nzSuffix]="addButton" class="mb-4">
+      <input [formControl]="publicKeyControl" nz-input placeholder="Public key" />
+    </nz-input-group>
+    <ng-template #addButton>
+      <button [disabled]="publicKeyControl.invalid"
+              (click)="onAdd()"
+              nz-button nzType="primary">
+        Add
+      </button>
+    </ng-template>
+
+    <small class="text-center text-label">
+      Transactions where these keys are the "source", will be ignored in this Wallet
+    </small>
+  </section>
+
+  <section class="w-full" [routerLink]="['../']">
+    <button nz-button class="w-full">
+      Go back
+    </button>
+  </section>
+</section>
