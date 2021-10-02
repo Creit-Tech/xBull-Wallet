@@ -33,9 +33,15 @@
               "src/manifest.json",
               "src/background.js",
               "src/content-script.js",
-              "src/xbull-sdk.js"
+              "src/xbull-sdk.js",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
+                "output": "/assets/"
+              }
             ],
             "styles": [
+              "src/theme/zorro-theme.less",
               "src/styles.scss"
             ],
             "scripts": [],

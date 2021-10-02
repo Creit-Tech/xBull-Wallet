@@ -16,6 +16,14 @@ import { SelectAccountComponent } from './core/layouts/main-layout/components/se
 import { SelectHorizonApiComponent } from './core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { en_US } from 'ng-zorro-antd/i18n';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+registerLocaleData(en);
 
 @NgModule({
   declarations: [
@@ -36,12 +44,14 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     BackgroundModule,
     FormsComponentsModule,
     SharedPipesModule,
+    BrowserAnimationsModule,
   ],
   providers: [
     {
       provide: ENV,
       useValue: environment,
-    }
+    },
+    { provide: NZ_I18N, useValue: en_US }
   ],
   bootstrap: [AppComponent]
 })

@@ -1,4 +1,5 @@
 module.exports = {
+  important: true,
   prefix: '',
   purge: {
     enabled: process.env.NODE_ENV === 'production',

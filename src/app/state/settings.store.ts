@@ -9,6 +9,11 @@ export interface SettingsState {
   advanceMode: boolean;
   defaultFee: string;
 
+  antiSPAMPublicKeys: string[];
+
+  // The string follow the "CODE:ISSUER" style from the claimable balance endpoint
+  antiSPAMClaimableAssets: string[];
+
   // TODO: this should be Array<IWalletsOperation['operationRecord']['type']> but the types are getting issues, fix this later
   operationTypesToShow: string[];
 }
@@ -21,6 +26,8 @@ export function createInitialState(): SettingsState {
     },
     advanceMode: false,
     defaultFee: '100',
+    antiSPAMPublicKeys: [],
+    antiSPAMClaimableAssets: [],
     operationTypesToShow: [
       'manage_sell_offer',
       'manage_buy_offer',
@@ -34,7 +41,10 @@ export function createInitialState(): SettingsState {
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'settings' })
+@StoreConfig({
+  name: 'settings',
+  resettable: true,
+})
 export class SettingsStore extends Store<SettingsState> {
 
   constructor() {

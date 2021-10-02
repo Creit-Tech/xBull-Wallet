@@ -1,0 +1,40 @@
+
+// Custom Theming for NG-ZORRO
+// For more information: https://ng.ant.design/docs/customize-theme/en
+@import "../../node_modules/ng-zorro-antd/ng-zorro-antd.dark.less";
+
+// Override less variables to here
+// View all variables: https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/style/themes/default.less
+
+@primary-color: #C19CFC;
+@info-color: @primary-color;
+@success-color: @green-6;
+@processing-color: @blue-6;
+@error-color: @red-5;
+@highlight-color: @red-5;
+@warning-color: @gold-6;
+@normal-color: #d9d9d9;
+@white: #FCFCFC;
+@black: #14142B;
+
+// Layout
+@layout-body-background: #EFF0F6;
+@layout-header-background: @black;
+//@layout-header-height: 64px;
+//@layout-header-padding: 0 50px;
+@layout-header-color: @text-color;
+//@layout-footer-padding: 24px 50px;
+@layout-footer-background: @layout-body-background;
+@layout-sider-background: @layout-header-background;
+//@layout-trigger-height: 48px;
+@layout-trigger-background: #262338;
+@layout-trigger-color: @white;
+//@layout-zero-trigger-width: 36px;
+//@layout-zero-trigger-height: 42px;
+
+// Helpful classes
+.simple-tabset {
+  nz-tabs-nav {
+    margin-bottom: 0 !important;
+  }
+}
