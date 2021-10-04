@@ -14,6 +14,9 @@ import { ConfirmPublicKeysComponent } from './components/confirm-public-keys/con
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/confirm-trezor-keys.component';
+import {NzSelectModule} from "ng-zorro-antd/select";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzButtonModule} from "ng-zorro-antd/button";
 
 
 @NgModule({
@@ -33,6 +36,9 @@ import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/con
     FormsComponentsModule,
     ModalsModule,
     SharedPipesModule,
+    NzSelectModule,
+    NzInputModule,
+    NzButtonModule,
   ],
   providers: [
     GenerateAccountStore,

@@ -86,6 +86,7 @@
         <button (click)="onAdd()"
                 class="w-full mb-3"
                 [disabled]="addAssetForm.invalid"
+                nzSize="large"
                 nz-button nzType="primary">
           Add
         </button>
@@ -100,7 +101,7 @@
   </section>
 
   <section class="w-full" [routerLink]="['../']">
-    <button nz-button class="w-full">
+    <button nzSize="large" nz-button class="w-full">
       Go back
     </button>
   </section>
