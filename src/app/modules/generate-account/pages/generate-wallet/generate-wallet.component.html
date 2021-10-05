@@ -1,6 +1,6 @@
 <section class="h-full w-full flex flex-col px-6 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-6">
-    <img src="/assets/icons/xbull-icon.svg" class="h-16" alt="xbull-logo">
+    <img src="/assets/icons/xbull-icon.svg" class="h-20" alt="xbull-logo">
   </div>
 
   <div class="w-full flex flex-wrap mb-4">
@@ -8,17 +8,15 @@
       This is your Mnemonic phrase
     </p>
 
-    <div class="cursor-pointer" appClipboard [textToCopy]="mnemonicPhraseFormControl.value">
-      <textarea class="w-full resize-none pointer-events-none"
-                nz-input nzSize="large"
-                cols="30" rows="6">{{ mnemonicPhraseFormControl.value }}</textarea>
-    </div>
+    <textarea class="w-full resize-none pointer-events-none"
+              nz-input nzSize="large"
+              cols="30" rows="6">{{ mnemonicPhraseFormControl.value }}</textarea>
   </div>
 
-  <div class="w-full text-center px-6 mb-auto">
-    <small class="text-placeholder">
-      Copy and save these words in a safe place, this is the only time we will show it to you and is not possible to recover it
-    </small>
+  <div class="w-full text-center mb-auto">
+    <p class="text-placeholder text-sm m-0">
+      Write these words in a safe place, this is the only time we will show it to you and is not possible to recover it
+    </p>
   </div>
 
   <div class="w-full flex flex-wrap">
