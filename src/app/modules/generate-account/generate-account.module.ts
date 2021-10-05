@@ -17,6 +17,7 @@ import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/con
 import {NzSelectModule} from "ng-zorro-antd/select";
 import {NzInputModule} from "ng-zorro-antd/input";
 import {NzButtonModule} from "ng-zorro-antd/button";
+import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
 
 
 @NgModule({
@@ -30,16 +31,17 @@ import {NzButtonModule} from "ng-zorro-antd/button";
     ConfirmPublicKeysComponent,
     ConfirmTrezorKeysComponent
   ],
-  imports: [
-    CommonModule,
-    GenerateAccountRoutingModule,
-    FormsComponentsModule,
-    ModalsModule,
-    SharedPipesModule,
-    NzSelectModule,
-    NzInputModule,
-    NzButtonModule,
-  ],
+    imports: [
+        CommonModule,
+        GenerateAccountRoutingModule,
+        FormsComponentsModule,
+        ModalsModule,
+        SharedPipesModule,
+        NzSelectModule,
+        NzInputModule,
+        NzButtonModule,
+        ClipboardModule,
+    ],
   providers: [
     GenerateAccountStore,
     GenerateAccountQuery,
