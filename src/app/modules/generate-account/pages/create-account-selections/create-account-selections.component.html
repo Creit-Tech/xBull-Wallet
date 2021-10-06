@@ -4,20 +4,39 @@
   </div>
 
   <div class="w-full flex flex-wrap my-auto">
-    <button (click)="generateWallet()" class="w-full btn btn-primary btn--small mb-6">
+    <button nz-button nzType="primary"
+            nzSize="large"
+            (click)="generateWallet()"
+            class="w-full mb-4">
       Generate new Wallet
     </button>
-    <button (click)="restoreWallet()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
+
+    <button nz-button
+            nzSize="large"
+            (click)="restoreWallet()"
+            class="w-full mb-4">
       Import Mnemonic phrase
     </button>
-    <button (click)="importSecretKey()" class="w-full btn btn-primary btn--small btn-primary--outline mb-6">
+
+    <button nz-button
+            nzSize="large"
+            (click)="importSecretKey()"
+            class="w-full mb-4">
       Import Secret Key
     </button>
-    <a (click)="connectHardwareWallet()"
-       class="w-full btn btn-primary btn--small btn-primary--outline mb-6 block flex justify-center items-center cursor-pointer">
+
+    <button nz-button
+            nzSize="large"
+            (click)="connectHardwareWallet()"
+            class="w-full mb-4">
       Connect Hardware Wallet
-    </a>
-    <button *ngIf="isThereWallet$ | async" routerLink="/wallet/assets" class="w-full btn btn-primary btn--small btn-primary--ghost">
+    </button>
+
+    <button nz-button nzType="link"
+            nzSize="large"
+            *ngIf="isThereWallet$ | async"
+            routerLink="/wallet/assets"
+            class="w-full">
       Go back to wallets
     </button>
   </div>

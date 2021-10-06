@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { generateMnemonic, mnemonicToSeed } from 'bip39';
+import { generateMnemonic, mnemonicToSeed, validateMnemonic, wordlists } from 'bip39';
 import { Keypair } from 'stellar-base';
 import { HdWalletService } from '~root/core/wallets/services/hd-wallet.service';
 
@@ -11,6 +11,10 @@ export class MnemonicPhraseService {
   constructor(
     private readonly hdWallet: HdWalletService,
   ) { }
+
+  getWordList() {
+    return [...wordlists['EN']];
+  }
 
   generateMnemonicPhrase(): string {
     return generateMnemonic(256);

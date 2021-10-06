@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "xBull Wallet",
   "description": "A powerful but easy to use Stellar network wallet.",
-  "version": "0.6.5",
+  "version": "0.6.6",
   "action": {
     "default_popup": "popup.html",
     "default_title": "xBull Wallet",

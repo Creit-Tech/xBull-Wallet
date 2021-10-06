@@ -14,6 +14,13 @@ import { ConfirmPublicKeysComponent } from './components/confirm-public-keys/con
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/confirm-trezor-keys.component';
+import {NzSelectModule} from "ng-zorro-antd/select";
+import {NzInputModule} from "ng-zorro-antd/input";
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
+import {NzCardModule} from "ng-zorro-antd/card";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
+import {NzTagModule} from "ng-zorro-antd/tag";
 
 
 @NgModule({
@@ -27,13 +34,20 @@ import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/con
     ConfirmPublicKeysComponent,
     ConfirmTrezorKeysComponent
   ],
-  imports: [
-    CommonModule,
-    GenerateAccountRoutingModule,
-    FormsComponentsModule,
-    ModalsModule,
-    SharedPipesModule,
-  ],
+    imports: [
+        CommonModule,
+        GenerateAccountRoutingModule,
+        FormsComponentsModule,
+        ModalsModule,
+        SharedPipesModule,
+        NzSelectModule,
+        NzInputModule,
+        NzButtonModule,
+        ClipboardModule,
+        NzCardModule,
+        NzAutocompleteModule,
+        NzTagModule,
+    ],
   providers: [
     GenerateAccountStore,
     GenerateAccountQuery,

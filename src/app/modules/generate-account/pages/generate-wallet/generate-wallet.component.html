@@ -1,25 +1,33 @@
 <section class="h-full w-full flex flex-col px-6 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-6">
-    <img src="/assets/icons/xbull-icon.svg" class="h-16" alt="xbull-logo">
+    <img src="/assets/icons/xbull-icon.svg" class="h-20" alt="xbull-logo">
+  </div>
+
+  <div class="w-full flex flex-wrap mb-4">
+    <p class="text-off-white w-full font-semibold mb-4 text-center">
+      This is your Mnemonic phrase
+    </p>
+
+    <textarea class="w-full resize-none pointer-events-none"
+              nz-input nzSize="large"
+              cols="30" rows="6">{{ mnemonicPhraseFormControl.value }}</textarea>
+  </div>
+
+  <div class="w-full text-center mb-auto">
+    <p class="text-placeholder text-sm m-0">
+      Write these words in a safe place, this is the only time we will show it to you and is not possible to recover it
+    </p>
   </div>
 
   <div class="w-full flex flex-wrap">
-    <app-textarea class="w-full" title="Mnemonic phrase"
-                  [formControl]="mnemonicPhraseFormControl"
-                  [disabled]="true"></app-textarea>
-  </div>
-
-  <div class="w-full text-center px-6 my-auto">
-    <small class="text-off-white">
-      Copy and save these words in a safe place, this is the only time we will show it to you and is not possible to recover it
-    </small>
-  </div>
-
-  <div class="w-full flex flex-wrap">
-    <button (click)="onContinue()" class="w-full btn btn-primary btn--small mb-6">
+    <button nz-button nzType="primary" nzSize="large"
+            (click)="onContinue()"
+            class="w-full mb-4">
       Continue
     </button>
-    <button routerLink="/create-account" class="w-full btn btn-primary btn--small btn-primary--outline">
+    <button nz-button nzSize="large"
+            routerLink="/create-account"
+            class="w-full">
       Start again
     </button>
   </div>
