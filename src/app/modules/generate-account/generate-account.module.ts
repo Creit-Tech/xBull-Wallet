@@ -18,6 +18,9 @@ import {NzSelectModule} from "ng-zorro-antd/select";
 import {NzInputModule} from "ng-zorro-antd/input";
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
+import {NzCardModule} from "ng-zorro-antd/card";
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
+import {NzTagModule} from "ng-zorro-antd/tag";
 
 
 @NgModule({
@@ -41,6 +44,9 @@ import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
         NzInputModule,
         NzButtonModule,
         ClipboardModule,
+        NzCardModule,
+        NzAutocompleteModule,
+        NzTagModule,
     ],
   providers: [
     GenerateAccountStore,
