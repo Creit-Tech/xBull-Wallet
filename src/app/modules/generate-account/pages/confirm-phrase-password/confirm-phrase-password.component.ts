@@ -9,6 +9,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsQuery } from '~root/state';
 import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
+import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 
 @Component({
   selector: 'app-confirm-phrase-password',
@@ -18,12 +19,12 @@ import { ENV, environment } from '~env';
 export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
+  wordList: string[] = this.mnemonicPhraseService.getWordList();
+  filteredOptions: string[] = this.mnemonicPhraseService.getWordList();
+
   form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
-    words: new FormArray(
-      new Array(24)
-        .fill(null)
-        .map(() => new FormControl('', Validators.required))
-    ),
+    words: new FormArray([]),
+    searchInput: new FormControl(''),
     confirmPhrase: new FormControl(''),
     confirmPassword: new FormControl('', [Validators.required]),
   }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
@@ -41,6 +42,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     private readonly walletsQuery: WalletsQuery,
     private readonly router: Router,
     @Inject(ENV) private readonly env: typeof environment,
+    private mnemonicPhraseService: MnemonicPhraseService,
   ) { }
 
   wordsUpdatedSubscription: Subscription = this.phraseArray.valueChanges
@@ -106,9 +108,34 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     await this.router.navigate(['/wallet', 'assets']);
   }
 
+  addWord(word: string): void {
+    if (!word || !this.wordList.find(w => w.includes(word))) {
+      return;
+    }
+
+    this.phraseArray.push(
+      new FormControl(word, Validators.required)
+    );
+
+    this.form.get('searchInput').patchValue('');
+    this.filteredOptions = this.wordList;
+  }
+
+  removeWord(index: number): void {
+    this.phraseArray.removeAt(index);
+    this.filteredOptions = this.wordList;
+  }
+
+  filterOptions(value: string): void {
+    this.filteredOptions = this.wordList.filter(option =>
+      option.includes(value)
+    );
+  }
+
 }
 
 export interface IConfirmPhrasePasswordForm {
+  searchInput: string;
   words: FormArray;
   confirmPhrase: string;
   confirmPassword: string;
