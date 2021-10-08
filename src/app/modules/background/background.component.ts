@@ -18,10 +18,8 @@ import { ComponentCreatorService } from '~root/core/services/component-creator.s
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { createHash } from 'crypto';
-import {Networks, Transaction} from 'stellar-base';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import {HorizonApisService} from "~root/core/services/horizon-apis.service";
+import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 
 @Component({
   selector: 'app-background',
