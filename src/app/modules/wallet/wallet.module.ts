@@ -22,6 +22,7 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { WalletTransactionItemComponent } from './components/wallet-transaction-item/wallet-transaction-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import {NzImageModule, NzImageService} from "ng-zorro-antd/image";
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     ClipboardModule,
     SharedPipesModule,
     ModalsModule,
+    NzImageModule,
   ],
 })
 export class WalletModule { }
