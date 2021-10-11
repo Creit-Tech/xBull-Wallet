@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as SDK from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
-import { HorizonApisQuery, IHorizonApi, SettingsQuery } from '~root/state';
+import {BalanceAssetType, HorizonApisQuery, IHorizonApi, SettingsQuery} from '~root/state';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,7 @@ export class StellarSdkService {
     return transaction.toXDR();
   }
 
-  submitTransaction(xdr: string) {
+  submitTransaction(xdr: string): Promise<SDK.Horizon.SubmitTransactionResponse> {
     const transaction = new this.SDK.Transaction(
       xdr,
       this.networkPassphrase
@@ -56,28 +56,34 @@ export class StellarSdkService {
     return this.Server.submitTransaction(transaction);
   }
 
-  calculateAvailableBalance(account: SDK.ServerApi.AccountRecord, code: 'native' | string): BigNumber {
-    let balanceLine: SDK.Horizon.BalanceLine;
+  calculateAvailableBalance(data: {
+    balanceLine: SDK.Horizon.BalanceLine;
+    account: SDK.ServerApi.AccountRecord
+  }): BigNumber {
     let finalAmount = new BigNumber(0);
 
-    if (code === 'XLM') {
+    if (data.balanceLine.asset_type === 'native') {
       const minimumBase = new BigNumber(2)
-        .plus(account.subentry_count)
-        .plus(account.num_sponsoring)
-        .minus(account.num_sponsored)
+        .plus(data.account.subentry_count)
+        .plus(data.account.num_sponsoring)
+        .minus(data.account.num_sponsored)
         .multipliedBy(0.5);
 
       finalAmount = finalAmount.minus(minimumBase);
     }
 
-    balanceLine = code === 'XLM'
-      ? account.balances
-        .find(balance => balance.asset_type === 'native') as SDK.Horizon.BalanceLineNative
-      : account.balances
-        .find(balance => balance.asset_type !== 'native' && balance.asset_code === code) as SDK.Horizon.BalanceLineAsset;
+    switch (data.balanceLine.asset_type) {
+      case 'native':
+      case 'credit_alphanum4':
+      case 'credit_alphanum12':
+        finalAmount = finalAmount.plus(new BigNumber(data.balanceLine.balance))
+          .minus(new BigNumber(data.balanceLine.selling_liabilities));
+        break;
 
-    finalAmount = finalAmount.plus(new BigNumber(balanceLine.balance))
-      .minus(new BigNumber(balanceLine.selling_liabilities));
+      case 'liquidity_pool_shares':
+        finalAmount = finalAmount.plus(new BigNumber(data.balanceLine.balance));
+        break;
+    }
 
     return finalAmount.isLessThanOrEqualTo(0) ? new BigNumber(0) : finalAmount;
   }

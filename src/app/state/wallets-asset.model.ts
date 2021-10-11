@@ -1,7 +1,12 @@
 // TODO: Probably we will need to refactor this
 
+import { Horizon } from 'stellar-sdk';
+import BalanceLine = Horizon.BalanceLine;
+
 declare type AssetType = 'native' | 'issued';
 declare type AssetStatus = 'unloaded' | 'extra' | 'full';
+
+export type BalanceAssetType = BalanceLine<'native'> | BalanceLine<'credit_alphanum4'> | BalanceLine<'credit_alphanum12'>
 
 interface IBaseNativeAsset {
   _id: 'native';

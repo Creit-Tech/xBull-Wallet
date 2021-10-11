@@ -1,5 +1,14 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { Server, ServerApi, Account, TransactionBuilder, Operation, Asset } from 'stellar-sdk';
+import {
+  Server,
+  ServerApi,
+  Account,
+  TransactionBuilder,
+  Operation,
+  Asset,
+  LiquidityPoolId,
+  LiquidityPoolAsset
+} from 'stellar-sdk';
 import { ReplaySubject, Subject } from 'rxjs';
 import { pluck, take, takeUntil } from 'rxjs/operators';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -8,6 +17,7 @@ import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-x
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ClaimableBalancesService } from '~root/core/services/claimable-balances.service';
+import {WalletsAssetsService} from "~root/core/wallets/services/wallets-assets.service";
 
 @Component({
   selector: 'app-claimable-balance-details',
@@ -36,6 +46,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, AfterViewInit, 
     private readonly toastrService: ToastrService,
     private readonly claimableBalancesService: ClaimableBalancesService,
     private readonly claimableBalancesQuery: ClaimableBalancesQuery,
+    private readonly walletsAssetsService: WalletsAssetsService,
   ) { }
 
   ngOnInit(): void {
@@ -88,11 +99,12 @@ export class ClaimableBalanceDetailsComponent implements OnInit, AfterViewInit, 
     }).setTimeout(this.stellarSdkService.defaultTimeout);
 
     if (!asset.isNative()) {
-      const alreadyTrust = !!loadedAccount.balances.find(balance => {
-        return balance.asset_type !== 'native'
-          && balance.asset_code === asset.code
-          && balance.asset_issuer === asset.issuer;
-      });
+      const alreadyTrust = !!this.walletsAssetsService.filterBalancesLines(loadedAccount.balances)
+        .find(balance => {
+          return balance.asset_type !== 'native'
+            && balance.asset_code === asset.code
+            && balance.asset_issuer === asset.issuer;
+        });
 
       if (!alreadyTrust) {
         transaction.addOperation(
