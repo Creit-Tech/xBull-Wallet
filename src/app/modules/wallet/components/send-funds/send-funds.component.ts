@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
-import { filter, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import {filter, map, pluck, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { ModalsService } from '~root/shared/modals/modals.service';
@@ -71,16 +71,29 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
   availableFunds$ = this.selectedAsset$
-    .pipe(filter(selectedAsset => !!selectedAsset))
     .pipe(withLatestFrom(this.selectedAccount$))
     .pipe(map(([selectedAsset, selectedAccount]) => {
       if (!selectedAsset || !selectedAccount.accountRecord) {
         console.warn('Balance or Account record is undefined');
         return new BigNumber(0).toNumber();
       }
+      const filteredBalances = this.walletsAssetsService
+        .filterBalancesLines(selectedAccount.accountRecord.balances);
+
+      const targetBalance = filteredBalances.find(balance => {
+        return selectedAsset._id === this.walletsAssetsService.formatBalanceLineId(balance);
+      });
+
+      if (!targetBalance) {
+        console.warn(`An unexpected balance arrived in this line`);
+        return 0;
+      }
 
       return this.stellarSdkService
-        .calculateAvailableBalance(selectedAccount.accountRecord, selectedAsset.assetCode)
+        .calculateAvailableBalance({
+          account: selectedAccount.accountRecord,
+          balanceLine: targetBalance,
+        })
         .toNumber();
     }));
 

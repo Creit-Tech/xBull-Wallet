@@ -1,6 +1,14 @@
 import { Inject, Injectable } from '@angular/core';
 import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset, StellarTomlResolver } from 'stellar-sdk';
-import { IHorizonApi, IWalletAsset, IWalletNativeAsset, IWalletsAccount, WalletsAssetsState, WalletsAssetsStore } from '~root/state';
+import {
+  BalanceAssetType,
+  IHorizonApi,
+  IWalletAsset,
+  IWalletNativeAsset,
+  IWalletsAccount,
+  WalletsAssetsState,
+  WalletsAssetsStore
+} from '~root/state';
 import { from, of } from 'rxjs';
 import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -150,5 +158,13 @@ export class WalletsAssetsService {
       const [assetCode, assetIssuer] = assetId.split('_');
       return new Asset(assetCode, assetIssuer);
     }
+  }
+
+  /*
+  * This method is used to filter those balances we are not handling directly in the WalletAssetsStore
+  * */
+  filterBalancesLines(balances: Horizon.BalanceLine[]): BalanceAssetType[] {
+    return balances
+      .filter(balance => balance.asset_type !== 'liquidity_pool_shares') as BalanceAssetType[];
   }
 }
