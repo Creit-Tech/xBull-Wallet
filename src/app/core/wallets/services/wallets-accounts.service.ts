@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
 import { from, of, throwError } from 'rxjs';
 import {
+  BalanceAssetType,
   createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
   IWalletsAccount,
   WalletsAccountsQuery,
@@ -41,7 +42,9 @@ export class WalletsAccountsService {
     }));
 
     if (!!accountRecord) {
-      for (const balanceLine of accountRecord.balances) {
+      const filteredBalances: BalanceAssetType[] = this.walletsAssetsService.filterBalancesLines(accountRecord.balances);
+
+      for (const balanceLine of filteredBalances) {
         if (balanceLine.asset_type === 'native') {
           this.walletsAssetsStore.upsert(
             this.walletsAssetsService.formatBalanceLineId(balanceLine),
@@ -89,16 +92,6 @@ export class WalletsAccountsService {
 
         return entity;
       }));
-  }
-
-  parseAccountBalances(balances: Horizon.BalanceLine[]): AccountParsedBalance[] {
-    return balances.map(balance => ({
-      assetCode: balance.asset_type === 'native' ? 'XLM' : balance.asset_code,
-      balance: balance.balance,
-      buyingLiabilities: balance.buying_liabilities,
-      sellingLiabilities: balance.selling_liabilities,
-      assetIssuer: balance.asset_type !== 'native' ? balance.asset_issuer : undefined,
-    }));
   }
 
   createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {

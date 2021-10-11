@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject, throwError } from 'rxjs';
-import { HorizonApisQuery, IWalletAsset, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
+import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, throwError} from 'rxjs';
+import {HorizonApisQuery, IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery} from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
 import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -45,17 +45,22 @@ export class AssetItemComponent implements OnInit, OnDestroy {
   amount$: Observable<string> = this.balanceLine$
     .pipe(map(data => data.balance));
 
-  availableFunds$: Observable<string> = this.asset$
-    .pipe(filter(selectedAsset => !!selectedAsset))
-    .pipe(withLatestFrom(this.walletsAccountsQuery.getSelectedAccount$))
-    .pipe(map(([selectedAsset, selectedAccount]) => {
-      if (!selectedAsset || !selectedAccount.accountRecord) {
+  availableFunds$: Observable<string> = combineLatest([
+    this.balanceLine$,
+    this.walletsAccountsQuery.getSelectedAccount$,
+  ])
+    .pipe(filter(values => values.every(value => !!value)))
+    .pipe(map(([balanceLine, selectedAccount]) => {
+      if (!balanceLine || !selectedAccount?.accountRecord) {
         console.warn('Balance or Account record is undefined');
         return new BigNumber(0).toString();
       }
 
       return this.stellarSdkService
-        .calculateAvailableBalance(selectedAccount.accountRecord, selectedAsset.assetCode)
+        .calculateAvailableBalance({
+          account: selectedAccount.accountRecord,
+          balanceLine
+        })
         .toString();
     }));
 

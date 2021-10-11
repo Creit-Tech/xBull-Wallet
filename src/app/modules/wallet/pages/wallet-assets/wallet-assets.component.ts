@@ -24,7 +24,13 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
 
   accountBalances$ = this.selectedAccount$
     .pipe(filter(account => !!account))
-    .pipe(map(account => account?.accountRecord?.balances || []))
+    .pipe(map(account => {
+      if (account?.accountRecord?.balances) {
+        return this.walletsAssetsService.filterBalancesLines(account.accountRecord.balances);
+      } else {
+        return [];
+      }
+    }));
 
     // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
     // TODO: We need to update this

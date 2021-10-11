@@ -2,6 +2,16 @@
   <app-modal-wrapper [loading]="!!(removingAssets$ | async)" [showModal]="showModal" (close)="onClose()">
     <section class="relative w-full h-full">
     <div class="w-full text-center mb-4">
+      <div *ngIf="(issuedAsset$ | async) && (fullDataLoaded$ | async)" class="w-full flex justify-center items-center mb-4 cursor-pointer">
+        <ng-container *ngIf="$any(asset).image as image">
+          <img nz-image
+               width="80px"
+               height="80px"
+               [nzSrc]="image"
+               alt="">
+        </ng-container>
+      </div>
+
       <h2 class="m-0 p-0 text-off-black font-bold text-xl">
         Asset: {{ asset.assetCode }}
       </h2>

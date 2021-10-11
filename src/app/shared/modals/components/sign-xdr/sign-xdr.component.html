@@ -76,10 +76,14 @@
 <!--            We are using $any here because the types use functions and TS can't know which one is the correct-->
             <ng-container *ngIf="operation.line.getAssetType() === 'liquidity_pool_shares'">
               <dt class="text-off-black text-base font-bold mb-1 w-full">Asset A:</dt>
-              <dd class="text-label break-all text-sm mb-3 w-full">{{ $any(operation).assetA.line.code }}</dd>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.code }}</dd>
+              <dd appClipboard [textToCopy]="$any(operation).line.assetA.issuer"
+                  class="cursor-pointer text-label break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.issuer | publicKey }}</dd>
 
               <dt class="text-off-black text-base font-bold mb-1 w-full">Asset B:</dt>
-              <dd class="text-label break-all text-sm mb-3 w-full">{{ $any(operation).assetB.line.code }}</dd>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.code }}</dd>
+              <dd appClipboard [textToCopy]="$any(operation).line.assetB.issuer"
+                  class="cursor-pointer text-label break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.issuer | publicKey }}</dd>
             </ng-container>
 
             <ng-container *ngIf="operation.line.getAssetType() !== 'liquidity_pool_shares'">
