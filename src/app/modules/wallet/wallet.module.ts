@@ -23,6 +23,8 @@ import { NgxMaskModule } from 'ngx-mask';
 import { WalletTransactionItemComponent } from './components/wallet-transaction-item/wallet-transaction-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import {NzImageModule, NzImageService} from "ng-zorro-antd/image";
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzIconModule} from "ng-zorro-antd/icon";
 
 
 @NgModule({
@@ -50,6 +52,8 @@ import {NzImageModule, NzImageService} from "ng-zorro-antd/image";
     SharedPipesModule,
     ModalsModule,
     NzImageModule,
+    NzButtonModule,
+    NzIconModule,
   ],
 })
 export class WalletModule { }
