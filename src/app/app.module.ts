@@ -22,6 +22,7 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IonicModule } from '@ionic/angular';
 
 registerLocaleData(en);
 
@@ -45,6 +46,7 @@ registerLocaleData(en);
     FormsComponentsModule,
     SharedPipesModule,
     BrowserAnimationsModule,
+    IonicModule.forRoot(),
   ],
   providers: [
     {
