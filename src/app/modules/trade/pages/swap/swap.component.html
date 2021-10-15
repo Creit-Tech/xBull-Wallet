@@ -74,7 +74,10 @@
   <section class="w-full">
     <button [disabled]="form.invalid || (shouldReceive$ | async)?.toNumber() === 0 || (sendingPathPaymentStrictSend$ | async) || (sendingPathPaymentStrictSend$ | async)"
             (click)="onConfirm()"
-            class="w-full btn btn--small btn-success-alternative">
+            nz-button
+            nzSize="large"
+            nzType="primary"
+            nzBlock>
       Confirm swap
     </button>
   </section>

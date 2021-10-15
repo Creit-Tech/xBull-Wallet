@@ -1,24 +1,24 @@
 <section class="w-full h-full flex flex-col justify-center items-center px-6">
   <div class="w-full mb-4">
-    <button routerLink="/lab/import-xdr" class="btn btn--small btn-primary w-full">
+    <button routerLink="/lab/import-xdr" nz-button class="w-full" nzSize="large" nzType="primary">
       Import XDR (manually sign)
     </button>
   </div>
 
   <div class="w-full mb-4">
-    <button class="btn btn--small btn-primary w-full" [disabled]="true">
+    <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
       Build transaction
     </button>
   </div>
 
   <div class="w-full mb-4">
-    <button class="btn btn--small btn-primary w-full" [disabled]="true">
+    <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
       Sign message
     </button>
   </div>
 
   <div class="w-full mb-4">
-    <button routerLink="/lab/claim-claimable-balance" class="btn btn--small btn-primary w-full">
+    <button routerLink="/lab/claim-claimable-balance" nz-button class="w-full" nzSize="large" nzType="primary">
       Claim claimable Balance
     </button>
   </div>

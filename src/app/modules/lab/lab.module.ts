@@ -11,6 +11,8 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
 import { ClaimableBalanceDetailsComponent } from './components/claimable-balance-details/claimable-balance-details.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzInputModule} from "ng-zorro-antd/input";
 
 
 @NgModule({
@@ -28,6 +30,8 @@ import { LoadingModule } from '~root/shared/loading/loading.module';
     SharedPipesModule,
     ModalsModule,
     LoadingModule,
+    NzButtonModule,
+    NzInputModule,
   ],
 })
 export class LabModule { }

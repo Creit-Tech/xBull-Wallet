@@ -22,13 +22,20 @@
 
   <div class="w-full flex flex-wrap pt-4 px-4">
     <div class="w-full px-2 mb-4">
-      <button routerLink="/create-account" class="w-full btn btn-primary btn--small">
+      <button routerLink="/create-account"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzBlock>
         Add Wallet
       </button>
     </div>
 
     <div class="w-full px-2">
-      <button routerLink="/settings" class="w-full btn btn-primary btn-primary--outline btn--small">
+      <button routerLink="/settings"
+              nz-button
+              nzSize="large"
+              nzBlock>
         Return to settings
       </button>
     </div>

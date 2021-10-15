@@ -1,7 +1,11 @@
-<section class="w-full flex flex-col justify-center items-center py-8">
+<section class="w-full flex flex-col justify-center items-center pt-8 pb-4 h-full">
   <div class="w-full px-6 mb-4">
-    <app-textarea title="XDR String" placeholder="Paste it here..."
-                  [formControl]="signControl"></app-textarea>
+    <textarea nz-input name="xdr"
+              id="xdr" cols="30"
+              class="resize-none"
+              [formControl]="signControl"
+              placeholder="Paste the XDR here..."
+              rows="8"></textarea>
   </div>
 
   <div class="w-full flex flex-wrap px-4">
@@ -9,7 +13,10 @@
       <button [disabled]="signedControl.invalid"
               appClipboard
               [textToCopy]="signedControl.value"
-              class="btn btn-primary btn--small w-full">
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              class="w-full">
         Copy Signed XDR
       </button>
     </div>
@@ -17,15 +24,27 @@
     <div class="w-5/12 px-2 mb-4">
       <button [disabled]="signControl.invalid"
               (click)="onSing()"
-              class="btn btn-primary btn--small w-full">
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              class="w-full">
         Sign XDR
       </button>
     </div>
+  </div>
 
-    <div class="w-full px-2">
-      <button (click)="onBack()" class="btn btn-primary btn-primary--outline btn--small w-full">
-        Back
-      </button>
-    </div>
+  <div class="w-full px-6 mb-4">
+    <p class="text-center text-placeholder">
+      Use the "Copy Signed XDR" after you have signed an XDR to get the signed version of the XDR. The XDR you pasted won't be modified.
+    </p>
+  </div>
+
+  <div class="w-full mt-auto px-2">
+    <button (click)="onBack()"
+            nz-button
+            nzSize="large"
+            class="w-full">
+      Back
+    </button>
   </div>
 </section>
