@@ -12,6 +12,7 @@ import { PressButtonModule } from '~root/shared/press-button/press-button.module
 import {SharedPipesModule} from "~root/shared/shared-pipes/shared-pipes.module";
 import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
 import {NzImageModule} from "ng-zorro-antd/image";
+import {NzMessageModule} from "ng-zorro-antd/message";
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -32,6 +33,7 @@ const COMPONENTS = [
     SharedPipesModule,
     ClipboardModule,
     NzImageModule,
+    NzMessageModule,
   ],
 })
 export class ModalsModule {

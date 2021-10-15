@@ -74,7 +74,10 @@
   <section class="w-full">
     <button [disabled]="form.invalid || (sendingPathPaymentStrictReceive$ | async)"
             (click)="onConfirm()"
-            class="w-full btn btn--small btn-success-alternative">
+            nz-button
+            nzType="primary"
+            nzSize="large"
+            nzBlock>
       Confirm trade
     </button>
   </section>

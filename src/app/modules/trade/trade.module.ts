@@ -9,6 +9,7 @@ import { SegmentModule } from '~root/shared/segment/segment.module';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SwapComponent } from './pages/swap/swap.component';
 import { LoadingModule } from '~root/shared/loading/loading.module';
+import {NzButtonModule} from "ng-zorro-antd/button";
 
 
 @NgModule({
@@ -18,12 +19,13 @@ import { LoadingModule } from '~root/shared/loading/loading.module';
     LimitComponent,
     SwapComponent
   ],
-  imports: [
-    CommonModule,
-    TradeRoutingModule,
-    SegmentModule,
-    FormsComponentsModule,
-    LoadingModule,
-  ],
+    imports: [
+        CommonModule,
+        TradeRoutingModule,
+        SegmentModule,
+        FormsComponentsModule,
+        LoadingModule,
+        NzButtonModule,
+    ],
 })
 export class TradeModule { }
