@@ -64,7 +64,10 @@
   <section class="w-full">
     <button [disabled]="form.invalid || (sendingOffer$ | async)"
             (click)="onConfirm()"
-            class="w-full btn btn--small btn-success-alternative">
+            nz-button
+            nzSize="large"
+            nzType="primary"
+            nzBlock>
       Place offer
     </button>
   </section>

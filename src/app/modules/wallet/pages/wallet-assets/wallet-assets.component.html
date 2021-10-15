@@ -7,16 +7,25 @@
   </ul>
 </section>
 
-<section class="w-full px-6 pb-5 pt-3 flex justify-between">
-  <button (click)="sendFunds()" class="btn btn-primary px-8 btn--small">
-    Send
-  </button>
+<section class="w-full px-6 pb-6 pt-3 flex justify-between">
+  <div class="px-1">
+    <button (click)="sendFunds()" nz-button nzType="primary" nzSize="large" class="flex items-center">
+      <i nz-icon nzType="arrow-up" nzTheme="outline"></i>
+      Send
+    </button>
+  </div>
 
-  <button (click)="receiveFunds()" class="btn btn-primary px-8 btn--small">
-    Receive
-  </button>
+  <div class="px-1">
+    <button (click)="receiveFunds()" nz-button nzType="primary" nzSize="large" class="flex items-center">
+      <i nz-icon nzType="arrow-down" nzTheme="outline"></i>
+      Receive
+    </button>
+  </div>
 
-  <button (click)="addAsset()" class="btn btn-primary px-6 btn--small btn-primary--outline">
-    Add
-  </button>
+  <div class="px-1">
+    <button (click)="addAsset()" nz-button nzSize="large" class="flex items-center">
+      Add
+      <i nz-icon nzType="plus" nzTheme="outline"></i>
+    </button>
+  </div>
 </section>

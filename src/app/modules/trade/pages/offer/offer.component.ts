@@ -40,7 +40,7 @@ export class OfferComponent implements OnInit, OnDestroy {
   heldAssets$: Observable<IWalletAsset[]> = this.selectedAccount$
     .pipe(switchMap(selectedAccount => {
       const assetsIds = !!selectedAccount.accountRecord
-        ? selectedAccount.accountRecord.balances.map(balanceLine => {
+        ? this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances).map(balanceLine => {
           return this.walletsAssetsService.formatBalanceLineId(balanceLine);
         })
         : [];

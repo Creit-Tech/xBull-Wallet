@@ -15,13 +15,13 @@ import {
 } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
 import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import {HorizonApisService} from "~root/core/services/horizon-apis.service";
+import {HorizonApisService} from '~root/core/services/horizon-apis.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -55,11 +55,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       try {
         this.walletsService.checkIfAllOperationsAreHandled(xdr.operations);
       } catch (e) {
-        this.toastrService.open({
-          title: `Can't continue`,
-          message: e.message,
-          status: 'error',
-        });
+        this.nzMessageService.error(e.message);
         this.onClose();
       }
     });
@@ -105,12 +101,12 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly stellarSdkService: StellarSdkService,
     private readonly cryptoService: CryptoService,
     private readonly walletsAccountQuery: WalletsAccountsQuery,
-    private readonly toastrService: ToastrService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
     private readonly hardwareWalletsService: HardwareWalletsService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly horizonApisService: HorizonApisService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   async ngAfterViewInit(): Promise<void> {
@@ -168,11 +164,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
           .then(() => ref.close());
       }, error => {
         console.log(error);
-        this.toastrService.open({
-          title: 'Error',
-          status: 'error',
-          message: `We couldn't sign the transaction, please check your password is correct`,
-        });
+        this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
 
         this.signing$.next(false);
         this.deny.emit();
@@ -209,11 +201,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       }
     } catch (e) {
       console.error(e);
-      this.toastrService.open({
-        title: `Device not found`,
-        message: `We didn't find the correct device connected, please make sure you are using the correct device.`,
-        status: 'error',
-        timer: 5000,
+      this.nzMessageService.error(`Device not found, please make sure you are using the correct device.`, {
+        nzDuration: 4000,
       });
       this.signing$.next(false);
       return;
@@ -223,21 +212,15 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       transport = await this.hardwareWalletsService.openLedgerConnection(targetDevice);
     } catch (e) {
       this.signing$.next(false);
-      this.toastrService.open({
-        title: `Can't connect`,
-        message: `Please make sure your wallet is unlocked and using the Stellar App.`,
-        status: 'error',
-        timer: 5000,
+      this.nzMessageService.error(`Can\'t connect with the wallet, please make sure your wallet is unlocked and using the Stellar App.`, {
+        nzDuration: 4000,
       });
       return;
     }
 
     try {
-      this.toastrService.open({
-        title: `Check your wallet`,
-        message: `Please confirm or cancel the transaction in your device.`,
-        status: 'info',
-        timer: 5000,
+      this.nzMessageService.info('Check your wallet and please confirm or cancel the transaction in your device.', {
+        nzDuration: 4000,
       });
       const signedXDR = await this.hardwareWalletsService.signWithLedger({
         xdr,
@@ -250,11 +233,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       this.accept.emit(signedXDR);
     } catch (e) {
       this.signing$.next(false);
-      this.toastrService.open({
-        title: `Can't connect/sign`,
-        message: `Please make sure your wallet is unlocked and using the Stellar App. This error also happens when your wallet does not support this kind of operation`,
-        status: 'error',
-        timer: 10000,
+      this.nzMessageService.error(`Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation to sign`, {
+        nzDuration: 10000,
       });
       return;
     }
@@ -282,11 +262,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     } catch (e) {
       console.error(e);
       this.signing$.next(false);
-      this.toastrService.open({
-        title: `Couldn't sign the transaction`,
-        message: 'There was an unexpected error, please contact support',
-        status: 'error',
-        timer: 5000,
+      this.nzMessageService.error(`Couldn't sign the transaction because there was an unexpected error, please contact support`, {
+        nzDuration: 4000,
       });
     }
 
