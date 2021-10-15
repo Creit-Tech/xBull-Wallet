@@ -1,6 +1,6 @@
 {
 	"appId": "app.xbull.mobile",
-	"appName": "xBull-Wallet",
-	"webDir": "dist/xbull",
+	"appName": "xBull Wallet",
+	"webDir": "dist/mobile",
 	"bundledWebRuntime": false
 }
