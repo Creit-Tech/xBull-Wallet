@@ -30,6 +30,10 @@
     </ng-template>
   </div>
 
+  <button (click)="qr()">
+    QR SCAN
+  </button>
+
   <div class="w-full">
     <button (click)="onSubmit()" [disabled]="form.invalid" class="w-full btn btn-success-alternative btn--small">
       Send

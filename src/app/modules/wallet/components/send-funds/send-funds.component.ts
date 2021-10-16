@@ -15,6 +15,7 @@ import { ComponentCreatorService } from '~root/core/services/component-creator.s
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import {QrScannerService} from "~root/mobile/services/qr-scanner.service";
 
 @Component({
   selector: 'app-send-funds',
@@ -108,6 +109,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly toastrService: ToastrService,
     private readonly walletsService: WalletsService,
+    private readonly qrScannerService: QrScannerService,
   ) { }
 
   ngOnInit(): void {
@@ -216,6 +218,12 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showModal = false;
     await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
     this.closed.emit();
+  }
+
+  qr() {
+    this.qrScannerService.scan()
+      .then(console.log)
+      .catch(console.error);
   }
 
 }
