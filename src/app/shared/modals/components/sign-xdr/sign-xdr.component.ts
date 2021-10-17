@@ -166,6 +166,9 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
         console.log(error);
         this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
 
+        ref.component.instance.onClose()
+          .then(() => ref.close());
+
         this.signing$.next(false);
         this.deny.emit();
       });
