@@ -10,6 +10,7 @@ import { WalletsQuery } from '~root/state';
 import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
+import {NzMessageService} from "ng-zorro-antd/message";
 
 @Component({
   selector: 'app-confirm-phrase-password',
@@ -25,7 +26,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
     words: new FormArray([]),
     searchInput: new FormControl(''),
-    confirmPhrase: new FormControl(''),
+    confirmPhrase: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', [Validators.required]),
   }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
 
@@ -43,6 +44,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     private readonly router: Router,
     @Inject(ENV) private readonly env: typeof environment,
     private mnemonicPhraseService: MnemonicPhraseService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   wordsUpdatedSubscription: Subscription = this.phraseArray.valueChanges
@@ -93,6 +95,13 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
 
   async onContinue(): Promise<void> {
     if (this.form.invalid) {
+      return;
+    }
+
+    if (!this.mnemonicPhraseService.validateMnemonicPhrase(this.form.value.confirmPhrase)) {
+      this.nzMessageService.error(`Mnemonic phrases is invalid, please make sure you write/add word by word correctly`, {
+        nzDuration: 5000
+      });
       return;
     }
 
