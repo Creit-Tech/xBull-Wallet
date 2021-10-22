@@ -11,6 +11,7 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { Horizon } from 'stellar-sdk';
 import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import {NzDrawerService} from "ng-zorro-antd/drawer";
 
 @Component({
   selector: 'app-wallet-assets',
@@ -45,6 +46,7 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly horizonApiQuery: HorizonApisQuery,
     private readonly cdr: ChangeDetectorRef,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   reloadSelectedAccountSubscription: Subscription = this.reloadSelectedAccount$
@@ -85,21 +87,36 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   }
 
   async sendFunds(): Promise<void> {
-    const ref = await this.componentCreatorService.createOnBody<SendFundsComponent>(SendFundsComponent);
+    const drawerRef = this.nzDrawerService.create<SendFundsComponent>({
+      nzContent: SendFundsComponent,
+      nzTitle: '',
+      nzPlacement: 'bottom',
+      nzHeight: 'auto'
+    });
 
-    merge(
-      ref.component.instance.paymentSent.asObservable(),
-      ref.component.instance.closed.asObservable()
-    )
+    drawerRef.open();
+
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      return;
+    }
+
+    componentRef.paymentSent
+      .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
+      .pipe(takeUntil(
+        merge(
+          this.componentDestroyed$.asObservable(),
+          drawerRef.afterClose
+        )
+      ))
       .subscribe(() => {
         this.reloadSelectedAccount$.next();
-        ref.component.instance.onClose()
-          .then(() => ref.close());
+        drawerRef.close();
       });
-
-    ref.open();
   }
 
   receiveFunds(): void {
