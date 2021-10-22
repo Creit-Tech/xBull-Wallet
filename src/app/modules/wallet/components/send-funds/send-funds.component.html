@@ -7,9 +7,16 @@
 
   <form [formGroup]="form" class="mb-2">
     <div class="w-full mb-4">
-      <nz-input-group nzSize="large" nzAddOnBeforeIcon="key">
+      <nz-input-group nzSize="large" nzAddOnBeforeIcon="key" [nzSuffix]="qr">
         <input type="text" nz-input nzSize="large" placeholder="Public key" formControlName="publicKey">
       </nz-input-group>
+
+      <ng-template #qr>
+        <i (click)="scanQr()"
+           *ngIf="isMobilePlatform"
+           nz-icon nzType="qrcode"
+           nzTheme="outline" class="cursor-pointer"></i>
+      </ng-template>
     </div>
 
     <div class="w-full mb-4">
@@ -48,10 +55,6 @@
       Available: Asset not selected
     </ng-template>
   </div>
-
-  <button (click)="qr()">
-    QR SCAN
-  </button>
 
   <div class="w-full">
     <button (click)="onSubmit()" [disabled]="form.invalid"

@@ -48,7 +48,7 @@ registerLocaleData(en);
     SharedPipesModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
-    environment.platform === 'mobile' ? MobileModule.forRoot() : [],
+    MobileModule.forRoot(),
   ],
   providers: [
     {

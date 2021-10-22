@@ -23,7 +23,8 @@
 
 .hide-app-send-funds {
   background-color: transparent !important;
-  app-root, app-send-funds {
-    display: none;
+
+  app-root, app-send-funds, ant-drawer-mask {
+    display: none !important;
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
 import {filter, map, pluck, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
@@ -19,6 +19,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import {NzMessageService} from "ng-zorro-antd/message";
 import {NzModalService} from "ng-zorro-antd/modal";
 import {QrScannerService} from "~root/mobile/services/qr-scanner.service";
+import {ENV, environment} from "~env";
 
 @Component({
   selector: 'app-send-funds',
@@ -30,6 +31,8 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() paymentSent: EventEmitter<void> = new EventEmitter<void>();
   @Output() closed: EventEmitter<void> = new EventEmitter<void>();
+
+  isMobilePlatform = this.env.platform === 'mobile';
 
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
   showModal = false;
@@ -102,6 +105,8 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
   constructor(
+    @Inject(ENV)
+    private readonly env: typeof environment,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -240,9 +245,13 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.closed.emit();
   }
 
-  qr() {
+  scanQr(): void {
     this.qrScannerService.scan()
-      .then(console.log)
+      .then(value => {
+        if (value.completed && value.text) {
+          this.form.controls.publicKey.patchValue(value.text);
+        }
+      })
       .catch(console.error);
   }
 
