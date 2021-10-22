@@ -1,42 +1,36 @@
-// DEPRECATED, we are moving into XdrSignerComponent
-
-
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
-import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
-import BigNumber from 'bignumber.js';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription} from 'rxjs';
+import {ITransaction, WalletsService} from '~root/core/wallets/services/wallets.service';
+import {filter, map, pluck, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import {Networks, Operation} from 'stellar-base';
+import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery,
-  IHorizonApi,
-  IWalletsAccount,
-  IWalletsAccountLedger,
-  IWalletsAccountTrezor,
+  IWalletsAccount, IWalletsAccountLedger, IWalletsAccountTrezor,
   IWalletsAccountWithSecretKey,
   WalletsAccountsQuery,
-  WalletsAssetsQuery,
+  WalletsAssetsQuery
 } from '~root/state';
-import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
-import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
-import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
-import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import {StellarSdkService} from '~root/gateways/stellar/stellar-sdk.service';
+import {CryptoService} from '~root/core/crypto/services/crypto.service';
+import {ComponentCreatorService} from '~root/core/services/component-creator.service';
+import {HardwareWalletsService} from '~root/core/services/hardware-wallets.service';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
+import {SignPasswordComponent} from '~root/shared/modals/components/sign-password/sign-password.component';
+import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
+import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
 
 @Component({
-  selector: 'app-sign-xdr',
-  templateUrl: './sign-xdr.component.html',
-  styleUrls: ['./sign-xdr.component.scss']
+  selector: 'app-xdr-signer',
+  templateUrl: './xdr-signer.component.html',
+  styleUrls: ['./xdr-signer.component.scss']
 })
-export class SignXdrComponent implements OnInit, AfterViewInit {
+export class XdrSignerComponent implements OnInit {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  showModal = false;
-  @Output() deny: EventEmitter<void> = new EventEmitter<void>();
   @Output() accept: EventEmitter<string> = new EventEmitter<string>();
 
   @Input() from: string | 'wallet' = 'wallet';
@@ -110,12 +104,9 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly horizonApisService: HorizonApisService,
     private readonly nzMessageService: NzMessageService,
+    private readonly nzDrawerService: NzDrawerService,
+    private readonly nzDrawerRef: NzDrawerRef
   ) { }
-
-  async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
-  }
 
   ngOnInit(): void {
   }
@@ -145,9 +136,24 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   async signWithPassword(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
-    const ref = await this.componentCreatorService.createOnBody<SignPasswordComponent>(SignPasswordComponent);
+    const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
+      nzContent: PasswordModalComponent,
+      nzPlacement: 'bottom',
+      nzTitle: '',
+      nzHeight: 'auto'
+    });
 
-    ref.component.instance.password
+    drawerRef.open();
+
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      return;
+    }
+
+    componentRef.password
       .pipe(take(1))
       .pipe(tap(() => {
         this.signing$.next(true);
@@ -159,37 +165,21 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       .pipe(map(([secret, xdr]) => {
         return this.stellarSdkService.signTransaction({ xdr, secret });
       }))
-      .pipe(takeUntil(merge( this.componentDestroyed$, ref.destroyed$.asObservable() )))
+      .pipe(takeUntil(merge(
+        this.componentDestroyed$,
+        drawerRef.afterClose
+      )))
       .subscribe(xdr => {
         this.signing$.next(false);
         this.accept.emit(xdr);
-        ref.component.instance.onClose()
-          .then(() => ref.close());
+        drawerRef.close();
       }, error => {
+        drawerRef.close();
         console.log(error);
         this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
 
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-
         this.signing$.next(false);
-        this.deny.emit();
       });
-
-    ref.component.instance.cancel
-      .pipe(take(1))
-      .pipe(takeUntil(
-        merge(
-          this.componentDestroyed$,
-          ref.destroyed$.asObservable()
-        )
-      ))
-      .subscribe(() => {
-        ref.close();
-      });
-
-
-    ref.open();
   }
 
   async signWithLedger(selectedAccount: IWalletsAccountLedger): Promise<void> {
@@ -278,9 +268,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
 
 
   async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.deny.emit();
+    this.nzDrawerRef.close();
   }
 
 }

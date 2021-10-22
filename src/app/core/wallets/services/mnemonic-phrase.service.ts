@@ -12,8 +12,12 @@ export class MnemonicPhraseService {
     private readonly hdWallet: HdWalletService,
   ) { }
 
-  getWordList() {
-    return [...wordlists['EN']];
+  getWordList(): string[] {
+    return [...wordlists.EN];
+  }
+
+  validateMnemonicPhrase(text: string): boolean {
+    return validateMnemonic(text, this.getWordList());
   }
 
   generateMnemonicPhrase(): string {

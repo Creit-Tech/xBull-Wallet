@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
 import {filter, map, pluck, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
@@ -12,9 +12,14 @@ import { merge, Subject } from 'rxjs';
 import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import {NzMessageService} from "ng-zorro-antd/message";
+import {NzModalService} from "ng-zorro-antd/modal";
+import {QrScannerService} from "~root/mobile/services/qr-scanner.service";
+import {ENV, environment} from "~env";
 
 @Component({
   selector: 'app-send-funds',
@@ -26,6 +31,8 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Output() paymentSent: EventEmitter<void> = new EventEmitter<void>();
   @Output() closed: EventEmitter<void> = new EventEmitter<void>();
+
+  isMobilePlatform = this.env.platform === 'mobile';
 
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
   showModal = false;
@@ -98,6 +105,8 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
   constructor(
+    @Inject(ENV)
+    private readonly env: typeof environment,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -106,8 +115,11 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly componentCreatorService: ComponentCreatorService,
-    private readonly toastrService: ToastrService,
     private readonly walletsService: WalletsService,
+    private readonly nzDrawerService: NzDrawerService,
+    private readonly nzMessageService: NzMessageService,
+    private readonly nzModalService: NzModalService,
+    private readonly qrScannerService: QrScannerService,
   ) { }
 
   ngOnInit(): void {
@@ -158,10 +170,8 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     } catch (e) {
       if (selectedAsset._id !== 'native') {
-        this.toastrService.open({
-          status: 'error',
-          message: `We can't send custom assets to an account that hasn't been created yet.`,
-          title: 'Oops!'
+        this.nzMessageService.error(`We ca not send custom assets to an account that has not been created yet.`, {
+          nzDuration: 3000,
         });
         return;
       }
@@ -181,41 +191,68 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
       .build()
       .toXDR();
 
-    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
+    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzContentParams: {
+        xdr: formattedXDR
+      },
+      nzPlacement: 'bottom',
+      nzHeight: '88%',
+      nzTitle: ''
+    });
 
-    ref.component.instance.xdr = formattedXDR;
+    drawerRef.open();
 
-    ref.component.instance.accept
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      return;
+    }
+
+    componentRef.accept
       .asObservable()
       .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .pipe(tap(async () => {
-        await ref.component.instance.onClose();
-        await ref.close();
-      }))
-      .pipe(switchMap((signedXdr) =>
-        this.walletsService.sendPayment(signedXdr)
+      .pipe(takeUntil(
+        merge(
+          this.componentDestroyed$,
+          drawerRef.afterClose
+        )
       ))
-      .subscribe(() => {
-        this.paymentSent.emit();
+      .subscribe((signedXdr) => {
+        drawerRef.close();
+        this.walletsService.sendPayment(signedXdr)
+          .then(() => {
+            this.nzMessageService.success('Payment sent correctly');
+            this.paymentSent.emit();
+          })
+          .catch(err => {
+            console.error(err);
+
+            this.nzModalService.error({
+              nzTitle: 'Oh oh!',
+              nzContent: `We were not able to send the payment, please try again or contact support`
+            });
+          });
       });
 
-    ref.component.instance.deny
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
   }
 
   async onClose(): Promise<void> {
     this.showModal = false;
     await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
     this.closed.emit();
+  }
+
+  scanQr(): void {
+    this.qrScannerService.scan()
+      .then(value => {
+        if (value.completed && value.text) {
+          this.form.controls.publicKey.patchValue(value.text);
+        }
+      })
+      .catch(console.error);
   }
 
 }

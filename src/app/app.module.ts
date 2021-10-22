@@ -23,6 +23,7 @@ import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
+import { MobileModule } from '~root/mobile/mobile.module';
 
 registerLocaleData(en);
 
@@ -47,6 +48,7 @@ registerLocaleData(en);
     SharedPipesModule,
     BrowserAnimationsModule,
     IonicModule.forRoot(),
+    MobileModule.forRoot(),
   ],
   providers: [
     {

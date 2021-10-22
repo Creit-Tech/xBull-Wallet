@@ -20,3 +20,11 @@
 .window-mode {
   @apply h-screen w-screen;
 }
+
+.hide-app-send-funds {
+  background-color: transparent !important;
+
+  app-root, app-send-funds, ant-drawer-mask {
+    display: none !important;
+  }
+}
