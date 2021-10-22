@@ -22,9 +22,15 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { WalletTransactionItemComponent } from './components/wallet-transaction-item/wallet-transaction-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
-import {NzImageModule, NzImageService} from "ng-zorro-antd/image";
-import {NzButtonModule} from "ng-zorro-antd/button";
-import {NzIconModule} from "ng-zorro-antd/icon";
+import { NzImageModule, NzImageService } from 'ng-zorro-antd/image';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
+import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
+import {NzSelectModule} from "ng-zorro-antd/select";
+import {NzSpinModule} from "ng-zorro-antd/spin";
+import {NzModalModule} from "ng-zorro-antd/modal";
 
 
 @NgModule({
@@ -42,18 +48,25 @@ import {NzIconModule} from "ng-zorro-antd/icon";
     TransactionDetailsComponent,
     WalletTransactionItemComponent,
   ],
-  imports: [
-    CommonModule,
-    WalletRoutingModule,
-    SegmentModule,
-    FormsComponentsModule,
-    LoadingModule,
-    ClipboardModule,
-    SharedPipesModule,
-    ModalsModule,
-    NzImageModule,
-    NzButtonModule,
-    NzIconModule,
-  ],
+    imports: [
+      CommonModule,
+      WalletRoutingModule,
+      SegmentModule,
+      FormsComponentsModule,
+      LoadingModule,
+      ClipboardModule,
+      SharedPipesModule,
+      ModalsModule,
+      NzImageModule,
+      NzButtonModule,
+      NzIconModule,
+      NzInputModule,
+      NzDrawerModule,
+      NgxMaskModule,
+      NzAutocompleteModule,
+      NzSelectModule,
+      NzSpinModule,
+      NzModalModule,
+    ],
 })
 export class WalletModule { }

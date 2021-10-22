@@ -1,22 +1,41 @@
-<app-modal-wrapper [loading]="!!(sendingPayment$ | async)" [showModal]="showModal" (close)="onClose()">
+<nz-spin [nzSpinning]="sendingPayment$ | async">
   <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+    <h2 class="m-0 p-0 text-off-white font-bold text-xl">
       Send Funds
     </h2>
   </div>
 
   <form [formGroup]="form" class="mb-2">
     <div class="w-full mb-4">
-      <app-input mode="light" title="Public key" formControlName="publicKey" iconPath="/assets/icons/key.svg"></app-input>
+      <nz-input-group nzSize="large" nzAddOnBeforeIcon="key">
+        <input type="text" nz-input nzSize="large" placeholder="Public key" formControlName="publicKey">
+      </nz-input-group>
     </div>
+
     <div class="w-full mb-4">
-      <app-input mode="light" title="Memo (optional)" formControlName="memo" iconPath="/assets/icons/tag.svg"></app-input>
+      <nz-input-group nzSize="large" nzAddOnBeforeIcon="tag">
+        <input type="text" nz-input nzSize="large" placeholder="Memo (optional)" formControlName="memo">
+      </nz-input-group>
     </div>
+
     <div *ngIf="selectOptions$ | async as selectOptions" class="w-full mb-4">
-      <app-select [options]="selectOptions" mode="light" title="Asset" formControlName="assetCode" iconPath="/assets/icons/type.svg"></app-select>
+      <nz-input-group nzPrefixIcon="dollar">
+        <nz-select class="w-full"
+                   [nzBorderless]="true"
+                   formControlName="assetCode"
+                   nzPlaceHolder="Select an asset">
+          <nz-option *ngFor="let option of selectOptions" [nzValue]="option.value" [nzLabel]="option.name"></nz-option>
+        </nz-select>
+      </nz-input-group>
+
     </div>
+
     <div class="w-full">
-      <app-input mask="separator.8" mode="light" title="Amount" formControlName="amount" iconPath="/assets/icons/world-net.svg"></app-input>
+      <nz-input-group nzSize="large" nzAddOnBeforeIcon="global">
+        <input mask="separator.8"
+               thousandSeparator=""
+               type="text" nz-input nzSize="large" placeholder="Amount" formControlName="amount">
+      </nz-input-group>
     </div>
   </form>
 
@@ -35,10 +54,13 @@
   </button>
 
   <div class="w-full">
-    <button (click)="onSubmit()" [disabled]="form.invalid" class="w-full btn btn-success-alternative btn--small">
+    <button (click)="onSubmit()" [disabled]="form.invalid"
+            nz-button
+            nzSize="large"
+            nzType="primary"
+            nzBlock>
       Send
     </button>
   </div>
 
-
-</app-modal-wrapper>
+</nz-spin>
