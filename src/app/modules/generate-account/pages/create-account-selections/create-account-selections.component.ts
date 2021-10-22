@@ -15,6 +15,8 @@ export class CreateAccountSelectionsComponent implements OnInit {
 
   walletVersion = this.env.version;
 
+  isMobilePlatform = this.env.platform === 'mobile';
+
   constructor(
     private readonly generateAccountService: GenerateAccountService,
     private readonly router: Router,

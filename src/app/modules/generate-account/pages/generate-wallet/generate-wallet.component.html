@@ -1,4 +1,4 @@
-<section class="h-full w-full flex flex-col px-6 py-8 container max-w-md mx-auto">
+<section class="min-h-full w-full flex flex-col px-6 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-6">
     <img src="/assets/icons/xbull-icon.svg" class="h-20" alt="xbull-logo">
   </div>
@@ -13,13 +13,13 @@
               cols="30" rows="6">{{ mnemonicPhraseFormControl.value }}</textarea>
   </div>
 
-  <div class="w-full text-center mb-auto">
+  <div class="w-full text-center mb-4">
     <p class="text-placeholder text-sm m-0">
       Write these words in a safe place, this is the only time we will show it to you and is not possible to recover it
     </p>
   </div>
 
-  <div class="w-full flex flex-wrap">
+  <div class="w-full flex flex-wrap mt-auto">
     <button nz-button nzType="primary" nzSize="large"
             (click)="onContinue()"
             class="w-full mb-4">
