@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery,
   IWalletsAccount, IWalletsAccountLedger, IWalletsAccountTrezor,
-  IWalletsAccountWithSecretKey,
+  IWalletsAccountWithSecretKey, SettingsQuery,
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
@@ -21,6 +21,7 @@ import {SignPasswordComponent} from '~root/shared/modals/components/sign-passwor
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
+import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
 
 @Component({
   selector: 'app-xdr-signer',
@@ -105,7 +106,9 @@ export class XdrSignerComponent implements OnInit {
     private readonly horizonApisService: HorizonApisService,
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerService: NzDrawerService,
-    private readonly nzDrawerRef: NzDrawerRef
+    private readonly nzDrawerRef: NzDrawerRef,
+    private readonly settingsQuery: SettingsQuery,
+    private readonly deviceAuthService: DeviceAuthService,
   ) { }
 
   ngOnInit(): void {
@@ -121,7 +124,15 @@ export class XdrSignerComponent implements OnInit {
 
     switch (selectedAccount.type) {
       case 'with_secret_key':
-        await this.signWithPassword(selectedAccount);
+        const passwordAuthTokenActive = await this.settingsQuery.passwordAuthTokenActive$
+          .pipe(take(1))
+          .toPromise();
+
+        if (passwordAuthTokenActive) {
+          await this.signWithDeviceAuthToken(selectedAccount);
+        } else {
+          await this.signWithPassword(selectedAccount);
+        }
         break;
 
       case 'with_ledger_wallet':
@@ -133,6 +144,41 @@ export class XdrSignerComponent implements OnInit {
         break;
     }
 
+  }
+
+  async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
+    const passwordAuthToken = await this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise();
+
+    if (!passwordAuthToken) {
+      this.nzMessageService.error(`Device Auth is not set up, go to settings if you want to set up Device Auth`);
+      return;
+    }
+
+    let decryptedPassword: string;
+    try {
+      decryptedPassword = await this.deviceAuthService.decryptWithDevice(passwordAuthToken, PASSWORD_IDENTIFIER);
+    } catch (e) {
+      this.nzMessageService.error(
+        e.message || `We were not able to decrypt the password with this device`
+      );
+      return;
+    }
+
+    this.xdr$
+      .pipe(map((xdr) => {
+        const secret = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
+        return this.stellarSdkService.signTransaction({ xdr, secret });
+      }))
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(xdr => {
+        this.signing$.next(false);
+        this.accept.emit(xdr);
+      }, error => {
+        console.log(error);
+        this.nzMessageService.error(`We couldn't sign the transaction, please try again or contact support`);
+
+        this.signing$.next(false);
+      });
   }
 
   async signWithPassword(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {

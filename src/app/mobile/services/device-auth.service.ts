@@ -56,7 +56,7 @@ export class DeviceAuthService {
           throw new Error(`Unauthorized, try again or contact support.`);
         }
       } else {
-        throw new Error('Device auth method or password required to continue');
+        throw new Error('Device auth method or password is not available');
       }
     }
 
