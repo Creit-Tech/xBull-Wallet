@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,7 @@ import { FormControl, Validators } from '@angular/forms';
 export class PasswordModalComponent {
   passwordField: FormControlTyped<string> = new FormControl('', [Validators.required]);
 
+  @Input() description = 'Your password is used to decrypt your private key';
   @Output() password: EventEmitter<string> = new EventEmitter<string>();
 
   constructor() { }

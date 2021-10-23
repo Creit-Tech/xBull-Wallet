@@ -36,6 +36,9 @@ import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import { AntiSpamClaimableAssetsComponent } from './pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
 import {NzMessageModule} from "ng-zorro-antd/message";
+import { LockingComponent } from './pages/locking/locking.component';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 
 @NgModule({
@@ -56,7 +59,8 @@ import {NzMessageModule} from "ng-zorro-antd/message";
     ActiveOperationsTypesComponent,
     AntiSpamOptionsComponent,
     AntiSpamKeysComponent,
-    AntiSpamClaimableAssetsComponent
+    AntiSpamClaimableAssetsComponent,
+    LockingComponent
   ],
   imports: [
     CommonModule,
@@ -78,6 +82,8 @@ import {NzMessageModule} from "ng-zorro-antd/message";
     NzTableModule,
     NzDividerModule,
     NzMessageModule,
+    NzSwitchModule,
+    NzSelectModule,
   ],
 })
 export class SettingsModule { }
