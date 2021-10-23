@@ -22,6 +22,8 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzIconModule} from "ng-zorro-antd/icon";
 
 registerLocaleData(en);
 
@@ -45,6 +47,8 @@ registerLocaleData(en);
     FormsComponentsModule,
     SharedPipesModule,
     BrowserAnimationsModule,
+    NzButtonModule,
+    NzIconModule,
   ],
   providers: [
     {
