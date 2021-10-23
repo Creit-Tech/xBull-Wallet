@@ -120,7 +120,13 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   }
 
   receiveFunds(): void {
-    this.modalsService.open({ component: ReceiveFundsComponent });
+    const drawerRef = this.nzDrawerService.create<ReceiveFundsComponent>({
+      nzContent: ReceiveFundsComponent,
+      nzHeight: 'auto',
+      nzPlacement: 'bottom',
+    });
+
+    drawerRef.open();
   }
 
   async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
