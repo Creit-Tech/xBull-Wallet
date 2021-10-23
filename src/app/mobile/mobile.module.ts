@@ -2,9 +2,11 @@ import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { QRScanner } from '@ionic-native/qr-scanner/ngx';
-import {NzDrawerModule} from "ng-zorro-antd/drawer";
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { CloseScanComponent } from './components/close-scan/close-scan.component';
-import {NzButtonModule} from "ng-zorro-antd/button";
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { DeviceAuthService } from '~root/mobile/services/device-auth.service';
+import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
 
 
 
@@ -12,12 +14,10 @@ import {NzButtonModule} from "ng-zorro-antd/button";
   declarations: [
     CloseScanComponent
   ],
-    imports: [
-        CommonModule,
-        NzDrawerModule,
-        NzButtonModule,
-    ],
-  providers: [
+  imports: [
+    CommonModule,
+    NzDrawerModule,
+    NzButtonModule,
   ],
 })
 export class MobileModule {
@@ -27,6 +27,8 @@ export class MobileModule {
       providers: [
         QrScannerService,
         QRScanner,
+        DeviceAuthService,
+        AndroidFingerprintAuth,
       ],
     };
   }

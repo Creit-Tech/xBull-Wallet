@@ -94,4 +94,20 @@ export class SettingsService {
       windowsMode: true,
     });
   }
+
+  addDeviceAuthToken(data: { passwordAuthToken: string; passwordAuthTokenIdentifier: string }): void {
+    this.settingsStore.updateState({
+      passwordAuthToken: data.passwordAuthToken,
+      passwordAuthTokenIdentifier: data.passwordAuthTokenIdentifier,
+      passwordAuthTokenActive: true,
+    });
+  }
+
+  removeDeviceAuthToken(): void {
+    this.settingsStore.updateState({
+      passwordAuthToken: undefined,
+      passwordAuthTokenIdentifier: undefined,
+      passwordAuthTokenActive: false,
+    });
+  }
 }
