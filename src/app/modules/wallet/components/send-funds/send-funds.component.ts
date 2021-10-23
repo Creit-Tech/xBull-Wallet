@@ -16,10 +16,10 @@ import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
-import {NzMessageService} from "ng-zorro-antd/message";
-import {NzModalService} from "ng-zorro-antd/modal";
-import {QrScannerService} from "~root/mobile/services/qr-scanner.service";
-import {ENV, environment} from "~env";
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {NzModalService} from 'ng-zorro-antd/modal';
+import {QrScannerService} from '~root/mobile/services/qr-scanner.service';
+import {ENV, environment} from '~env';
 
 @Component({
   selector: 'app-send-funds',
