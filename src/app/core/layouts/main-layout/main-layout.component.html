@@ -26,19 +26,19 @@
     <router-outlet></router-outlet>
   </div>
 
-  <footer *ngIf="activeIcon$ | async as activeIcon" class="bg-ash px-4 py-1">
+  <footer class="bg-ash px-4 py-1">
     <section class="flex items-center justify-between container max-w-md mx-auto">
       <button nz-button
               nzType="text"
               class="flex flex-col items-center transition font-medium h-auto m-0 border-0"
               routerLink="/wallet"
-              [class.text-label]="activeIcon !== 'wallet'"
-              [class.hover:text-off-white]="activeIcon !== 'wallet'"
-              [class.text-primary]="activeIcon === 'wallet'">
+              [class.text-label]="(activeIcon$ | async) !== 'wallet'"
+              [class.hover:text-off-white]="(activeIcon$ | async) !== 'wallet'"
+              [class.text-primary]="(activeIcon$ | async) === 'wallet'">
 
         <i class="text-lg" nz-icon nzType="credit-card" nzTheme="outline"></i>
 
-        <span class="m-0" [class.text-off-white]="activeIcon === 'wallet'">
+        <span class="m-0" [class.text-off-white]="(activeIcon$ | async) === 'wallet'">
           Wallet
         </span>
       </button>
@@ -47,13 +47,13 @@
               nzType="text"
               class="flex flex-col items-center transition font-medium h-auto m-0 border-0"
               routerLink="/trade"
-              [class.text-label]="activeIcon !== 'trade'"
-              [class.hover:text-off-white]="activeIcon !== 'trade'"
-              [class.text-primary]="activeIcon === 'trade'">
+              [class.text-label]="(activeIcon$ | async) !== 'trade'"
+              [class.hover:text-off-white]="(activeIcon$ | async) !== 'trade'"
+              [class.text-primary]="(activeIcon$ | async) === 'trade'">
 
         <i class="text-lg" nz-icon nzType="swap" nzTheme="outline"></i>
 
-        <span class="m-0" [class.text-off-white]="activeIcon === 'trade'">
+        <span class="m-0" [class.text-off-white]="(activeIcon$ | async) === 'trade'">
           Trade
         </span>
       </button>
@@ -63,13 +63,13 @@
               class="flex flex-col items-center transition font-medium h-auto m-0 border-0"
               routerLink="/lab"
               *ngIf="advanceMode$ | async"
-              [class.text-label]="activeIcon !== 'lab'"
-              [class.hover:text-off-white]="activeIcon !== 'lab'"
-              [class.text-primary]="activeIcon === 'lab'">
+              [class.text-label]="(activeIcon$ | async) !== 'lab'"
+              [class.hover:text-off-white]="(activeIcon$ | async) !== 'lab'"
+              [class.text-primary]="(activeIcon$ | async) === 'lab'">
 
         <i class="text-lg" nz-icon nzType="experiment" nzTheme="outline"></i>
 
-        <span class="m-0" [class.text-off-white]="activeIcon === 'lab'">
+        <span class="m-0" [class.text-off-white]="(activeIcon$ | async) === 'lab'">
           Lab
         </span>
       </button>
@@ -78,13 +78,13 @@
               nzType="text"
               class="flex flex-col items-center transition font-medium h-auto m-0 border-0"
               routerLink="/settings"
-              [class.text-label]="activeIcon !== 'settings'"
-              [class.hover:text-off-white]="activeIcon !== 'settings'"
-              [class.text-primary]="activeIcon === 'settings'">
+              [class.text-label]="(activeIcon$ | async) !== 'settings'"
+              [class.hover:text-off-white]="(activeIcon$ | async) !== 'settings'"
+              [class.text-primary]="(activeIcon$ | async) === 'settings'">
 
         <i class="text-lg" nz-icon nzType="setting" nzTheme="outline"></i>
 
-        <span class="m-0" [class.text-off-white]="activeIcon === 'settings'">
+        <span class="m-0" [class.text-off-white]="(activeIcon$ | async) === 'settings'">
           Settings
         </span>
       </button>
