@@ -34,10 +34,14 @@ registerLocaleData(en);
     AppComponent,
     MainLayoutComponent,
     SelectAccountComponent,
-    SelectHorizonApiComponent
+    SelectHorizonApiComponent,
   ],
   imports: [
     BrowserModule,
+    IonicModule.forRoot({
+      hardwareBackButton: false,
+    }),
+    BrowserAnimationsModule,
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
@@ -48,8 +52,6 @@ registerLocaleData(en);
     BackgroundModule,
     FormsComponentsModule,
     SharedPipesModule,
-    BrowserAnimationsModule,
-    IonicModule.forRoot(),
     MobileModule.forRoot(),
     NzButtonModule,
     NzIconModule,
