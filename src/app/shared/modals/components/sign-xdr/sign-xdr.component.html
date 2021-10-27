@@ -37,11 +37,11 @@
 
         <ng-container *ngFor="let operation of (operations$ | async); let i = index">
 
-          <div class="w-full pt-2 mb-6 border-placeholder border-b-1 border-b-2" *ngIf="i !== 0"></div>
+          <div class="w-full pt-2 mb-6 border-placeholder border-b-1 border-b-2"></div>
 
           <ng-container *ngIf="operation.type === 'createAccount'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">Create Acccount</dd>
+            <dd class="text-label break-all text-sm mb-3 w-full">Create Account</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Destination:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
@@ -339,6 +339,43 @@
           <ng-container *ngIf="operation.type === 'endSponsoringFutureReserves'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">End Sponsoring Future Reserves</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'liquidityPoolDeposit'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Liquidity Pool Deposit</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Max amount A:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.maxAmountA | number: '0.0-7' }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Max amount B:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.maxAmountB | number: '0.0-7' }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Min price:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.minPrice | number: '0.0-7' }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Max price:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.maxPrice | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'liquidityPoolWithdraw'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Liquidity Pool Withdraw</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Amount:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Min amount A:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.minAmountA | number: '0.0-7' }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Min amount B:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.minAmountB | number: '0.0-7' }}</dd>
           </ng-container>
 
           <ng-container *ngIf="!!operation.source">
