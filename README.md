@@ -62,6 +62,8 @@ The Stellar Blockchain supports multiple kind of transactions, xBull is designed
 - [ ] Clawback
 - [ ] Clawback Claimable Balance
 - [X] Set Trust Line Flags
+- [X] Liquidity Pool Deposit
+- [X] Liquidity Pool Withdraw
 
 
 # xBull "SDK"

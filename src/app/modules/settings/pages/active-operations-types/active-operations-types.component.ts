@@ -26,7 +26,7 @@ export class ActiveOperationsTypesComponent implements OnInit, OnDestroy {
     account_merge: new FormControl(false),
     manage_data: new FormControl(false),
     bump_sequence: new FormControl(false),
-    // create_claimable_balance: new FormControl(false),
+    create_claimable_balance: new FormControl(false),
     // claim_claimable_balance: new FormControl(false),
     begin_sponsoring_future_reserves: new FormControl(false),
     end_sponsoring_future_reserves: new FormControl(false),
@@ -34,6 +34,8 @@ export class ActiveOperationsTypesComponent implements OnInit, OnDestroy {
     // clawback: new FormControl(false),
     // clawback_claimable_balance: new FormControl(false),
     set_trust_line_flags: new FormControl(false),
+    liquidity_pool_deposit: new FormControl(false),
+    liquidity_pool_withdraw: new FormControl(false),
   });
 
   get values(): FormArray {
