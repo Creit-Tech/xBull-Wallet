@@ -123,7 +123,7 @@ export class WalletsAccountsService {
     if (params.account && !params.account.operationsStreamCreated && index === -1) {
       const streamBuilder = new Server(params.horizonApi.url).operations()
         .forAccount(params.account.publicKey)
-        .limit(10)
+        .limit(100)
         .includeFailed(false);
 
       streamBuilder.order(params.order);

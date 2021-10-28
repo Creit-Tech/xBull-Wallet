@@ -1,4 +1,4 @@
-import { AssetType, ServerApi } from 'stellar-sdk';
+import { AssetType, ServerApi, Horizon } from 'stellar-sdk';
 import { IWalletsAccount } from '~root/state/wallets-account.model';
 import OperationRecord = ServerApi.OperationRecord;
 
@@ -46,7 +46,11 @@ export interface IWalletsOperation {
   ownerPublicKey: IWalletsAccount['publicKey'];
   createdAt: number; // Unix time
   pagingToken: OperationRecord['paging_token'];
-  operationRecord: OperationRecord | ManageBuyOfferOperationResponse | SetTrustLineFlagsOperationResponse;
+  operationRecord: OperationRecord
+    | ManageBuyOfferOperationResponse
+    | SetTrustLineFlagsOperationResponse
+    | Horizon.DepositLiquidityOperationResponse
+    | Horizon.WithdrawLiquidityOperationResponse;
 }
 
 export function createWalletsOperation(params: {
