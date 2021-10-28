@@ -16,6 +16,7 @@
     "build:mobile:resources:ios": "./node_modules/.bin/cordova-res ios --skip-config --copy --icon-background-source='#14142B'",
     "build:mobile:resources:android": "./node_modules/.bin/cordova-res android --skip-config --copy --icon-background-source='#14142B'",
     "deploy": "cross-env NODE_ENV=production npm run build:prod && npm run build:extension",
+    "deploy:android": "cross-env NODE_ENV=production npm run build:mobile:prod && npm run build:mobile:resources:android && npm run build:mobile:plugins",
     "test": "./node_modules/.bin/ng test",
     "lint": "./node_modules/.bin/ng lint",
     "e2e": "./node_modules/.bin/ng e2e"
