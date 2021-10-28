@@ -200,14 +200,33 @@
     </ng-container>
 
     <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
-      <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
-      <dd class="text-label text-sm mb-3">
-        {{ operation.operationRecord.asset_code }}
-      </dd>
+      <ng-container *ngIf="operation.operationRecord.asset_type === 'liquidity_pool_shares'">
+        <dt class="text-off-black text-base font-bold mb-1">Liquidity pool id:</dt>
+        <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+          {{ operation.operationRecord.liquidity_pool_id }}
+        </dd>
 
-      <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
-      <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
-        {{ operation.operationRecord.asset_issuer | publicKey }}
+        <dt class="text-off-black text-base font-bold mb-1">Limit:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.limit | number: '0.0-7' }}
+        </dd>
+      </ng-container>
+
+      <ng-container *ngIf="operation.operationRecord.asset_type !== 'liquidity_pool_shares'">
+        <dt class="text-off-black text-base font-bold mb-1">Asset code:</dt>
+        <dd class="text-label text-sm mb-3">
+          {{ operation.operationRecord.asset_code }}
+        </dd>
+
+        <dt class="text-off-black text-base font-bold mb-1">Asset issuer:</dt>
+        <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+          {{ operation.operationRecord.asset_issuer | publicKey }}
+        </dd>
+      </ng-container>
+
+      <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.trustor }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Limit:</dt>
@@ -307,6 +326,72 @@
           {{ operation.operationRecord.clear_flags_s }}
         </dd>
       </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_deposit'">
+      <dt class="text-off-black text-base font-bold mb-1">Liquidity Pool ID:</dt>
+      <dd class="cursor-pointer text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+        {{ operation.operationRecord.liquidity_pool_id | publicKey }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Min price:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.min_price | number: '0.0-7' }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Max price:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.max_price | number: '0.0-7' }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Shares received:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.shares_received | number: '0.0-7' }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Reserves max:</dt>
+      <dd *ngFor="let reserve of operation.operationRecord.reserves_max"
+          class="text-label text-sm mb-3">
+        {{ reserve.asset }}
+        <br>
+        <b>{{ reserve.amount | number: '0.0-7' }}</b>
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Reserves deposited:</dt>
+      <dd *ngFor="let reserve of operation.operationRecord.reserves_deposited"
+          class="text-label text-sm mb-3">
+        {{ reserve.asset }}
+        <br>
+        <b>{{ reserve.amount | number: '0.0-7' }}</b>
+      </dd>
+    </ng-container>
+
+    <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_withdraw'">
+      <dt class="text-off-black text-base font-bold mb-1">Liquidity Pool ID:</dt>
+      <dd class="cursor-pointer text-label text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+        {{ operation.operationRecord.liquidity_pool_id | publicKey }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Shares:</dt>
+      <dd class="text-label text-sm mb-3">
+        {{ operation.operationRecord.shares | number: '0.0-7' }}
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Reserves min:</dt>
+      <dd *ngFor="let reserve of operation.operationRecord.reserves_min"
+          class="text-label text-sm mb-3">
+        {{ reserve.asset }}
+        <br>
+        <b>{{ reserve.amount | number: '0.0-7' }}</b>
+      </dd>
+
+      <dt class="text-off-black text-base font-bold mb-1">Reserves received:</dt>
+      <dd *ngFor="let reserve of operation.operationRecord.reserves_received"
+          class="text-label text-sm mb-3">
+        {{ reserve.asset }}
+        <br>
+        <b>{{ reserve.amount | number: '0.0-7' }}</b>
+      </dd>
     </ng-container>
   </dl>
 </section>

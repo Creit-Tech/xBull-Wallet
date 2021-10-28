@@ -49,6 +49,8 @@ export class WalletsService {
     // 'clawback',
     // 'clawbackClaimableBalance',
     'setTrustLineFlags',
+    'liquidityPoolDeposit',
+    'liquidityPoolWithdraw',
   ];
 
   constructor(

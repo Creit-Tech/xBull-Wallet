@@ -41,7 +41,9 @@ export function createInitialState(): SettingsState {
       'payment',
       'path_payment_strict_send',
       'path_payment_strict_receive',
-      'account_merge'
+      'account_merge',
+      'liquidity_pool_deposit',
+      'withdraw_pool_deposit'
     ]
   };
 }
