@@ -38,7 +38,8 @@ export class WalletsAccountsService {
     this.walletsAccountsStore.upsert(accountId, state => ({
       ...state,
       isCreated: !!accountRecord,
-      accountRecord
+      // We do this to remove the functions from the account record stellar sdk object
+      accountRecord: accountRecord && JSON.parse(JSON.stringify(accountRecord)),
     }));
 
     if (!!accountRecord) {
