@@ -1,11 +1,20 @@
+import { Storage } from '@capacitor/storage';
 import { PersistStateStorage } from '@datorama/akita/lib/persistState';
-import * as localForage from 'localforage';
 
-localForage.config({
-  driver: localForage.INDEXEDDB,
-  name: 'xbull_wallet',
-  version: 1.0,
-  storeName: 'akita-storage',
-});
+export const storageMobileMiddleware: PersistStateStorage = {
+  async setItem(key: string, value: any): Promise<boolean> {
+    await Storage.set({ key, value: JSON.stringify(value) });
+    return true;
+  },
 
-export const storageMobileMiddleware: PersistStateStorage = localForage;
+  async getItem(key: string): Promise<any> {
+    return Storage.get({ key })
+      .then(response => {
+        return response.value && JSON.parse(response.value);
+      });
+  },
+
+  async clear(): Promise<void> {
+    await Storage.clear();
+  },
+};
