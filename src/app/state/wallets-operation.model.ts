@@ -64,6 +64,7 @@ export function createWalletsOperation(params: {
     ownerPublicKey: params.ownerPublicKey,
     createdAt: new Date(params.operation.created_at).getTime(),
     pagingToken: params.operation.paging_token,
-    operationRecord: params.operation,
+    // We do a stringify and parse to remove all functions in the stellar object
+    operationRecord: params.operation && JSON.parse(JSON.stringify(params.operation)),
   };
 }

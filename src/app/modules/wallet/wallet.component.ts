@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { exhaustMap, map, pluck, switchMap, take, withLatestFrom } from 'rxjs/operators';
-import { ModalsService } from '~root/shared/modals/modals.service';
 import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { combineLatest, pipe, Subject } from 'rxjs';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-wallet',
@@ -27,10 +27,10 @@ export class WalletComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly modalsService: ModalsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly horizonApiQuery: HorizonApisQuery,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +45,13 @@ export class WalletComponent implements OnInit {
   }
 
   openReceiveFundsModal(): void {
-    this.modalsService.open({ component: ReceiveFundsComponent });
+    const drawerRef = this.nzDrawerService.create<ReceiveFundsComponent>({
+      nzContent: ReceiveFundsComponent,
+      nzHeight: 'auto',
+      nzPlacement: 'bottom',
+    });
+
+    drawerRef.open();
   }
 
 }

@@ -9,10 +9,14 @@ import { SignXdrComponent } from './components/sign-xdr/sign-xdr.component';
 import { SignPasswordComponent } from './components/sign-password/sign-password.component';
 import { HardConfirmComponent } from './components/hard-confirm/hard-confirm.component';
 import { PressButtonModule } from '~root/shared/press-button/press-button.module';
-import {SharedPipesModule} from "~root/shared/shared-pipes/shared-pipes.module";
-import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
-import {NzImageModule} from "ng-zorro-antd/image";
-import {NzMessageModule} from "ng-zorro-antd/message";
+import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzMessageModule } from 'ng-zorro-antd/message';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
+import {NzInputModule} from "ng-zorro-antd/input";
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -20,6 +24,8 @@ const COMPONENTS = [
   SignXdrComponent,
   SignPasswordComponent,
   HardConfirmComponent,
+  XdrSignerComponent,
+  PasswordModalComponent,
 ];
 
 @NgModule({
@@ -34,6 +40,8 @@ const COMPONENTS = [
     ClipboardModule,
     NzImageModule,
     NzMessageModule,
+    NzButtonModule,
+    NzInputModule,
   ],
 })
 export class ModalsModule {

@@ -1,11 +1,12 @@
-import { persistState, PersistStateSelectFn } from '@datorama/akita';
+import { persistState } from '@datorama/akita';
 import { storageAkitaMiddleware } from './storage-akita.middleware';
 import { debounceTime } from 'rxjs/operators';
-import { IWallet, IWalletsAccount, WalletsAccountsState } from '~root/state';
 import { migrationsHandler } from './migrations/migrations';
+import { environment } from '~env';
+import { PersistStateParams } from '@datorama/akita/lib/persistState';
+import { storageMobileMiddleware } from './storage-mobile.middleware';
 
-const storage = persistState({
-  storage: storageAkitaMiddleware,
+const persistStateParams: Partial<PersistStateParams> = {
   preStorageUpdateOperator: () => debounceTime(150),
   include: [
     'wallets',
@@ -43,8 +44,16 @@ const storage = persistState({
   },
   preStoreUpdate(storeName: string, state: any, initialState: any): any {
     return migrationsHandler(storeName, state, initialState);
-  }
-});
+  },
+};
+
+if (environment.platform === 'extension') {
+  persistStateParams.storage = storageAkitaMiddleware;
+} else if (environment.platform === 'mobile') {
+  persistStateParams.storage = storageMobileMiddleware;
+}
+
+const storage = persistState(persistStateParams);
 
 export const storageProviders = [{
   provide: 'persistStorage',
