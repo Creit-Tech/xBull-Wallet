@@ -33,6 +33,17 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       }
     }));
 
+  accountLpBalances$: Observable<Array<Horizon.BalanceLine<'liquidity_pool_shares'>>> = this.selectedAccount$
+    .pipe(filter<any>(Boolean))
+    .pipe(map((account: IWalletsAccount) => {
+      if (account.accountRecord?.balances) {
+        return account.accountRecord.balances
+          .filter(b => b.asset_type === 'liquidity_pool_shares') as Array<Horizon.BalanceLine<'liquidity_pool_shares'>>;
+      } else {
+        return [];
+      }
+    }));
+
     // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
     // TODO: We need to update this
     // .pipe(tap(() => setTimeout(() => this.cdr.detectChanges(), 10)));

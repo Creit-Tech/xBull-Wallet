@@ -5,7 +5,7 @@ import {
   IHorizonApi,
   IWalletAsset,
   IWalletNativeAsset,
-  IWalletsAccount,
+  IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
   WalletsAssetsStore
 } from '~root/state';
@@ -25,6 +25,7 @@ export class WalletsAssetsService {
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly http: HttpClient,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly lpAssetsStore: LpAssetsStore,
   ) { }
 
   private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
@@ -109,6 +110,28 @@ export class WalletsAssetsService {
           }
         );
         return accountRecord;
+      }));
+  }
+
+  getLiquidityPoolsData(params: {
+    lpId: ILpAsset['_id'];
+    horizonApi: IHorizonApi;
+  }): Observable<ServerApi.LiquidityPoolRecord> {
+    const recordPromise = new Server(params.horizonApi.url)
+      .liquidityPools()
+      .liquidityPoolId(params.lpId)
+      .call();
+
+    return from(recordPromise)
+      .pipe(map(response => {
+        this.lpAssetsStore.upsert(params.lpId, {
+          dataLoaded: true,
+          reserves: response.reserves,
+          totalShares: response.total_shares,
+          totalTrustlines: response.total_trustlines,
+        });
+
+        return response;
       }));
   }
 

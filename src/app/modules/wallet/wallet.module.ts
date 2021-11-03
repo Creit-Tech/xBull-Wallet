@@ -31,6 +31,8 @@ import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzSelectModule} from "ng-zorro-antd/select";
 import {NzSpinModule} from "ng-zorro-antd/spin";
 import {NzModalModule} from "ng-zorro-antd/modal";
+import { LpAssetItemComponent } from './components/lp-asset-item/lp-asset-item.component';
+import { LpAssetDetailsComponent } from './components/lp-asset-details/lp-asset-details.component';
 
 
 @NgModule({
@@ -47,6 +49,8 @@ import {NzModalModule} from "ng-zorro-antd/modal";
     WalletTransactionsComponent,
     TransactionDetailsComponent,
     WalletTransactionItemComponent,
+    LpAssetItemComponent,
+    LpAssetDetailsComponent,
   ],
     imports: [
       CommonModule,

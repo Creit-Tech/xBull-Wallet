@@ -31,3 +31,7 @@ export { HorizonApisState, HorizonApisStore } from './horizon-apis.store';
 
 export * from './claimable-balances.query';
 export { ClaimableBalancesState, ClaimableBalancesStore } from './claimable-balances.store';
+
+export * from './lp-assets/lp-asset.model';
+export * from './lp-assets/lp-assets.query';
+export { LpAssetsState, LpAssetsStore } from './lp-assets/lp-assets.store';

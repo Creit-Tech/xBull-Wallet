@@ -5,6 +5,13 @@
                     (click)="assetDetails(balanceRecord)">
     </app-asset-item>
   </ul>
+
+  <ul>
+    <app-lp-asset-item *ngFor="let balanceRecord of (accountLpBalances$ | async)"
+                       [balanceLine]="balanceRecord"
+                       (click)="assetDetails(balanceRecord)">
+    </app-lp-asset-item>
+  </ul>
 </section>
 
 <section class="w-full px-4 pb-6 pt-3 flex justify-center">
