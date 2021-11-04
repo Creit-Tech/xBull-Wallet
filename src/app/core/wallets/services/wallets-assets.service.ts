@@ -129,6 +129,7 @@ export class WalletsAssetsService {
           reserves: response.reserves,
           totalShares: response.total_shares,
           totalTrustlines: response.total_trustlines,
+          fee_bp: response.fee_bp,
         });
 
         return response;

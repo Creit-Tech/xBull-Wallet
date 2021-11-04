@@ -11,6 +11,7 @@ export interface ILpAssetLoaded {
   totalShares: string;
   totalTrustlines: string;
   dataLoaded: true;
+  fee_bp: number;
 }
 
 export type ILpAsset = ILpAssetBase | ILpAssetLoaded;

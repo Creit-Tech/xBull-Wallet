@@ -8,10 +8,11 @@ import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-det
 import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { Horizon } from 'stellar-sdk';
+import {AssetType, Horizon} from 'stellar-sdk';
 import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import {NzDrawerService} from "ng-zorro-antd/drawer";
+import {NzDrawerService} from 'ng-zorro-antd/drawer';
+import {LpAssetDetailsComponent} from '~root/modules/wallet/components/lp-asset-details/lp-asset-details.component';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -158,6 +159,20 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       });
 
     ref.open();
+  }
+
+  async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
+    const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
+      nzContent: LpAssetDetailsComponent,
+      nzTitle: '',
+      nzHeight: 'auto',
+      nzPlacement: 'bottom',
+      nzContentParams: {
+        lpAssetId: balanceLine.liquidity_pool_id,
+      }
+    });
+
+    drawerRef.open();
   }
 
 }

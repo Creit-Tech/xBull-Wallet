@@ -9,7 +9,7 @@
   <ul>
     <app-lp-asset-item *ngFor="let balanceRecord of (accountLpBalances$ | async)"
                        [balanceLine]="balanceRecord"
-                       (click)="assetDetails(balanceRecord)">
+                       (click)="lpAssetDetails(balanceRecord)">
     </app-lp-asset-item>
   </ul>
 </section>
