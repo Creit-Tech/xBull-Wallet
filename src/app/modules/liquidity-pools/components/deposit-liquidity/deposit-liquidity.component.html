@@ -1,4 +1,4 @@
-<nz-spin [nzSpinning]="depositingLiquidity$ | async">
+<nz-spin [nzSpinning]="(depositingLiquidity$ | async) || (creatingPool$ | async)">
   <section class="w-full flex flex-col mb-4" [formGroup]="depositForm">
     <div class="w-full mb-4">
       <nz-form-control nzExtra="Available balance: {{ ((availableAssetAFunds$ | async) || 0) | number: '0.0-7' }}">
@@ -57,15 +57,28 @@
   </section>
 
   <section class="w-full mb-4">
-    <button nz-button
+    <button *ngIf="showCreateLPButton$ | async; else depositButton"
+            nz-button
             nzSize="large"
             nzType="primary"
             nzBlock
-            (click)="depositLiquidity$.next()"
+            (click)="actionButton$.next('create')"
             [nzLoading]="depositingLiquidity$ | async"
             [disabled]="depositForm.invalid || (depositingLiquidity$ | async) || (disableActionButtons$ | async)">
-      Deposit liquidity
+      Create Liquidity Pool
     </button>
+
+    <ng-template #depositButton>
+      <button nz-button
+              nzSize="large"
+              nzType="primary"
+              nzBlock
+              (click)="actionButton$.next('deposit')"
+              [nzLoading]="depositingLiquidity$ | async"
+              [disabled]="depositForm.invalid || (depositingLiquidity$ | async) || (disableActionButtons$ | async)">
+        Deposit liquidity
+      </button>
+    </ng-template>
   </section>
 
   <section class="text-center"

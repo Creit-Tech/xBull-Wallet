@@ -14,7 +14,7 @@ import {
   distinctUntilChanged,
   filter,
   map,
-  pluck,
+  pluck, skip,
   startWith,
   switchMap, take,
   takeUntil, tap,
@@ -26,7 +26,7 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { BehaviorSubject, from, merge, of, Subject, Subscription } from 'rxjs';
-import { ServerApi } from 'stellar-sdk';
+import { AccountResponse, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 
@@ -37,14 +37,25 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 })
 export class DepositLiquidityComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
-  depositLiquidity$: Subject<void> = new Subject<void>();
+  actionButton$: Subject<'deposit' | 'create'> = new Subject<'deposit' | 'create'>();
 
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
   depositingLiquidity$ = this.lpAssetsQuery.depositingLiquidity$;
+  creatingPool$ = this.walletAssetsQuery.addingAsset$;
 
-  selectedLiquidityPool$: BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined> = new BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined>(undefined);
+  selectedLiquidityPool$: BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined> =
+    new BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined>(undefined);
+
   disableActionButtons$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  showCreateLPButton$: Observable<boolean> = this.selectedLiquidityPool$
+    .pipe(skip(1))
+    .pipe(map(response => {
+      return !response
+        && !!this.depositForm.value.assetABalanceLine
+        && !!this.depositForm.value.assetBBalanceLine;
+    }));
 
   accountBalances$ = this.selectedAccount$
     .pipe(filter<any>(Boolean))
@@ -115,42 +126,13 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return a.assetABalanceLine === b.assetABalanceLine
         && a.assetBBalanceLine === b.assetBBalanceLine;
     }))
-    .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
     .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(([values, horizonApi]) => {
-      if (!values.assetBBalanceLine || !values.assetABalanceLine) {
-        this.selectedLiquidityPool$.next(undefined);
-        return;
-      }
-
-      const assetA = values.assetABalanceLine.asset_type === 'native'
-        ? this.stellarSdkService.SDK.Asset.native()
-        : new this.stellarSdkService.SDK.Asset(values.assetABalanceLine.asset_code, values.assetABalanceLine.asset_issuer);
-
-      const assetB = values.assetBBalanceLine.asset_type === 'native'
-        ? this.stellarSdkService.SDK.Asset.native()
-        : new this.stellarSdkService.SDK.Asset(values.assetBBalanceLine.asset_code, values.assetBBalanceLine.asset_issuer);
-
-      const server = new this.stellarSdkService.SDK.Server(horizonApi.url);
-      server.liquidityPools()
-        .forAssets(assetA, assetB)
-        .call()
-        .then(response => {
-          const liquidityPool = response.records.pop();
-          const correctAsset = liquidityPool?.reserves.every(r => {
-            if (r.asset === 'native') {
-              return assetA.isNative() || assetB.isNative();
-            } else {
-              return r.asset.includes(assetA.code) || r.asset.includes(assetB.code);
-            }
-          });
-
-          if (!!correctAsset) {
-            this.selectedLiquidityPool$.next(liquidityPool);
-          } else {
-            this.selectedLiquidityPool$.next(undefined);
-          }
-
+    .subscribe(() => {
+      this.getLiquidityPool()
+        .then()
+        .catch(error => {
+          console.error(error);
+          this.nzMessageService.error('There was an unexpected error when requesting Horizon, make sure you have internet');
         });
     });
 
@@ -198,7 +180,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     .pipe(withLatestFrom(this.selectedLiquidityPool$))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(([value, liquidityPool]) => {
-      if (!liquidityPool) {
+      console.log(liquidityPool)
+      if (!liquidityPool || new BigNumber(liquidityPool.total_shares).isEqualTo(0)) {
         return;
       }
 
@@ -218,7 +201,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     .pipe(withLatestFrom(this.selectedLiquidityPool$))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(([value, liquidityPool]) => {
-      if (!liquidityPool) {
+      console.log(liquidityPool)
+      if (!liquidityPool || new BigNumber(liquidityPool.total_shares).isEqualTo(0)) {
         return;
       }
 
@@ -246,17 +230,53 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       });
     });
 
-  onDepositLiquiditySubscription: Subscription = this.depositLiquidity$.asObservable()
+  onActionClickedSubscription: Subscription = this.actionButton$.asObservable()
     .pipe(debounceTime(300))
     .pipe(tap(() => this.disableActionButtons$.next(true)))
-    .pipe(switchMap(() =>
-      this.onDepositLiquidity()
+    .pipe(switchMap(async (type) => {
+      if (this.depositForm.invalid) {
+        return;
+      }
+
+      const [
+        horizonApi,
+        selectedAccount
+      ] = await Promise.all([
+        this.horizonApisQuery.getSelectedHorizonApi$
+          .pipe(take(1))
+          .toPromise(),
+        this.walletsAccountsQuery.getSelectedAccount$
+          .pipe(take(1))
+          .toPromise()
+      ]);
+
+      if (!selectedAccount || !horizonApi) {
+        this.nzMessageService.error(`There was an issue selecting the account to sign, please try again`);
+        return;
+      }
+
+      const loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+        .loadAccount(selectedAccount.publicKey);
+
+      const account = new this.stellarSdkService.SDK.Account(loadedAccount.account_id, loadedAccount.sequence);
+
+      const transactionBuilder = new this.stellarSdkService.SDK.TransactionBuilder(account, {
+        fee: this.stellarSdkService.fee,
+        networkPassphrase: this.stellarSdkService.networkPassphrase,
+      })
+        .setTimeout(this.stellarSdkService.defaultTimeout);
+
+      return (
+        type === 'deposit'
+          ? this.onDepositLiquidity({ loadedAccount, transactionBuilder })
+          : this.onCreatePool({ loadedAccount, transactionBuilder })
+      )
         .catch(error => {
           console.error(error);
           this.nzMessageService.error(`An unexpected error happened, please contact support.`);
           return error;
-        })
-    ))
+        });
+    }))
     .pipe(tap(() => this.disableActionButtons$.next(false)))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe();
@@ -301,28 +321,78 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       .toNumber();
   }
 
-  async onDepositLiquidity(): Promise<void> {
-    if (this.depositForm.invalid) {
+  calculateMinAndMaxPrices(params: {
+    spotPrice?: string | number | BigNumber
+  }): { minPrice: BigNumber; maxPrice: BigNumber } {
+    if (!params.spotPrice) {
+      params.spotPrice = new BigNumber(this.depositForm.value.amountAssetA)
+        .dividedBy(this.depositForm.value.amountAssetB)
+        .toFixed(7);
+    }
+
+    return {
+      maxPrice: new BigNumber(params.spotPrice)
+        .multipliedBy(
+          new BigNumber(1)
+            .plus(this.depositForm.value.errorPercentage)
+        ),
+      minPrice: new BigNumber(params.spotPrice)
+        .multipliedBy(
+          new BigNumber(1)
+            .minus(this.depositForm.value.errorPercentage)
+        ),
+    };
+  }
+
+  async getLiquidityPool(): Promise<void> {
+    const horizonApi = await this.horizonApisQuery.getSelectedHorizonApi$.pipe(take(1)).toPromise();
+
+    if (!this.depositForm.value.assetBBalanceLine || !this.depositForm.value.assetABalanceLine) {
+      this.selectedLiquidityPool$.next(undefined);
       return;
     }
 
-    const [
-      horizonApi,
-      selectedAccount
-    ] = await Promise.all([
-      this.horizonApisQuery.getSelectedHorizonApi$
-        .pipe(take(1))
-        .toPromise(),
-      this.walletsAccountsQuery.getSelectedAccount$
-        .pipe(take(1))
-        .toPromise()
-    ]);
+    const assetA = this.depositForm.value.assetABalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetABalanceLine.asset_code,
+        this.depositForm.value.assetABalanceLine.asset_issuer
+      );
 
-    if (!selectedAccount || !horizonApi) {
-      this.nzMessageService.error(`There was an issue selecting the account to sign, please try again`);
-      return;
-    }
+    const assetB = this.depositForm.value.assetBBalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetBBalanceLine.asset_code,
+        this.depositForm.value.assetBBalanceLine.asset_issuer
+      );
 
+    const server = new this.stellarSdkService.SDK.Server(horizonApi.url);
+    server.liquidityPools()
+      .forAssets(assetA, assetB)
+      .call()
+      .then(response => {
+        const liquidityPool = response.records.pop();
+        const correctAsset = liquidityPool?.reserves.every(r => {
+          if (r.asset === 'native') {
+            return assetA.isNative() || assetB.isNative();
+          } else {
+            return r.asset.includes(assetA.code) || r.asset.includes(assetB.code);
+          }
+        });
+
+        if (!!correctAsset) {
+          this.selectedLiquidityPool$.next(liquidityPool);
+        } else {
+          this.selectedLiquidityPool$.next(undefined);
+        }
+
+      });
+  }
+
+  async onDepositLiquidity(params: {
+    loadedAccount: AccountResponse,
+    transactionBuilder: TransactionBuilder,
+  }): Promise<void> {
     const liquidityPool = await this.selectedLiquidityPool$
       .pipe(take(1))
       .toPromise();
@@ -332,19 +402,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
-      .loadAccount(selectedAccount.publicKey);
-
-    const account = new this.stellarSdkService.SDK.Account(loadedAccount.accountId(), loadedAccount.sequence);
-
-    const transactionBuilder = new this.stellarSdkService.SDK.TransactionBuilder(account, {
-      fee: this.stellarSdkService.fee,
-      networkPassphrase: this.stellarSdkService.networkPassphrase,
-    })
-      .setTimeout(this.stellarSdkService.defaultTimeout);
-
     if (
-      !loadedAccount.balances.find(b => {
+      !params.loadedAccount.balances.find(b => {
         return b.asset_type === 'liquidity_pool_shares'
           && b.liquidity_pool_id === liquidityPool.id;
       })
@@ -363,14 +422,16 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
 
       const asset = new this.stellarSdkService.SDK.LiquidityPoolAsset(assetA, assetB, liquidityPool.fee_bp);
 
-      transactionBuilder.addOperation(
+      params.transactionBuilder.addOperation(
         this.stellarSdkService.SDK.Operation.changeTrust({ asset })
       );
     }
 
     const spotPrice = this.calculateSpotPrice(liquidityPool);
 
-    transactionBuilder
+    const { minPrice, maxPrice } = this.calculateMinAndMaxPrices({ spotPrice });
+
+    params.transactionBuilder
       .addOperation(
         this.stellarSdkService.SDK.Operation.liquidityPoolDeposit({
           liquidityPoolId: liquidityPool.id,
@@ -378,22 +439,15 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
             .toFixed(7),
           maxAmountB: new BigNumber(this.depositForm.value.amountAssetB)
             .toFixed(7),
-          maxPrice: new BigNumber(spotPrice)
-            .multipliedBy(
-              new BigNumber(1)
-                .plus(this.depositForm.value.errorPercentage)
-            ),
-          minPrice: new BigNumber(spotPrice)
-            .multipliedBy(
-              new BigNumber(1)
-                .minus(this.depositForm.value.errorPercentage)
-            ),
+          maxPrice,
+          minPrice
         })
       );
 
-    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({      nzContent: XdrSignerComponent,
+    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
       nzContentParams: {
-        xdr: transactionBuilder.build().toXDR(),
+        xdr: params.transactionBuilder.build().toXDR(),
       },
       nzPlacement: 'bottom',
       nzHeight: '88%',
@@ -432,10 +486,92 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         this.nzMessageService.error('Submission failed, please try again or contact support');
       }
     }
+
+    try {
+      await this.getLiquidityPool();
+    } catch (e) {
+
+    }
   }
 
-  async onCreatePool(): Promise<void> {
+  async onCreatePool(params: {
+    loadedAccount: AccountResponse,
+    transactionBuilder: TransactionBuilder,
+  }): Promise<void> {
+    const A = this.depositForm.value.assetABalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetABalanceLine.asset_code,
+        this.depositForm.value.assetABalanceLine.asset_issuer
+      );
 
+    const B = this.depositForm.value.assetBBalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetBBalanceLine.asset_code,
+        this.depositForm.value.assetBBalanceLine.asset_issuer
+      );
+
+    const [assetA, assetB] = this.liquidityPoolsService.orderAssets(A, B);
+
+    const asset = new this.stellarSdkService.SDK.LiquidityPoolAsset(
+      assetA,
+      assetB,
+      this.stellarSdkService.SDK.LiquidityPoolFeeV18,
+    );
+
+    params.transactionBuilder.addOperation(
+      this.stellarSdkService.SDK.Operation.changeTrust({ asset })
+    );
+
+    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzContentParams: {
+        xdr: params.transactionBuilder.build().toXDR(),
+      },
+      nzPlacement: 'bottom',
+      nzHeight: '88%',
+      nzTitle: ''
+    });
+
+    drawerRef.open();
+
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      drawerRef.close();
+      return;
+    }
+
+    const signedXdr = await componentRef.accept
+      .asObservable()
+      .pipe(take(1))
+      .pipe(takeUntil(
+        merge(
+          this.componentDestroyed$,
+          drawerRef.afterClose
+        )
+      ))
+      .toPromise();
+
+    if (!!signedXdr) {
+      try {
+        drawerRef.close();
+        await this.walletsAssetsService.addAssetToAccount(signedXdr);
+        this.nzMessageService.success('Pool created, you can deposit liquidity now');
+      } catch (e) {
+        console.error(e);
+        this.nzMessageService.error('Submission failed, please try again or contact support');
+      }
+    }
+
+    try {
+      await this.getLiquidityPool();
+    } catch (e) {
+
+    }
   }
 
 }

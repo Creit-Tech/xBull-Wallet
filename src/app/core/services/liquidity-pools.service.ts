@@ -59,4 +59,9 @@ export class LiquidityPoolsService {
         return Promise.reject(error);
       });
   }
+
+  // Get the assets in order to create the trustline
+  orderAssets(A: Asset, B: Asset): Asset[] {
+    return (this.stellarSdkService.SDK.Asset.compare(A, B) <= 0) ? [A, B] : [B, A];
+  }
 }
