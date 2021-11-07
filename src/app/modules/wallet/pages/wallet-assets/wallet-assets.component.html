@@ -7,10 +7,13 @@
   </ul>
 
   <ul>
-    <app-lp-asset-item *ngFor="let balanceRecord of (accountLpBalances$ | async)"
-                       [balanceLine]="balanceRecord"
-                       (click)="lpAssetDetails(balanceRecord)">
-    </app-lp-asset-item>
+    <li class="w-full cursor-pointer px-4 border-b-2 transition border-label hover:border-placeholder py-4">
+      <app-lp-asset-item *ngFor="let balanceRecord of (accountLpBalances$ | async)"
+                         [lpAssetId]="balanceRecord.liquidity_pool_id"
+                         [sharesAmount]="balanceRecord.balance"
+                         (click)="lpAssetDetails(balanceRecord)">
+      </app-lp-asset-item>
+    </li>
   </ul>
 </section>
 

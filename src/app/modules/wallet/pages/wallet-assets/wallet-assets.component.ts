@@ -12,7 +12,8 @@ import {AssetType, Horizon} from 'stellar-sdk';
 import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import {NzDrawerService} from 'ng-zorro-antd/drawer';
-import {LpAssetDetailsComponent} from '~root/modules/wallet/components/lp-asset-details/lp-asset-details.component';
+import {LpAssetDetailsComponent} from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
+import {} from 'stellar-sdk/lib/horizon_api';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -34,16 +35,16 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       }
     }));
 
-  accountLpBalances$: Observable<Array<Horizon.BalanceLine<'liquidity_pool_shares'>>> = this.selectedAccount$
+  accountLpBalances$: Observable<Array<Horizon.BalanceLineLiquidityPool>> = this.selectedAccount$
     .pipe(filter<any>(Boolean))
     .pipe(map((account: IWalletsAccount) => {
       if (account.accountRecord?.balances) {
         return account.accountRecord.balances
-          .filter(b => b.asset_type === 'liquidity_pool_shares') as Array<Horizon.BalanceLine<'liquidity_pool_shares'>>;
+          .filter(b => b.asset_type === 'liquidity_pool_shares');
       } else {
         return [];
       }
-    }));
+    })) as Observable<Horizon.BalanceLineLiquidityPool[]>;
 
     // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
     // TODO: We need to update this

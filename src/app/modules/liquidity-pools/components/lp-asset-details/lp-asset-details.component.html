@@ -40,7 +40,7 @@
 
         <p *ngIf="reserve._id !== 'native'"
            appClipboard [textToCopy]="$any(reserve).assetIssuer"
-           class="text-xs">
+           class="cursor-pointer text-xs">
           {{ $any(reserve).assetIssuer | publicKey }}
         </p>
       </div>

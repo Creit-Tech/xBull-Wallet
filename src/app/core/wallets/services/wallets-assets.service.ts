@@ -7,7 +7,7 @@ import {
   IWalletNativeAsset,
   IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore
+  WalletsAssetsStore, IWalletIssuedAsset,
 } from '~root/state';
 import { from, of } from 'rxjs';
 import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -159,6 +159,24 @@ export class WalletsAssetsService {
       default:
         throw new Error('This type of address is not handled by this wallet');
     }
+  }
+
+  saveInitialAssetState(data: {
+    _id: IWalletIssuedAsset['_id'];
+    assetCode: IWalletIssuedAsset['assetCode'];
+    assetIssuer: IWalletIssuedAsset['assetIssuer'];
+  }): void {
+    this.walletsAssetsStore.upsert(
+      data._id,
+      {
+        _id: data._id,
+        assetCode: data.assetCode,
+        assetExtraDataLoaded: false,
+        assetIssuer: data.assetIssuer,
+      },
+      (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
+      {}
+    );
   }
 
   nativeAssetDefaultRecord(): IWalletNativeAsset<'full'> {

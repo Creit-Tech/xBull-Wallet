@@ -1,0 +1,83 @@
+<nz-spin [nzSpinning]="depositingLiquidity$ | async">
+  <section class="w-full flex flex-col mb-4" [formGroup]="depositForm">
+    <div class="w-full mb-4">
+      <nz-form-control nzExtra="Available balance: {{ ((availableAssetAFunds$ | async) || 0) | number: '0.0-7' }}">
+        <nz-input-group class="mb-1" nzSize="large" [nzSuffix]="assetASelect">
+          <input mask="separator.7"
+                 formControlName="amountAssetA"
+                 thousandSeparator=""
+                 [validation]="false"
+                 nz-input
+                 type="text">
+        </nz-input-group>
+      </nz-form-control>
+      <ng-template #assetASelect>
+        <nz-select formControlName="assetABalanceLine" nzPlaceHolder="Asset">
+          <nz-option *ngFor="let balance of accountBalances$ | async;"
+                     [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
+                     [nzValue]="balance">
+          </nz-option>
+        </nz-select>
+      </ng-template>
+    </div>
+
+    <div class="w-full mb-4">
+      <nz-form-control nzExtra="Available balance: {{ ((availableAssetBFunds$ | async) || 0) | number: '0.0-7' }}">
+        <nz-input-group class="mb-1" nzSize="large" [nzSuffix]="assetBSelect">
+          <input mask="separator.7"
+                 formControlName="amountAssetB"
+                 thousandSeparator=""
+                 [validation]="false"
+                 nz-input
+                 type="text">
+        </nz-input-group>
+      </nz-form-control>
+      <ng-template #assetBSelect>
+        <nz-select formControlName="assetBBalanceLine" nzPlaceHolder="Asset">
+          <nz-option *ngFor="let balance of accountBalances$ | async;"
+                     [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
+                     [nzValue]="balance">
+          </nz-option>
+        </nz-select>
+      </ng-template>
+    </div>
+
+    <div class="w-full flex flex-col justify-center items-center">
+      <nz-radio-group formControlName="errorPercentage" class="mb-2" nzButtonStyle="solid" style="z-index: 0">
+        <label nz-radio-button [nzValue]="0.005">0.5%</label>
+        <label nz-radio-button [nzValue]="0.01">1%</label>
+        <label nz-radio-button [nzValue]="0.05">5%</label>
+        <label nz-radio-button [nzValue]="0.1">10%</label>
+      </nz-radio-group>
+
+      <small>
+        Price movement tolerance
+      </small>
+    </div>
+  </section>
+
+  <section class="w-full mb-4">
+    <button nz-button
+            nzSize="large"
+            nzType="primary"
+            nzBlock
+            (click)="depositLiquidity$.next()"
+            [nzLoading]="depositingLiquidity$ | async"
+            [disabled]="depositForm.invalid || (depositingLiquidity$ | async) || (disableActionButtons$ | async)">
+      Deposit liquidity
+    </button>
+  </section>
+
+  <section class="text-center"
+           *ngIf="selectedLiquidityPool$ | async as selectedLiquidityPool">
+    <p class="text-xs">
+      Spot price: {{ calculateSpotPrice(selectedLiquidityPool) | number: '0.0-7' }}
+    </p>
+    <p class="text-xs">
+      Shares in the pool: {{ selectedLiquidityPool.total_shares | number: '0.0-7' }}
+    </p>
+    <p class="text-xs">
+      Total of providers: {{ selectedLiquidityPool.total_trustlines }}
+    </p>
+  </section>
+</nz-spin>

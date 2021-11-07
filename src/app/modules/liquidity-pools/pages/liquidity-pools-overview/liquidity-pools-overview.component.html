@@ -1,0 +1,101 @@
+<section class="w-full min-h-full px-4 py-6 flex flex-col">
+  <section class="w-full mb-4">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i nz-icon nzType="home" nzTheme="outline"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Liquidity Pools
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+
+  <nz-tabset nzCentered>
+    <ng-template #depositTitle>
+      <div class="flex items-center">
+<!--        <i class="mr-2" nz-icon nzType="plus" nzTheme="outline"></i>-->
+        Deposit
+      </div>
+    </ng-template>
+    <nz-tab [nzTitle]="depositTitle">
+      <app-deposit-liquidity></app-deposit-liquidity>
+
+    </nz-tab>
+
+
+
+
+
+    <ng-template #withdrawTitle>
+      <div class="flex items-center">
+<!--        <i class="mr-2" nz-icon nzType="minus" nzTheme="outline"></i>-->
+        Withdraw
+      </div>
+    </ng-template>
+    <nz-tab [nzTitle]="withdrawTitle">
+
+    </nz-tab>
+
+
+    <nz-tab [nzTitle]="searchTitle">
+
+      <div class="flex w-full mb-4 no-scrollbar">
+        <nz-tag *ngFor="let tag of codeTagsArray$ | async"
+                nzMode="closeable"
+                (nzOnClose)="onTagClose(tag)">
+          {{ tag.code }}:{{ tag.issuer | publicKey }}
+        </nz-tag>
+      </div>
+
+      <div [formGroup]="assetForm" class="w-full mb-4 flex flex-wrap">
+        <div class="w-4/12 pr-2 mb-2">
+          <input formControlName="code"
+                 mask="A{12}"
+                 [validation]="false"
+                 nz-input
+                 type="text"
+                 nzSize="large"
+                 (keydown.enter)="addTag()"
+                 placeholder="Code">
+        </div>
+        <div class="w-6/12 pr-2 mb-2">
+          <input formControlName="issuer"
+                 nz-input
+                 type="text"
+                 nzSize="large"
+                 mask="A{56}"
+                 [validation]="false"
+                 (keydown.enter)="addTag()"
+                 placeholder="Issuer">
+        </div>
+
+        <div class="w-2/12">
+          <button (click)="addTag()"
+                  class="w-full flex items-center justify-center"
+                  [disabled]="assetForm.invalid"
+                  nzSize="large"
+                  nz-button nzType="primary">
+            <i nz-icon nzType="search" nzTheme="outline"></i>
+          </button>
+        </div>
+      </div>
+
+      <nz-list [nzLoading]="fetchingLatestPools$ | async" *ngIf="lpAssets$ | async as lpAssets">
+        <nz-list-item *ngFor="let lpAsset of lpAssets; trackBy: trackById" class="flex cursor-pointer">
+          <app-lp-asset-item [sharesAmount]="lpAsset.totalShares" [lpAssetId]="lpAsset._id" class="w-full"></app-lp-asset-item>
+        </nz-list-item>
+      </nz-list>
+
+    </nz-tab>
+    <ng-template #searchTitle>
+      <div class="flex items-center">
+<!--        <i class="mr-2" nz-icon nzType="search" nzTheme="outline"></i>-->
+        Search
+      </div>
+    </ng-template>
+  </nz-tabset>
+</section>
