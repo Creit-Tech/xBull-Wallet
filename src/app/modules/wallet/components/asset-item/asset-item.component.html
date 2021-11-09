@@ -29,7 +29,7 @@
           <div class="w-3/12 h-3 skeleton-box"></div>
         </ng-template>
 
-        <p *ngIf="availableFunds$ | async as availableFunds" class="text-placeholder text-xs m-0 p-0">
+        <p *ngIf="availableFunds$ | async as availableFunds" class="text-placeholder text-right text-xs m-0 p-0">
           Available: {{ availableFunds | number: '1.2-7' }}
         </p>
       </div>

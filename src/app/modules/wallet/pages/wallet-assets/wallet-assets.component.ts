@@ -8,12 +8,11 @@ import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-det
 import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import {AssetType, Horizon} from 'stellar-sdk';
-import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { AssetType, Horizon } from 'stellar-sdk';
+import { exhaustMap, filter, map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import {NzDrawerService} from 'ng-zorro-antd/drawer';
-import {LpAssetDetailsComponent} from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
-import {} from 'stellar-sdk/lib/horizon_api';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { LpAssetDetailsComponent } from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -154,7 +153,6 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        this.reloadSelectedAccount$.next();
         ref.component.instance.onClose()
           .then(() => ref.close());
       });

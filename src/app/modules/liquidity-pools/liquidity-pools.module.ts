@@ -27,6 +27,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { WithdrawLiquidityComponent } from './components/withdraw-liquidity/withdraw-liquidity.component';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { SearchLiquidityPoolsComponent } from './components/search-liquidity-pools/search-liquidity-pools.component';
 
 
 @NgModule({
@@ -36,6 +37,7 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
     LpAssetDetailsComponent,
     DepositLiquidityComponent,
     WithdrawLiquidityComponent,
+    SearchLiquidityPoolsComponent,
   ],
   exports: [
     LpAssetItemComponent,

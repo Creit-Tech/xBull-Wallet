@@ -33,59 +33,13 @@
       <app-withdraw-liquidity></app-withdraw-liquidity>
     </nz-tab>
 
-    <nz-tab [nzTitle]="searchTitle">
-      <div class="flex w-full mb-4 no-scrollbar">
-        <nz-tag *ngFor="let tag of codeTagsArray$ | async"
-                nzMode="closeable"
-                (nzOnClose)="onTagClose(tag)">
-          {{ tag.code }}:{{ tag.issuer | publicKey }}
-        </nz-tag>
-      </div>
-
-      <div [formGroup]="assetForm" class="w-full mb-4 flex flex-wrap">
-        <div class="w-4/12 pr-2 mb-2">
-          <input formControlName="code"
-                 mask="A{12}"
-                 [validation]="false"
-                 nz-input
-                 type="text"
-                 nzSize="large"
-                 (keydown.enter)="addTag()"
-                 placeholder="Code">
-        </div>
-        <div class="w-6/12 pr-2 mb-2">
-          <input formControlName="issuer"
-                 nz-input
-                 type="text"
-                 nzSize="large"
-                 mask="A{56}"
-                 [validation]="false"
-                 (keydown.enter)="addTag()"
-                 placeholder="Issuer">
-        </div>
-
-        <div class="w-2/12">
-          <button (click)="addTag()"
-                  class="w-full flex items-center justify-center"
-                  [disabled]="assetForm.invalid"
-                  nzSize="large"
-                  nz-button nzType="primary">
-            <i nz-icon nzType="search" nzTheme="outline"></i>
-          </button>
-        </div>
-      </div>
-
-      <nz-list [nzLoading]="fetchingLatestPools$ | async" *ngIf="lpAssets$ | async as lpAssets">
-        <nz-list-item *ngFor="let lpAsset of lpAssets; trackBy: trackById" class="flex cursor-pointer">
-          <app-lp-asset-item [sharesAmount]="lpAsset.totalShares" [lpAssetId]="lpAsset._id" class="w-full"></app-lp-asset-item>
-        </nz-list-item>
-      </nz-list>
-
-    </nz-tab>
-    <ng-template #searchTitle>
-      <div class="flex items-center">
-        Search
-      </div>
-    </ng-template>
+<!--    <nz-tab [nzTitle]="searchTitle">-->
+<!--      <app-search-liquidity-pools></app-search-liquidity-pools>-->
+<!--    </nz-tab>-->
+<!--    <ng-template #searchTitle>-->
+<!--      <div class="flex items-center">-->
+<!--        Search-->
+<!--      </div>-->
+<!--    </ng-template>-->
   </nz-tabset>
 </section>

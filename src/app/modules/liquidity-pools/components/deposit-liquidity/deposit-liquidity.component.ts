@@ -29,6 +29,7 @@ import { BehaviorSubject, from, merge, of, Subject, Subscription } from 'rxjs';
 import { AccountResponse, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 
 @Component({
   selector: 'app-deposit-liquidity',
@@ -115,6 +116,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly walletsAccountsService: WalletsAccountsService,
   ) { }
 
   getLiquidityPoolSubscription: Subscription = this.depositForm.valueChanges
@@ -277,6 +279,18 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
           ? this.onDepositLiquidity({ loadedAccount, transactionBuilder })
           : this.onCreatePool({ loadedAccount, transactionBuilder })
       )
+        .then(() => {
+          return this.walletsAccountsService.getAccountData({
+            account: selectedAccount,
+            horizonApi
+          })
+            .pipe(take(1))
+            .toPromise()
+            .catch(error => {
+              console.error(error);
+              return error;
+            });
+        })
         .catch(error => {
           console.error(error);
           this.nzMessageService.error(`An unexpected error happened, please contact support.`);
@@ -487,21 +501,21 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         drawerRef.close();
         await this.liquidityPoolsService.depositLiquidity(signedXdr);
         this.nzMessageService.success('Deposit completed');
+
+        this.depositForm.patchValue({
+          amountAssetA: '0',
+          multiplierA: undefined,
+          assetABalanceLine: undefined,
+          amountAssetB: '0',
+          multiplierB: undefined,
+          assetBBalanceLine: undefined,
+          errorPercentage: 0.005,
+        });
       } catch (e) {
         console.error(e);
         this.nzMessageService.error('Submission failed, please try again or contact support');
       }
     }
-
-    this.depositForm.patchValue({
-      amountAssetA: '0',
-      multiplierA: undefined,
-      assetABalanceLine: undefined,
-      amountAssetB: '0',
-      multiplierB: undefined,
-      assetBBalanceLine: undefined,
-      errorPercentage: 0.005,
-    });
 
     try {
       await this.getLiquidityPool();
