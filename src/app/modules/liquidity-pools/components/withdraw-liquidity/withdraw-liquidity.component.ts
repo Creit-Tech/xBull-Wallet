@@ -26,6 +26,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 
 @Component({
   selector: 'app-withdraw-liquidity',
@@ -65,6 +66,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     ));
 
   reloadAccountBalances$: Subject<void> = new Subject<void>();
+
   accountBalances$: Observable<BalanceLine<'liquidity_pool_shares'>[]> = this.selectedAccount$
     .pipe(filter<any>(Boolean))
     .pipe(map((selectedAccount: IWalletsAccount) => {
@@ -107,6 +109,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
   constructor(
     private readonly lpAssetsQuery: LpAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsAccountsService: WalletsAccountsService,
     private readonly liquidityPoolsService: LiquidityPoolsService,
     private readonly horizonApiQuery: HorizonApisQuery,
     private readonly stellarSdkService: StellarSdkService,
@@ -221,8 +224,16 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
-      .loadAccount(selectedAccount.publicKey);
+    let loadedAccount;
+    try {
+      loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+        .loadAccount(selectedAccount.publicKey);
+    } catch (e) {
+      this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+        nzDuration: 5000,
+      });
+      return;
+    }
 
     const account = new this.stellarSdkService.SDK.Account(loadedAccount.accountId(), loadedAccount.sequence);
 
@@ -291,6 +302,12 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       });
 
     this.reloadAccountBalances$.next();
+
+    this.walletsAccountsService.getAccountData({
+      account: selectedAccount,
+      horizonApi
+    })
+      .subscribe();
 
     this.withDrawForm.patchValue({
       amountToWithdraw: 0,

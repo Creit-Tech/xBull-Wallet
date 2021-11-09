@@ -7,11 +7,11 @@
   </ul>
 
   <ul>
-    <li class="w-full cursor-pointer px-4 border-b-2 transition border-label hover:border-placeholder py-4">
-      <app-lp-asset-item *ngFor="let balanceRecord of (accountLpBalances$ | async)"
-                         [lpAssetId]="balanceRecord.liquidity_pool_id"
-                         [sharesAmount]="balanceRecord.balance"
-                         (click)="lpAssetDetails(balanceRecord)">
+    <li *ngFor="let balanceRecord of (accountLpBalances$ | async)"
+        (click)="lpAssetDetails(balanceRecord)"
+        class="w-full cursor-pointer px-4 border-b-2 transition border-label hover:border-placeholder py-4">
+      <app-lp-asset-item [lpAssetId]="balanceRecord.liquidity_pool_id"
+                         [sharesAmount]="balanceRecord.balance">
       </app-lp-asset-item>
     </li>
   </ul>

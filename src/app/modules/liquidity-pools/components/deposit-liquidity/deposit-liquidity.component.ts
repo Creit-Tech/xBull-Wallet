@@ -200,7 +200,6 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     .pipe(withLatestFrom(this.selectedLiquidityPool$))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(([value, liquidityPool]) => {
-      console.log(liquidityPool)
       if (!liquidityPool || new BigNumber(liquidityPool.total_shares).isEqualTo(0)) {
         return;
       }
@@ -254,8 +253,16 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         return;
       }
 
-      const loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
-        .loadAccount(selectedAccount.publicKey);
+      let loadedAccount;
+      try {
+        loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+          .loadAccount(selectedAccount.publicKey);
+      } catch (e) {
+        this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+          nzDuration: 5000,
+        });
+        return;
+      }
 
       const account = new this.stellarSdkService.SDK.Account(loadedAccount.account_id, loadedAccount.sequence);
 
