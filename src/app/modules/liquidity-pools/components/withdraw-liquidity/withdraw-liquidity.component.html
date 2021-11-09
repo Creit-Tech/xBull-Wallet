@@ -1,0 +1,72 @@
+<nz-spin [nzSpinning]="withdrawingLiquidity$ | async">
+  <section [formGroup]="withDrawForm" class="w-full flex flex-wrap">
+    <div class="w-full mb-4">
+      <nz-select formControlName="selectedPoolId" nzSize="large" class="w-full" nzPlaceHolder="Pick a liquidity pool">
+        <nz-option *ngFor="let option of selectOptions$ | async"
+                   [nzValue]="option.value"
+                   [nzLabel]="option.label"></nz-option>
+      </nz-select>
+    </div>
+
+    <section [class.hidden]="!withDrawForm.value.selectedPoolId" class="w-full flex flex-wrap mb-4">
+      <div class="w-full text-center mb-2">
+        <nz-form-control nzExtra="Available shares: {{ (selectedBalance$ | async) || 0 }}">
+          <input formControlName="amountToWithdraw"
+                 nz-input
+                 mask="separator.7"
+                 nzSize="large"
+                 thousandSeparator=""
+                 [validation]="false"
+                 type="text">
+        </nz-form-control>
+      </div>
+
+      <div class="w-full flex mb-4">
+        <nz-slider [nzMarks]="sliderMarks"
+                   formControlName="percentage"
+                   class="w-10/12 mx-auto"
+                   [nzMax]="100"
+                   [nzMin]="0">
+        </nz-slider>
+      </div>
+
+      <div class="w-full flex flex-col justify-center items-center">
+        <nz-radio-group formControlName="errorPercentage" class="mb-2" nzButtonStyle="solid" style="z-index: 0">
+          <label nz-radio-button [nzValue]="0.005">0.5%</label>
+          <label nz-radio-button [nzValue]="0.01">1%</label>
+          <label nz-radio-button [nzValue]="0.05">5%</label>
+          <label nz-radio-button [nzValue]="0.1">10%</label>
+        </nz-radio-group>
+
+        <small>
+          Price movement tolerance
+        </small>
+      </div>
+    </section>
+
+    <nz-empty class="w-full"
+              [class.hidden]="withDrawForm.value.selectedPoolId"
+              nzNotFoundImage="simple"
+              nzNotFoundContent="">
+    </nz-empty>
+  </section>
+
+  <section [class.hidden]="!withDrawForm.value.selectedPoolId" class="w-full">
+    <div class="w-full mb-4">
+      <button nz-button
+              nzSize="large"
+              nzType="primary"
+              [disabled]="withDrawForm.invalid || (disableActionButtons$ | async)"
+              (click)="actionButton$.next()"
+              nzBlock>
+        Withdraw liquidity
+      </button>
+    </div>
+
+    <div class="w-full text-center">
+      <small class="mb-4" *ngIf="selectedLiquidityPool$ | async as selectedLiquidityPool">
+        Current spot price: {{ calculateSpotPrice(selectedLiquidityPool) }}
+      </small>
+    </div>
+  </section>
+</nz-spin>

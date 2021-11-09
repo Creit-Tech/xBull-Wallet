@@ -64,12 +64,12 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     }));
 
   depositForm: FormGroupTyped<IDepositForm> = new FormGroup({
-    amountAssetA: new FormControl(0, [Validators.required, Validators.min(0.0000001)]),
+    amountAssetA: new FormControl('0', [Validators.required, Validators.min(0.0000001)]),
     multiplierA: new FormControl(undefined),
-    assetABalanceLine: new FormControl(null, Validators.required),
-    amountAssetB: new FormControl(0, [Validators.required, Validators.min(0.0000001)]),
+    assetABalanceLine: new FormControl(undefined, Validators.required),
+    amountAssetB: new FormControl('0', [Validators.required, Validators.min(0.0000001)]),
     multiplierB: new FormControl(undefined),
-    assetBBalanceLine: new FormControl(null, Validators.required),
+    assetBBalanceLine: new FormControl(undefined, Validators.required),
     errorPercentage: new FormControl(0.005, Validators.required),
   }) as FormGroupTyped<IDepositForm>;
 
@@ -180,7 +180,6 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     .pipe(withLatestFrom(this.selectedLiquidityPool$))
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(([value, liquidityPool]) => {
-      console.log(liquidityPool)
       if (!liquidityPool || new BigNumber(liquidityPool.total_shares).isEqualTo(0)) {
         return;
       }
@@ -486,6 +485,16 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         this.nzMessageService.error('Submission failed, please try again or contact support');
       }
     }
+
+    this.depositForm.patchValue({
+      amountAssetA: '0',
+      multiplierA: undefined,
+      assetABalanceLine: undefined,
+      amountAssetB: '0',
+      multiplierB: undefined,
+      assetBBalanceLine: undefined,
+      errorPercentage: 0.005,
+    });
 
     try {
       await this.getLiquidityPool();

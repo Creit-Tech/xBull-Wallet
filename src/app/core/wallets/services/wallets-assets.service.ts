@@ -113,29 +113,6 @@ export class WalletsAssetsService {
       }));
   }
 
-  getLiquidityPoolsData(params: {
-    lpId: ILpAsset['_id'];
-    horizonApi: IHorizonApi;
-  }): Observable<ServerApi.LiquidityPoolRecord> {
-    const recordPromise = new Server(params.horizonApi.url)
-      .liquidityPools()
-      .liquidityPoolId(params.lpId)
-      .call();
-
-    return from(recordPromise)
-      .pipe(map(response => {
-        this.lpAssetsStore.upsert(params.lpId, {
-          dataLoaded: true,
-          reserves: response.reserves,
-          totalShares: response.total_shares,
-          totalTrustlines: response.total_trustlines,
-          fee_bp: response.fee_bp,
-        });
-
-        return response;
-      }));
-  }
-
   addAssetToAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
     return this.simpleStateUpdateFlow(xdr, 'addingAsset');
   }

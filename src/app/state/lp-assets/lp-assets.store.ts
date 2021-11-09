@@ -7,6 +7,7 @@ export interface LpAssetsState extends EntityState<ILpAsset> {
   UIState: {
     fetchingLatestPools: boolean;
     depositingLiquidity: boolean;
+    withdrawingLiquidity: boolean;
   };
 }
 
@@ -15,6 +16,7 @@ function initialState(): LpAssetsState {
     UIState: {
       fetchingLatestPools: false,
       depositingLiquidity: false,
+      withdrawingLiquidity: false,
     },
   };
 }

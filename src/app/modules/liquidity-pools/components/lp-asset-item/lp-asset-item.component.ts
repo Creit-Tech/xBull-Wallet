@@ -12,6 +12,7 @@ import {
 } from '~root/state';
 import {WalletsAssetsService} from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
+import { LiquidityPoolsService } from '~root/core/services/liquidity-pools.service';
 
 @Component({
   selector: 'app-lp-asset-item',
@@ -55,6 +56,7 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
+    private readonly liquidityPoolsService: LiquidityPoolsService
   ) { }
 
   ngOnInit(): void {
@@ -63,7 +65,7 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
       .pipe(switchMap((data: [ILpAsset, IHorizonApi]) => {
-        return this.walletsAssetsService.getLiquidityPoolsData({
+        return this.liquidityPoolsService.getLiquidityPoolsData({
           lpId: data[0]._id,
           horizonApi: data[1],
         });

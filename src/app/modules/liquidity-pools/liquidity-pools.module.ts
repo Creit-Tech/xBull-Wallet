@@ -25,6 +25,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { DepositLiquidityComponent } from './components/deposit-liquidity/deposit-liquidity.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { WithdrawLiquidityComponent } from './components/withdraw-liquidity/withdraw-liquidity.component';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 
 
 @NgModule({
@@ -33,6 +35,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     LpAssetItemComponent,
     LpAssetDetailsComponent,
     DepositLiquidityComponent,
+    WithdrawLiquidityComponent,
   ],
   exports: [
     LpAssetItemComponent,
@@ -59,6 +62,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzRadioModule,
     NzFormModule,
     NzSpinModule,
+    NzSliderModule,
   ],
 })
 export class LiquidityPoolsModule { }

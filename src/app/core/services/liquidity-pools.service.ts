@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IHorizonApi, ILpAssetLoaded, LpAssetsStore } from '~root/state';
-import { Server, Asset, Horizon } from 'stellar-sdk';
+import { IHorizonApi, ILpAsset, ILpAssetLoaded, LpAssetsStore } from '~root/state';
+import { Server, Asset, Horizon, ServerApi } from 'stellar-sdk';
 import {from, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { withTransaction } from '@datorama/akita';
@@ -15,6 +15,26 @@ export class LiquidityPoolsService {
     private readonly lpAssetsStore: LpAssetsStore,
     private readonly stellarSdkService: StellarSdkService,
   ) { }
+
+  async getLiquidityPoolsData(params: {
+    lpId: ILpAsset['_id'];
+    horizonApi: IHorizonApi;
+  }): Promise<ServerApi.LiquidityPoolRecord> {
+    const record = await new Server(params.horizonApi.url)
+      .liquidityPools()
+      .liquidityPoolId(params.lpId)
+      .call();
+
+    this.lpAssetsStore.upsert(params.lpId, {
+      dataLoaded: true,
+      reserves: record.reserves,
+      totalShares: record.total_shares,
+      totalTrustlines: record.total_trustlines,
+      fee_bp: record.fee_bp,
+    });
+
+    return record;
+  }
 
   // getLatestPools(data: { horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
   getPoolsByAssets(data: { assets: Asset[], horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
@@ -56,6 +76,19 @@ export class LiquidityPoolsService {
       })
       .catch(error => {
         this.lpAssetsStore.updateUIState({ depositingLiquidity: false });
+        return Promise.reject(error);
+      });
+  }
+
+  withdrawLiquidity(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    this.lpAssetsStore.updateUIState({ withdrawingLiquidity: true });
+    return this.stellarSdkService.submitTransaction(xdr)
+      .then(response => {
+        this.lpAssetsStore.updateUIState({ withdrawingLiquidity: false });
+        return response;
+      })
+      .catch(error => {
+        this.lpAssetsStore.updateUIState({ withdrawingLiquidity: false });
         return Promise.reject(error);
       });
   }

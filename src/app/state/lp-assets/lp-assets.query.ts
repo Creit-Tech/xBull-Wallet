@@ -6,6 +6,7 @@ import { LpAssetsStore, LpAssetsState } from './lp-assets.store';
 export class LpAssetsQuery extends QueryEntity<LpAssetsState> {
   fetchingLatestPools$ = this.select(state => state.UIState.fetchingLatestPools);
   depositingLiquidity$ = this.select(state => state.UIState.depositingLiquidity);
+  withdrawingLiquidity$ = this.select(state => state.UIState.withdrawingLiquidity);
 
   constructor(protected store: LpAssetsStore) {
     super(store);

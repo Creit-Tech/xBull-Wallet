@@ -17,32 +17,23 @@
   <nz-tabset nzCentered>
     <ng-template #depositTitle>
       <div class="flex items-center">
-<!--        <i class="mr-2" nz-icon nzType="plus" nzTheme="outline"></i>-->
         Deposit
       </div>
     </ng-template>
     <nz-tab [nzTitle]="depositTitle">
       <app-deposit-liquidity></app-deposit-liquidity>
-
     </nz-tab>
-
-
-
-
 
     <ng-template #withdrawTitle>
       <div class="flex items-center">
-<!--        <i class="mr-2" nz-icon nzType="minus" nzTheme="outline"></i>-->
         Withdraw
       </div>
     </ng-template>
     <nz-tab [nzTitle]="withdrawTitle">
-
+      <app-withdraw-liquidity></app-withdraw-liquidity>
     </nz-tab>
 
-
     <nz-tab [nzTitle]="searchTitle">
-
       <div class="flex w-full mb-4 no-scrollbar">
         <nz-tag *ngFor="let tag of codeTagsArray$ | async"
                 nzMode="closeable"
@@ -93,7 +84,6 @@
     </nz-tab>
     <ng-template #searchTitle>
       <div class="flex items-center">
-<!--        <i class="mr-2" nz-icon nzType="search" nzTheme="outline"></i>-->
         Search
       </div>
     </ng-template>
