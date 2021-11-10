@@ -99,6 +99,7 @@
               ]
             },
             "mobile-production": {
+              "outputPath": "dist/mobile",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
