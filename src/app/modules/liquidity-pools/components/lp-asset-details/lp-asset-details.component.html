@@ -13,9 +13,9 @@
   <section *ngIf="reserves$ | async as reserves" class="mb-4">
     <div class="w-full flex">
       <div *ngFor="let reserve of reserves; let i = index"
-           [class.flex-row-reverse]="i === 0"
-           [class.flex-row]="i === 1"
-           class="w-6/12 justify-start flex px-2 items-center">
+           [class.items-end]="i === 0"
+           [class.items-start]="i === 1"
+           class="w-6/12 flex flex-col px-2">
 
         <div class="w-8 h-8 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
           <img class="w-full h-full"
@@ -27,8 +27,6 @@
         </div>
 
         <div class="w-auto flex flex-col"
-             [class.pr-2]="i === 0"
-             [class.pl-2]="i === 1"
              [class.items-end]="i === 0"
              [class.items-start]="i === 1">
           <p class="text-off-white font-semibold text-lg">
