@@ -21,7 +21,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   wordList: string[] = this.mnemonicPhraseService.getWordList();
-  filteredOptions: string[] = this.mnemonicPhraseService.getWordList();
+  filteredOptions: string[] = [];
 
   form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
     words: new FormArray([]),
@@ -127,18 +127,22 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     );
 
     this.form.get('searchInput').patchValue('');
-    this.filteredOptions = this.wordList;
+    this.filteredOptions = [];
   }
 
   removeWord(index: number): void {
     this.phraseArray.removeAt(index);
-    this.filteredOptions = this.wordList;
+    this.filteredOptions = [];
   }
 
   filterOptions(value: string): void {
-    this.filteredOptions = this.wordList.filter(option =>
-      option.includes(value)
-    );
+    if (value && value.length > 1) {
+      this.filteredOptions = this.wordList.filter(option =>
+        option.includes(value)
+      );
+    } else {
+      this.filteredOptions = [];
+    }
   }
 
 }

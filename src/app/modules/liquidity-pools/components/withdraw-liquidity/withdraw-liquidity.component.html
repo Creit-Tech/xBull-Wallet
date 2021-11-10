@@ -23,6 +23,7 @@
 
       <div class="w-full flex mb-4">
         <nz-slider [nzMarks]="sliderMarks"
+                   [class.hidden]="isMobilePlatform"
                    formControlName="percentage"
                    class="w-10/12 mx-auto"
                    [nzMax]="100"

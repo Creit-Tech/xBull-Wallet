@@ -12,16 +12,18 @@
 
     <section class="w-full mb-8">
       <dl>
-        <dt class="text-base font-bold mb-1 w-full">Created at:</dt>
-        <dd class="break-all text-sm mb-3 w-full">
+        <dt class="text-off-black text-base font-bold mb-1 w-full">Created at:</dt>
+        <dd class="text-label break-all text-sm mb-3 w-full">
           {{ (connectedSite$ | async)?.createdAt | date: 'MMM dd, yyyy' }}
         </dd>
 
-        <dt class="text-base font-bold mb-1 w-full">Permissions:</dt>
-        <dd *ngIf="(connectedSite$ | async)?.canRequestPublicKey" class="break-all text-sm mb-3 w-full">
+        <dt class="text-off-black text-base font-bold mb-1 w-full">Permissions:</dt>
+        <dd *ngIf="(connectedSite$ | async)?.canRequestPublicKey"
+            class="text-label break-all text-sm mb-3 w-full">
           Get public key
         </dd>
-        <dd *ngIf="(connectedSite$ | async)?.canRequestSign" class="break-all text-sm mb-3 w-full">
+        <dd *ngIf="(connectedSite$ | async)?.canRequestSign"
+            class="text-label break-all text-sm mb-3 w-full">
           Ask to sign transactions
         </dd>
       </dl>

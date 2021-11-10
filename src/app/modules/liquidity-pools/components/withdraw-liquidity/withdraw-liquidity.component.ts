@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, interval, merge, Subject, Subscription, timer } from 'rxjs';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, combineLatest, merge, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery, ILpAsset,
   ILpAssetLoaded,
@@ -8,9 +8,8 @@ import {
   WalletsAccountsQuery,
 } from '~root/state';
 import {
-  distinctUntilKeyChanged,
   filter,
-  map, shareReplay, startWith,
+  map, shareReplay,
   switchMap, take,
   takeUntil,
   tap,
@@ -27,6 +26,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-withdraw-liquidity',
@@ -34,6 +34,7 @@ import { WalletsAccountsService } from '~root/core/wallets/services/wallets-acco
   styleUrls: ['./withdraw-liquidity.component.scss']
 })
 export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
+  isMobilePlatform = this.env.platform === 'mobile';
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   actionButton$: Subject<void> = new Subject<void>();
@@ -115,6 +116,8 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     private readonly stellarSdkService: StellarSdkService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
+    @Inject(ENV)
+    private readonly env: typeof environment,
   ) { }
 
   fetchLiquidityPoolsDataSubscription: Subscription = this.accountBalances$
