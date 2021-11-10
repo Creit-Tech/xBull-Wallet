@@ -7,7 +7,6 @@ import { SegmentModule } from '~root/shared/segment/segment.module';
 import { AssetItemComponent } from './components/asset-item/asset-item.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { AddAssetComponent } from './components/add-asset/add-asset.component';
-import { ReactiveFormsModule } from '@angular/forms';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SendFundsComponent } from './components/send-funds/send-funds.component';
 import { ReceiveFundsComponent } from './components/receive-funds/receive-funds.component';
@@ -22,15 +21,16 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { WalletTransactionItemComponent } from './components/wallet-transaction-item/wallet-transaction-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
-import { NzImageModule, NzImageService } from 'ng-zorro-antd/image';
+import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
-import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
-import {NzSelectModule} from "ng-zorro-antd/select";
-import {NzSpinModule} from "ng-zorro-antd/spin";
-import {NzModalModule} from "ng-zorro-antd/modal";
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { LiquidityPoolsModule } from '~root/modules/liquidity-pools/liquidity-pools.module';
 
 
 @NgModule({
@@ -48,25 +48,26 @@ import {NzModalModule} from "ng-zorro-antd/modal";
     TransactionDetailsComponent,
     WalletTransactionItemComponent,
   ],
-    imports: [
-      CommonModule,
-      WalletRoutingModule,
-      SegmentModule,
-      FormsComponentsModule,
-      LoadingModule,
-      ClipboardModule,
-      SharedPipesModule,
-      ModalsModule,
-      NzImageModule,
-      NzButtonModule,
-      NzIconModule,
-      NzInputModule,
-      NzDrawerModule,
-      NgxMaskModule,
-      NzAutocompleteModule,
-      NzSelectModule,
-      NzSpinModule,
-      NzModalModule,
-    ],
+  imports: [
+    CommonModule,
+    WalletRoutingModule,
+    SegmentModule,
+    FormsComponentsModule,
+    LoadingModule,
+    ClipboardModule,
+    SharedPipesModule,
+    ModalsModule,
+    NzImageModule,
+    NzButtonModule,
+    NzIconModule,
+    NzInputModule,
+    NzDrawerModule,
+    NgxMaskModule,
+    NzAutocompleteModule,
+    NzSelectModule,
+    NzSpinModule,
+    NzModalModule,
+    LiquidityPoolsModule,
+  ],
 })
 export class WalletModule { }

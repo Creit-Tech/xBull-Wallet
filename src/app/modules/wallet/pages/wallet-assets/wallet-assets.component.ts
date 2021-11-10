@@ -8,10 +8,11 @@ import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-det
 import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { Horizon } from 'stellar-sdk';
-import { exhaustMap, filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { AssetType, Horizon } from 'stellar-sdk';
+import { exhaustMap, filter, map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import {NzDrawerService} from "ng-zorro-antd/drawer";
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { LpAssetDetailsComponent } from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
 
 @Component({
   selector: 'app-wallet-assets',
@@ -32,6 +33,17 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
         return [];
       }
     }));
+
+  accountLpBalances$: Observable<Array<Horizon.BalanceLineLiquidityPool>> = this.selectedAccount$
+    .pipe(filter<any>(Boolean))
+    .pipe(map((account: IWalletsAccount) => {
+      if (account.accountRecord?.balances) {
+        return account.accountRecord.balances
+          .filter(b => b.asset_type === 'liquidity_pool_shares');
+      } else {
+        return [];
+      }
+    })) as Observable<Horizon.BalanceLineLiquidityPool[]>;
 
     // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
     // TODO: We need to update this
@@ -141,12 +153,25 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        this.reloadSelectedAccount$.next();
         ref.component.instance.onClose()
           .then(() => ref.close());
       });
 
     ref.open();
+  }
+
+  async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
+    const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
+      nzContent: LpAssetDetailsComponent,
+      nzTitle: '',
+      nzHeight: 'auto',
+      nzPlacement: 'bottom',
+      nzContentParams: {
+        lpAssetId: balanceLine.liquidity_pool_id,
+      }
+    });
+
+    drawerRef.open();
   }
 
 }

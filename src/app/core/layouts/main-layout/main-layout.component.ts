@@ -8,6 +8,8 @@ import { SelectAccountComponent } from '~root/core/layouts/main-layout/component
 import { Subject } from 'rxjs';
 import { SelectHorizonApiComponent } from '~root/core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
 import { GlobalsService } from '~root/lib/globals/globals.service';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NavMenuComponent } from '~root/core/layouts/main-layout/components/nav-menu/nav-menu.component';
 
 @Component({
   selector: 'app-main-layout',
@@ -30,9 +32,22 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly globalsService: GlobalsService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
+  }
+
+  openMenu(): void {
+    this.nzDrawerService.create<NavMenuComponent>({
+      nzContent: NavMenuComponent,
+      nzTitle: 'Navigation menu',
+      nzPlacement: 'right',
+      nzCloseOnNavigation: true,
+      nzBodyStyle: {
+        padding: '0'
+      }
+    });
   }
 
   ngOnDestroy(): void {

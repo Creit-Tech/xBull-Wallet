@@ -5,9 +5,9 @@ import {
   IHorizonApi,
   IWalletAsset,
   IWalletNativeAsset,
-  IWalletsAccount,
+  IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore
+  WalletsAssetsStore, IWalletIssuedAsset,
 } from '~root/state';
 import { from, of } from 'rxjs';
 import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
@@ -25,6 +25,7 @@ export class WalletsAssetsService {
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly http: HttpClient,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly lpAssetsStore: LpAssetsStore,
   ) { }
 
   private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
@@ -89,7 +90,7 @@ export class WalletsAssetsService {
       .pipe(map(([parsedToml, accountRecord]) => {
         const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
         const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
-        const currency = currencies.find((c: any) => c.code === data.assetCode);
+        const currency = (currencies || []).find((c: any) => c.code === data.assetCode);
 
         this.walletsAssetsStore.upsert(
           data._id,
@@ -135,6 +136,24 @@ export class WalletsAssetsService {
       default:
         throw new Error('This type of address is not handled by this wallet');
     }
+  }
+
+  saveInitialAssetState(data: {
+    _id: IWalletIssuedAsset['_id'];
+    assetCode: IWalletIssuedAsset['assetCode'];
+    assetIssuer: IWalletIssuedAsset['assetIssuer'];
+  }): void {
+    this.walletsAssetsStore.upsert(
+      data._id,
+      {
+        _id: data._id,
+        assetCode: data.assetCode,
+        assetExtraDataLoaded: false,
+        assetIssuer: data.assetIssuer,
+      },
+      (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
+      {}
+    );
   }
 
   nativeAssetDefaultRecord(): IWalletNativeAsset<'full'> {

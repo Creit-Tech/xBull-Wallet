@@ -1,0 +1,45 @@
+<section class="w-full min-h-full px-4 py-6 flex flex-col">
+  <section class="w-full mb-4">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i nz-icon nzType="home" nzTheme="outline"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Liquidity Pools
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+
+  <nz-tabset nzCentered>
+    <ng-template #depositTitle>
+      <div class="flex items-center">
+        Deposit
+      </div>
+    </ng-template>
+    <nz-tab [nzTitle]="depositTitle">
+      <app-deposit-liquidity></app-deposit-liquidity>
+    </nz-tab>
+
+    <ng-template #withdrawTitle>
+      <div class="flex items-center">
+        Withdraw
+      </div>
+    </ng-template>
+    <nz-tab [nzTitle]="withdrawTitle">
+      <app-withdraw-liquidity></app-withdraw-liquidity>
+    </nz-tab>
+
+<!--    <nz-tab [nzTitle]="searchTitle">-->
+<!--      <app-search-liquidity-pools></app-search-liquidity-pools>-->
+<!--    </nz-tab>-->
+<!--    <ng-template #searchTitle>-->
+<!--      <div class="flex items-center">-->
+<!--        Search-->
+<!--      </div>-->
+<!--    </ng-template>-->
+  </nz-tabset>
+</section>

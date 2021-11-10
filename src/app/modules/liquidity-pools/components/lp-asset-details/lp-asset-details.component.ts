@@ -1,0 +1,217 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import {
+  HorizonApisQuery,
+  ILpAssetLoaded,
+  IWalletAsset,
+  LpAssetsQuery,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+} from '~root/state';
+import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { Horizon } from 'stellar-sdk';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+
+@Component({
+  selector: 'app-lp-asset-details',
+  templateUrl: './lp-asset-details.component.html',
+  styleUrls: ['./lp-asset-details.component.scss']
+})
+export class LpAssetDetailsComponent implements OnInit, OnDestroy {
+  componentDestroyed$: Subject<void> = new Subject<void>();
+
+  removeActionButton$: Subject<void> = new Subject<void>();
+  disableActionButton$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  lpAssetId$: ReplaySubject<string> = new ReplaySubject<string>();
+  @Input() set lpAssetId(data: string) {
+    this.lpAssetId$.next(data);
+  }
+
+  removingAsset$ = this.walletsAssetsQuery.removingAsset$;
+
+  lpAsset$: Observable<ILpAssetLoaded> = this.lpAssetId$
+    .pipe(switchMap(lpAssetId => this.lpAssetsQuery.selectEntity(lpAssetId))) as Observable<ILpAssetLoaded>;
+
+  reserves$: Observable<Array<IWalletAsset<any, 'full'>>> = this.lpAsset$
+    .pipe(filter<any>(lpAsset => !!lpAsset?.dataLoaded))
+    .pipe(switchMap((lpAsset: ILpAssetLoaded) => {
+      const [assetACode, assetBCode] = lpAsset.reserves.map(reserve => {
+        return reserve.asset.includes(':')
+          ? reserve.asset.split(':')[0] + '_' + reserve.asset.split(':')[1]
+          : 'native';
+      });
+
+      return combineLatest([
+        this.walletsAssetsQuery.selectEntity(assetACode),
+        this.walletsAssetsQuery.selectEntity(assetBCode),
+      ]);
+    })) as Observable<Array<IWalletAsset<any, 'full'>>>;
+
+  constructor(
+    private readonly nzDrawerRef: NzDrawerRef,
+    private readonly lpAssetsQuery: LpAssetsQuery,
+    private readonly walletsAssetsQuery: WalletsAssetsQuery,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly nzMessageService: NzMessageService,
+    private readonly nzDrawerService: NzDrawerService,
+    private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly walletsAccountsService: WalletsAccountsService,
+  ) { }
+
+  onRemoveSubscription: Subscription = this.removeActionButton$
+    .asObservable()
+    .pipe(tap(() => this.disableActionButton$.next(true)))
+    .pipe(switchMap(() => {
+      return this.removeAsset()
+        .catch(e => {
+          console.error(e);
+          this.nzMessageService.error(`There was an unexpected error, try again or contact support`);
+          return;
+        });
+    }))
+    .pipe(tap(() => this.disableActionButton$.next(false)))
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe();
+
+  ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
+  }
+
+  parseLpReserveCode(reserve: Horizon.Reserve): string {
+    return reserve.asset.includes(':')
+      ? reserve.asset.split(':')[0]
+      : 'XLM';
+  }
+
+  async removeAsset(): Promise<void> {
+    const [
+      horizonApi,
+      selectedAccount,
+      lpAsset,
+    ] = await Promise.all([
+      this.horizonApisQuery.getSelectedHorizonApi$
+        .pipe(take(1))
+        .toPromise(),
+      this.walletsAccountsQuery.getSelectedAccount$
+        .pipe(take(1))
+        .toPromise(),
+      this.lpAsset$
+        .pipe(take(1))
+        .toPromise()
+    ]);
+
+    if (!selectedAccount || !horizonApi || !lpAsset?.dataLoaded) {
+      this.nzMessageService.error(`There was an issue selecting the params to continue, please try again`);
+      return;
+    }
+
+    let loadedAccount;
+    try {
+      loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+        .loadAccount(selectedAccount.publicKey);
+    } catch (e) {
+      this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+        nzDuration: 5000,
+      });
+      return;
+    }
+
+    const account = new this.stellarSdkService.SDK.Account(loadedAccount.account_id, loadedAccount.sequence);
+
+    const asset = new this.stellarSdkService.SDK.LiquidityPoolAsset(
+      lpAsset.reserves[0].asset === 'native'
+        ? this.stellarSdkService.SDK.Asset.native()
+        : new this.stellarSdkService.SDK.Asset(
+          lpAsset.reserves[0].asset.split(':')[0],
+          lpAsset.reserves[0].asset.split(':')[1]
+        ),
+      new this.stellarSdkService.SDK.Asset(
+        lpAsset.reserves[1].asset.split(':')[0],
+        lpAsset.reserves[1].asset.split(':')[1]
+      ),
+      this.stellarSdkService.SDK.LiquidityPoolFeeV18,
+    );
+
+    const transactionBuilder = new this.stellarSdkService.SDK.TransactionBuilder(account, {
+      fee: this.stellarSdkService.fee,
+      networkPassphrase: this.stellarSdkService.networkPassphrase,
+    }).setTimeout(this.stellarSdkService.defaultTimeout)
+      .addOperation(
+        this.stellarSdkService.SDK.Operation.changeTrust({
+          limit: '0',
+          asset
+        })
+      );
+
+    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzContentParams: {
+        xdr: transactionBuilder.build().toXDR(),
+      },
+      nzPlacement: 'bottom',
+      nzHeight: '88%',
+      nzTitle: ''
+    });
+
+    drawerRef.open();
+
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      this.nzMessageService.error(`We were not able to prepare the XDR to sign, please contact support.`);
+      return;
+    }
+
+    let signedXdr: string;
+    try {
+      signedXdr = await componentRef.accept
+        .pipe(take(1))
+        .pipe(takeUntil(this.componentDestroyed$))
+        .toPromise();
+
+      drawerRef.close();
+    } catch (e) {
+      console.error(e);
+      this.nzMessageService.error(`We couldn't sign the XDR, please try again.`);
+      return;
+    }
+
+    if (!signedXdr) {
+      return;
+    }
+
+    try {
+      await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
+      this.nzMessageService.success(`LP Asset removed correctly.`);
+      this.nzDrawerRef.close();
+    } catch (e) {
+      console.error(e);
+      this.nzMessageService.success(`We were not able to remove the LP asset, please make sure you follow all the requirements to remove an Asset from your account.`, {
+        nzDuration: 5000,
+      });
+      return;
+    }
+
+    this.walletsAccountsService.getAccountData({
+      account: selectedAccount,
+      horizonApi
+    }).toPromise()
+      .then()
+      .catch(e => console.error(e));
+  }
+
+}

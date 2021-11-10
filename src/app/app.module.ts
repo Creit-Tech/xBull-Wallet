@@ -26,6 +26,9 @@ import { IonicModule } from '@ionic/angular';
 import { MobileModule } from '~root/mobile/mobile.module';
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {NzIconModule} from "ng-zorro-antd/icon";
+import { NavMenuComponent } from './core/layouts/main-layout/components/nav-menu/nav-menu.component';
+import {NzListModule} from "ng-zorro-antd/list";
+import {NzMenuModule} from "ng-zorro-antd/menu";
 
 registerLocaleData(en);
 
@@ -35,6 +38,7 @@ registerLocaleData(en);
     MainLayoutComponent,
     SelectAccountComponent,
     SelectHorizonApiComponent,
+    NavMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -55,6 +59,8 @@ registerLocaleData(en);
     MobileModule.forRoot(),
     NzButtonModule,
     NzIconModule,
+    NzListModule,
+    NzMenuModule,
   ],
   providers: [
     {
