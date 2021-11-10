@@ -4,6 +4,8 @@ import { IWallet } from './wallet.model';
 
 export interface WalletsState extends EntityState<IWallet>, ActiveState  {
   walletsLocked: boolean;
+
+  // TODO: Move this from this store to the settings store
   globalPasswordHash?: string;
 }
 

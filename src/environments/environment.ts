@@ -9,6 +9,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   production: false,
+  platform: 'extension',
   defaultApis: [{
     _id: 'aa604e66a74ade3ef250f904ef28c92d',
     name: 'Main Network',
@@ -28,7 +29,7 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '0.6.11'
+  version: '0.7.0'
 };
 
 /*

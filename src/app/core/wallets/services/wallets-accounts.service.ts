@@ -4,7 +4,7 @@ import { from, of, throwError } from 'rxjs';
 import {
   BalanceAssetType,
   createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
-  IWalletsAccount,
+  IWalletsAccount, LpAssetsStore,
   WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsAssetsStore, WalletsOperationsStore,
@@ -30,6 +30,7 @@ export class WalletsAccountsService {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly lpAssetsStore: LpAssetsStore,
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsOperationsStore: WalletsOperationsStore,
   ) { }
@@ -38,30 +39,43 @@ export class WalletsAccountsService {
     this.walletsAccountsStore.upsert(accountId, state => ({
       ...state,
       isCreated: !!accountRecord,
-      accountRecord
+      // We do this to remove the functions from the account record stellar sdk object
+      accountRecord: accountRecord && JSON.parse(JSON.stringify(accountRecord)),
     }));
 
     if (!!accountRecord) {
-      const filteredBalances: BalanceAssetType[] = this.walletsAssetsService.filterBalancesLines(accountRecord.balances);
+      const filteredBalances = accountRecord.balances;
 
       for (const balanceLine of filteredBalances) {
-        if (balanceLine.asset_type === 'native') {
-          this.walletsAssetsStore.upsert(
-            this.walletsAssetsService.formatBalanceLineId(balanceLine),
-            this.walletsAssetsService.nativeAssetDefaultRecord()
-          );
-        } else {
-          this.walletsAssetsStore.upsert(
-            this.walletsAssetsService.formatBalanceLineId(balanceLine),
-            {
-              _id: this.walletsAssetsService.formatBalanceLineId(balanceLine),
-              assetCode: balanceLine.asset_code,
-              assetExtraDataLoaded: false,
-              assetIssuer: balanceLine.asset_issuer,
-            },
-            (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
-            {}
-          );
+        switch (balanceLine.asset_type) {
+          case 'liquidity_pool_shares':
+            this.lpAssetsStore.upsert(balanceLine.liquidity_pool_id, state => ({
+              _id: balanceLine.liquidity_pool_id,
+              dataLoaded: 'dataLoaded' in state ? state.dataLoaded : false
+            }));
+            break;
+
+          case 'credit_alphanum12':
+          case 'credit_alphanum4':
+            this.walletsAssetsStore.upsert(
+              this.walletsAssetsService.formatBalanceLineId(balanceLine),
+              {
+                _id: this.walletsAssetsService.formatBalanceLineId(balanceLine),
+                assetCode: balanceLine.asset_code,
+                assetExtraDataLoaded: false,
+                assetIssuer: balanceLine.asset_issuer,
+              },
+              (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
+              {}
+            );
+            break;
+
+          case 'native':
+            this.walletsAssetsStore.upsert(
+              this.walletsAssetsService.formatBalanceLineId(balanceLine),
+              this.walletsAssetsService.nativeAssetDefaultRecord()
+            );
+            break;
         }
       }
     }

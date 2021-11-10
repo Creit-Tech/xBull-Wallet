@@ -1,9 +1,10 @@
 <ng-container *ngIf="(asset$ | async) as asset; else skeletonTemplate">
 
-  <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-label hover:border-placeholder py-4"
+  <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-label hover:border-placeholder py-4"
     *ngIf="!(skeleton$ | async); else skeletonTemplate">
-    <section class="w-12 mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
-      <img *ngIf="assetImg$ | async as assetImg; else imgSkeleton" [src]="assetImg" alt=""/>
+    <section class="w-full h-auto mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden" style="max-width: 2.5rem !important; max-height: 2.5rem">
+      <img *ngIf="assetImg$ | async as assetImg; else imgSkeleton"
+           [src]="assetImg" alt=""/>
       <ng-template #imgSkeleton>
         <div class="w-full h-full rounded-3xl skeleton-box"></div>
       </ng-template>
@@ -28,7 +29,7 @@
           <div class="w-3/12 h-3 skeleton-box"></div>
         </ng-template>
 
-        <p *ngIf="availableFunds$ | async as availableFunds" class="text-placeholder text-xs m-0 p-0">
+        <p *ngIf="availableFunds$ | async as availableFunds" class="text-placeholder text-right text-xs m-0 p-0">
           Available: {{ availableFunds | number: '1.2-7' }}
         </p>
       </div>
@@ -39,7 +40,7 @@
 
 <ng-template #skeletonTemplate>
 
-  <li class="flex w-full px-6 border-b-2 transition border-label py-4">
+  <li class="flex w-full px-4 border-b-2 transition border-label py-4">
     <section class="w-12 mr-4">
       <div class="w-full h-full rounded-3xl skeleton-box"></div>
     </section>

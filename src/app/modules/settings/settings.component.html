@@ -1,10 +1,10 @@
 <section class="w-full h-full flex flex-col py-4">
-  <p class="text-label font-semibold text-sm px-6">
+  <p class="text-label font-semibold text-sm px-4">
     Settings
   </p>
 
   <ul>
-    <li class="flex w-full items-center justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
+    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
       <div class="w-8/12">
         <p class="m-0 text-sm font-bold text-off-white">
           Advanced mode
@@ -15,7 +15,7 @@
       </div>
     </li>
 
-    <li class="flex w-full justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/wallets">
       <div class="w-auto">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -29,7 +29,7 @@
       </div>
     </li>
 
-    <li *ngIf="advanceMode$ | async" class="flex justify-between w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li *ngIf="advanceMode$ | async" class="flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/horizon-apis">
       <div class="w-auto">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -43,7 +43,7 @@
       </div>
     </li>
 
-    <li class="opacity-50 pointer-events-none flex w-full items-center justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
+    <li class="opacity-50 pointer-events-none flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
       <div class="w-8/12">
         <p class="m-0 text-sm font-bold text-off-white">
           Language
@@ -56,7 +56,7 @@
       </div>
     </li>
 
-    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         (click)="conDefaultFeeClicked()">
       <div class="w-8/12 mr-auto">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -71,7 +71,7 @@
     </li>
 
     <li *ngIf="advanceMode$ | async"
-        class="flex w-full items-center  justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+        class="flex w-full items-center  justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/active-operations-types">
       <div class="w-8/12">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -85,7 +85,7 @@
       </div>
     </li>
 
-    <li class="flex w-full items-center  justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full items-center  justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/sites-connected">
       <div class="w-8/12">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -99,7 +99,7 @@
       </div>
     </li>
 
-    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/anti-spam">
       <div class="w-8/12 mr-auto">
         <p class="m-0 text-sm font-bold text-off-white">
@@ -113,7 +113,21 @@
       </div>
     </li>
 
-    <li class="flex w-full cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5"
+    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
+        routerLink="/settings/locking">
+      <div class="w-8/12 mr-auto">
+        <p class="m-0 text-sm font-bold text-off-white">
+          Lock settings
+        </p>
+      </div>
+      <div class="w-auto">
+        <p class="text-label text-sm">
+          <b>></b>
+        </p>
+      </div>
+    </li>
+
+    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
         routerLink="/settings/about">
       <div class="w-8/12 mr-auto">
         <p class="m-0 text-sm font-bold text-off-white">

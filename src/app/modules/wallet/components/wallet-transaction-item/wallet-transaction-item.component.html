@@ -1,6 +1,6 @@
 <ng-container *ngIf="operation$ | async as operation">
   <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-4 cursor-pointer">
       <div class="w-7/12">
         <p class="text-base text-off-white m-0">
           XLM
@@ -25,7 +25,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'payment'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex py-4 px-4 cursor-pointer">
       <div class="w-7/12">
         <p class="text-base text-off-white m-0">
           {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
@@ -50,7 +50,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0 text-error">
           - {{ operation.operationRecord.source_amount | number: '0.0-7' }}
@@ -86,7 +86,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'create_passive_sell_offer' || operation.operationRecord.type === 'manage_sell_offer' || operation.operationRecord.type === 'manage_buy_offer'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-5/12">
         <p class="text-base text-off-white m-0">
           Sell: {{ operation.operationRecord.amount | number: '0.0-7' }}
@@ -117,7 +117,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'set_options'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Set options operation
@@ -139,7 +139,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           {{ (operation.operationRecord.limit | number: '0.0-0') === '0' ? 'Remove' : 'Trust' }} Asset
@@ -164,7 +164,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Allow trust
@@ -186,7 +186,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Merge account
@@ -208,7 +208,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           {{ !operation.operationRecord.value ? 'Remove' : 'Set' }}
@@ -231,7 +231,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'bump_sequence'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Bump to
@@ -253,7 +253,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Begin Sponsoring
@@ -275,7 +275,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'end_sponsoring_future_reserves'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           End Sponsoring
@@ -297,7 +297,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'set_trust_line_flags'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Set trustline flags
@@ -319,7 +319,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_deposit'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Deposit LP
@@ -341,7 +341,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_withdraw'">
-    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-6 cursor-pointer">
+    <section class="w-full border-label hover:border-placeholder border-b-2 transition flex justify-between py-4 px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base text-off-white m-0">
           Withdraw LP

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Inject, OnInit, Renderer2 } from '@angular/core';
+import {AfterViewInit, Component, HostListener, Inject, OnInit, Renderer2} from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { HorizonApisQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
 import { combineLatest, forkJoin, of, pipe, Subscription } from 'rxjs';

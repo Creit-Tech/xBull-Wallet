@@ -1,0 +1,7 @@
+{
+  "name": "xBull-Wallet",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

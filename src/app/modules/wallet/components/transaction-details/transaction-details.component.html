@@ -203,7 +203,7 @@
       <ng-container *ngIf="operation.operationRecord.asset_type === 'liquidity_pool_shares'">
         <dt class="text-off-black text-base font-bold mb-1">Liquidity pool id:</dt>
         <dd class="text-label text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
-          {{ operation.operationRecord.liquidity_pool_id }}
+          {{ operation.operationRecord.liquidity_pool_id | publicKey }}
         </dd>
 
         <dt class="text-off-black text-base font-bold mb-1">Limit:</dt>
@@ -225,8 +225,8 @@
       </ng-container>
 
       <dt class="text-off-black text-base font-bold mb-1">Trustor:</dt>
-      <dd class="text-label text-sm mb-3">
-        {{ operation.operationRecord.trustor }}
+      <dd appClipboard [textToCopy]="operation.operationRecord.trustor" class="text-label text-sm mb-3 cursor-pointer">
+        {{ operation.operationRecord.trustor | publicKey }}
       </dd>
 
       <dt class="text-off-black text-base font-bold mb-1">Limit:</dt>
@@ -351,7 +351,7 @@
 
       <dt class="text-off-black text-base font-bold mb-1">Reserves max:</dt>
       <dd *ngFor="let reserve of operation.operationRecord.reserves_max"
-          class="text-label text-sm mb-3">
+          class="text-label text-sm mb-3 truncate">
         {{ reserve.asset }}
         <br>
         <b>{{ reserve.amount | number: '0.0-7' }}</b>
@@ -359,7 +359,7 @@
 
       <dt class="text-off-black text-base font-bold mb-1">Reserves deposited:</dt>
       <dd *ngFor="let reserve of operation.operationRecord.reserves_deposited"
-          class="text-label text-sm mb-3">
+          class="text-label text-sm mb-3 truncate">
         {{ reserve.asset }}
         <br>
         <b>{{ reserve.amount | number: '0.0-7' }}</b>
@@ -379,7 +379,7 @@
 
       <dt class="text-off-black text-base font-bold mb-1">Reserves min:</dt>
       <dd *ngFor="let reserve of operation.operationRecord.reserves_min"
-          class="text-label text-sm mb-3">
+          class="text-label text-sm mb-3 truncate">
         {{ reserve.asset }}
         <br>
         <b>{{ reserve.amount | number: '0.0-7' }}</b>
@@ -387,7 +387,7 @@
 
       <dt class="text-off-black text-base font-bold mb-1">Reserves received:</dt>
       <dd *ngFor="let reserve of operation.operationRecord.reserves_received"
-          class="text-label text-sm mb-3">
+          class="text-label text-sm mb-3 truncate">
         {{ reserve.asset }}
         <br>
         <b>{{ reserve.amount | number: '0.0-7' }}</b>

@@ -13,6 +13,9 @@ export class SettingsQuery extends Query<SettingsState> {
   antiSpamClaimableAssets$ = this.select(state => state.antiSPAMClaimableAssets);
   operationTypesToShow$ = this.select(state => state.operationTypesToShow);
 
+  passwordAuthTokenActive$ = this.select(state => state.passwordAuthTokenActive);
+  passwordAuthToken$ = this.select(state => state.passwordAuthToken);
+
   constructor(protected store: SettingsStore) {
     super(store);
   }

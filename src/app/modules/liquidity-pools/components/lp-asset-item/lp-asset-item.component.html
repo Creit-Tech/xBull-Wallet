@@ -1,0 +1,44 @@
+<ng-container *ngIf="(lpAsset$ | async)?.dataLoaded; else skeletonTemplate">
+  <div *ngFor="let reserve of (reserves$ | async)"
+       class="w-10 h-10 mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
+    <img class="w-full h-full"
+         *ngIf="reserve?.image; else imgSkeleton"
+         [src]="reserve.image" alt=""/>
+    <ng-template #imgSkeleton>
+      <div class="w-full h-full rounded-3xl skeleton-box"></div>
+    </ng-template>
+  </div>
+
+  <div class="ml-auto flex flex-col items-end">
+    <p *ngIf="parseCodes(reserves$ | async) as codes; else codesPlaceholder" class="m-0 p-0 text-off-white text-sm font-bold">
+      {{ codes }}
+    </p>
+    <ng-template #codesPlaceholder>
+      <div class="w-16 h-5 mb-1 skeleton-box"></div>
+    </ng-template>
+
+    <p class="text-placeholder text-xs m-0 p-0">
+      Shares: {{ (sharesAmount$ | async) | number: '1.2-7' }}
+    </p>
+  </div>
+</ng-container>
+
+<ng-template #skeletonTemplate>
+  <section class="w-12 mr-4">
+    <div class="w-full h-full rounded-3xl skeleton-box"></div>
+  </section>
+
+  <section class="w-12 mr-4">
+    <div class="w-full h-full rounded-3xl skeleton-box"></div>
+  </section>
+
+  <section class="w-full">
+    <div class="w-full flex justify-end mb-2">
+      <div class="w-5/12 h-4 mb-1 skeleton-box"></div>
+    </div>
+
+    <div class="w-full flex justify-end">
+      <div class="w-4/12 h-3 skeleton-box"></div>
+    </div>
+  </section>
+</ng-template>

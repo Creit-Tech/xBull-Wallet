@@ -22,6 +22,13 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IonicModule } from '@ionic/angular';
+import { MobileModule } from '~root/mobile/mobile.module';
+import {NzButtonModule} from "ng-zorro-antd/button";
+import {NzIconModule} from "ng-zorro-antd/icon";
+import { NavMenuComponent } from './core/layouts/main-layout/components/nav-menu/nav-menu.component';
+import {NzListModule} from "ng-zorro-antd/list";
+import {NzMenuModule} from "ng-zorro-antd/menu";
 
 registerLocaleData(en);
 
@@ -30,10 +37,15 @@ registerLocaleData(en);
     AppComponent,
     MainLayoutComponent,
     SelectAccountComponent,
-    SelectHorizonApiComponent
+    SelectHorizonApiComponent,
+    NavMenuComponent
   ],
   imports: [
     BrowserModule,
+    IonicModule.forRoot({
+      hardwareBackButton: false,
+    }),
+    BrowserAnimationsModule,
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
@@ -44,7 +56,11 @@ registerLocaleData(en);
     BackgroundModule,
     FormsComponentsModule,
     SharedPipesModule,
-    BrowserAnimationsModule,
+    MobileModule.forRoot(),
+    NzButtonModule,
+    NzIconModule,
+    NzListModule,
+    NzMenuModule,
   ],
   providers: [
     {

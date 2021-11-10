@@ -9,6 +9,11 @@ export interface SettingsState {
   advanceMode: boolean;
   defaultFee: string;
 
+  // This is a token which is used to decode an encrypted password in mobile devices
+  passwordAuthTokenActive: boolean;
+  passwordAuthToken?: string;
+  passwordAuthTokenIdentifier?: string;
+
   antiSPAMPublicKeys: string[];
 
   // The string follow the "CODE:ISSUER" style from the claimable balance endpoint
@@ -26,6 +31,7 @@ export function createInitialState(): SettingsState {
     },
     advanceMode: false,
     defaultFee: '100',
+    passwordAuthTokenActive: false,
     antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],
     operationTypesToShow: [

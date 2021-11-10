@@ -11,6 +11,7 @@ import { ActiveOperationsTypesComponent } from '~root/modules/settings/pages/act
 import {AntiSpamOptionsComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-options/anti-spam-options.component';
 import {AntiSpamKeysComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-keys/anti-spam-keys.component';
 import {AntiSpamClaimableAssetsComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
+import {LockingComponent} from "~root/modules/settings/pages/locking/locking.component";
 
 const routes: Routes = [
   {
@@ -41,6 +42,10 @@ const routes: Routes = [
   {
     path: 'sites-connected',
     component: SitesConnectedComponent,
+  },
+  {
+    path: 'locking',
+    component: LockingComponent,
   },
   {
     path: 'anti-spam',

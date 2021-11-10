@@ -38,7 +38,8 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
     _id: params._id,
     publicKey: params.publicKey,
     isCreated: params.isCreated,
-    accountRecord: params.accountRecord,
+    // We do a stringify and parse to remove all functions in the stellar object
+    accountRecord: params.accountRecord && JSON.parse(JSON.stringify(params.accountRecord)),
     streamCreated: params.streamCreated,
     operationsStreamCreated: params.operationsStreamCreated,
     name: params.name,

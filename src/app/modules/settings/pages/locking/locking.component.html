@@ -1,0 +1,75 @@
+<section class="w-full min-h-full px-4 py-6 flex flex-col">
+  <section class="w-full mb-4">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i nz-icon nzType="home" nzTheme="outline"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/settings">
+          Settings
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        Locking settings
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+
+  <section class="w-full mb-4">
+    <nz-list>
+      <nz-list-item *ngIf="!!mobilePlatform">
+        <p>
+          Use device authentication
+        </p>
+
+        <nz-switch [nzControl]="true" (click)="requireAuthStart()"
+                   [formControl]="useDeviceAuthControl"
+                   nzCheckedChildren="ON" nzUnCheckedChildren="OFF"></nz-switch>
+      </nz-list-item>
+
+<!--      <nz-list-item>-->
+<!--        <p>-->
+<!--          Require authentication at start-->
+<!--        </p>-->
+
+<!--        <nz-switch [nzControl]="true" (click)="requireAuthStart()"-->
+<!--                   nzCheckedChildren="ON" nzUnCheckedChildren="OFF"></nz-switch>-->
+<!--      </nz-list-item>-->
+
+<!--      <nz-list-item>-->
+<!--        <p>-->
+<!--          Auto-lock wallet-->
+<!--        </p>-->
+
+<!--        <nz-switch nzCheckedChildren="ON" nzUnCheckedChildren="OFF"></nz-switch>-->
+<!--      </nz-list-item>-->
+
+<!--      <nz-list-item>-->
+<!--        <p>-->
+<!--          Time to lock the wallet:-->
+<!--        </p>-->
+
+<!--        <nz-select>-->
+<!--          <nz-option nzLabel="5 minutes" [nzValue]="5"></nz-option>-->
+<!--          <nz-option nzLabel="15 minutes" [nzValue]="15"></nz-option>-->
+<!--          <nz-option nzLabel="30 minutes" [nzValue]="30"></nz-option>-->
+<!--          <nz-option nzLabel="60 minutes" [nzValue]="60"></nz-option>-->
+<!--        </nz-select>-->
+<!--      </nz-list-item>-->
+    </nz-list>
+  </section>
+
+  <section class="w-full mt-auto" [routerLink]="['../']">
+    <div class="w-full">
+      <p class="mx-auto w-9/12 m-4 text-xs text-center">
+        Locking settings change depending on the platform being used
+      </p>
+    </div>
+
+    <button nzSize="large" nz-button class="w-full">
+      Go back
+    </button>
+  </section>
+</section>
