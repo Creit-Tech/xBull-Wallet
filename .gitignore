@@ -2,6 +2,7 @@
 
 # Random files
 temp
+/random-folder
 
 # compiled output
 /dist

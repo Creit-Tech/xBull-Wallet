@@ -90,7 +90,11 @@ export class WalletsAssetsService {
       .pipe(map(([parsedToml, accountRecord]) => {
         const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
         const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
-        const currency = (currencies || []).find((c: any) => c.code === data.assetCode);
+        const currency = (currencies || []).find((c: any) => {
+          return c.code === data.assetCode && c.issuer === data.assetIssuer;
+        }) || (currencies || []).find((c: any) => {
+          return c.code === data.assetCode;
+        });
 
         this.walletsAssetsStore.upsert(
           data._id,
