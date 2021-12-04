@@ -7,7 +7,6 @@ import {
   IRuntimeGetPublicKeyResponse,
   IRuntimeSignXDRResponse,
   ISignXDRRequestPayload,
-  ISitePermissions,
   XBULL_CONNECT,
   XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
 } from '../interfaces';
@@ -16,31 +15,37 @@ import { Networks } from 'stellar-sdk';
 class Sdk {
   isConnected = false;
 
-  constructor() { }
+  constructor() {}
 
-  private sendEventToContentScript<T, R>(eventName: EventTypes, payload: T): Promise<CustomEvent<R>> {
+  // tslint:disable-next-line:only-arrow-functions
+  private sendEventToContentScript<T, R>(eventName: EventTypes, payload: T): Promise<any> {
     return new Promise<CustomEvent<R>>((resolve) => {
       // We use this id to create a random event listener and avoid mixing messages
       const eventId = (new Date().getTime() + Math.random()).toString(16);
 
       const eventListener = (event: any) => {
-        resolve(event);
-        window.removeEventListener(eventId, eventListener, false);
+        // tslint:disable-next-line:triple-equals
+        if (event.source !== window || !event.data || event.origin !== window.origin) {
+          return;
+        }
+
+        const response = event.data as { detail: R, eventId: string, returnFromCS?: boolean };
+
+        if (response.eventId === eventId && response.returnFromCS) {
+          resolve(event);
+          window.removeEventListener('message', eventListener, false);
+        }
       };
 
-      window.addEventListener(eventId, eventListener, false);
+      window.addEventListener('message', eventListener, false);
 
-      const dispatchEventParams: CustomEventInit<T> = {
-        detail: {
-          ...payload,
-          eventId,
-        },
-      };
-
-      window.dispatchEvent(new CustomEvent(eventName, dispatchEventParams));
+      window.postMessage({
+        type: eventName,
+        eventId,
+        detail: payload,
+      }, '*');
     });
   }
-
   async connect(permissions: IConnectRequestPayload['permissions']): Promise<IRuntimeConnectResponse['payload']> {
     if (
       !permissions ||
@@ -56,7 +61,8 @@ class Sdk {
     };
 
     // tslint:disable-next-line:max-line-length
-    const { detail } = await this.sendEventToContentScript<IConnectRequestPayload, IRuntimeConnectResponse | IRuntimeErrorResponse>(XBULL_CONNECT, dispatchEventParams);
+    const response = await this.sendEventToContentScript<IConnectRequestPayload, IRuntimeConnectResponse | IRuntimeErrorResponse>(XBULL_CONNECT, dispatchEventParams);
+    const { detail } = response.data;
 
     if (detail.error) {
       throw new Error(detail.errorMessage);
@@ -73,10 +79,12 @@ class Sdk {
       host: window.location.host,
     };
 
-    const { detail } = await this.sendEventToContentScript<
+    const response = await this.sendEventToContentScript<
       IGetPublicKeyRequestPayload,
       IRuntimeGetPublicKeyResponse | IRuntimeErrorResponse
     >(XBULL_GET_PUBLIC_KEY, dispatchEventParams);
+
+    const { detail } = response.data;
 
     if (detail.error) {
       throw new Error(detail.errorMessage);
@@ -94,10 +102,12 @@ class Sdk {
       xdr
     };
 
-    const { detail } = await this.sendEventToContentScript<
+    const response = await this.sendEventToContentScript<
       ISignXDRRequestPayload,
       IRuntimeSignXDRResponse | IRuntimeErrorResponse
     >(XBULL_SIGN_XDR, dispatchEventParams);
+
+    const { detail } = response.data;
 
     if (detail.error) {
       throw new Error(detail.errorMessage);

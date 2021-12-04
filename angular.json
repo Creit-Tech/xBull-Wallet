@@ -30,7 +30,6 @@
               "src/popup.html",
               "src/popup.js",
               "src/assets",
-              "src/manifest.json",
               "src/background.js",
               "src/content-script.js",
               "src/xbull-sdk.js",

@@ -1,4 +1,5 @@
 const { resolve } = require('path');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV === 'production' ? 'production' : 'none',
@@ -32,4 +33,22 @@ module.exports = {
     }
   },
   target: 'web',
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js',
+          to: resolve(__dirname, "dist/xbull/browser-polyfill.js"),
+          toType: "file",
+          force: true,
+        },
+        {
+          from: resolve(__dirname, "src/manifest." + (process.env.MANIFEST_VERSION || 'v3') + '.json'),
+          to: resolve(__dirname, "dist/xbull/manifest.json"),
+          toType: "file",
+          force: true,
+        },
+      ],
+    }),
+  ],
 };
