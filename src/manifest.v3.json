@@ -1,0 +1,52 @@
+{
+  "manifest_version": 3,
+  "name": "xBull Wallet",
+  "version": "0.7.2",
+  "description": "A powerful but easy to use Stellar network wallet.",
+  "homepage_url": "https://xbull.app",
+  "icons": {
+    "16": "./assets/icons/extension-icon-16.png",
+    "48": "./assets/icons/extension-icon-48.png",
+    "128": "./assets/icons/extension-icon-128.png"
+  },
+  "action": {
+    "default_title": "xBull Wallet",
+    "default_icon": "./assets/icons/extension-icon-128.png"
+  },
+  "permissions": [
+    "storage",
+    "*://connect.trezor.io/8/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "content-script.js"
+      ],
+      "matches": [
+        "https://*/*"
+      ],
+      "match_about_blank": true,
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "*://connect.trezor.io/8/popup.html"
+      ],
+      "js": [
+        "./assets/vendor/trezor-content-script.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [{
+    "resources": [
+      "sdk.js",
+      "assets/*"
+    ],
+    "matches": [
+      "https://*/*"
+    ]
+  }]
+}
