@@ -59,7 +59,7 @@ browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): P
     console.error(error);
     return {
       error: true,
-      errorMessage: 'Connection failed'
+      errorMessage: error?.message || 'Connection failed',
     };
   };
 

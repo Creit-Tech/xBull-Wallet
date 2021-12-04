@@ -5,6 +5,8 @@ const getStore = () => new Promise<{ 'sites-connections': SitesConnectionsState,
   chrome.storage.local.get(['AkitaStores'], (items: { [key: string]: any }) => {
     if (chrome.runtime.lastError) {
       return reject(chrome.runtime.lastError);
+    } else if (!items.AkitaStores) {
+      return reject(new Error(`Wallet hasn't been set upp`));
     } else {
       return resolve(items.AkitaStores);
     }

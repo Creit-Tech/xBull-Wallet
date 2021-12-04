@@ -22,8 +22,7 @@
     "scripts": [
       "background.js",
       "popup.js"
-    ],
-    "persistent": false
+    ]
   },
   "content_scripts": [
     {
