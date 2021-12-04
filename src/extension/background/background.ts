@@ -1,3 +1,5 @@
+// This file is use in v2 manifests extensions
+import browser from 'webextension-polyfill';
 import {
   RuntimeMessage,
   RuntimeResponse,
@@ -9,46 +11,75 @@ import { requestConnection } from '~extension/background/connection.background';
 import { requestPublicKey } from '~extension/background/public-key.background';
 import { requestSignXDR } from '~extension/background/sign-transaction.background';
 
-chrome.runtime.onMessage.addListener((message: RuntimeMessage, sender, sendResponse) => {
-  let response: RuntimeResponse;
+let windowId: number | undefined;
 
-  const catchError = (error: any) => {
+(browser?.action || browser?.browserAction).onClicked.addListener(async () => {
+  let window: browser.Windows.Window;
+  if (!!windowId) {
+    try {
+      window = await browser.windows.get(windowId);
+      if (!!window) {
+        window.alwaysOnTop = true;
+        await browser.windows.update(windowId, {
+          focused: true,
+        });
+        return;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  window = await browser.windows.create({
+    url: chrome.runtime.getURL('index.html'),
+    height: 640,
+    width: 380,
+    type: 'popup',
+    focused: true,
+  });
+
+  window.alwaysOnTop = true;
+  windowId = window.id;
+});
+
+browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): Promise<RuntimeResponse> => {
+  if (!!windowId) {
+    try {
+      const window = await browser.windows.get(windowId);
+      if (!!window) {
+        await browser.windows.remove(windowId);
+        windowId = undefined;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const catchError = (error: any): RuntimeResponse => {
     console.error(error);
-    response = {
+    return {
       error: true,
-      errorMessage: 'Connection failed'
+      errorMessage: error?.message || 'Connection failed',
     };
-    return sendResponse(response);
   };
 
   switch (message.event) {
     case XBULL_CONNECT_BACKGROUND:
-      requestConnection(message)
-        .then(backgroundResponse => {
-          return sendResponse(backgroundResponse);
-        })
+      return requestConnection(message)
         .catch(catchError);
-      break;
 
     case XBULL_GET_PUBLIC_KEY_BACKGROUND:
-      requestPublicKey(message)
-        .then(sendResponse)
+      return requestPublicKey(message)
         .catch(catchError);
-      break;
 
     case XBULL_SIGN_XDR_BACKGROUND:
-      requestSignXDR(message)
-        .then(sendResponse)
+      return requestSignXDR(message)
         .catch(catchError);
-      break;
 
     default:
-      response = {
+      return {
         error: true,
         errorMessage: `We can't handle this type of event`,
       };
-      return sendResponse(response);
   }
-
-  return true;
 });

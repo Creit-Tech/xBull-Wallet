@@ -1,4 +1,5 @@
 import {
+  EventTypes,
   IConnectRequestPayload, IGetPublicKeyRequestPayload,
   IRuntimeConnectResponse, IRuntimeGetPublicKeyResponse, IRuntimeSignXDRResponse, ISignXDRRequestPayload,
   XBULL_CONNECT,
@@ -12,44 +13,68 @@ sdkScript.src = chrome.runtime.getURL('sdk.js');
 sdkScript.onload = () => sdkScript.remove();
 (document.head || document.documentElement).appendChild(sdkScript);
 
-
-window.addEventListener(XBULL_CONNECT, (event: any) => {
-  const payload: IConnectRequestPayload = event.detail;
-
-  if (payload.origin === window.origin) {
-    chrome.runtime.sendMessage({
-      event: XBULL_CONNECT_BACKGROUND,
-      payload,
-    }, (response: IRuntimeConnectResponse) => {
-      window.dispatchEvent(new CustomEvent(event.detail.eventId, { detail: response }));
-    });
+// message
+window.addEventListener('message', (event: any) => {
+  if (event.source !== window || !event.data || event.origin !== window.origin) {
+    return;
   }
-});
 
+  const {
+    type,
+    detail,
+    eventId,
+    returnFromCS
+  } = event.data as { detail: any , type: EventTypes, eventId: string, returnFromCS?: boolean };
 
-window.addEventListener(XBULL_GET_PUBLIC_KEY, (event: any) => {
-  const payload: IGetPublicKeyRequestPayload = event.detail;
-
-  if (payload.origin === window.origin) {
-    chrome.runtime.sendMessage({
-      event: XBULL_GET_PUBLIC_KEY_BACKGROUND,
-      payload,
-    }, (response: IRuntimeGetPublicKeyResponse) => {
-      window.dispatchEvent(new CustomEvent(event.detail.eventId, { detail: response }));
-    });
+  if (returnFromCS) {
+    return;
   }
-});
 
+  let payload: IConnectRequestPayload | IGetPublicKeyRequestPayload | ISignXDRRequestPayload;
+  switch (type) {
+    case XBULL_CONNECT:
+      payload = detail as IConnectRequestPayload;
+      chrome.runtime.sendMessage({
+        event: XBULL_CONNECT_BACKGROUND,
+        payload,
+      }, (response: IRuntimeConnectResponse) => {
+        window.postMessage({
+          returnFromCS: true,
+          detail: response,
+          eventId,
+        }, '*');
+      });
+      break;
 
-window.addEventListener(XBULL_SIGN_XDR, (event: any) => {
-  const payload: ISignXDRRequestPayload = event.detail;
+    case XBULL_GET_PUBLIC_KEY:
+      payload = detail as IGetPublicKeyRequestPayload;
+      chrome.runtime.sendMessage({
+        event: XBULL_GET_PUBLIC_KEY_BACKGROUND,
+        payload,
+      }, (response: IRuntimeGetPublicKeyResponse) => {
+        window.postMessage({
+          returnFromCS: true,
+          detail: response,
+          eventId,
+        }, '*');
+      });
+      break;
 
-  if (payload.origin === window.origin) {
-    chrome.runtime.sendMessage({
-      event: XBULL_SIGN_XDR_BACKGROUND,
-      payload,
-    }, (response: IRuntimeSignXDRResponse) => {
-      window.dispatchEvent(new CustomEvent(event.detail.eventId, { detail: response }));
-    });
+    case XBULL_SIGN_XDR:
+      payload = detail as ISignXDRRequestPayload;
+
+      if (payload.origin === window.origin) {
+        chrome.runtime.sendMessage({
+          event: XBULL_SIGN_XDR_BACKGROUND,
+          payload,
+        }, (response: IRuntimeSignXDRResponse) => {
+          window.postMessage({
+            returnFromCS: true,
+            detail: response,
+            eventId,
+          }, '*');
+        });
+      }
+      break;
   }
 });
