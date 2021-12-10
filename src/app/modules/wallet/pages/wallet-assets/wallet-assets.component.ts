@@ -174,4 +174,8 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     drawerRef.open();
   }
 
+  trackByBalanceline(index: number, balanceLine: Horizon.BalanceLine): string {
+    return balanceLine.balance;
+  }
+
 }
