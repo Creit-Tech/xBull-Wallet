@@ -7,12 +7,6 @@ import {
   XBULL_GET_PUBLIC_KEY, XBULL_GET_PUBLIC_KEY_BACKGROUND, XBULL_SIGN_XDR, XBULL_SIGN_XDR_BACKGROUND,
 } from '../interfaces';
 
-// Inject SDK in the document
-const sdkScript = document.createElement('script');
-sdkScript.src = chrome.runtime.getURL('sdk.js');
-sdkScript.onload = () => sdkScript.remove();
-(document.head || document.documentElement).appendChild(sdkScript);
-
 // message
 window.addEventListener('message', (event: any) => {
   if (event.source !== window || !event.data || event.origin !== window.origin) {
@@ -78,3 +72,15 @@ window.addEventListener('message', (event: any) => {
       break;
   }
 });
+
+// Inject SDK in the document
+const sdkScript = document.createElement('script');
+sdkScript.src = chrome.runtime.getURL('sdk.js');
+sdkScript.onload = () => {
+  window.postMessage({
+    type: 'XBULL_INJECTED',
+    returnFromCS: true,
+  }, window.origin);
+  sdkScript.remove();
+};
+(document.head || document.documentElement).appendChild(sdkScript);
