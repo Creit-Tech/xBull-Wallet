@@ -120,10 +120,14 @@ export class WalletsAccountsService {
           }
         });
 
-      this.activeAccountsStreams.push({
+      this.activeAccountsStreams.forEach(stream => {
+        stream.stream();
+      });
+
+      this.activeAccountsStreams = [{
         account: account._id,
         stream: newStream,
-      });
+      }];
     }
   }
 
@@ -157,10 +161,14 @@ export class WalletsAccountsService {
           }
         });
 
-      this.activeOperationsStreams.push({
+      this.activeOperationsStreams.forEach(stream => {
+        stream.stream();
+      });
+
+      this.activeOperationsStreams = [{
         account: params.account._id,
         stream: newStream,
-      });
+      }];
     }
   }
 
