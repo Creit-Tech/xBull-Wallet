@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import * as SDK from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import {BalanceAssetType, HorizonApisQuery, IHorizonApi, SettingsQuery} from '~root/state';
+import { from, Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +88,37 @@ export class StellarSdkService {
     }
 
     return finalAmount.isLessThanOrEqualTo(0) ? new BigNumber(0) : finalAmount;
+  }
+
+  getRecommendedFee(): Observable<string> {
+    const promise = this.Server.ledgers()
+      .order('desc')
+      .limit(1)
+      .call();
+
+    return from(promise)
+      .pipe(map((value) => {
+        return value.records[0];
+      }))
+      .pipe(switchMap(ledger => {
+        return this.Server.transactions()
+          .forLedger(ledger.sequence)
+          .call();
+      }))
+      .pipe(map(({ records }) => {
+        const fees = records.map(record => new BigNumber(record.max_fee));
+
+        const arrSort = fees.sort((a, b) => {
+          return a.toNumber() - b.toNumber();
+        });
+
+        const mid = Math.ceil(fees.length / 2);
+
+        return fees.length % 2 === 0
+          ? arrSort[mid].plus(arrSort[mid - 1]).dividedBy(2)
+          : arrSort[mid - 1];
+      }))
+      .pipe(map(value => value.toFixed()));
   }
 
 

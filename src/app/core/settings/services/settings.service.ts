@@ -3,7 +3,7 @@ import { SettingsState, SettingsStore } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { from, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +23,10 @@ export class SettingsService {
     this.settingsStore.updateState({ defaultFee: value });
   }
 
-  getRecommendedFee(): Observable<BigNumber> {
+  getRecommendedFee(): Observable<string> {
     this.settingsStore.updateUIState({ gettingRecommendedFee: true });
-    const promise = this.stellarSdkService.Server.feeStats();
 
-    return from(promise)
-      .pipe(map(({ last_ledger_base_fee }) => new BigNumber(last_ledger_base_fee)))
+    return this.stellarSdkService.getRecommendedFee()
       .pipe(tap(() => this.settingsStore.updateUIState({ gettingRecommendedFee: false })))
       .pipe(catchError(error => {
         this.settingsStore.updateUIState({ gettingRecommendedFee: false });
