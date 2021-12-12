@@ -28,3 +28,21 @@
     display: none !important;
   }
 }
+
+// iOS specific styles
+.ios body, .ios-safe-y .ant-drawer-content {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ios-safe-b .ant-drawer-content {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ios-safe-t .ant-drawer-content {
+  padding-top: env(safe-area-inset-top);
+}
+
+.ios body {
+  @apply bg-ash;
+}

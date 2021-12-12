@@ -44,6 +44,7 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
       nzTitle: 'Navigation menu',
       nzPlacement: 'right',
       nzCloseOnNavigation: true,
+      nzWrapClassName: 'ios-safe-y',
       nzBodyStyle: {
         padding: '0'
       }
