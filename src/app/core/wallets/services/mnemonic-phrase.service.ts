@@ -30,4 +30,34 @@ export class MnemonicPhraseService {
     const ed25519SeedObject = this.hdWallet.derivePath(path, seedString);
     return Keypair.fromRawEd25519Seed(ed25519SeedObject.key);
   }
+
+  // DO NOT USE THIS IN CASE YOU REALLY KNOW WHAT YOU ARE DOING
+  getTestAccount(): string[] {
+    return [
+      'bench',
+      'hurt',
+      'jump',
+      'file',
+      'august',
+      'wise',
+      'shallow',
+      'faculty',
+      'impulse',
+      'spring',
+      'exact',
+      'slush',
+      'thunder',
+      'author',
+      'capable',
+      'act',
+      'festival',
+      'slice',
+      'deposit',
+      'sauce',
+      'coconut',
+      'afford',
+      'frown',
+      'better',
+    ];
+  }
 }
