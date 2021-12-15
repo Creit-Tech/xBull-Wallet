@@ -77,14 +77,24 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     const generateAccountStorageSnapshot = this.generateAccountQuery.getValue();
     const accountsStoreSnapshot = this.walletsQuery.getValue();
 
-    if (generateAccountStorageSnapshot.pathType === 'new_wallet' && generateAccountStorageSnapshot.mnemonicPhrase) {
-      this.form.controls
-        .confirmPhrase.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.mnemonicPhrase)]);
-    }
+    // DO NOT USE THIS IN CASE YOU REALLY KNOW WHAT YOU ARE DOING
+    const testPassword = 'thisisatestpasswordandyoushouldnotuseit';
 
-    if (!accountsStoreSnapshot.globalPasswordHash && generateAccountStorageSnapshot.password) {
-      this.form.controls
-        .confirmPassword.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.password)]);
+    if (generateAccountStorageSnapshot.password !== testPassword) {
+      if (generateAccountStorageSnapshot.pathType === 'new_wallet' && generateAccountStorageSnapshot.mnemonicPhrase) {
+        this.form.controls
+          .confirmPhrase.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.mnemonicPhrase)]);
+      }
+
+      if (!accountsStoreSnapshot.globalPasswordHash && generateAccountStorageSnapshot.password) {
+        this.form.controls
+          .confirmPassword.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.password)]);
+      }
+    } else {
+      this.mnemonicPhraseService.getTestAccount().forEach(word => {
+        this.phraseArray.push(new FormControl(word, Validators.required));
+      });
+      this.form.controls.confirmPassword.patchValue(testPassword);
     }
   }
 
