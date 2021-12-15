@@ -1,7 +1,30 @@
 import { SitesConnectionsState, WalletsAccountsState } from '~root/state';
 import { ISitePermissions } from '~extension/interfaces';
 
-const getStore = () => new Promise<{ 'sites-connections': SitesConnectionsState, 'wallets-accounts': WalletsAccountsState }>((resolve, reject) => {
+export const getWindowId = () => new Promise<number | undefined>((resolve, reject) => {
+  chrome.storage.local.get(['windowId'], (items: { [key: string]: number | undefined }) => {
+    if (chrome.runtime.lastError) {
+      return reject(chrome.runtime.lastError);
+    } else {
+      return resolve(items?.windowId);
+    }
+  });
+});
+
+export const setWindowId = (windowId: number | undefined) => new Promise((resolve, reject) => {
+  chrome.storage.local.set({ windowId }, () => {
+    if (chrome.runtime.lastError) {
+      return reject(chrome.runtime.lastError);
+    } else {
+      return resolve(true);
+    }
+  });
+});
+
+const getStore = () => new Promise<{
+  'sites-connections': SitesConnectionsState,
+  'wallets-accounts': WalletsAccountsState
+}>((resolve, reject) => {
   chrome.storage.local.get(['AkitaStores'], (items: { [key: string]: any }) => {
     if (chrome.runtime.lastError) {
       return reject(chrome.runtime.lastError);

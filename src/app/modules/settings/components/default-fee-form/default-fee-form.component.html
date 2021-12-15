@@ -1,18 +1,15 @@
 <section class="h-full w-full relative">
   <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
+    <h2 class="m-0 p-0 text-off-white font-bold text-xl">
       Set default fee
     </h2>
   </div>
 
   <form class="mb-2">
     <div class="w-full">
-      <app-input mode="light"
-                 title="Fee expressed in troops"
-                 [formControl]="defaultFeeControl"
-                 mask="0000000"
-                 iconPath="/assets/icons/world-net.svg">
-      </app-input>
+      <input nz-input nzSize="large" type="text"
+             pattern="[0-9]*"
+             [formControl]="defaultFeeControl">
     </div>
   </form>
 
@@ -25,17 +22,20 @@
     </ng-template>
   </div>
 
-  <div class="w-full mb-4 relative" [appLoading]="gettingRecommendedFee$ | async">
-    <button [disabled]="gettingRecommendedFee$ | async"
-            (click)="onGetRecommendedFee()" class="btn btn--small btn-primary btn-primary--outline w-full">
-      Get recommended fee
-    </button>
+  <div class="w-full mb-4 relative">
+    <nz-spin [nzSpinning]="gettingRecommendedFee$ | async">
+      <button nz-button nzType="primary" nzGhost nzBlock nzSize="large"
+              (click)="onGetRecommendedFee()"
+              [disabled]="gettingRecommendedFee$ | async">
+        Get recommended fee
+      </button>
+    </nz-spin>
   </div>
 
   <div class="w-full">
-    <button [disabled]="defaultFeeControl.invalid"
-            (click)="onSubmit()"
-            class="w-full btn btn-success-alternative btn--small">
+    <button nz-button nzType="primary" nzBlock nzSize="large"
+            [disabled]="defaultFeeControl.invalid"
+            (click)="onSubmit()">
       Set fee
     </button>
   </div>

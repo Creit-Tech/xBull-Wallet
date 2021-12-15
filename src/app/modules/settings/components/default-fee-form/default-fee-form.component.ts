@@ -3,8 +3,8 @@ import { FormControl, Validators } from '@angular/forms';
 import { SettingsQuery } from '~root/state';
 import { take } from 'rxjs/operators';
 import { SettingsService } from '~root/core/settings/services/settings.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { Subject } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-default-fee-form',
@@ -20,7 +20,7 @@ export class DefaultFeeFormComponent implements OnInit {
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
-    private readonly toastrService: ToastrService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -35,17 +35,14 @@ export class DefaultFeeFormComponent implements OnInit {
 
   onSubmit(): void {
     this.settingsService.setDefaultFee(this.defaultFeeControl.value);
-    this.toastrService.open({
-      title: 'Done!',
-      message: `Default fee updated to: ${this.defaultFeeControl.value}`,
-      status: 'success'
-    });
+    this.nzMessageService.success(`Default fee updated to: ${this.defaultFeeControl.value}`)
   }
 
   onGetRecommendedFee(): void {
     this.settingsService.getRecommendedFee()
       .subscribe(fee => {
         this.recommendedFee$.next(fee.toString());
+        this.defaultFeeControl.patchValue(fee.toString());
       });
   }
 

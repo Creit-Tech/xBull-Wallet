@@ -10,10 +10,16 @@ import {
 import { requestConnection } from '~extension/background/connection.background';
 import { requestPublicKey } from '~extension/background/public-key.background';
 import { requestSignXDR } from '~extension/background/sign-transaction.background';
-
-let windowId: number | undefined;
+import { getWindowId, setWindowId } from '~extension/background/state.background';
 
 (browser?.action || browser?.browserAction).onClicked.addListener(async () => {
+  let windowId: number | undefined;
+  try {
+    windowId = await getWindowId();
+  } catch (e) {
+    console.error(e);
+  }
+
   let window: browser.Windows.Window;
   if (!!windowId) {
     try {
@@ -39,16 +45,26 @@ let windowId: number | undefined;
   });
 
   window.alwaysOnTop = true;
-  windowId = window.id;
+
+  if (!!window.id) {
+    await setWindowId(window.id);
+  }
 });
 
 browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): Promise<RuntimeResponse> => {
+  let windowId: number | undefined;
+  try {
+    windowId = await getWindowId();
+  } catch (e) {
+    console.error(e);
+  }
+
   if (!!windowId) {
     try {
       const window = await browser.windows.get(windowId);
       if (!!window) {
         await browser.windows.remove(windowId);
-        windowId = undefined;
+        await setWindowId(undefined);
       }
     } catch (e) {
       console.error(e);
