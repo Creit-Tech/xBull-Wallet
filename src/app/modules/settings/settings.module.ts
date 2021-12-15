@@ -39,6 +39,8 @@ import {NzMessageModule} from "ng-zorro-antd/message";
 import { LockingComponent } from './pages/locking/locking.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({
@@ -84,6 +86,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     NzMessageModule,
     NzSwitchModule,
     NzSelectModule,
+    NzSpinModule,
+    NgxMaskModule,
   ],
 })
 export class SettingsModule { }

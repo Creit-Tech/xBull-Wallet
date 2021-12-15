@@ -54,9 +54,17 @@ export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
     const generateAccountStorageSnapshot = this.generateAccountQuery.getValue();
     const accountsStoreSnapshot = this.walletsQuery.getValue();
 
-    if (!accountsStoreSnapshot.globalPasswordHash && generateAccountStorageSnapshot.password) {
-      this.form.controls
-        .confirmPassword.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.password)]);
+    // DO NOT USE THIS IN CASE YOU REALLY KNOW WHAT YOU ARE DOING
+    const testPassword = 'thisisatestpasswordandyoushouldnotuseit';
+
+    if (generateAccountStorageSnapshot.password !== testPassword) {
+      if (!accountsStoreSnapshot.globalPasswordHash && generateAccountStorageSnapshot.password) {
+        this.form.controls
+          .confirmPassword.setValidators([Validators.required, sameValueValidator(generateAccountStorageSnapshot.password)]);
+      }
+    } else {
+      this.form.controls.secretKey.patchValue('SCPA5OX4EYINOPAUEQCPY6TJMYICUS5M7TVXYKWXR3G5ZRAJXY3C37GF');
+      this.form.controls.confirmPassword.patchValue(testPassword);
     }
   }
 

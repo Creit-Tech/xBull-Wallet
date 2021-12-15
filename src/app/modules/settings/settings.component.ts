@@ -4,9 +4,9 @@ import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { CheckboxControlValueAccessor, FormControl } from '@angular/forms';
 import { takeUntil } from 'rxjs/operators';
-import { ModalsService } from '~root/shared/modals/modals.service';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 import { HorizonApisQuery, WalletsAccountsQuery, WalletsQuery } from '~root/state';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-settings',
@@ -28,10 +28,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
-    private readonly modalsService: ModalsService,
     private readonly walletsQuery: WalletsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   advanceModeStateSubscription: Subscription = this.advanceMode$
@@ -57,7 +57,14 @@ export class SettingsComponent implements OnInit, OnDestroy {
   }
 
   async conDefaultFeeClicked(): Promise<void> {
-    await this.modalsService.open<DefaultFeeFormComponent>({ component: DefaultFeeFormComponent });
+    const drawerRef = this.nzDrawerService.create<DefaultFeeFormComponent>({
+      nzContent: DefaultFeeFormComponent,
+      nzPlacement: 'bottom',
+      nzHeight: 'auto',
+      nzTitle: ''
+    });
+
+    drawerRef.open();
   }
 
 }
