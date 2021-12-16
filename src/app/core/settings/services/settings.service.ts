@@ -93,7 +93,7 @@ export class SettingsService {
     });
   }
 
-  addDeviceAuthToken(data: { passwordAuthToken: string; passwordAuthTokenIdentifier: string }): void {
+  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string }): void {
     this.settingsStore.updateState({
       passwordAuthToken: data.passwordAuthToken,
       passwordAuthTokenIdentifier: data.passwordAuthTokenIdentifier,

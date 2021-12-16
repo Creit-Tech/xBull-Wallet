@@ -158,14 +158,12 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
     const passwordAuthToken = await this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise();
 
-    if (!passwordAuthToken) {
-      this.nzMessageService.error(`Device Auth is not set up, go to settings if you want to set up Device Auth`);
-      return;
-    }
-
     let decryptedPassword: string;
     try {
-      decryptedPassword = await this.deviceAuthService.decryptWithDevice(passwordAuthToken, PASSWORD_IDENTIFIER);
+      decryptedPassword = await this.deviceAuthService.decryptWithDevice({
+        token: passwordAuthToken,
+        identifier: PASSWORD_IDENTIFIER
+      });
     } catch (e) {
       this.nzMessageService.error(
         e.message || `We were not able to decrypt the password with this device`
