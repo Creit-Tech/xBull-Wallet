@@ -40,7 +40,10 @@ const persistStateParams: Partial<PersistStateParams> = {
       };
     }
 
-    return state;
+    return {
+      ...state,
+      UIState: {},
+    };
   },
   preStoreUpdate(storeName: string, state: any, initialState: any): any {
     return migrationsHandler(storeName, state, initialState);
