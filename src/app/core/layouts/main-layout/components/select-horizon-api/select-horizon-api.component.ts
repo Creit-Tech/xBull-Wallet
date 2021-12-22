@@ -3,8 +3,8 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { HorizonApisQuery, IHorizonApi, SettingsQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-select-horizon-api',
@@ -28,9 +28,9 @@ export class SelectHorizonApiComponent implements OnInit, AfterViewInit, OnDestr
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly horizonApisService: HorizonApisService,
     private readonly walletsService: WalletsService,
-    private readonly toastrService: ToastrService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly settingsQuery: SettingsQuery,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -46,11 +46,7 @@ export class SelectHorizonApiComponent implements OnInit, AfterViewInit, OnDestr
       publicKey: walletAccount.publicKey,
     });
 
-    this.toastrService.open({
-      status: 'success',
-      message: `${horizon.name} selected`,
-      title: 'Done!'
-    });
+    this.nzMessageService.success(`${horizon.name} selected`);
 
     this.close.emit();
   }

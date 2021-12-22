@@ -12,7 +12,6 @@ import { merge, Subject } from 'rxjs';
 import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';

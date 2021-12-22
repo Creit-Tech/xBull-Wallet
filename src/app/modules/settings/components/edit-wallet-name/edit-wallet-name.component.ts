@@ -3,8 +3,8 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { IWallet } from '~root/state';
 import { FormControl, Validators } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { take, takeUntil } from 'rxjs/operators';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-edit-wallet-name',
@@ -26,7 +26,7 @@ export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy
 
   constructor(
     private readonly walletsService: WalletsService,
-    private readonly toastrService: ToastrService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -57,11 +57,7 @@ export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.walletsService.updateWalletName(wallet._id, this.nameField.value);
 
-    this.toastrService.open({
-      title: 'Process completed',
-      message: `Wallet's name updated to "${this.nameField.value}"`,
-      status: 'success',
-    });
+    this.nzMessageService.success(`Wallet's name updated to "${this.nameField.value}"`);
 
     this.onClose();
   }

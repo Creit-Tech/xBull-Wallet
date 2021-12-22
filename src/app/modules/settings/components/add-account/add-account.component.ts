@@ -4,8 +4,8 @@ import { IWallet, IWalletsAccount, IWalletWithMnemonicPhrase, IWalletWithSecretK
 import { FormControl, Validators } from '@angular/forms';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-add-account',
@@ -44,10 +44,10 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
 
   constructor(
     private readonly cryptoService: CryptoService,
-    private readonly toastrService: ToastrService,
     private readonly walletsService: WalletsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsQuery: WalletsQuery,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +58,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
     const hash = this.cryptoService.hashPassword(this.password.value);
 
     if (hash !== globalPasswordHash) {
-      this.toastrService.open({
-        status: 'error',
-        message: 'The password you just used is not your saved password',
-        title: 'Oh oh!'
-      });
+      this.nzMessageService.error('The password you just used is not your saved password');
       return;
     }
 
@@ -78,11 +74,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
         break;
     }
 
-    this.toastrService.open({
-      title: 'Completed.',
-      message: `Your new account was added to the wallet ${parentWallet.name}`,
-      status: 'success',
-    });
+    this.nzMessageService.success(`Your new account was added to the wallet ${parentWallet.name}`);
 
     this.close.emit();
   }
@@ -97,11 +89,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
       });
     } catch (e) {
       console.error(e);
-      this.toastrService.open({
-        status: 'error',
-        message: 'We were not able to save your new account',
-        title: 'Oh oh!'
-      });
+      this.nzMessageService.error('We were not able to save your new account');
       throw e;
     }
   }
@@ -113,11 +101,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
       decryptedPhrase = this.cryptoService.decryptText(parentWallet.mnemonicPhrase, this.password.value);
     } catch (e) {
       console.error(e);
-      this.toastrService.open({
-        status: 'error',
-        message: 'We were not able to decrypt your Mnemonic Phrase',
-        title: 'Oh oh!'
-      });
+      this.nzMessageService.error('We were not able to decrypt your Mnemonic Phrase');
       throw e;
     }
 
@@ -133,11 +117,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
       });
     } catch (e) {
       console.error(e);
-      this.toastrService.open({
-        status: 'error',
-        message: 'We were not able to add the new account',
-        title: 'Oh oh!'
-      });
+      this.nzMessageService.error('We were not able to add the new account');
       throw e;
     }
   }
