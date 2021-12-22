@@ -15,9 +15,9 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ClaimableBalancesQuery, HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ClaimableBalancesService } from '~root/core/services/claimable-balances.service';
 import {WalletsAssetsService} from "~root/core/wallets/services/wallets-assets.service";
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-claimable-balance-details',
@@ -43,10 +43,10 @@ export class ClaimableBalanceDetailsComponent implements OnInit, AfterViewInit, 
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly componentCreatorService: ComponentCreatorService,
-    private readonly toastrService: ToastrService,
     private readonly claimableBalancesService: ClaimableBalancesService,
     private readonly claimableBalancesQuery: ClaimableBalancesQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -149,19 +149,10 @@ export class ClaimableBalanceDetailsComponent implements OnInit, AfterViewInit, 
   async sendTransaction(signedXdr: string): Promise<void> {
     try {
       await this.claimableBalancesService.claimBalance(signedXdr);
-
-      this.toastrService.open({
-        message: 'Funds have been added to your balances',
-        status: 'success',
-        title: 'Balance claimed'
-      });
+      this.nzMessageService.success('Funds have been added to your balances');
       this.accept.emit();
     } catch (e) {
-      this.toastrService.open({
-        message: 'We were not able to complete the operation.',
-        status: 'error',
-        title: 'Oops!'
-      });
+      this.nzMessageService.error('We were not able to complete the operation.');
     }
   }
 

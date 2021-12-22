@@ -16,8 +16,8 @@ import { Server, ServerApi } from 'stellar-sdk';
 import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ClaimableBalanceDetailsComponent } from '~root/modules/lab/components/claimable-balance-details/claimable-balance-details.component';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ClaimableBalancesService } from '~root/core/services/claimable-balances.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-claim-claimable-balance',
@@ -48,11 +48,7 @@ export class ClaimClaimableBalanceComponent implements AfterViewInit, OnDestroy 
     }))
     .pipe(catchError(error => {
       console.error(error);
-      this.toastrService.open({
-        status: 'error',
-        message: `Please check you have internet and the Horizon API you're using is the correct one.`,
-        title: `Can't retrieve the records.`
-      });
+      this.nzMessageService.error(`Please check you have internet and the Horizon API you're using is the correct one.`);
 
       return of([]);
     }));
@@ -61,10 +57,10 @@ export class ClaimClaimableBalanceComponent implements AfterViewInit, OnDestroy 
     private readonly router: Router,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly componentCreatorService: ComponentCreatorService,
-    private readonly toastrService: ToastrService,
     private readonly claimableBalancesQuery: ClaimableBalancesQuery,
     private readonly claimableBalancesService: ClaimableBalancesService,
     private readonly settingsQuery: SettingsQuery,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngAfterViewInit(): void {
