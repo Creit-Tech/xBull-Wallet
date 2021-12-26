@@ -13,7 +13,7 @@
 
     <dt class="text-off-black text-base font-bold mb-1">Date:</dt>
     <dd class="text-label text-sm mb-3">
-      Pushed at {{ operation.createdAt | date: 'MMM dd, yyyy' }}
+      Pushed at {{ operation.createdAt | date: 'MMM dd, yyyy hh:mm a' }}
     </dd>
 
     <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
