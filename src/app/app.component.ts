@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, HostListener, Inject, OnInit, Renderer2} from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { HorizonApisQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
+import { HorizonApisQuery, SettingsQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
 import { combineLatest, forkJoin, of, pipe, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilKeyChanged, filter, skip, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { Order, selectPersistStateInit } from '@datorama/akita';
@@ -15,9 +15,12 @@ import { GlobalsService } from '~root/lib/globals/globals.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  backgroundImg$ = this.settingsQuery.backgroundImg$;
+  backgroundCover$ = this.settingsQuery.backgroundCover$;
 
   constructor(
     private readonly settingsService: SettingsService,
+    private readonly settingsQuery: SettingsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,

@@ -12,6 +12,7 @@ import {AntiSpamOptionsComponent} from '~root/modules/settings/pages/anti-spam/a
 import {AntiSpamKeysComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-keys/anti-spam-keys.component';
 import {AntiSpamClaimableAssetsComponent} from '~root/modules/settings/pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
 import {LockingComponent} from "~root/modules/settings/pages/locking/locking.component";
+import { BackgroundImageComponent } from '~root/modules/settings/pages/background-image/background-image.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'sites-connected',
     component: SitesConnectedComponent,
+  },
+  {
+    path: 'background-image',
+    component: BackgroundImageComponent,
   },
   {
     path: 'locking',

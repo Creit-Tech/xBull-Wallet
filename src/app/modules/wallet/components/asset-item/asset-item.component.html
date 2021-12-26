@@ -4,6 +4,7 @@
     *ngIf="!(skeleton$ | async); else skeletonTemplate">
     <section class="w-full h-auto mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden" style="max-width: 2.5rem !important; max-height: 2.5rem">
       <img *ngIf="assetImg$ | async as assetImg; else imgSkeleton"
+           class="rounded-3xl"
            [src]="assetImg" alt=""/>
       <ng-template #imgSkeleton>
         <div class="w-full h-full rounded-3xl skeleton-box"></div>
