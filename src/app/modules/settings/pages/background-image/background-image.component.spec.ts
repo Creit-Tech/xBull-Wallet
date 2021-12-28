@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ToastrComponent } from './toastr.component';
+import { BackgroundImageComponent } from './background-image.component';
 
-describe('ToastrComponent', () => {
-  let component: ToastrComponent;
-  let fixture: ComponentFixture<ToastrComponent>;
+describe('BackgroundImageComponent', () => {
+  let component: BackgroundImageComponent;
+  let fixture: ComponentFixture<BackgroundImageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ToastrComponent ]
+      declarations: [ BackgroundImageComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ToastrComponent);
+    fixture = TestBed.createComponent(BackgroundImageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

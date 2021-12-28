@@ -1,6 +1,6 @@
 import { Directive, EventEmitter, HostListener, Inject, Input, Output, Renderer2, RendererFactory2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Directive({
   selector: '[appClipboard]'
@@ -13,7 +13,7 @@ export class ClipboardDirective {
   constructor(
     private readonly rendererFactory2: RendererFactory2,
     @Inject(DOCUMENT) private readonly document: Document,
-    private readonly toastrService: ToastrService,
+    private readonly nzMessageService: NzMessageService,
   ) {
     this.renderer = this.rendererFactory2.createRenderer(null, null);
   }
@@ -39,17 +39,9 @@ export class ClipboardDirective {
 
       this.copied.emit(this.textToCopy);
 
-      this.toastrService.open({
-        status: 'success',
-        title: 'Copy completed',
-        message: 'Text copied to the clipboard'
-      });
+      this.nzMessageService.success('Text copied to the clipboard');
     } catch (e) {
-      this.toastrService.open({
-        status: 'error',
-        title: 'Oops!',
-        message: `We couldn't copy the text`
-      });
+      this.nzMessageService.error(`We couldn't copy the text`);
     }
   }
 

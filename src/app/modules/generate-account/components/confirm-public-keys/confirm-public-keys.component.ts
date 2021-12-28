@@ -2,10 +2,10 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { BehaviorSubject } from 'rxjs';
 import { SettingsQuery } from '~root/state';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-confirm-public-keys',
@@ -35,8 +35,8 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly hardwareWalletsService: HardwareWalletsService,
-    private readonly toastrService: ToastrService,
     private readonly walletsService: WalletsService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -83,11 +83,8 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
       }
 
       if (newAccounts.every(account => account.key === firstAccount)) {
-        this.toastrService.open({
-          timer: 5000,
-          status: 'error',
-          title: `Oh oh!`,
-          message: `We can't get the accounts from your wallet, please make sure your wallet is unlocked and with the Stellar App opened`,
+        this.nzMessageService.error(`We can't get the accounts from your wallet, please make sure your wallet is unlocked and with the Stellar App opened`, {
+          nzDuration: 5000,
         });
         await this.onClose();
         return;

@@ -16,6 +16,9 @@ export class SettingsQuery extends Query<SettingsState> {
   passwordAuthTokenActive$ = this.select(state => state.passwordAuthTokenActive);
   passwordAuthToken$ = this.select(state => state.passwordAuthToken);
 
+  backgroundImg$ = this.select(state => state.backgroundImg);
+  backgroundCover$ = this.select(state => state.backgroundCover);
+
   constructor(protected store: SettingsStore) {
     super(store);
   }

@@ -8,11 +8,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import BigNumber from 'bignumber.js';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-limit',
@@ -72,10 +72,10 @@ export class LimitComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly stellarSdkService: StellarSdkService,
     private readonly modalsService: ModalsService,
-    private readonly toastrService: ToastrService,
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletsOffersQuery: WalletsOffersQuery,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -169,17 +169,9 @@ export class LimitComponent implements OnInit, OnDestroy {
   async sendTradeOrder(signedXdr: string): Promise<void> {
     try {
       await this.walletsOffersService.sendPathPaymentStrictReceive(signedXdr);
-      this.toastrService.open({
-        message: 'The asset trade were successful',
-        status: 'success',
-        title: 'Operation completed'
-      });
+      this.nzMessageService.success('The asset trade were successful');
     } catch (e) {
-      this.toastrService.open({
-        message: 'We were not able to complete the trade.',
-        status: 'error',
-        title: 'Oops!'
-      });
+      this.nzMessageService.error('We were not able to complete the trade.');
     }
   }
 

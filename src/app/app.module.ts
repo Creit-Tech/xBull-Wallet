@@ -9,7 +9,6 @@ import { ENV, environment } from '~env';
 import { MainLayoutComponent } from './core/layouts/main-layout/main-layout.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { HttpClientModule } from '@angular/common/http';
-import { ToastrModule } from '~root/shared/toastr/toastr.module';
 import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundModule } from '~root/modules/background/background.module';
 import { SelectAccountComponent } from './core/layouts/main-layout/components/select-account/select-account.component';
@@ -51,7 +50,6 @@ registerLocaleData(en);
     AkitaNgRouterStoreModule,
     ModalsModule.forRoot(),
     HttpClientModule,
-    ToastrModule.forRoot(),
     NgxMaskModule.forRoot(),
     BackgroundModule,
     FormsComponentsModule,

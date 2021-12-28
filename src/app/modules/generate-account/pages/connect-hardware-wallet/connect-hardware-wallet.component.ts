@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ConfirmPublicKeysComponent } from '~root/modules/generate-account/components/confirm-public-keys/confirm-public-keys.component';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ConfirmTrezorKeysComponent } from '~root/modules/generate-account/components/confirm-trezor-keys/confirm-trezor-keys.component';
 import {GlobalsService} from "~root/lib/globals/globals.service";
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -20,9 +20,9 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly hardwareWalletsService: HardwareWalletsService,
-    private readonly toastrService: ToastrService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly globalsService: GlobalsService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -39,12 +39,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
       transport = await this.hardwareWalletsService.connectLedgerWallet();
     } catch (e) {
       console.error(e);
-      await this.toastrService.open({
-        message: `We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it`,
-        title: `We can't continue`,
-        status: 'error',
-        timer: 5000,
-      });
+      await this.nzMessageService.error(`We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it`);
       return;
     }
 
@@ -99,12 +94,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
   }
 
   async showSuccessMessage(): Promise<void> {
-    this.toastrService.open({
-      timer: 10000,
-      status: 'success',
-      title: 'Process completed!',
-      message: 'Accounts imported correctly, this window will be closed in the next 5 seconds.'
-    });
+    this.nzMessageService.success(`Accounts imported correctly, this window will be closed in the next 5 seconds.`);
 
     await new Promise(resolve => setTimeout(resolve, 5000));
 

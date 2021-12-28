@@ -8,9 +8,9 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { Subject } from 'rxjs';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-offer-details',
@@ -37,8 +37,8 @@ export class OfferDetailsComponent implements OnInit, OnDestroy {
     private readonly modalsService: ModalsService,
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletsOffersQuery: WalletsOffersQuery,
-    private readonly toastrService: ToastrService,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -99,18 +99,10 @@ export class OfferDetailsComponent implements OnInit, OnDestroy {
   async sendTransaction(signedXdr: string): Promise<void> {
     try {
       await this.walletsOffersService.sendManageSellOffer(signedXdr);
-      this.toastrService.open({
-        message: 'We removed the offer correctly',
-        status: 'success',
-        title: 'Operation completed'
-      });
+      this.nzMessageService.success('We removed the offer correctly');
       this.offerCancelled.emit();
     } catch (e) {
-      this.toastrService.open({
-        message: 'We were not able to complete the operation.',
-        status: 'error',
-        title: 'Oops!'
-      });
+      this.nzMessageService.error('We were not able to complete the operation.');
     }
   }
 

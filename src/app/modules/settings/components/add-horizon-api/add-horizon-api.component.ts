@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { Networks } from 'stellar-sdk';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-add-horizon-api',
@@ -28,8 +28,8 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
   }) as FormGroupTyped<IAddHorizonApiForm>;
 
   constructor(
-    private readonly toastrService: ToastrService,
     private readonly horizonApisService: HorizonApisService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -41,11 +41,7 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
   }
 
   onConfirm(): void {
-    this.toastrService.open({
-      status: 'success',
-      title: 'Horizon API added',
-      message: 'The APIs was successfully added to the store',
-    });
+    this.nzMessageService.success('The APIs was successfully added to the store');
 
     this.horizonApisService.addHorizonApi({
       networkPassphrase: this.form.value.passphrase,
