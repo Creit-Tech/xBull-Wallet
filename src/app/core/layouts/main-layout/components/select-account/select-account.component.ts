@@ -5,7 +5,7 @@ import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~r
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { FormControl, Validators } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-select-account',
@@ -46,7 +46,7 @@ export class SelectAccountComponent implements OnInit, AfterViewInit, OnDestroy 
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsQuery: WalletsQuery,
     private readonly walletsService: WalletsService,
-    private readonly toastrService: ToastrService,
+    private readonly nzMessageService: NzMessageService
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +58,7 @@ export class SelectAccountComponent implements OnInit, AfterViewInit, OnDestroy 
       publicKey: walletAccount.publicKey,
     });
 
-    this.toastrService.open({
-      status: 'success',
-      message: `Account ${walletAccount.name} selected`,
-      title: 'Done!'
-    });
+    this.nzMessageService.success(`Account ${walletAccount.name} selected`);
 
     this.close.emit();
   }

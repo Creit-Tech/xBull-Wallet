@@ -13,12 +13,12 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { TransactionBuilder, Operation, Account } from 'stellar-sdk';
 import { merge, Subject } from 'rxjs';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-offer',
@@ -76,9 +76,9 @@ export class OfferComponent implements OnInit, OnDestroy {
     private readonly modalsService: ModalsService,
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletsOffersQuery: WalletsOffersQuery,
-    private readonly toastrService: ToastrService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -140,17 +140,9 @@ export class OfferComponent implements OnInit, OnDestroy {
   async sendOffer(signedXdr: string): Promise<void> {
     try {
       await this.walletsOffersService.sendManageSellOffer(signedXdr);
-      this.toastrService.open({
-        message: 'We placed the offer correctly',
-        status: 'success',
-        title: 'Operation completed'
-      });
+      this.nzMessageService.success('We placed the offer correctly');
     } catch (e) {
-      this.toastrService.open({
-        message: 'We were not able to complete the operation.',
-        status: 'error',
-        title: 'Oops!'
-      });
+      this.nzMessageService.error('We were not able to complete the operation.');
     }
   }
 

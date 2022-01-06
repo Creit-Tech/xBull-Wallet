@@ -3,9 +3,9 @@ import { HardwareWalletsService } from '~root/core/services/hardware-wallets.ser
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { StellarAddress, Success, Unsuccessful } from 'trezor-connect';
-import { ToastrService } from '~root/shared/toastr/toastr.service';
 import { SettingsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-confirm-trezor-keys',
@@ -32,9 +32,9 @@ export class ConfirmTrezorKeysComponent implements OnInit {
 
   constructor(
     private readonly hardwareWalletsService: HardwareWalletsService,
-    private readonly toastrService: ToastrService,
     private readonly settingsQuery: SettingsQuery,
     private readonly walletsService: WalletsService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -64,21 +64,15 @@ export class ConfirmTrezorKeysComponent implements OnInit {
       });
     } catch (e) {
       console.error(e);
-      await this.toastrService.open({
-        message: `There was an error we didn't expect, try again or contact support`,
-        title: `Ups!`,
-        status: 'error',
-        timer: 5000,
+      this.nzMessageService.error(`There was an error we didn't expect, try again or contact support`, {
+        nzDuration: 5000
       });
       return;
     }
 
     if (!response.success) {
-      await this.toastrService.open({
-        message: response.payload.error,
-        title: `We can't continue`,
-        status: 'error',
-        timer: 5000,
+      this.nzMessageService.error(`We can't continue`, {
+        nzDuration: 5000,
       });
       return;
     }

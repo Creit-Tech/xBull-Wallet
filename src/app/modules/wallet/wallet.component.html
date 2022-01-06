@@ -1,18 +1,18 @@
 <section *ngIf="accountCreated$ | async; else accountNotCreated" class="flex flex-col h-full">
-  <section class="w-full px-4 pt-6 pb-1">
+  <section class="w-full px-4 pb-1 bg-ash">
     <app-segment [buttons]="[{
-    text: 'Assets',
-    value: 'asset',
-    routeLink: '/wallet/assets'
-  }, {
-    text: 'Offers',
-    value: 'offers',
-    routeLink: '/wallet/offers'
-  }, {
-    text: 'Transactions',
-    value: 'transactions',
-    routeLink: '/wallet/transactions'
-  }]"></app-segment>
+      text: 'Assets',
+      value: 'asset',
+      routeLink: '/wallet/assets'
+    }, {
+      text: 'Offers',
+      value: 'offers',
+      routeLink: '/wallet/offers'
+    }, {
+      text: 'Transactions',
+      value: 'transactions',
+      routeLink: '/wallet/transactions'
+    }]"></app-segment>
   </section>
 
   <section class="w-full h-full overflow-y-auto no-scrollbar">

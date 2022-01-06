@@ -1,3 +1,12 @@
 <ion-app class="block bg-off-black h-full">
-  <router-outlet id="main"></router-outlet>
+  <section class="h-screen w-screen relative bg-center bg-cover"
+           [style.background-image]="'url(' + (backgroundImg$ | async) + ')'">
+    <div class="top-0 left-0 absolute w-full h-full z-0 animation"
+         [style.background-color]="backgroundCover$ | async"></div>
+
+    <div class="h-screen w-screen relative">
+      <router-outlet id="main"></router-outlet>
+    </div>
+
+  </section>
 </ion-app>

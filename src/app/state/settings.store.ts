@@ -21,6 +21,10 @@ export interface SettingsState {
 
   // TODO: this should be Array<IWalletsOperation['operationRecord']['type']> but the types are getting issues, fix this later
   operationTypesToShow: string[];
+
+  // Background settings
+  backgroundImg?: string;
+  backgroundCover?: string;
 }
 
 export function createInitialState(): SettingsState {

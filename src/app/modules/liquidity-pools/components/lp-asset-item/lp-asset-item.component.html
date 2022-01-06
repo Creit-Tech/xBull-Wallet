@@ -1,7 +1,7 @@
 <ng-container *ngIf="(lpAsset$ | async)?.dataLoaded; else skeletonTemplate">
   <div *ngFor="let reserve of (reserves$ | async)"
        class="w-10 h-10 mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
-    <img class="w-full h-full"
+    <img class="w-full h-full rounded-3xl"
          *ngIf="reserve?.image; else imgSkeleton"
          [src]="reserve.image" alt=""/>
     <ng-template #imgSkeleton>

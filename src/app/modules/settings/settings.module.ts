@@ -41,6 +41,8 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NgxMaskModule } from 'ngx-mask';
+import { BackgroundImageComponent } from './pages/background-image/background-image.component';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 
 
 @NgModule({
@@ -62,7 +64,8 @@ import { NgxMaskModule } from 'ngx-mask';
     AntiSpamOptionsComponent,
     AntiSpamKeysComponent,
     AntiSpamClaimableAssetsComponent,
-    LockingComponent
+    LockingComponent,
+    BackgroundImageComponent
   ],
   imports: [
     CommonModule,
@@ -88,6 +91,7 @@ import { NgxMaskModule } from 'ngx-mask';
     NzSelectModule,
     NzSpinModule,
     NgxMaskModule,
+    NzSliderModule,
   ],
 })
 export class SettingsModule { }

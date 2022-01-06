@@ -108,4 +108,8 @@ export class SettingsService {
       passwordAuthTokenActive: false,
     });
   }
+
+  updateBackgroundImage(data: Pick<SettingsState, 'backgroundImg' | 'backgroundCover'>): void {
+    this.settingsStore.updateState(data);
+  }
 }
