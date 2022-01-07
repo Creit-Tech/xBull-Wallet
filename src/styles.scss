@@ -8,7 +8,7 @@
 @import "theme/skeleton";
 
 * {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -27,4 +27,32 @@
   app-root, app-send-funds, ant-drawer-mask {
     display: none !important;
   }
+}
+
+// iOS specific styles
+.ios .main-wrapper {
+  border-top: env(safe-area-inset-top) solid;
+  border-bottom: env(safe-area-inset-bottom) solid;
+  @apply border-ash;
+}
+
+.ios-safe-y .ant-drawer-content {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ios .ant-image-preview-operations {
+  top: env(safe-area-inset-top);
+}
+
+.ios-safe-b .ant-drawer-content {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.ios-safe-t .ant-drawer-content {
+  padding-top: env(safe-area-inset-top);
+}
+
+.ios body {
+  @apply bg-ash;
 }

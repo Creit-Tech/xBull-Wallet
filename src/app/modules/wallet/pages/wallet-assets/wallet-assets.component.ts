@@ -24,30 +24,21 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
   reloadSelectedAccount$: Subject<void> = new Subject<void>();
 
-  accountBalances$ = this.selectedAccount$
-    .pipe(filter(account => !!account))
-    .pipe(map(account => {
-      if (account?.accountRecord?.balances) {
-        return this.walletsAssetsService.filterBalancesLines(account.accountRecord.balances);
-      } else {
-        return [];
-      }
-    }));
-
-  accountLpBalances$: Observable<Array<Horizon.BalanceLineLiquidityPool>> = this.selectedAccount$
-    .pipe(filter<any>(Boolean))
+  accountBalancesItems$ = this.selectedAccount$
     .pipe(map((account: IWalletsAccount) => {
-      if (account.accountRecord?.balances) {
-        return account.accountRecord.balances
-          .filter(b => b.asset_type === 'liquidity_pool_shares');
-      } else {
+      if (!account?.accountRecord?.balances) {
         return [];
       }
-    })) as Observable<Horizon.BalanceLineLiquidityPool[]>;
 
-    // A hack because for some reason the view doesn't want to update with the observable (I'm probably missing something obvious)
-    // TODO: We need to update this
-    // .pipe(tap(() => setTimeout(() => this.cdr.detectChanges(), 10)));
+      return account.accountRecord.balances.map((balance): { data: any, type: 'lp' | 'regular' } => {
+        return {
+          data: balance,
+          type: balance.asset_type === 'liquidity_pool_shares'
+            ? 'lp'
+            : 'regular',
+        };
+      });
+    }));
 
   constructor(
     private readonly modalsService: ModalsService,
@@ -174,8 +165,8 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
     drawerRef.open();
   }
 
-  trackByBalanceline(index: number, balanceLine: Horizon.BalanceLine): string {
-    return balanceLine.balance;
+  trackByBalanceline(index: number, item: { data: Horizon.BalanceLine }): string {
+    return item.data.balance;
   }
 
 }

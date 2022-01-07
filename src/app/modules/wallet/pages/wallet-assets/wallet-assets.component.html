@@ -1,20 +1,22 @@
 <section class="h-full overscroll-contain overflow-y-scroll no-scrollbar">
-  <ul>
-    <app-asset-item *ngFor="let balanceRecord of (accountBalances$ | async); trackBy: trackByBalanceline"
-                    [balanceLine]="balanceRecord"
-                    (click)="assetDetails(balanceRecord)">
-    </app-asset-item>
-  </ul>
+  <cdk-virtual-scroll-viewport itemSize="10" class="h-full w-full no-scrollbar">
+    <nz-list class="h-full w-full no-scrollbar">
+      <nz-list-item *cdkVirtualFor="let item of (accountBalancesItems$ | async); trackBy: trackByBalanceline">
+        <app-asset-item class="w-full"
+                        *ngIf="item.type === 'regular'"
+                        [balanceLine]="item.data"
+                        (click)="assetDetails(item.data)">
+        </app-asset-item>
 
-  <ul>
-    <li *ngFor="let balanceRecord of (accountLpBalances$ | async); trackBy: trackByBalanceline"
-        (click)="lpAssetDetails(balanceRecord)"
-        class="w-full cursor-pointer px-4 border-b-2 transition border-label hover:border-placeholder py-4">
-      <app-lp-asset-item [lpAssetId]="balanceRecord.liquidity_pool_id"
-                         [sharesAmount]="balanceRecord.balance">
-      </app-lp-asset-item>
-    </li>
-  </ul>
+        <app-lp-asset-item class="w-full px-4 cursor-pointer"
+                           (click)="lpAssetDetails(item.data)"
+                           *ngIf="item.type === 'lp'"
+                           [lpAssetId]="item.data.liquidity_pool_id"
+                           [sharesAmount]="item.data.balance">
+        </app-lp-asset-item>
+      </nz-list-item>
+    </nz-list>
+  </cdk-virtual-scroll-viewport>
 </section>
 
 <section class="w-full p-4 flex justify-center">

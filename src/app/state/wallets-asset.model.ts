@@ -11,6 +11,7 @@ export type BalanceAssetType = BalanceLine<'native'> | BalanceLine<'credit_alpha
 interface IBaseNativeAsset {
   _id: 'native';
   assetCode: 'XLM';
+  lastTimeUpdated?: Date;
 }
 
 interface INativeAsset extends IBaseNativeAsset {
@@ -34,6 +35,7 @@ interface IBaseIssuedAsset {
   _id: string; // This must be `${asset_code}_${asset_issuer}`
   assetCode: string;
   assetIssuer: string;
+  lastTimeUpdated?: Date;
 }
 
 interface IIssuedAsset extends IBaseIssuedAsset {
