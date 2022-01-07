@@ -30,7 +30,9 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzListModule } from 'ng-zorro-antd/list';
 import { LiquidityPoolsModule } from '~root/modules/liquidity-pools/liquidity-pools.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 
 @NgModule({
@@ -68,6 +70,8 @@ import { LiquidityPoolsModule } from '~root/modules/liquidity-pools/liquidity-po
     NzSpinModule,
     NzModalModule,
     LiquidityPoolsModule,
+    NzListModule,
+    ScrollingModule,
   ],
 })
 export class WalletModule { }
