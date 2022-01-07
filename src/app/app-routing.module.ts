@@ -98,7 +98,7 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, {
     useHash: true,
     preloadingStrategy: PreloadAllModules,
-    enableTracing: !environment.production
+    // enableTracing: !environment.production
   })],
   exports: [RouterModule]
 })

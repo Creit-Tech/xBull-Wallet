@@ -1,11 +1,19 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, throwError} from 'rxjs';
-import {HorizonApisQuery, IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery} from '~root/state';
+import {
+  HorizonApisQuery,
+  IHorizonApi,
+  IWalletAsset,
+  IWalletsAccount,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery
+} from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
 import { filter, map, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import { add, isAfter } from 'date-fns';
 
 @Component({
   selector: 'app-asset-item',
@@ -74,24 +82,30 @@ export class AssetItemComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.asset$
-      .pipe(filter(asset => !!asset && asset._id !== 'native'))
+      .pipe(filter<any>((asset: IWalletAsset) => {
+        if (!asset || asset._id === 'native') {
+          return false;
+        }
+
+        if (!asset.lastTimeUpdated) {
+          return true;
+        }
+
+        const lastUpdate = new Date(asset.lastTimeUpdated);
+        // TODO: maybe we should make this time dynamic and configurable form the settings
+        const nextUpdate = add(lastUpdate, { minutes: 15 });
+        const now = new Date();
+
+        return isAfter(now, nextUpdate);
+      }))
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
-      .pipe(switchMap<any, Observable<IWalletAsset<'issued'>>>(([asset, horizonApi]) => {
-        return this.walletsAssetsService.getAssetExtraRecord({
+      .subscribe(([asset, horizonApi]: [IWalletAsset<'issued'>, IHorizonApi]) => {
+        this.walletsAssetsService.requestAssetData$.next({
           ...asset,
           horizonApi,
-        })
-          .pipe(map(() => asset));
-      }))
-      .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
-      .pipe(switchMap(([asset, horizonApi]) => {
-        return this.walletsAssetsService.getAssetFullRecord({
-          ...asset,
-          horizonApi
         });
-      }))
-      .subscribe();
+      });
   }
 
   ngOnDestroy(): void {

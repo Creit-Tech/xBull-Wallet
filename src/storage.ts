@@ -7,7 +7,6 @@ import { PersistStateParams } from '@datorama/akita/lib/persistState';
 import { storageMobileMiddleware } from './storage-mobile.middleware';
 
 const persistStateParams: Partial<PersistStateParams> = {
-  preStorageUpdateOperator: () => debounceTime(150),
   include: [
     'wallets',
     'UI/wallets',
@@ -51,8 +50,10 @@ const persistStateParams: Partial<PersistStateParams> = {
 };
 
 if (environment.platform === 'extension') {
+  persistStateParams.preStorageUpdateOperator = () => debounceTime(150);
   persistStateParams.storage = storageAkitaMiddleware;
 } else if (environment.platform === 'mobile') {
+  persistStateParams.preStorageUpdateOperator = () => debounceTime(1000);
   persistStateParams.storage = storageMobileMiddleware;
 }
 

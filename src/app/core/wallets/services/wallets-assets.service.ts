@@ -9,8 +9,8 @@ import {
   WalletsAssetsState,
   WalletsAssetsStore, IWalletIssuedAsset,
 } from '~root/state';
-import { from, of } from 'rxjs';
-import { filter, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { from, of, Subject, Subscription } from 'rxjs';
+import { catchError, concatAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
@@ -20,6 +20,12 @@ import { OfferAsset } from 'stellar-sdk/lib/types/offer';
 })
 export class WalletsAssetsService {
   // TODO: Make this optional before launching the app IE add a settings store
+  requestAssetData$: Subject<{
+    _id: IWalletAsset['_id'],
+    assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
+    assetCode: IWalletAsset<'issued'>['assetCode'],
+    horizonApi: IHorizonApi,
+  }> = new Subject();
 
   constructor(
     private readonly walletsAssetsStore: WalletsAssetsStore,
@@ -27,6 +33,22 @@ export class WalletsAssetsService {
     private readonly stellarSdkService: StellarSdkService,
     private readonly lpAssetsStore: LpAssetsStore,
   ) { }
+
+  requestAssetDataSubscription: Subscription = this.requestAssetData$
+    .asObservable()
+    .pipe(mergeMap(params => {
+      this.walletsAssetsStore.upsert(params._id, {
+        lastTimeUpdated: new Date(),
+      });
+      return this.getAssetExtraRecord(params)
+        .pipe(switchMap(_ => this.getAssetFullRecord(params)))
+        .pipe(catchError(error => {
+          console.error(error);
+          return of(error);
+        }));
+    }, 1))
+    .subscribe();
+
 
   private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
     this.walletsAssetsStore.updateUIState({ [stateField]: true });

@@ -99,7 +99,8 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
       }))
       .pipe(mergeMap(reserve => reserve))
       .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
-      .pipe(switchMap(([reserve, horizonApi]) => {
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(([reserve, horizonApi]) => {
         const assetCode = reserve.asset.split(':')[0] as string;
         const assetIssuer = reserve.asset.split(':')[1] as string;
 
@@ -109,23 +110,13 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
           assetIssuer
         });
 
-        return this.walletsAssetsService.getAssetExtraRecord({
+        this.walletsAssetsService.requestAssetData$.next({
           _id: `${assetCode}_${assetIssuer}`,
           assetCode,
           assetIssuer,
           horizonApi,
-        })
-          .pipe(switchMap(_ => {
-            return this.walletsAssetsService.getAssetFullRecord({
-              _id: `${assetCode}_${assetIssuer}`,
-              assetCode,
-              assetIssuer,
-              horizonApi,
-            });
-          }));
-      }))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe();
+        });
+      });
   }
 
   ngOnDestroy(): void {
