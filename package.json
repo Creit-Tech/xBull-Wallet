@@ -72,7 +72,7 @@
     "qrcode": "^1.4.4",
     "rxjs": "~6.6.0",
     "stellar-sdk": "^9.0.1",
-    "trezor-connect": "^8.1.29",
+    "trezor-connect": "^8.2.4-extended",
     "tslib": "^2.0.0",
     "util": "^0.12.4",
     "zone.js": "~0.11.4"

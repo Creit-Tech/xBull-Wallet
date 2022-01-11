@@ -29,6 +29,7 @@
               "src/favicon.png",
               "src/popup.html",
               "src/popup.js",
+              "src/trezor-usb-permissions.html",
               "src/assets",
               "src/background.js",
               "src/content-script.js",
