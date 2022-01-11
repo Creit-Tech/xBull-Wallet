@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, merge, pipe, Subject } from 'rxjs';
 import { filter, map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
@@ -10,6 +10,7 @@ import { withTransaction } from '@datorama/akita';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { AddAccountComponent } from '~root/modules/settings/components/add-account/add-account.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-registered-wallet-details',
@@ -53,6 +54,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsService: WalletsService,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
@@ -119,13 +121,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
   }
 
   async onRemove(): Promise<void> {
-    const [
-      ref,
-      wallet,
-    ] = await Promise.all([
-      this.componentCreatorService.createOnBody<HardConfirmComponent>(HardConfirmComponent),
-      this.wallet$.pipe(take(1)).toPromise()
-    ]);
+    const wallet = await this.wallet$.pipe(take(1)).toPromise();
 
     if (!wallet) {
       // TODO: add error message later
@@ -136,34 +132,42 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
       filterBy: state => state.walletId === wallet._id
     }).pipe(take(1)).toPromise();
 
-    ref.component.instance.title = 'Remove Wallet';
-    ref.component.instance.alertMessage = `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's remove we can't get it back until you create it again with your recover method`;
+    const drawerRef = this.nzDrawerService.create<HardConfirmComponent>({
+      nzContent: HardConfirmComponent,
+      nzTitle: '',
+      nzPlacement: 'bottom',
+      nzHeight: 'auto',
+      nzContentParams: {
+        title: 'Remove Wallet',
+        alertMessage: `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's remove we can't get it back until you create it again with your recover method`
+      }
+    });
 
-    ref.component.instance.confirmed
+    drawerRef.open();
+
+    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+
+    const componentRef = drawerRef.getContentComponent();
+
+    if (!componentRef) {
+      return;
+    }
+
+    componentRef.confirmed
       .asObservable()
       .pipe(take(1))
       .pipe(tap(() => this.removingWallet$.next(true)))
-      .pipe(switchMap(() => ref.component.instance.onClose()))
       .pipe(withTransaction(() => {
         this.walletsService.removeWallets([wallet._id]);
         this.walletsAccountsService.removeAccounts(walletsAccounts.map(account => account._id));
       }))
-      .pipe(takeUntil(this.componentDestroyed$))
+      .pipe(takeUntil(
+        merge(this.componentDestroyed$, drawerRef.afterClose)
+      ))
       .subscribe(() => {
         this.router.navigate(['/settings/wallets'])
           .then();
       });
-
-    ref.component.instance.close
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
   }
 
 }
