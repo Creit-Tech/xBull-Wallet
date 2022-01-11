@@ -17,6 +17,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
 import {NzInputModule} from "ng-zorro-antd/input";
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -42,6 +43,7 @@ const COMPONENTS = [
     NzMessageModule,
     NzButtonModule,
     NzInputModule,
+    NzModalModule,
   ],
 })
 export class ModalsModule {
