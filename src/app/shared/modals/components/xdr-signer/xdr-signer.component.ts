@@ -273,7 +273,7 @@ export class XdrSignerComponent implements OnInit {
       this.accept.emit(signedXDR);
     } catch (e) {
       this.signing$.next(false);
-      this.nzMessageService.error(`Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation to sign`, {
+      this.nzMessageService.error(e?.message || `Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
         nzDuration: 10000,
       });
       return;

@@ -55,12 +55,6 @@ export class HardwareWalletsService {
       this.stellarSdkService.networkPassphrase,
     );
 
-    for (const operation of transaction.operations) {
-      if (operation.type === 'pathPaymentStrictSend') {
-        throw new Error(`"pathPaymentStrictSend"operation is not supported by Ledger devices at the moment`);
-      }
-    }
-
     const str = new Str(data.transport);
     const result = await str.signTransaction(data.accountPath, transaction.signatureBase());
 
