@@ -5,7 +5,8 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import TrezorConnect from 'trezor-connect';
 import { BehaviorSubject } from 'rxjs';
 import { Transaction } from 'stellar-base';
-import { trezorTransformTransaction } from '~root/lib/trezor/trezor-transform-transaction';
+// @ts-ignore
+import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
 
 @Injectable({
@@ -53,12 +54,6 @@ export class HardwareWalletsService {
       data.xdr,
       this.stellarSdkService.networkPassphrase,
     );
-
-    for (const operation of transaction.operations) {
-      if (operation.type === 'pathPaymentStrictSend') {
-        throw new Error(`"pathPaymentStrictSend"operation is not supported by Ledger devices at the moment`);
-      }
-    }
 
     const str = new Str(data.transport);
     const result = await str.signTransaction(data.accountPath, transaction.signatureBase());
@@ -108,7 +103,7 @@ export class HardwareWalletsService {
   }
 
   async signWithTrezor(params: { path: string; transaction: Transaction; networkPassphrase: string; }): Promise<string> {
-    const trezorTransaction = trezorTransformTransaction(params.path, params.transaction);
+    const trezorTransaction = transformTransaction(params.path, params.transaction);
 
     const result = await TrezorConnect.stellarSignTransaction(trezorTransaction);
 
