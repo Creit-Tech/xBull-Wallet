@@ -139,7 +139,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
       nzHeight: 'auto',
       nzContentParams: {
         title: 'Remove Wallet',
-        alertMessage: `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's remove we can't get it back until you create it again with your recover method`
+        alertMessage: `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method`
       }
     });
 
