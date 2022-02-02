@@ -122,7 +122,6 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.operations$.subscribe(console.log)
   }
 
   async onAccepted(): Promise<void> {
@@ -330,7 +329,6 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   dateFromEpoch(epoch: number): Date {
-    console.log(epoch);
     return fromUnixTime(epoch);
   }
 
