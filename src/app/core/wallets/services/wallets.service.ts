@@ -26,7 +26,7 @@ import { Horizon, ServerApi } from 'stellar-sdk';
 })
 export class WalletsService {
   // TODO: Think a better way of doing this
-  private handledOperations: Array<Operation['type']> = [
+  private handledOperations: Array<string> = [
     'createAccount',
     'payment',
     'pathPaymentStrictReceive',
@@ -45,7 +45,13 @@ export class WalletsService {
     'claimClaimableBalance',
     'beginSponsoringFutureReserves',
     'endSponsoringFutureReserves',
-    // 'revokeSponsorship',
+    'revokeAccountSponsorship',
+    'revokeTrustlineSponsorship',
+    'revokeOfferSponsorship',
+    'revokeDataSponsorship',
+    'revokeClaimableBalanceSponsorship',
+    'revokeLiquidityPoolSponsorship',
+    'revokeSignerSponsorship',
     // 'clawback',
     // 'clawbackClaimableBalance',
     'setTrustLineFlags',
@@ -287,17 +293,8 @@ export class WalletsService {
     return Buffer.from(memo.value).toString();
   }
 
-  parseFromXDRToTransactionInterface(xdr: string): ITransaction {
-    const createdTransaction = new Transaction(xdr, this.stellarSdkService.networkPassphrase);
-    return {
-      fee: createdTransaction.fee,
-      sequence: createdTransaction.sequence,
-      source: createdTransaction.source,
-      baseAccount: createdTransaction.source,
-      operations: createdTransaction.operations,
-      passphrase: createdTransaction.networkPassphrase,
-      memo: this.parseMemo(createdTransaction.memo),
-    };
+  parseFromXDRToTransactionInterface(xdr: string): Transaction {
+    return new Transaction(xdr, this.stellarSdkService.networkPassphrase);
   }
 
   sendPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {

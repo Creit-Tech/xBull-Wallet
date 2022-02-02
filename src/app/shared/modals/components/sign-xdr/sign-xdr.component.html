@@ -422,6 +422,91 @@
             <dd class="text-label break-all text-sm mb-3 w-full">End Sponsoring Future Reserves</dd>
           </ng-container>
 
+          <ng-container *ngIf="operation.type === 'revokeAccountSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Account Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Revoke:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Account sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Account:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeTrustlineSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Trustline Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Account:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Asset code:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
+            <ng-container *ngIf="!!operation.asset.issuer">
+              <dt class="text-off-black text-base font-bold mb-1 w-full">Asset issuer:</dt>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+            </ng-container>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeOfferSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Offer Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Offer id:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Seller:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.seller }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeDataSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Data Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Name:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Account:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeClaimableBalanceSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Balance ID:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeClaimableBalanceSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Balance ID:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'revokeSignerSponsorship'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Signer Sponsorship</dd>
+
+            <ng-container *ngIf="operation.signer.preAuthTx">
+              <dt class="text-off-black text-base font-bold mb-1 w-full">Auth tx:</dt>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.signer.preAuthTx }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.signer.ed25519PublicKey">
+              <dt class="text-off-black text-base font-bold mb-1 w-full">Stellar account:</dt>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.signer.ed25519PublicKey }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.signer.sha256Hash">
+              <dt class="text-off-black text-base font-bold mb-1 w-full">Hash:</dt>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.signer.sha256Hash }}</dd>
+            </ng-container>
+          </ng-container>
+
           <ng-container *ngIf="operation.type === 'liquidityPoolDeposit'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">Liquidity Pool Deposit</dd>
