@@ -5,7 +5,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
-import {Networks, Operation} from 'stellar-base';
+import { Networks, Operation, Transaction } from 'stellar-base';
 import {
   HorizonApisQuery,
   IHorizonApi,
@@ -20,12 +20,13 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignPasswordComponent } from '~root/shared/modals/components/sign-password/sign-password.component';
-import { ITransaction, WalletsService } from '~root/core/wallets/services/wallets.service';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
+import { fromUnixTime } from 'date-fns';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -47,7 +48,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     this.xdr$.next(data);
   }
 
-  xdrParsed$: Observable<ITransaction> = this.xdr$.asObservable()
+  xdrParsed$: Observable<Transaction> = this.xdr$.asObservable()
     .pipe(map(xdr =>
       this.walletsService.parseFromXDRToTransactionInterface(xdr)
     ));
@@ -65,13 +66,13 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     });
 
   // TODO: Handle this and a better way for the compiler understand the different types of operations
-  operations$: Observable<Operation[]> = this.xdrParsed$
+  operations$: Observable<any> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
 
   // TODO: Make this dynamic with a config store
   fee$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('fee'))
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('fee'))
     .pipe(map(fee =>
       new BigNumber(fee)
         .dividedBy('10000000')
@@ -79,16 +80,16 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     ));
 
   memoText$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('memo'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('memo'));
 
   sequenceNumber$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('sequence'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('sequence'));
 
   source$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('source'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('source'));
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;
   networkBeingUsed$: Observable<'Public' | 'Testnet'> = this.horizonApisQuery.getSelectedHorizonApi$
@@ -325,6 +326,10 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     this.showModal = false;
     await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
     this.deny.emit();
+  }
+
+  dateFromEpoch(epoch: number): Date {
+    return fromUnixTime(epoch);
   }
 
 }

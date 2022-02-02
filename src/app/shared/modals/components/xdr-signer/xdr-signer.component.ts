@@ -1,8 +1,8 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription} from 'rxjs';
-import {ITransaction, WalletsService} from '~root/core/wallets/services/wallets.service';
+import {WalletsService} from '~root/core/wallets/services/wallets.service';
 import {filter, map, pluck, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
-import {Networks, Operation} from 'stellar-base';
+import { Networks, Operation, Transaction } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery,
@@ -22,6 +22,7 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
 import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
+import { fromUnixTime } from 'date-fns';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -41,7 +42,7 @@ export class XdrSignerComponent implements OnInit {
     this.xdr$.next(data);
   }
 
-  xdrParsed$: Observable<ITransaction> = this.xdr$.asObservable()
+  xdrParsed$: Observable<Transaction> = this.xdr$.asObservable()
     .pipe(map(xdr =>
       this.walletsService.parseFromXDRToTransactionInterface(xdr)
     ));
@@ -59,13 +60,13 @@ export class XdrSignerComponent implements OnInit {
     });
 
   // TODO: Handle this and a better way for the compiler understand the different types of operations
-  operations$: Observable<Operation[]> = this.xdrParsed$
+  operations$: Observable<any> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
 
   // TODO: Make this dynamic with a config store
   fee$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('fee'))
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('fee'))
     .pipe(map(fee =>
       new BigNumber(fee)
         .dividedBy('10000000')
@@ -73,16 +74,16 @@ export class XdrSignerComponent implements OnInit {
     ));
 
   memoText$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('memo'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('memo'));
 
   sequenceNumber$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('sequence'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('sequence'));
 
   source$: Observable<string> = this.xdrParsed$
-    .pipe(filter<ITransaction>(data => !!data))
-    .pipe(pluck<ITransaction, string>('source'));
+    .pipe(filter<Transaction>(data => !!data))
+    .pipe(pluck<Transaction, string>('source'));
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;
   networkBeingUsed$: Observable<'Public' | 'Testnet'> = this.horizonApisQuery.getSelectedHorizonApi$
@@ -313,6 +314,10 @@ export class XdrSignerComponent implements OnInit {
 
   async onClose(): Promise<void> {
     this.nzDrawerRef.close();
+  }
+
+  dateFromEpoch(epoch: number): Date {
+    return fromUnixTime(epoch);
   }
 
 }
