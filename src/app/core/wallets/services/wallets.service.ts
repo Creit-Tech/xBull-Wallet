@@ -41,7 +41,7 @@ export class WalletsService {
     'inflation',
     'manageData',
     'bumpSequence',
-    // 'createClaimableBalance',
+    'createClaimableBalance',
     'claimClaimableBalance',
     'beginSponsoringFutureReserves',
     'endSponsoringFutureReserves',

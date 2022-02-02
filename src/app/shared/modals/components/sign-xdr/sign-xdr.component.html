@@ -313,22 +313,101 @@
             </dd>
           </ng-container>
 
-<!--          <ng-container *ngIf="operation.type === 'createClaimableBalance'">-->
-<!--            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>-->
-<!--            <dd class="text-label break-all text-sm mb-3 w-full">Create Claimable Balance</dd>-->
+          <ng-container *ngIf="operation.type === 'createClaimableBalance'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Create Claimable Balance</dd>
 
-<!--            <dt class="text-off-black text-base font-bold mb-1 w-full">Amount:</dt>-->
-<!--            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>-->
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Amount:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
 
-<!--            <dt class="text-off-black text-base font-bold mb-1 w-full">Asset code:</dt>-->
-<!--            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>-->
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Asset code:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
 
-<!--            <ng-container *ngIf="operation.asset.issuer">-->
-<!--              <dt class="text-off-black text-base font-bold mb-1 w-full">Asset issuer:</dt>-->
-<!--              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>-->
-<!--            </ng-container>-->
+            <ng-container *ngIf="operation.asset.issuer">
+              <dt class="text-off-black text-base font-bold mb-1 w-full">Asset issuer:</dt>
+              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+            </ng-container>
 
-<!--          </ng-container>-->
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Claimants:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">
+              <ul>
+                <li class="w-full mb-4" *ngFor="let claimant of operation.claimants">
+                  <div class="w-full">
+                    <p class="text-label text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
+                      <span class="text-off-black text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
+                    </p>
+                  </div>
+
+                  <ng-template #predicateTemplate let-predicateValue="predicateValue">
+                    <section class="pl-4 border-label border-l-2">
+                      <div *ngIf="!predicateValue._value" class="w-full">
+                        <p class="text-label">
+                          Can claim it without conditions
+                        </p>
+                      </div>
+
+                      <div *ngIf="predicateValue._arm === 'absBefore'" class="w-full">
+                        <p class="text-label">
+                          <b class="text-off-black">Until:</b> {{ dateFromEpoch(predicateValue._value.low) | date: 'MMM dd, yyyy HH:mm' }}
+                        </p>
+                      </div>
+
+                      <div *ngIf="predicateValue._arm === 'relBefore'" class="w-full">
+                        <p class="text-label">
+                          <b class="text-off-black">After:</b> {{ predicateValue._value.low }} seconds
+                        </p>
+                      </div>
+
+                      <ng-container *ngIf="predicateValue._arm === 'andPredicates'" class="w-full">
+                        <div class="w-full">
+                          <b class="text-off-black">And:</b>
+
+                          <ng-container *ngFor="let predicate of predicateValue._value">
+                            <ng-template
+                              [ngTemplateOutlet]="predicateTemplate"
+                              [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                            </ng-template>
+                          </ng-container>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="predicateValue._arm === 'orPredicates'" class="w-full">
+                        <div class="w-full">
+                          <b class="text-off-black">Or:</b>
+
+                          <ng-container *ngFor="let predicate of predicateValue._value">
+                            <ng-template
+                              [ngTemplateOutlet]="predicateTemplate"
+                              [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                            </ng-template>
+                          </ng-container>
+                        </div>
+                      </ng-container>
+
+                      <ng-container *ngIf="predicateValue._arm === 'notPredicate'" class="w-full">
+                        <div class="w-full">
+                          <b class="text-off-black">Not:</b>
+
+                          <ng-template
+                            [ngTemplateOutlet]="predicateTemplate"
+                            [ngTemplateOutletContext]="{ predicateValue: predicateValue._value }">
+                          </ng-template>
+                        </div>
+                      </ng-container>
+                    </section>
+
+                  </ng-template>
+
+                  <ng-template
+                    [ngTemplateOutlet]="predicateTemplate"
+                    [ngTemplateOutletContext]="{ predicateValue: claimant.predicate }">
+                  </ng-template>
+
+                </li>
+              </ul>
+            </dd>
+
+          </ng-container>
 
           <ng-container *ngIf="operation.type === 'beginSponsoringFutureReserves'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>

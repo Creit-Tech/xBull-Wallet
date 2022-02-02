@@ -26,6 +26,7 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
+import { fromUnixTime } from 'date-fns';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -121,6 +122,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.operations$.subscribe(console.log)
   }
 
   async onAccepted(): Promise<void> {
@@ -325,6 +327,11 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     this.showModal = false;
     await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
     this.deny.emit();
+  }
+
+  dateFromEpoch(epoch: number): Date {
+    console.log(epoch);
+    return fromUnixTime(epoch);
   }
 
 }
