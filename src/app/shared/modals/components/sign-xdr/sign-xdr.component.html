@@ -507,6 +507,31 @@
             </ng-container>
           </ng-container>
 
+          <ng-container *ngIf="operation.type === 'clawback'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Clawback</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Amount:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">From:</dt>
+            <dd appClipboard [textToCopy]="operation.from" class="text-label break-all text-sm mb-3 w-full cursor-pointer">{{ operation.from | publicKey }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Asset code:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Asset issuer:</dt>
+            <dd appClipboard [textToCopy]="operation.asset.issuer" class="text-label break-all text-sm mb-3 w-full cursor-pointer">{{ operation.asset.issuer | publicKey }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'clawbackClaimableBalance'">
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class="text-label break-all text-sm mb-3 w-full">Clawback Claimable Balance</dd>
+
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Balance ID:</dt>
+            <dd appClipboard [textToCopy]="operation.balanceId" class="text-label break-all text-sm mb-3 w-full cursor-pointer">{{ operation.balanceId | publicKey }}</dd>
+          </ng-container>
+
           <ng-container *ngIf="operation.type === 'liquidityPoolDeposit'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">Liquidity Pool Deposit</dd>
