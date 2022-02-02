@@ -79,17 +79,19 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
         .toString()
     ));
 
-  memoText$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(data => !!data))
-    .pipe(pluck<Transaction, string>('memo'));
+  memoText$: Observable<string | undefined> = this.xdrParsed$
+    .pipe(filter<Transaction>(Boolean))
+    .pipe(map(transaction => {
+      return this.walletsService.parseMemo(transaction.memo);
+    }));
 
   sequenceNumber$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(data => !!data))
-    .pipe(pluck<Transaction, string>('sequence'));
+    .pipe(filter<Transaction>(Boolean))
+    .pipe(pluck('sequence'));
 
   source$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(data => !!data))
-    .pipe(pluck<Transaction, string>('source'));
+    .pipe(filter<Transaction>(Boolean))
+    .pipe(pluck('source'));
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;
   networkBeingUsed$: Observable<'Public' | 'Testnet'> = this.horizonApisQuery.getSelectedHorizonApi$
