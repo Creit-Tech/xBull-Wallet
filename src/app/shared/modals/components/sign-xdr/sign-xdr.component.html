@@ -476,15 +476,15 @@
             <dd class="text-label break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Balance ID:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
+            <dd appClipboard [textToCopy]="operation.balanceId" class="text-label break-all text-sm mb-3 w-full">{{ operation.balanceId | publicKey }}</dd>
           </ng-container>
 
-          <ng-container *ngIf="operation.type === 'revokeClaimableBalanceSponsorship'">
+          <ng-container *ngIf="operation.type === 'revokeLiquidityPoolSponsorship'">
             <dt class="text-off-black text-base font-bold mb-1 w-full">Transaction type:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
+            <dd class="text-label break-all text-sm mb-3 w-full">Revoke Liquidity pool Sponsorship</dd>
 
-            <dt class="text-off-black text-base font-bold mb-1 w-full">Balance ID:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.balanceId }}</dd>
+            <dt class="text-off-black text-base font-bold mb-1 w-full">Pool ID:</dt>
+            <dd appClipboard [textToCopy]="operation.liquidityPoolId" class="text-label break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId | publicKey }}</dd>
           </ng-container>
 
           <ng-container *ngIf="operation.type === 'revokeSignerSponsorship'">
@@ -498,7 +498,7 @@
 
             <ng-container *ngIf="operation.signer.ed25519PublicKey">
               <dt class="text-off-black text-base font-bold mb-1 w-full">Stellar account:</dt>
-              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.signer.ed25519PublicKey }}</dd>
+              <dd appClipboard [textToCopy]="operation.signer.ed25519PublicKey" class="text-label break-all text-sm mb-3 w-full">{{ operation.signer.ed25519PublicKey | publicKey }}</dd>
             </ng-container>
 
             <ng-container *ngIf="operation.signer.sha256Hash">
