@@ -64,8 +64,8 @@ class Sdk {
     const response = await this.sendEventToContentScript<IConnectRequestPayload, IRuntimeConnectResponse | IRuntimeErrorResponse>(XBULL_CONNECT, dispatchEventParams);
     const { detail } = response.data;
 
-    if (detail.error) {
-      throw new Error(detail.errorMessage);
+    if (!detail || detail.error) {
+      throw new Error(detail?.errorMessage || 'Unexpected error');
     }
 
     this.isConnected = true;
@@ -86,8 +86,8 @@ class Sdk {
 
     const { detail } = response.data;
 
-    if (detail.error) {
-      throw new Error(detail.errorMessage);
+    if (!detail || detail.error) {
+      throw new Error(detail?.errorMessage || 'Unexpected error');
     }
 
     return detail.payload;
@@ -109,8 +109,8 @@ class Sdk {
 
     const { detail } = response.data;
 
-    if (detail.error) {
-      throw new Error(detail.errorMessage);
+    if (!detail || detail.error) {
+      throw new Error(detail?.errorMessage || 'Unexpected error');
     }
 
     return detail.payload;

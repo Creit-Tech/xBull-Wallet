@@ -13,7 +13,7 @@ export const requestSignXDR = async (message: IRuntimeSignXDRMessage): Promise<I
   if (!savedPermissions?.canRequestSign) {
     return {
       error: true,
-      errorMessage: 'You are not authorized to request singing a transaction from this wallet',
+      errorMessage: 'You are not authorized to request signing a transaction from this wallet',
     };
   }
 

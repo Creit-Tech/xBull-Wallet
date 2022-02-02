@@ -54,13 +54,13 @@ The Stellar Blockchain supports multiple kind of transactions, xBull is designed
 - [X] Account merge
 - [X] Manage Data
 - [X] Bump sequence
-- [ ] Create claimable Balance
+- [x] Create claimable Balance
 - [X] Claim claimable Balance
 - [X] Begin Sponsoring Future Reserves
 - [X] End Sponsoring Future Reserves
-- [ ] Revoke Sponsorship
-- [ ] Clawback
-- [ ] Clawback Claimable Balance
+- [x] Revoke Sponsorship
+- [x] Clawback
+- [x] Clawback Claimable Balance
 - [X] Set Trust Line Flags
 - [X] Liquidity Pool Deposit
 - [X] Liquidity Pool Withdraw

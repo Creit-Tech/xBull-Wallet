@@ -34,7 +34,7 @@ export function createInitialState(): SettingsState {
       gettingRecommendedFee: false,
     },
     advanceMode: false,
-    defaultFee: '100',
+    defaultFee: '10000',
     passwordAuthTokenActive: false,
     antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],
