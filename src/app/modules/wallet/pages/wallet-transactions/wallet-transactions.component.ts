@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery,
   IWalletsOperation,
@@ -15,10 +15,12 @@ import {
   exhaustMap,
   filter,
   map,
-  pluck,
+  pluck, switchMap, take, takeUntil,
   withLatestFrom
 } from 'rxjs/operators';
 import { Networks } from 'stellar-base';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { GlobalsService } from '~root/lib/globals/globals.service';
 
 @Component({
   selector: 'app-wallet-transactions',
@@ -32,7 +34,7 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     .pipe(filter(account => !!account))
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(withLatestFrom(this.settingsQuery.antiSpamPublicKeys$))
-    .pipe(exhaustMap(([account, antiSpamPublicKeys]) => {
+    .pipe(switchMap(([account, antiSpamPublicKeys]) => {
       return this.walletsOperationsQuery.selectAll({
         filterBy: entity => entity.ownerAccount === account._id
           && !antiSpamPublicKeys.find(key => entity.operationRecord.source_account === key),
@@ -52,6 +54,8 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     .pipe(pluck('networkPassphrase'))
     .pipe(map(networkPassphrase => networkPassphrase === Networks.TESTNET));
 
+  gettingAccountsOperations$ = this.walletsOperationsQuery.gettingAccountsOperations$;
+
   constructor(
     private readonly modalsService: ModalsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -59,7 +63,22 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly settingsQuery: SettingsQuery,
+    private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly globalsService: GlobalsService,
   ) { }
+
+  getLatestOperationsSubscription: Subscription = combineLatest([
+    this.selectedAccount$.pipe(distinctUntilKeyChanged('_id')),
+    this.horizonApisQuery.getSelectedHorizonApi$.pipe(distinctUntilKeyChanged('_id'))
+  ])
+    .pipe(takeUntil(this.componentDestroyed$))
+    .pipe(switchMap(([account, horizonApi]) => {
+      return this.walletsAccountsService.getLatestAccountOperations({
+        account,
+        horizonApi
+      });
+    }))
+    .subscribe();
 
   ngOnInit(): void {
   }
@@ -77,6 +96,24 @@ export class WalletTransactionsComponent implements OnInit, OnDestroy {
         value: operation
       }]
     });
+  }
+
+  async checkOnBlockchain(): Promise<void> {
+    const selectedHorizonApi = await this.horizonApisQuery.getSelectedHorizonApi$.pipe(take(1))
+      .toPromise();
+
+    const selectedAccount = await this.selectedAccount$.pipe(take(1))
+      .toPromise();
+
+    const network = selectedHorizonApi.networkPassphrase === Networks.PUBLIC
+      ? 'public'
+      : 'testnet';
+
+    // TODO: This needs to be dynamic
+    this.globalsService.window.open(
+      `https://stellar.expert/explorer/${network}/account/${selectedAccount.publicKey}`,
+      '_blank'
+    );
   }
 
 }
