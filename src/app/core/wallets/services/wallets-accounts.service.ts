@@ -4,7 +4,7 @@ import { from, of, throwError } from 'rxjs';
 import {
   BalanceAssetType,
   createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
-  IWalletsAccount, LpAssetsStore,
+  IWalletsAccount, IWalletsOperation, LpAssetsStore,
   WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsAssetsStore, WalletsOperationsStore,
@@ -188,6 +188,35 @@ export class WalletsAccountsService {
         this.activeOperationsStreams.splice(accountOperationsIndex, 1);
       }
     }
+  }
+
+  getLatestAccountOperations(params: {
+    account: IWalletsAccount,
+    horizonApi: IHorizonApi
+  }): Promise<IWalletsOperation[]> {
+    this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: true });
+    return new this.stellarSdkService.SDK.Server(params.horizonApi.url)
+      .operations()
+      .forAccount(params.account.publicKey)
+      .limit(100)
+      .order('desc')
+      .call()
+      .then(response => {
+        const operations = response.records.map(operationRecord => {
+          return createWalletsOperation({
+            ownerId: params.account._id,
+            ownerPublicKey: params.account.publicKey,
+            operation: operationRecord as any as OperationRecord,
+          });
+        });
+
+        applyTransaction(() => {
+          this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
+          this.walletsOperationsStore.set(operations);
+        });
+
+        return operations;
+      });
   }
 }
 
