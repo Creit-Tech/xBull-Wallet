@@ -50,22 +50,11 @@ export class AppComponent implements OnInit {
     }));
 
   createWalletsOperationsQuery: Subscription = this.accountWithHorizonQuery$
-    .pipe(switchMap(([account, horizonApi]) => {
-      return combineLatest([
-        of(account),
-        of(horizonApi),
-        this.walletsOperationsQuery.selectAll({
-          filterBy: entity => entity.ownerAccount === account._id,
-          sortBy: (entityA, entityB) => entityA.createdAt - entityB.createdAt,
-        }).pipe(take(1))
-      ]);
-    }))
-    .subscribe(([account, horizonApi, operations]) => {
-      const lastValue = operations[operations.length - 1];
+    .subscribe(([account, horizonApi]) => {
       this.walletsAccountsService.createOperationsStream({
         account,
         order: 'asc',
-        cursor: lastValue?.pagingToken,
+        cursor: 'now',
         horizonApi
       });
     });

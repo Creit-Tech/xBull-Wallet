@@ -1,8 +1,20 @@
-<section class="w-full pb-6">
-  <ng-container *ngFor="let operation of (filteredOperations$ | async)">
-    <app-wallet-transaction-item
-      (click)="onSelected(operation)"
-      [operation]="operation">
-    </app-wallet-transaction-item>
-  </ng-container>
+<section class="w-full h-full grid-cols-1 grid-rows-1 pb-6">
+  <nz-spin *ngIf="(gettingAccountsOperations$ | async) && (filteredOperations$ | async)?.length === 0; else operations"
+           class="h-full" [nzSpinning]="gettingAccountsOperations$ | async">
+  </nz-spin>
+
+  <ng-template #operations>
+    <ng-container *ngFor="let operation of (filteredOperations$ | async)">
+      <app-wallet-transaction-item
+        (click)="onSelected(operation)"
+        [operation]="operation">
+      </app-wallet-transaction-item>
+    </ng-container>
+
+    <section class="w-full pt-6 pb-6 flex justify-center">
+      <button (click)="checkOnBlockchain()" nz-button nzType="primary">
+        Check the blockchain
+      </button>
+    </section>
+  </ng-template>
 </section>
