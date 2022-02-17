@@ -1,6 +1,6 @@
 {
   "name": "xbull",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "scripts": {
     "ng": "./node_modules/.bin/ng",
     "start": "./node_modules/.bin/ng serve",
