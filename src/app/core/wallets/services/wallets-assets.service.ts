@@ -113,9 +113,23 @@ export class WalletsAssetsService {
         const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
         const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
         const currency = (currencies || []).find((c: any) => {
+          if (!!c.code_template) {
+            const index = c.code_template.indexOf('?');
+            if (index === -1) {
+              return false;
+            }
+            const baseTemplate = c.code_template.slice(0, index);
+            const dynamicTemplate = c.code_template.slice(index);
+
+            const baseTemplateFromAssetCode = data.assetCode.slice(0, index);
+            const dynamicTemplateFromAssetCode = c.code_template.slice(index);
+
+            return baseTemplate === baseTemplateFromAssetCode
+            && dynamicTemplate.length === dynamicTemplateFromAssetCode.length
+            && c.issuer === data.assetIssuer;
+          }
+
           return c.code === data.assetCode && c.issuer === data.assetIssuer;
-        }) || (currencies || []).find((c: any) => {
-          return c.code === data.assetCode;
         });
 
         this.walletsAssetsStore.upsert(

@@ -31,7 +31,7 @@ export class MnemonicPhraseService {
     return Keypair.fromRawEd25519Seed(ed25519SeedObject.key);
   }
 
-  // DO NOT USE THIS IN CASE YOU REALLY KNOW WHAT YOU ARE DOING
+  // Do not use this unless you really (and I mean REALLY) know what you are doing
   getTestAccount(): string[] {
     return [
       'bench',
