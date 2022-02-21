@@ -23,7 +23,8 @@ module.exports = {
       }
     },
     colors: {
-      'off-black': '#14142B',
+      black: '#141414',
+      'off-black': '#141414',
       'ash': '#262338',
       'body': '#4E4B66',
       'label': '#6E7191',

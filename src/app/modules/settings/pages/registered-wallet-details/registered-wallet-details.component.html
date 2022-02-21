@@ -41,7 +41,9 @@
     </div>
 
     <ul class="w-full flex flex-col mb-5">
-      <li *ngFor="let walletAccount of (groupedWalletAccounts$ | async)" class="flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
+      <li *ngFor="let walletAccount of (groupedWalletAccounts$ | async)"
+          [routerLink]="['./accounts', walletAccount.publicKey]"
+          class="flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
         <div class="w-auto px-2">
           <p class="m-0 text-sm font-bold text-off-white">
             {{ walletAccount?.name }}
@@ -57,7 +59,11 @@
       <ng-container *ngIf="wallet$ | async as wallet">
         <li *ngIf="wallet.type !== 'ledger_wallet' && wallet.type !== 'trezor_wallet'" class="flex justify-center w-full px-4 pt-5">
           <div class="w-7/12 px-2 mb-4">
-            <button (click)="onCreateAccount()" class="w-full btn btn-success-alternative btn--small">
+            <button (click)="onCreateAccount()"
+                    nz-button
+                    nzSize="large"
+                    nzType="primary"
+                    class="w-full">
               Create account
             </button>
           </div>
@@ -68,17 +74,30 @@
 
   <section class="w-full px-4 flex flex-wrap">
     <div class="w-6/12 px-2 mb-4">
-      <button (click)="onRemove()" class="w-full btn btn-error btn--small">
+      <button (click)="onRemove()"
+              nz-button
+              nzSize="large"
+              nzType="primary"
+              nzDanger
+              class="w-full">
         Remove
       </button>
     </div>
     <div class="w-6/12 px-2 mb-4">
-      <button (click)="onEditName()" class="w-full btn btn-primary btn--small">
+      <button (click)="onEditName()"
+              nz-button
+              nzSize="large"
+              nzType="primary"
+              class="w-full">
         Edit name
       </button>
     </div>
     <div class="w-full px-2">
-      <button routerLink="/settings/wallets" class="w-full btn btn-primary btn-primary--outline btn--small">
+      <button routerLink="/settings/wallets"
+              nz-button
+              nzSize="large"
+              class="w-full flex items-center justify-center">
+        <i class="fa-solid fa-arrow-left mr-2"></i>
         Go back
       </button>
     </div>

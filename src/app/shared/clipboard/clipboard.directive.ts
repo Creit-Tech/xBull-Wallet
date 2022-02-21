@@ -1,22 +1,19 @@
 import { Directive, EventEmitter, HostListener, Inject, Input, Output, Renderer2, RendererFactory2 } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ClipboardService } from '~root/core/services/clipboard.service';
 
 @Directive({
   selector: '[appClipboard]'
 })
 export class ClipboardDirective {
-  private renderer: Renderer2;
   @Input() textToCopy?: string | null;
   @Output() copied: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
-    private readonly rendererFactory2: RendererFactory2,
-    @Inject(DOCUMENT) private readonly document: Document,
     private readonly nzMessageService: NzMessageService,
-  ) {
-    this.renderer = this.rendererFactory2.createRenderer(null, null);
-  }
+    private readonly clipboardService: ClipboardService,
+  ) {}
 
   @HostListener('click')
   copyToClipboard(): void {
@@ -25,18 +22,7 @@ export class ClipboardDirective {
     }
 
     try {
-      const el = this.renderer.createElement('input');
-      this.renderer.setAttribute(el, 'readonly', '');
-      this.renderer.setAttribute(el, 'value', this.textToCopy);
-      this.renderer.setStyle(el, 'position', 'absolute');
-      this.renderer.setStyle(el, 'left', '-9999px');
-      this.renderer.appendChild(this.document.body, el);
-      this.renderer.selectRootElement(el);
-      el.select();
-      el.setSelectionRange(0, 99999);
-      this.document.execCommand('copy');
-      this.renderer.removeChild(this.document.body, el);
-
+      this.clipboardService.copyToClipboard(this.textToCopy);
       this.copied.emit(this.textToCopy);
 
       this.nzMessageService.success('Text copied to the clipboard');
