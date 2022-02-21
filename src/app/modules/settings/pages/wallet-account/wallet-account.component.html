@@ -1,0 +1,142 @@
+<section class="w-full h-full grid grid-cols-1 gap-4"
+         style="grid-template-rows: 1fr auto;">
+
+  <section class="col-span-1 row-span-1 pt-4 overflow-y-auto no-scrollbar">
+
+    <section *ngIf="account$ | async as account" class="px-6">
+      <nz-card class="w-full mb-4" nzTitle="Account">
+        <nz-list>
+          <nz-list-item class="flex flex-nowrap">
+            <b class="mr-2">Name:</b>
+
+            <span [class.hidden]="editingName">{{ account.name }} <i (click)="editingName = true;" class="cursor-pointer ml-2 fa-solid fa-pen-to-square"></i></span>
+            <nz-input-group [class.hidden]="!editingName"
+                            [nzSuffix]="saveNewName"
+                            [nzPrefix]="cancelNewName">
+              <input type="text" nz-input [formControl]="accountNameControl">
+            </nz-input-group>
+
+            <ng-template #cancelNewName>
+              <button (click)="editingName = false" nz-button nzType="text" nzSize="small">
+                <i class="fa-solid fa-times"></i>
+              </button>
+            </ng-template>
+
+            <ng-template #saveNewName>
+              <button (click)="saveName()" nz-button nzType="text" nzSize="small">
+                <i class="fa-solid fa-check"></i>
+              </button>
+            </ng-template>
+          </nz-list-item>
+
+          <nz-list-item>
+            <b>Public Key:</b>
+
+            <span class="cursor-pointer" appClipboard [textToCopy]="account.publicKey">
+              {{ account.publicKey | publicKey }}
+            </span>
+          </nz-list-item>
+
+          <nz-list-item *ngIf="(wallet$ | async)?.type === 'mnemonic_phrase' || (wallet$ | async)?.type === 'secret_key'">
+            <b>Private key:</b>
+
+            <button (click)="copyPrivateKey()" nz-button nzSize="small">Copy</button>
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+
+      <ng-container *ngIf="account.accountRecord as accountRecord">
+        <nz-card class="w-full mb-4" nzTitle="Account details">
+          <nz-list>
+            <nz-list-item>
+              <b>Sequence: </b>
+              <span class="cursor-pointer" appClipboard [textToCopy]="accountRecord.sequence">
+              {{ accountRecord.sequence }}
+            </span>
+            </nz-list-item>
+
+            <nz-list-item>
+              <b>Subentry count: </b> <span>{{ accountRecord.subentry_count }} ({{ (accountRecord.subentry_count || 0) * 0.5 }} XLMs)</span>
+            </nz-list-item>
+
+            <nz-list-item>
+              <b>Total sponsoring: </b> <span>{{ accountRecord.num_sponsoring }}</span>
+            </nz-list-item>
+
+            <nz-list-item>
+              <b>Total sponsored: </b> <span>{{ accountRecord.num_sponsored }}</span>
+            </nz-list-item>
+
+            <nz-list-item *ngIf="accountRecord.home_domain">
+              <b>Domain: </b> <span>{{ accountRecord.home_domain }}</span>
+            </nz-list-item>
+
+            <nz-list-item *ngIf="accountRecord.sponsor">
+              <b>Domain: </b> <span>{{ accountRecord.sponsor }}</span>
+            </nz-list-item>
+          </nz-list>
+        </nz-card>
+
+        <nz-card class="w-full mb-4" nzTitle="Account thresholds">
+          <nz-list>
+            <nz-list-item>
+              <b>Low:</b> <span>{{ accountRecord.thresholds?.low_threshold }}</span>
+            </nz-list-item>
+            <nz-list-item>
+              <b>Medium:</b> <span>{{ accountRecord.thresholds?.med_threshold }}</span>
+            </nz-list-item>
+            <nz-list-item>
+              <b>High:</b> <span>{{ accountRecord.thresholds?.high_threshold }}</span>
+            </nz-list-item>
+          </nz-list>
+        </nz-card>
+
+        <nz-card class="w-full mb-4" nzTitle="Account flags">
+          <nz-list>
+            <nz-list-item>
+              <b>Auth required:</b> <span>{{ accountRecord.flags?.auth_required }}</span>
+            </nz-list-item>
+            <nz-list-item>
+              <b>Auth revocable:</b> <span>{{ accountRecord.flags?.auth_revocable }}</span>
+            </nz-list-item>
+            <nz-list-item>
+              <b>Auth immutable:</b> <span>{{ accountRecord.flags?.auth_immutable }}</span>
+            </nz-list-item>
+            <nz-list-item>
+              <b>Auth clawback enabled:</b> <span>{{ accountRecord.flags?.auth_clawback_enabled }}</span>
+            </nz-list-item>
+          </nz-list>
+        </nz-card>
+
+        <nz-card class="w-full mb-4" nzTitle="Account signers">
+          <nz-list>
+            <nz-list-item *ngFor="let signer of accountRecord.signers">
+              <b class="cursor-pointer" appClipboard [textToCopy]="signer.key">
+                {{ signer.key | publicKey }}:
+              </b>
+              <span>
+              {{ signer.type }} ({{ signer.weight }})
+            </span>
+            </nz-list-item>
+          </nz-list>
+        </nz-card>
+      </ng-container>
+
+      <button (click)="removeAccount()"
+              nz-button nzSize="large" nzType="primary" nzDanger nzBlock>
+        Remove account
+      </button>
+    </section>
+
+  </section>
+
+  <section class="cols-span-1 px-6 pb-4">
+    <button [routerLink]="['/settings/wallets', walletId$ | async]"
+            nz-button nzSize="large"
+            class="w-full flex items-center justify-center">
+      <i class="fa-solid fa-arrow-left mr-2"></i>
+      Go back
+    </button>
+  </section>
+
+</section>

@@ -9,7 +9,7 @@ import {
   WalletsAccountsStore,
   WalletsAssetsStore, WalletsOperationsStore,
 } from '~root/state';
-import { catchError, map, withLatestFrom } from 'rxjs/operators';
+import { catchError, map, take, withLatestFrom } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -217,6 +217,26 @@ export class WalletsAccountsService {
 
         return operations;
       });
+  }
+
+  async setAccountName(data: { publicKey: IWalletsAccount['publicKey']; name: IWalletsAccount['name'] }): Promise<void> {
+    const sameNameAccount = await this.walletsAccountsQuery.selectAll({
+      filterBy: entity => entity.name === data.name,
+    }).pipe(take(1))
+      .toPromise();
+
+    if (sameNameAccount.length > 0) {
+      throw new Error('Name is being used by another account.');
+    }
+
+    const accounts = await this.walletsAccountsQuery.selectAll({
+      filterBy: entity => entity.publicKey === data.publicKey,
+    }).pipe(take(1))
+      .toPromise();
+
+    this.walletsAccountsStore.upsert(accounts.map(a => a._id), {
+      name: data.name,
+    });
   }
 }
 

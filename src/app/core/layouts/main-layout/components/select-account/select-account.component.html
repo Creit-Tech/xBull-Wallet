@@ -20,7 +20,8 @@
         (click)="onWalletSelected(walletAccount)"
         [class.pointer-events-none]="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">
       <p class="m-0 text-sm font-bold text-label">
-        {{ i }}: {{ walletAccount.publicKey | publicKey }} <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">(Active)</ng-container>
+        {{ i }}: {{ walletAccount.publicKey | publicKey }} <span class="mr-2">- {{ walletAccount.name }}</span>
+        <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">(Active)</ng-container>
       </p>
     </li>
   </ul>
