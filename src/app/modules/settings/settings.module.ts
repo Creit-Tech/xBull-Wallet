@@ -11,7 +11,6 @@ import { RegisteredWalletsComponent } from './pages/registered-wallets/registere
 import { RegisteredWalletDetailsComponent } from './pages/registered-wallet-details/registered-wallet-details.component';
 import { EditWalletNameComponent } from './components/edit-wallet-name/edit-wallet-name.component';
 import { ModalsModule } from '~root/shared/modals/modals.module';
-import { WalletsAccountsComponent } from './pages/wallets-accounts/wallets-accounts.component';
 import { HorizonApiDetailsComponent } from './components/horizon-api-details/horizon-api-details.component';
 import { AddHorizonApiComponent } from './components/add-horizon-api/add-horizon-api.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
@@ -35,7 +34,7 @@ import {NzInputNumberModule} from 'ng-zorro-antd/input-number';
 import {NzTableModule} from 'ng-zorro-antd/table';
 import {NzDividerModule} from 'ng-zorro-antd/divider';
 import { AntiSpamClaimableAssetsComponent } from './pages/anti-spam/anti-spam-claimable-assets/anti-spam-claimable-assets.component';
-import {NzMessageModule} from "ng-zorro-antd/message";
+import {NzMessageModule} from 'ng-zorro-antd/message';
 import { LockingComponent } from './pages/locking/locking.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -43,6 +42,8 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundImageComponent } from './pages/background-image/background-image.component';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { WalletAccountComponent } from './pages/wallet-account/wallet-account.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 
 @NgModule({
@@ -53,7 +54,6 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
     RegisteredWalletsComponent,
     RegisteredWalletDetailsComponent,
     EditWalletNameComponent,
-    WalletsAccountsComponent,
     HorizonApiDetailsComponent,
     AddHorizonApiComponent,
     AddAccountComponent,
@@ -65,7 +65,8 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
     AntiSpamKeysComponent,
     AntiSpamClaimableAssetsComponent,
     LockingComponent,
-    BackgroundImageComponent
+    BackgroundImageComponent,
+    WalletAccountComponent
   ],
   imports: [
     CommonModule,
@@ -92,6 +93,7 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
     NzSpinModule,
     NgxMaskModule,
     NzSliderModule,
+    NzCardModule,
   ],
 })
 export class SettingsModule { }
