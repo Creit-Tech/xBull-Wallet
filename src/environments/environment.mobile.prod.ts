@@ -6,6 +6,12 @@ export const environment = {
   production: true,
   platform: 'mobile',
   defaultApis: [{
+    _id: 'aa604e66a74ade3ef250f904ef28c92f',
+    name: 'Creit Tech Horizon',
+    url: 'https://horizon.creit.tech',
+    networkPassphrase: Networks.PUBLIC,
+    canRemove: false,
+  }, {
     _id: 'aa604e66a74ade3ef250f904ef28c92d',
     name: 'Main Network',
     url: 'https://horizon.stellar.org',
