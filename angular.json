@@ -141,11 +141,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "xbull:build"
+            "browserTarget": "app:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "xbull:build:production"
+              "browserTarget": "app:build:production"
             }
           }
         },

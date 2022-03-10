@@ -1,15 +1,10 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
-// Included with Angular CLI.
-
 import { Networks } from 'stellar-base';
 
 export const ENV = 'ENVIRONMENT';
 
 export const environment = {
-  production: false,
-  platform: 'website',
+  production: true,
+  platform: 'extension',
   defaultApis: [{
     _id: 'aa604e66a74ade3ef250f904ef28c92d',
     name: 'Main Network',
@@ -31,12 +26,3 @@ export const environment = {
   }],
   version: '0.9.0'
 };
-
-/*
- * For easier debugging in development mode, you can import the following file
- * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
- *
- * This import should be commented out in production mode because it will have a negative impact
- * on performance if an error is thrown.
- */
-import 'zone.js/plugins/zone-error';

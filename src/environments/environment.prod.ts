@@ -4,7 +4,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   production: true,
-  platform: 'extension',
+  platform: 'website',
   defaultApis: [{
     _id: 'aa604e66a74ade3ef250f904ef28c92d',
     name: 'Main Network',
