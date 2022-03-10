@@ -104,7 +104,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {
-    useHash: true,
+    useHash: environment.platform !== 'website',
     preloadingStrategy: PreloadAllModules,
     // enableTracing: !environment.production
   })],
