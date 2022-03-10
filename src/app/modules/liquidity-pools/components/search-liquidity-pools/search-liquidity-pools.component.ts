@@ -9,7 +9,7 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery,
 } from '~root/state';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, take, takeUntil } from 'rxjs/operators';
 import { LiquidityPoolsService } from '~root/core/services/liquidity-pools.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -37,10 +37,10 @@ export class SearchLiquidityPoolsComponent implements OnInit, OnDestroy {
 
   fetchingLatestPools$ = this.lpAssetsQuery.fetchingLatestPools$;
 
-  assetForm: FormGroupTyped<Pick<Asset, 'code' | 'issuer'>> = new FormGroup({
+  assetForm: FormGroup = new FormGroup({
     code: new FormControl('', Validators.required),
     issuer: new FormControl('', Validators.required)
-  }) as FormGroupTyped<Pick<Asset, 'code' | 'issuer'>>;
+  });
 
   constructor(
     private readonly liquidityPoolsService: LiquidityPoolsService,

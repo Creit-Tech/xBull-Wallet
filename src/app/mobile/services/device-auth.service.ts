@@ -38,7 +38,7 @@ export class DeviceAuthService {
             identifier,
             key,
           };
-        } catch (e) {
+        } catch (e: any) {
           throw new Error(`We were not able to encrypt with the device, try again or contact support.`);
         }
       } else {
@@ -49,21 +49,21 @@ export class DeviceAuthService {
     else if (this.platform.is('ios')) {
       try {
         await this.touchId.isAvailable();
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         throw new Error(`Touch/Face ID is not available.`);
       }
 
       try {
         await this.touchId.verifyFingerprint('Scan your fingerprint/face please');
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         throw new Error(`Authentication failed`);
       }
 
       try {
         await this.keychain.set(identifier, encryptedText, true);
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         throw new Error(`We couldn't save the value in the secured storage`);
       }
@@ -92,7 +92,7 @@ export class DeviceAuthService {
           });
 
           return AES.decrypt(result.password, params.key).toString(enc.Utf8);
-        } catch (e) {
+        } catch (e: any) {
           throw new Error(`Unauthorized, try again or contact support.`);
         }
       } else {
@@ -104,7 +104,7 @@ export class DeviceAuthService {
       try {
         return this.keychain.get(params.identifier, 'Confirm with Touch/Face ID to continue')
           .then(text => AES.decrypt(text, params.key).toString(enc.Utf8));
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         throw new Error(`We couldn't get the key from the secured storage.`);
       }

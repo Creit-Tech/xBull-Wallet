@@ -26,7 +26,7 @@ export class ClipboardDirective {
       this.copied.emit(this.textToCopy);
 
       this.nzMessageService.success('Text copied to the clipboard');
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error(`We couldn't copy the text`);
     }
   }

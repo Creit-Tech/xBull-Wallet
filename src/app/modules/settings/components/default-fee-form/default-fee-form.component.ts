@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   styleUrls: ['./default-fee-form.component.scss']
 })
 export class DefaultFeeFormComponent implements OnInit {
-  defaultFeeControl: FormControlTyped<string> = new FormControl('', Validators.required);
+  defaultFeeControl: FormControl = new FormControl('', Validators.required);
   recommendedFee$: Subject<string> = new Subject<string>();
 
   gettingRecommendedFee$ = this.settingsQuery.gettingRecommendedFee$;

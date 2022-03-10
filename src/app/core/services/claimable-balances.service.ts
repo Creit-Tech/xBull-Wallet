@@ -26,7 +26,7 @@ export class ClaimableBalancesService {
       this.claimableBalancesStore.updateUIState({ gettingClaimableBalances: false });
 
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       this.claimableBalancesStore.updateUIState({ gettingClaimableBalances: false });
       throw error;
@@ -40,7 +40,7 @@ export class ClaimableBalancesService {
       const response = await this.stellarSdkService.submitTransaction(xdr);
       this.claimableBalancesStore.updateUIState({ claimingBalance: false });
       return response;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       this.claimableBalancesStore.updateUIState({ claimingBalance: false });
       throw error;

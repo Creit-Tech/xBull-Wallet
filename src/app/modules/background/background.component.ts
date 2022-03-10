@@ -153,7 +153,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     if (!!params.network && !!params.publicKey) {
       try {
         this.horizonApisService.setHorizonByNetwork(params.network);
-      } catch (e) {
+      } catch (e: any) {
         return {
           error: true,
           errorMessage: e.name,

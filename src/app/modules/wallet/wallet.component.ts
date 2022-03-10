@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { exhaustMap, map, pluck, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { HorizonApisQuery, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { combineLatest, pipe, Subject } from 'rxjs';
+import { combineLatest, Observable, pipe, Subject } from 'rxjs';
 import { ReceiveFundsComponent } from '~root/modules/wallet/components/receive-funds/receive-funds.component';
 import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';

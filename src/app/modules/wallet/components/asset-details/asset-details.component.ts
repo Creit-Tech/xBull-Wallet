@@ -7,7 +7,7 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery,
 } from '~root/state';
-import { merge, ReplaySubject, Subject } from 'rxjs';
+import { merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ModalsService } from '~root/shared/modals/modals.service';

@@ -4,6 +4,7 @@ import {map} from 'rxjs/operators';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SettingsService} from '~root/core/settings/services/settings.service';
 import {NzMessageService} from "ng-zorro-antd/message";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-anti-spam-claimable-assets',
@@ -62,7 +63,7 @@ export class AntiSpamClaimableAssetsComponent implements OnInit {
 
       this.addAssetForm.reset();
       this.cdr.detectChanges();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(`We couldn't save the asset. It's possible that you already saved it.`, {
         nzDuration: 5000,
