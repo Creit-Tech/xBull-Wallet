@@ -3,7 +3,7 @@ import { ISiteConnection, SitesConnectionsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ConnectedSiteDetailsComponent } from '~root/modules/settings/components/connected-site-details/connected-site-details.component';
 import { take, takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-sites-connected',

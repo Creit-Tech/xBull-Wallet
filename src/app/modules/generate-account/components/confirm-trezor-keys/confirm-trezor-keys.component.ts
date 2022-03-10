@@ -62,7 +62,7 @@ export class ConfirmTrezorKeysComponent implements OnInit {
         start: amountOfAccountsLoaded,
         end: amountOfAccountsLoaded + 4,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(`There was an error we didn't expect, try again or contact support`, {
         nzDuration: 5000

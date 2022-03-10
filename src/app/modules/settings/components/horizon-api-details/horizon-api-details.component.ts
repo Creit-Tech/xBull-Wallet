@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HorizonApisQuery, IHorizonApi } from '~root/state';
-import { ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 import { pluck, take } from 'rxjs/operators';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 

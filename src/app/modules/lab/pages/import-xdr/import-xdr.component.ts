@@ -13,8 +13,8 @@ import { switchMap, take, takeUntil } from 'rxjs/operators';
 })
 export class ImportXdrComponent implements OnInit {
   componentDestroyed$: Subject<void> = new Subject<void>();
-  signControl: FormControlTyped<string> = new FormControl('', Validators.required);
-  signedControl: FormControlTyped<string> = new FormControl('', Validators.required);
+  signControl: FormControl = new FormControl('', Validators.required);
+  signedControl: FormControl = new FormControl('', Validators.required);
 
   constructor(
     private readonly router: Router,

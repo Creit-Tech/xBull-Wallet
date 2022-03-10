@@ -18,10 +18,10 @@ import { sameValueValidator } from '~root/shared/forms-validators/same-value.val
 export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
-  form: FormGroupTyped<IConfirmSecretPasswordForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     secretKey: new FormControl('', [Validators.required]),
     confirmPassword: new FormControl('', [Validators.required]),
-  }) as unknown as FormGroupTyped<IConfirmSecretPasswordForm>;
+  });
 
   walletVersion = this.env.version;
 

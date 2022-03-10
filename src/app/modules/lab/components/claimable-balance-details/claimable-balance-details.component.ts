@@ -151,7 +151,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, AfterViewInit, 
       await this.claimableBalancesService.claimBalance(signedXdr);
       this.nzMessageService.success('Funds have been added to your balances');
       this.accept.emit();
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error('We were not able to complete the operation.');
     }
   }

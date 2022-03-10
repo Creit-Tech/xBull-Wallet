@@ -21,7 +21,7 @@ export class SelectAccountComponent implements OnInit, AfterViewInit, OnDestroy 
   wallets$ = this.walletsQuery.selectAll();
   selectedWalletId$ = this.walletsQuery.getSelectedWallet$;
 
-  walletSelect: FormControlTyped<string> = new FormControl('', Validators.required);
+  walletSelect: FormControl = new FormControl('', Validators.required);
 
   walletAccountsPublicKeys$ = this.walletSelect.valueChanges
     .pipe(switchMap(walletId =>

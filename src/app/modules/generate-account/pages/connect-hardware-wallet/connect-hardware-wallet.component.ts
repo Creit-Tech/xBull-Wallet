@@ -37,7 +37,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
     let transport;
     try {
       transport = await this.hardwareWalletsService.connectLedgerWallet();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       await this.nzMessageService.error(`We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it`);
       return;

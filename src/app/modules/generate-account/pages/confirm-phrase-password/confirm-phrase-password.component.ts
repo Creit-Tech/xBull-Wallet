@@ -23,12 +23,12 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   wordList: string[] = this.mnemonicPhraseService.getWordList();
   filteredOptions: string[] = [];
 
-  form: FormGroupTyped<IConfirmPhrasePasswordForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     words: new FormArray([]),
     searchInput: new FormControl(''),
     confirmPhrase: new FormControl('', Validators.required),
     confirmPassword: new FormControl('', [Validators.required]),
-  }) as unknown as FormGroupTyped<IConfirmPhrasePasswordForm>;
+  }) as unknown as FormGroup;
 
   get phraseArray(): FormArray {
     return this.form.controls.words as FormArray;
@@ -136,7 +136,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
       new FormControl(word, Validators.required)
     );
 
-    this.form.get('searchInput').patchValue('');
+    this.form.get('searchInput')?.patchValue('');
     this.filteredOptions = [];
   }
 

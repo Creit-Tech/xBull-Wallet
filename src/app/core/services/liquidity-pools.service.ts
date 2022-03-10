@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IHorizonApi, ILpAsset, ILpAssetLoaded, LpAssetsStore } from '~root/state';
 import { Server, Asset, Horizon, ServerApi } from 'stellar-sdk';
-import {from, throwError} from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { withTransaction } from '@datorama/akita';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';

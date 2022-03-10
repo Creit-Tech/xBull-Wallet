@@ -101,7 +101,7 @@ export class OfferDetailsComponent implements OnInit, OnDestroy {
       await this.walletsOffersService.sendManageSellOffer(signedXdr);
       this.nzMessageService.success('We removed the offer correctly');
       this.offerCancelled.emit();
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error('We were not able to complete the operation.');
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import QRCode from 'qrcode';
 import { map, switchMap } from 'rxjs/operators';
 import { WalletsAccountsQuery } from '~root/state';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-receive-funds',

@@ -16,7 +16,7 @@ import { getWindowId, setWindowId } from '~extension/background/state.background
   let windowId: number | undefined;
   try {
     windowId = await getWindowId();
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
   }
 
@@ -31,7 +31,7 @@ import { getWindowId, setWindowId } from '~extension/background/state.background
         });
         return;
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
     }
   }
@@ -55,7 +55,7 @@ browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): P
   let windowId: number | undefined;
   try {
     windowId = await getWindowId();
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
   }
 
@@ -66,7 +66,7 @@ browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): P
         await browser.windows.remove(windowId);
         await setWindowId(undefined);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
     }
   }

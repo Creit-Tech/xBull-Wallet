@@ -5,7 +5,7 @@ import { SettingsQuery } from '~root/state/settings.query';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SelectAccountComponent } from '~root/core/layouts/main-layout/components/select-account/select-account.component';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SelectHorizonApiComponent } from '~root/core/layouts/main-layout/components/select-horizon-api/select-horizon-api.component';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, merge, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Observable, pipe, Subject } from 'rxjs';
 import { filter, map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
