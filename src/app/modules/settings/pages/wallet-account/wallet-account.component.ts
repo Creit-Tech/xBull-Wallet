@@ -85,7 +85,7 @@ export class WalletAccountComponent implements OnInit {
         name: this.accountNameControl.value.trim(),
         publicKey: account.publicKey,
       });
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error(e.message || 'Unexpected error, please contact support');
       return;
     }

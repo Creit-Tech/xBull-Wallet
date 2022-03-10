@@ -25,7 +25,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
-import { BehaviorSubject, from, merge, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { AccountResponse, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
@@ -64,7 +64,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord?.balances || []);
     }));
 
-  depositForm: FormGroupTyped<IDepositForm> = new FormGroup({
+  depositForm: FormGroup = new FormGroup({
     amountAssetA: new FormControl('0', [Validators.required, Validators.min(0.0000001)]),
     multiplierA: new FormControl(undefined),
     assetABalanceLine: new FormControl(undefined, Validators.required),
@@ -72,7 +72,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     multiplierB: new FormControl(undefined),
     assetBBalanceLine: new FormControl(undefined, Validators.required),
     errorPercentage: new FormControl(0.005, Validators.required),
-  }) as FormGroupTyped<IDepositForm>;
+  });
 
   assetA$: Observable<IWalletAsset | undefined> = this.depositForm.valueChanges
     .pipe(startWith(this.depositForm.value))
@@ -259,7 +259,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       try {
         loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
           .loadAccount(selectedAccount.publicKey);
-      } catch (e) {
+      } catch (e: any) {
         this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
           nzDuration: 5000,
         });
@@ -511,7 +511,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
           assetBBalanceLine: undefined,
           errorPercentage: 0.005,
         });
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         this.nzMessageService.error('Submission failed, please try again or contact support');
       }
@@ -519,7 +519,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
 
     try {
       await this.getLiquidityPool();
-    } catch (e) {
+    } catch (e: any) {
 
     }
   }
@@ -591,7 +591,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         drawerRef.close();
         await this.walletsAssetsService.addAssetToAccount(signedXdr);
         this.nzMessageService.success('Pool created, you can deposit liquidity now');
-      } catch (e) {
+      } catch (e: any) {
         console.error(e);
         this.nzMessageService.error('Submission failed, please try again or contact support');
       }
@@ -599,7 +599,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
 
     try {
       await this.getLiquidityPool();
-    } catch (e) {
+    } catch (e: any) {
 
     }
   }

@@ -7,7 +7,7 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./password-modal.component.scss']
 })
 export class PasswordModalComponent {
-  passwordField: FormControlTyped<string> = new FormControl('', [Validators.required]);
+  passwordField: FormControl = new FormControl('', [Validators.required]);
 
   @Input() description = 'Your password is used to decrypt your private key';
   @Output() password: EventEmitter<string> = new EventEmitter<string>();

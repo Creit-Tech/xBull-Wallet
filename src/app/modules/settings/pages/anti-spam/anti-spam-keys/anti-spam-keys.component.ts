@@ -4,6 +4,7 @@ import {SettingsService} from '~root/core/settings/services/settings.service';
 import {SettingsQuery} from '~root/state';
 import {map, pluck} from 'rxjs/operators';
 import {NzMessageService} from "ng-zorro-antd/message";
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-anti-spam-keys',
@@ -16,7 +17,7 @@ export class AntiSpamKeysComponent implements OnInit {
   showEmpty$: Observable<boolean> = this.publicKeys$
     .pipe(map(array => array.length === 0));
 
-  publicKeyControl: FormControlTyped<string> = new FormControl('', [
+  publicKeyControl: FormControl = new FormControl('', [
     Validators.required,
     Validators.minLength(56),
     Validators.maxLength(56)
@@ -42,7 +43,7 @@ export class AntiSpamKeysComponent implements OnInit {
 
       this.publicKeyControl.patchValue('');
       this.cdr.detectChanges();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(`We couldn't add the key, it's possible that you already saved it.`, {
         nzDuration: 5000,

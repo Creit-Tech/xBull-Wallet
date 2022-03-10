@@ -91,7 +91,7 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
       }
 
       this.loading$.next(false);
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
       this.loading$.next(false);
     }

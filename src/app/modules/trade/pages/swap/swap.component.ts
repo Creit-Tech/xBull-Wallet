@@ -36,11 +36,11 @@ export class SwapComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
   gettingPath$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  form: FormGroupTyped<ISwapForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     fromAsset: new FormControl('', [Validators.required]),
     toAsset: new FormControl('', [Validators.required]),
     amountToSwap: new FormControl('', [Validators.required]),
-  }) as FormGroupTyped<ISwapForm>;
+  });
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
@@ -172,7 +172,7 @@ export class SwapComponent implements OnInit, OnDestroy {
     try {
       await this.walletsOffersService.sendPathPaymentStrictSend(signedXdr);
       this.nzMessageService.success('The swap of the assets were successful');
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error('We were not able to complete the swap.');
     }
   }

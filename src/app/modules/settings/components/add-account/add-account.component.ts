@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
+import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { IWallet, IWalletsAccount, IWalletWithMnemonicPhrase, IWalletWithSecretKey, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { FormControl, Validators } from '@angular/forms';
 import { filter, map, switchMap, take } from 'rxjs/operators';
@@ -37,8 +37,8 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
     ))
     .pipe(map(obj => Object.values(obj)));
 
-  secretKey: FormControlTyped<string> = new FormControl('', Validators.required) as FormControlTyped<string>;
-  password: FormControlTyped<string> = new FormControl('', Validators.required) as FormControlTyped<string>;
+  secretKey: FormControl = new FormControl('', Validators.required) as FormControl;
+  password: FormControl = new FormControl('', Validators.required) as FormControl;
 
   globalPasswordHash$: Observable<string | undefined> = this.walletsQuery.globalPasswordHash$;
 
@@ -87,7 +87,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
         password: this.password.value,
         walletId: parentWallet._id,
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error('We were not able to save your new account');
       throw e;
@@ -99,7 +99,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
 
     try {
       decryptedPhrase = this.cryptoService.decryptText(parentWallet.mnemonicPhrase, this.password.value);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error('We were not able to decrypt your Mnemonic Phrase');
       throw e;
@@ -115,7 +115,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
         password: this.password.value,
         path:  `m/44'/148'/${walletAccounts.length}'`
       });
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error('We were not able to add the new account');
       throw e;

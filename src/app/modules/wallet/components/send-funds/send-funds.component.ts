@@ -8,7 +8,7 @@ import { ModalsService } from '~root/shared/modals/modals.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { Account, Asset, TransactionBuilder, Operation } from 'stellar-base';
 import BigNumber from 'bignumber.js';
-import { merge, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { Memo } from 'stellar-sdk';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
@@ -36,7 +36,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
   showModal = false;
 
-  form: FormGroupTyped<ISendFundsForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     publicKey: new FormControl('', [
       Validators.required,
       Validators.minLength(56),
@@ -45,7 +45,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
     memo: new FormControl(''),
     assetCode: new FormControl('', [Validators.required]),
     amount: new FormControl('', [Validators.required])
-  }) as FormGroupTyped<ISendFundsForm>;
+  });
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
@@ -167,7 +167,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
       );
-    } catch (e) {
+    } catch (e: any) {
       if (selectedAsset._id !== 'native') {
         this.nzMessageService.error(`We ca not send custom assets to an account that has not been created yet.`, {
           nzDuration: 3000,

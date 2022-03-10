@@ -4,7 +4,7 @@ import { OfferDetailsComponent } from '~root/modules/wallet/components/offer-det
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { IWalletAsset, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
-import { forkJoin, from, of, Subject, Subscription } from 'rxjs';
+import { forkJoin, from, Observable, of, Subject, Subscription } from 'rxjs';
 import { concatMap, distinctUntilKeyChanged, map, mergeMap, switchMap, take, takeUntil, toArray, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';

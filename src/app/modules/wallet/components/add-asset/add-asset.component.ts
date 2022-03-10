@@ -24,7 +24,7 @@ export class AddAssetComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showModal = false;
 
-  form: FormGroupTyped<IAddAssetForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     assetIssuer: new FormControl('', [
       Validators.required,
       Validators.minLength(56),
@@ -36,7 +36,7 @@ export class AddAssetComponent implements OnInit, AfterViewInit, OnDestroy {
     limitAmount: new FormControl('', [
       Validators.pattern('^[0-9|\.]*$')
     ])
-  }) as FormGroupTyped<IAddAssetForm>;
+  });
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,

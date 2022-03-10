@@ -22,7 +22,7 @@ export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy
     this.wallet$.next(data);
   }
 
-  nameField: FormControlTyped<string> = new FormControl('', Validators.required);
+  nameField: FormControl = new FormControl('', Validators.required);
 
   constructor(
     private readonly walletsService: WalletsService,

@@ -1,5 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {combineLatest, ReplaySubject, Subject} from 'rxjs';
+import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, mergeMap, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import {
   HorizonApisQuery,

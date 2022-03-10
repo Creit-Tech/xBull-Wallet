@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { merge, Subject, Subscription } from 'rxjs';
+import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { AddAssetComponent } from '~root/modules/wallet/components/add-asset/add-asset.component';
 import { SendFundsComponent } from '~root/modules/wallet/components/send-funds/send-funds.component';

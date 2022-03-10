@@ -22,7 +22,7 @@ export class LockingComponent implements OnInit, OnDestroy {
 
   mobilePlatform = this.env.platform === 'mobile';
 
-  useDeviceAuthControl: FormControlTyped<boolean> = new FormControl(false);
+  useDeviceAuthControl: FormControl = new FormControl(false);
 
   globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
 
