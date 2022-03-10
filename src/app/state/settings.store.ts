@@ -6,12 +6,15 @@ export interface SettingsState {
     windowsMode: boolean;
     gettingRecommendedFee: boolean;
   };
+  storeVersion: number;
+
   advanceMode: boolean;
   defaultFee: string;
 
   // This is a token which is used to decode an encrypted password in mobile devices
   passwordAuthTokenActive: boolean;
   passwordAuthToken?: string;
+  passwordAuthKey?: string;
   passwordAuthTokenIdentifier?: string;
 
   antiSPAMPublicKeys: string[];
@@ -33,21 +36,37 @@ export function createInitialState(): SettingsState {
       windowsMode: false,
       gettingRecommendedFee: false,
     },
+    storeVersion: 2,
     advanceMode: false,
     defaultFee: '10000',
     passwordAuthTokenActive: false,
     antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],
     operationTypesToShow: [
-      'manage_sell_offer',
-      'manage_buy_offer',
       'create_account',
       'payment',
-      'path_payment_strict_send',
       'path_payment_strict_receive',
+      'create_passive_sell_offer',
+      'manage_sell_offer',
+      'set_options',
+      'change_trust',
+      'allow_trust',
       'account_merge',
+      'inflation',
+      'manage_data',
+      'bump_sequence',
+      'manage_buy_offer',
+      'path_payment_strict_send',
+      'create_claimable_balance',
+      'claim_claimable_balance',
+      'begin_sponsoring_future_reserves',
+      'end_sponsoring_future_reserves',
+      'revoke_sponsorship',
+      'clawback',
+      'clawback_claimable_balance',
+      'set_trust_line_flags',
       'liquidity_pool_deposit',
-      'withdraw_pool_deposit'
+      'liquidity_pool_withdraw',
     ]
   };
 }
