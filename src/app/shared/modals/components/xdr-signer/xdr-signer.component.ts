@@ -21,7 +21,7 @@ import {SignPasswordComponent} from '~root/shared/modals/components/sign-passwor
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
 import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
-import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
+import {DeviceAuthService} from "~root/mobile/services/device-auth.service";
 import { fromUnixTime } from 'date-fns';
 
 @Component({
@@ -150,13 +150,29 @@ export class XdrSignerComponent implements OnInit {
   }
 
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
-    const passwordAuthToken = await this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise();
+    const [
+      passwordAuthToken,
+      passwordAuthKey,
+      passwordAuthTokenIdentifier
+    ] = await Promise.all([
+      this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise(),
+      this.settingsQuery.passwordAuthKey$.pipe(take(1)).toPromise(),
+      this.settingsQuery.passwordAuthTokenIdentifier$.pipe(take(1)).toPromise(),
+    ]);
+
+    if (!passwordAuthKey || !passwordAuthTokenIdentifier) {
+      this.nzMessageService.error(
+        `There was an error with the device authentication, please configure it again from the settings view.`
+      );
+      return;
+    }
 
     let decryptedPassword: string;
     try {
       decryptedPassword = await this.deviceAuthService.decryptWithDevice({
         token: passwordAuthToken,
-        identifier: PASSWORD_IDENTIFIER
+        identifier: passwordAuthTokenIdentifier,
+        key: passwordAuthKey,
       });
     } catch (e) {
       this.nzMessageService.error(

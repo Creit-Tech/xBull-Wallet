@@ -93,11 +93,12 @@ export class SettingsService {
     });
   }
 
-  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string }): void {
+  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string; passwordAuthKey: string; }): void {
     this.settingsStore.updateState({
       passwordAuthToken: data.passwordAuthToken,
       passwordAuthTokenIdentifier: data.passwordAuthTokenIdentifier,
       passwordAuthTokenActive: true,
+      passwordAuthKey: data.passwordAuthKey,
     });
   }
 
@@ -105,6 +106,7 @@ export class SettingsService {
     this.settingsStore.updateState({
       passwordAuthToken: undefined,
       passwordAuthTokenIdentifier: undefined,
+      passwordAuthKey: undefined,
       passwordAuthTokenActive: false,
     });
   }

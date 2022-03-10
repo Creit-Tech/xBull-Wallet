@@ -20,12 +20,13 @@ export class IosViewRestrictionGuard implements CanActivate, CanActivateChild {
   ) { }
 
   guardLogic(): boolean {
-    if (!this.platform.is('ios')) {
+    // We disabled this for now
+    // if (!this.platform.is('ios')) {
       return true;
-    }
+    // }
 
-    this.router.navigate(['/ios-block-message']);
-    return false;
+    // this.router.navigate(['/ios-block-message']);
+    // return false;
   }
 
   canActivate(
