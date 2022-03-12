@@ -7,6 +7,7 @@ import {BackgroundComponent} from "~root/modules/background/background.component
 import {environment} from "~env";
 import { IosViewRestrictionGuard } from '~root/core/guards/ios-view-restriction.guard';
 import { IosBlockPageComponent } from '~root/mobile/components/ios-block-page/ios-block-page.component';
+import { MainLayoutV1Component } from '~root/core/layouts/main-layout-v1/main-layout-v1.component';
 
 const routes: Routes = [
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: 'wallet',
-    component: MainLayoutComponent,
+    component: MainLayoutV1Component,
     data: {
       activeIcon: 'wallet'
     },

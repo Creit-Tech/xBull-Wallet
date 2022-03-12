@@ -33,6 +33,10 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { LiquidityPoolsModule } from '~root/modules/liquidity-pools/liquidity-pools.module';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { WalletDashboardComponent } from './pages/wallet-dashboard/wallet-dashboard.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 
 
 @NgModule({
@@ -49,6 +53,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     WalletTransactionsComponent,
     TransactionDetailsComponent,
     WalletTransactionItemComponent,
+    WalletDashboardComponent,
   ],
   imports: [
     CommonModule,
@@ -72,6 +77,9 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     LiquidityPoolsModule,
     NzListModule,
     ScrollingModule,
+    NzCardModule,
+    NzTableModule,
+    NzDropDownModule,
   ],
 })
 export class WalletModule { }

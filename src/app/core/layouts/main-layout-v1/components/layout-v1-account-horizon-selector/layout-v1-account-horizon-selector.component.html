@@ -1,0 +1,61 @@
+<section style="grid-template-rows: repeat(3, auto) 6fr auto"
+         class="w-full h-full grid grid-cols-1">
+  <section class="col-span-1 px-4 pt-4">
+    <h2 class="mb-4 text-center font-bold">
+      Horizon Api
+    </h2>
+
+    <nz-select [formControl]="horizonSelectControl" class="w-full mb-4">
+      <ng-container *ngFor="let horizonApi of (horizonApis | async); let i = index">
+        <nz-option [nzValue]="horizonApi._id"
+                   [nzLabel]="horizonApi.name">
+        </nz-option>
+      </ng-container>
+    </nz-select>
+
+    <button (click)="closeDrawer()" routerLink="/settings/horizon-apis" nz-button nzBlock nzType="primary">
+      Add Horizon API
+    </button>
+  </section>
+
+  <nz-divider></nz-divider>
+
+  <section class="col-span-1 px-4 mb-2">
+    <h2 class="mb-4 text-center font-bold">
+      Wallet and account
+    </h2>
+
+    <nz-select [formControl]="walletSelectControl" class="w-full">
+      <ng-container *ngFor="let wallet of wallets$ | async">
+        <nz-option nzLabel="Wallet: {{ wallet.name }}"
+                   [nzValue]="wallet._id">
+        </nz-option>
+      </ng-container>
+    </nz-select>
+  </section>
+
+  <section class="col-span-1 px-4 overflow-y-auto no-scrollbar">
+    <nz-list class="w-full cursor-pointer">
+      <ng-container *ngFor="let walletAccount of (walletAccountsPublicKeys$ | async); let i = index">
+        <nz-list-item (click)="onWalletAccountSelected(walletAccount)"
+                      class="flex flex-col transition items-start font-normal hover:text-primary">
+          <div>
+            {{ i }}: {{ walletAccount.publicKey | publicKey }}
+            <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">
+              (Active)
+            </ng-container>
+          </div>
+          <div>
+            {{ walletAccount.name }}
+          </div>
+        </nz-list-item>
+      </ng-container>
+    </nz-list>
+  </section>
+
+  <section class="col-span-1 p-4">
+    <button (click)="closeDrawer()" routerLink="/create-account" nz-button nzType="primary" nzBlock>
+      Add wallet
+    </button>
+  </section>
+</section>

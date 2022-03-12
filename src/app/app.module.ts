@@ -19,15 +19,22 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
 import { MobileModule } from '~root/mobile/mobile.module';
-import {NzButtonModule} from "ng-zorro-antd/button";
-import {NzIconModule} from "ng-zorro-antd/icon";
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NavMenuComponent } from './core/layouts/main-layout/components/nav-menu/nav-menu.component';
-import {NzListModule} from "ng-zorro-antd/list";
-import {NzMenuModule} from "ng-zorro-antd/menu";
+import { NzListModule } from 'ng-zorro-antd/list';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { MainLayoutV1Component } from './core/layouts/main-layout-v1/main-layout-v1.component';
+import { MobileMenuComponent } from './core/layouts/main-layout-v1/components/mobile-menu/mobile-menu.component';
+import { LayoutV1HeaderComponent } from './core/layouts/main-layout-v1/components/layout-v1-header/layout-v1-header.component';
+import { LayoutV1AccountHorizonSelectorComponent } from './core/layouts/main-layout-v1/components/layout-v1-account-horizon-selector/layout-v1-account-horizon-selector.component';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 registerLocaleData(en);
 
@@ -37,7 +44,11 @@ registerLocaleData(en);
     MainLayoutComponent,
     SelectAccountComponent,
     SelectHorizonApiComponent,
-    NavMenuComponent
+    NavMenuComponent,
+    MainLayoutV1Component,
+    MobileMenuComponent,
+    LayoutV1HeaderComponent,
+    LayoutV1AccountHorizonSelectorComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +70,10 @@ registerLocaleData(en);
     NzIconModule,
     NzListModule,
     NzMenuModule,
+    NzLayoutModule,
+    NzSelectModule,
+    ReactiveFormsModule,
+    NzDividerModule,
   ],
   providers: [
     {

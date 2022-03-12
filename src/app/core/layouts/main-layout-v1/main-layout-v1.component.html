@@ -1,0 +1,65 @@
+<nz-layout class="h-full">
+  <nz-sider class="hidden md:block bg-gray"
+            nzCollapsible [(nzCollapsed)]="isCollapsed">
+    <div class="p-4">
+      <img src="/assets/icons/xbull-dark.png"
+           style="max-width: 120px;"
+           alt="" class="w-full h-auto mx-auto">
+    </div>
+    <ul nz-menu nzMode="inline" nzTheme="dark">
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/wallet"
+          routerLinkActive="bg-primary text-white"
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-wallet" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Wallet</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/swap"
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-rotate" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Swap</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/trade"
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-chart-line" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Trade</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/liquidity-tools"
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-water-ladder" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Liquidity pools</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/settings"
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-gear" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Settings</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+
+    <nz-header class="bg-gray p-0 w-full px-4">
+      <app-layout-v1-header class="w-full"></app-layout-v1-header>
+    </nz-header>
+
+    <nz-content class="overflow-y-auto no-scrollbar">
+      <router-outlet></router-outlet>
+      <nz-footer class="mt-auto">
+        xBull Wallet - An Open Source Stellar Wallet created by Creit Tech
+      </nz-footer>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

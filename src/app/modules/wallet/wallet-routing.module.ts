@@ -4,17 +4,18 @@ import { WalletAssetsComponent } from '~root/modules/wallet/pages/wallet-assets/
 import { WalletComponent } from '~root/modules/wallet/wallet.component';
 import { WalletOffersComponent } from '~root/modules/wallet/pages/wallet-offers/wallet-offers.component';
 import { WalletTransactionsComponent } from '~root/modules/wallet/pages/wallet-transactions/wallet-transactions.component';
+import { WalletDashboardComponent } from '~root/modules/wallet/pages/wallet-dashboard/wallet-dashboard.component';
 
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    component: WalletDashboardComponent,
+  },
+  {
+    path: '',
     component: WalletComponent,
     children: [
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: '/wallet/assets',
-      },
       {
         path: 'assets',
         component: WalletAssetsComponent,

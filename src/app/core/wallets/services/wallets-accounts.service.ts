@@ -109,8 +109,7 @@ export class WalletsAccountsService {
   }
 
   createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
-    const index = this.activeAccountsStreams.findIndex(record => record.account === account._id);
-    if (account && !account.streamCreated && index === -1) {
+    if (account) {
       const newStream = new Server(horizonApi.url).accounts()
         .accountId(account.publicKey)
         .stream({
@@ -137,8 +136,7 @@ export class WalletsAccountsService {
     cursor?: string,
     horizonApi: IHorizonApi
   }): void {
-    const index = this.activeOperationsStreams.findIndex(record => record.account === params.account._id);
-    if (params.account && !params.account.operationsStreamCreated && index === -1) {
+    if (params.account) {
       const streamBuilder = new Server(params.horizonApi.url).operations()
         .forAccount(params.account.publicKey)
         .limit(100)
