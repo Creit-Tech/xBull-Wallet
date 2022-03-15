@@ -12,7 +12,7 @@ import { WalletsQuery } from '~root/state';
   styleUrls: ['./generate-password.component.scss']
 })
 export class GeneratePasswordComponent implements OnInit {
-  passwordFormControl: FormControlTyped<string> = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
   walletVersion = this.env.version;
 

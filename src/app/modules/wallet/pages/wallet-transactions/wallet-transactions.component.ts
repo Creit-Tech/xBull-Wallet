@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionDetailsComponent } from '~root/modules/wallet/components/transaction-details/transaction-details.component';
-import { combineLatest, Subject, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery,
   IWalletsOperation,

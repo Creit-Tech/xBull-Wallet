@@ -9,7 +9,7 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery,
 } from '~root/state';
-import { BehaviorSubject, combineLatest, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { Horizon } from 'stellar-sdk';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -121,7 +121,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
     try {
       loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
         .loadAccount(selectedAccount.publicKey);
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
         nzDuration: 5000,
       });
@@ -184,7 +184,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
         .toPromise();
 
       drawerRef.close();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(`We couldn't sign the XDR, please try again.`);
       return;
@@ -198,7 +198,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
       await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
       this.nzMessageService.success(`LP Asset removed correctly.`);
       this.nzDrawerRef.close();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.success(`We were not able to remove the LP asset, please make sure you follow all the requirements to remove an Asset from your account.`, {
         nzDuration: 5000,

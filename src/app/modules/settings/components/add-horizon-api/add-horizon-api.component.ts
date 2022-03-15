@@ -21,11 +21,11 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
     value: Networks.TESTNET
   }];
 
-  form: FormGroupTyped<IAddHorizonApiForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     name: new FormControl('', Validators.required),
     passphrase: new FormControl('', Validators.required),
     url: new FormControl('', Validators.required),
-  }) as FormGroupTyped<IAddHorizonApiForm>;
+  });
 
   constructor(
     private readonly horizonApisService: HorizonApisService,

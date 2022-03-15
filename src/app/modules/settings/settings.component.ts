@@ -18,7 +18,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   advanceMode$ = this.settingsQuery.advanceMode$;
   defaultFee$ = this.settingsQuery.defaultFee$;
 
-  advanceModeControl: FormControlTyped<boolean> = new FormControl(false);
+  advanceModeControl: FormControl = new FormControl(false);
 
   selectedWallet$ = this.walletsQuery.getSelectedWallet$;
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;

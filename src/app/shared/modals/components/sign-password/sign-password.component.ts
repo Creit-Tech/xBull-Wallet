@@ -7,7 +7,7 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./sign-password.component.scss']
 })
 export class SignPasswordComponent implements AfterViewInit {
-  passwordField: FormControlTyped<string> = new FormControl('', [Validators.required]);
+  passwordField: FormControl = new FormControl('', [Validators.required]);
 
   showModal = false;
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();

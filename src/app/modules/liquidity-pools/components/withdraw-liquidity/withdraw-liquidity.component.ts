@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery, ILpAsset,
   ILpAssetLoaded,
@@ -52,12 +52,12 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     100: '100%',
   };
 
-  withDrawForm: FormGroupTyped<IWithdrawForm> = new FormGroup({
+  withDrawForm: FormGroup = new FormGroup({
     selectedPoolId: new FormControl(undefined, Validators.required),
     amountToWithdraw: new FormControl(0, [Validators.required, Validators.min(0.0000001)]),
     percentage: new FormControl(0, Validators.required),
     errorPercentage: new FormControl(0.005, Validators.required),
-  }) as FormGroupTyped<IWithdrawForm>;
+  });
 
   selectedLiquidityPool$: Observable<ILpAssetLoaded> = this.withDrawForm.controls.selectedPoolId
     .valueChanges
@@ -231,7 +231,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     try {
       loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
         .loadAccount(selectedAccount.publicKey);
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
         nzDuration: 5000,
       });

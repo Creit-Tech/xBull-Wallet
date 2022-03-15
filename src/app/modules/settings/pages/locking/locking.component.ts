@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {DeviceAuthService, PASSWORD_IDENTIFIER} from '~root/mobile/services/device-auth.service';
+import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
 import { SettingsService} from '~root/core/settings/services/settings.service';
 import { ENV, environment } from '~env';
 import { FormControl } from '@angular/forms';
@@ -7,10 +7,10 @@ import {SettingsQuery, WalletsQuery} from '~root/state';
 import {map, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {merge, Subject, Subscription} from 'rxjs';
-import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
-import {NzMessageService} from "ng-zorro-antd/message";
+import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
+import {NzMessageService} from 'ng-zorro-antd/message';
 import {result} from "lodash";
-import {CryptoService} from "~root/core/crypto/services/crypto.service";
+import {CryptoService} from '~root/core/crypto/services/crypto.service';
 
 @Component({
   selector: 'app-locking',
@@ -22,7 +22,7 @@ export class LockingComponent implements OnInit, OnDestroy {
 
   mobilePlatform = this.env.platform === 'mobile';
 
-  useDeviceAuthControl: FormControlTyped<boolean> = new FormControl(false);
+  useDeviceAuthControl: FormControl = new FormControl(false);
 
   globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
 
@@ -92,7 +92,7 @@ export class LockingComponent implements OnInit, OnDestroy {
           return password;
         }))
         .pipe(switchMap(password => {
-          return this.deviceAuthService.encryptWithDevice(password, PASSWORD_IDENTIFIER);
+          return this.deviceAuthService.encryptWithDevice(password);
         }))
         .pipe(takeUntil(merge(
           this.componentDestroyed$,
@@ -102,6 +102,7 @@ export class LockingComponent implements OnInit, OnDestroy {
           this.settingsService.addDeviceAuthToken({
             passwordAuthToken: encryptResult.token,
             passwordAuthTokenIdentifier: encryptResult.identifier,
+            passwordAuthKey: encryptResult.key,
           });
           this.nzMessageService.success(`Device Auth is now active for password protected features.`);
           drawerRef.close();

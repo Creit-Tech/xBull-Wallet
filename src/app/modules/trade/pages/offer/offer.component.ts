@@ -14,7 +14,7 @@ import BigNumber from 'bignumber.js';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { TransactionBuilder, Operation, Account } from 'stellar-sdk';
-import { merge, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
@@ -28,12 +28,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class OfferComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
-  form: FormGroupTyped<IOfferForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     fromAsset: new FormControl('', [Validators.required]),
     fromValue: new FormControl('', [Validators.required, Validators.min(0.0000001)]),
     toAsset: new FormControl('', [Validators.required]),
     toValue: new FormControl('', [Validators.required, Validators.min(0.0000001)]),
-  }) as FormGroupTyped<IOfferForm>;
+  });
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
@@ -141,7 +141,7 @@ export class OfferComponent implements OnInit, OnDestroy {
     try {
       await this.walletsOffersService.sendManageSellOffer(signedXdr);
       this.nzMessageService.success('We placed the offer correctly');
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error('We were not able to complete the operation.');
     }
   }

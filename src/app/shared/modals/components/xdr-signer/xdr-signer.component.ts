@@ -19,9 +19,9 @@ import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {SignPasswordComponent} from '~root/shared/modals/components/sign-password/sign-password.component';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import {NzDrawerRef, NzDrawerService} from "ng-zorro-antd/drawer";
-import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
-import {DeviceAuthService, PASSWORD_IDENTIFIER} from "~root/mobile/services/device-auth.service";
+import {NzDrawerRef, NzDrawerService} from 'ng-zorro-antd/drawer';
+import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
+import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
 import { fromUnixTime } from 'date-fns';
 
 @Component({
@@ -53,7 +53,7 @@ export class XdrSignerComponent implements OnInit {
     .subscribe(xdr => {
       try {
         this.walletsService.checkIfAllOperationsAreHandled(xdr.operations);
-      } catch (e) {
+      } catch (e: any) {
         this.nzMessageService.error(e.message);
         this.onClose();
       }
@@ -150,15 +150,31 @@ export class XdrSignerComponent implements OnInit {
   }
 
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
-    const passwordAuthToken = await this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise();
+    const [
+      passwordAuthToken,
+      passwordAuthKey,
+      passwordAuthTokenIdentifier
+    ] = await Promise.all([
+      this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise(),
+      this.settingsQuery.passwordAuthKey$.pipe(take(1)).toPromise(),
+      this.settingsQuery.passwordAuthTokenIdentifier$.pipe(take(1)).toPromise(),
+    ]);
+
+    if (!passwordAuthKey || !passwordAuthTokenIdentifier) {
+      this.nzMessageService.error(
+        `There was an error with the device authentication, please configure it again from the settings view.`
+      );
+      return;
+    }
 
     let decryptedPassword: string;
     try {
       decryptedPassword = await this.deviceAuthService.decryptWithDevice({
         token: passwordAuthToken,
-        identifier: PASSWORD_IDENTIFIER
+        identifier: passwordAuthTokenIdentifier,
+        key: passwordAuthKey,
       });
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error(
         e.message || `We were not able to decrypt the password with this device`
       );
@@ -242,7 +258,7 @@ export class XdrSignerComponent implements OnInit {
       if (!targetDevice) {
         throw new Error('Target not found');
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(`Device not found, please make sure you are using the correct device.`, {
         nzDuration: 4000,
@@ -253,7 +269,7 @@ export class XdrSignerComponent implements OnInit {
 
     try {
       transport = await this.hardwareWalletsService.openLedgerConnection(targetDevice);
-    } catch (e) {
+    } catch (e: any) {
       this.signing$.next(false);
       this.nzMessageService.error(`Can\'t connect with the wallet, please make sure your wallet is unlocked and using the Stellar App.`, {
         nzDuration: 4000,
@@ -274,7 +290,7 @@ export class XdrSignerComponent implements OnInit {
 
       this.signing$.next(false);
       this.accept.emit(signedXDR);
-    } catch (e) {
+    } catch (e: any) {
       this.signing$.next(false);
       this.nzMessageService.error(e?.message || `Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
         nzDuration: 10000,
@@ -302,7 +318,7 @@ export class XdrSignerComponent implements OnInit {
       });
 
       this.accept.emit(signedXDR);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
       this.signing$.next(false);
       this.nzMessageService.error(`Couldn't sign the transaction because there was an unexpected error, please contact support`, {

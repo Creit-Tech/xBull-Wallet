@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { HorizonApisQuery, IHorizonApi, SettingsQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';

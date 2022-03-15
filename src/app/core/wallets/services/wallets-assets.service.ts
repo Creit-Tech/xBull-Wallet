@@ -9,7 +9,7 @@ import {
   WalletsAssetsState,
   WalletsAssetsStore, IWalletIssuedAsset,
 } from '~root/state';
-import { from, of, Subject, Subscription } from 'rxjs';
+import { from, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, concatAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';

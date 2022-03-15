@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
-import { from, of, throwError } from 'rxjs';
+import { from, Observable, of, throwError } from 'rxjs';
 import {
   BalanceAssetType,
   createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,

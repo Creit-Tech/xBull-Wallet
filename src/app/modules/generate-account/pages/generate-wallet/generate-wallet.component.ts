@@ -11,7 +11,7 @@ import { ENV, environment } from '~env';
   styleUrls: ['./generate-wallet.component.scss']
 })
 export class GenerateWalletComponent implements OnInit {
-  mnemonicPhraseFormControl: FormControlTyped<string> = new FormControl('', [Validators.required]);
+  mnemonicPhraseFormControl: FormControl = new FormControl('', [Validators.required]);
 
   walletVersion = this.env.version;
 

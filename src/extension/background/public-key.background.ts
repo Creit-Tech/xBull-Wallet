@@ -19,7 +19,7 @@ export const requestPublicKey = async (message: IRuntimeGetPublicKeyMessage): Pr
       error: false,
       payload: activeAccount.publicKey,
     };
-  } catch (e) {
+  } catch (e: any) {
     return {
       error: true,
       errorMessage: e,

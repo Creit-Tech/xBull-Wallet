@@ -3,7 +3,7 @@ import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery
 import { map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import BigNumber from 'bignumber.js';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
@@ -22,12 +22,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 export class LimitComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<boolean> = new Subject<boolean>();
 
-  form: FormGroupTyped<ILimitForm> = new FormGroup({
+  form: FormGroup = new FormGroup({
     assetToPayWith: new FormControl('', [Validators.required]),
     assetToBuy: new FormControl('', [Validators.required]),
     amount: new FormControl('', [Validators.required, Validators.min(0.0000001)]),
     price: new FormControl('', [Validators.required, Validators.min(0.0000001)]),
-  }) as FormGroupTyped<ILimitForm>;
+  });
 
   maxAmountToPay$: Observable<BigNumber> = this.form.valueChanges
     .pipe(startWith(this.form.value))
@@ -170,7 +170,7 @@ export class LimitComponent implements OnInit, OnDestroy {
     try {
       await this.walletsOffersService.sendPathPaymentStrictReceive(signedXdr);
       this.nzMessageService.success('The asset trade were successful');
-    } catch (e) {
+    } catch (e: any) {
       this.nzMessageService.error('We were not able to complete the trade.');
     }
   }

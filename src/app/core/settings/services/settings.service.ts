@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SettingsState, SettingsStore } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
-import { from, throwError } from 'rxjs';
+import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable({
@@ -93,11 +93,12 @@ export class SettingsService {
     });
   }
 
-  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string }): void {
+  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string; passwordAuthKey: string; }): void {
     this.settingsStore.updateState({
       passwordAuthToken: data.passwordAuthToken,
       passwordAuthTokenIdentifier: data.passwordAuthTokenIdentifier,
       passwordAuthTokenActive: true,
+      passwordAuthKey: data.passwordAuthKey,
     });
   }
 
@@ -105,6 +106,7 @@ export class SettingsService {
     this.settingsStore.updateState({
       passwordAuthToken: undefined,
       passwordAuthTokenIdentifier: undefined,
+      passwordAuthKey: undefined,
       passwordAuthTokenActive: false,
     });
   }
