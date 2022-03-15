@@ -21,10 +21,13 @@ export class HorizonApisStore extends EntityStore<HorizonApisState> {
     super();
     this.upsertMany(env.defaultApis.map(api => createHorizonApi(api)));
 
-    if (this.platform.is('ios') && env.production) {
-      this.setActive('aa604e66a74ade3ef250f904ef28c92f');
-    } else {
-      this.setActive(env.production ? 'aa604e66a74ade3ef250f904ef28c92d' : '10a05029fe79fe9df15c33ee2e2d43bb');
+    const storeValue = this.getValue();
+    if (!storeValue.active) {
+      if (this.platform.is('ios') && env.production) {
+        this.setActive('aa604e66a74ade3ef250f904ef28c92f');
+      } else {
+        this.setActive(env.production ? 'aa604e66a74ade3ef250f904ef28c92d' : '10a05029fe79fe9df15c33ee2e2d43bb');
+      }
     }
   }
 
