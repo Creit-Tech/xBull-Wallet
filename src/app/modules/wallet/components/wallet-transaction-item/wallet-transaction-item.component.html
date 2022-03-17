@@ -259,7 +259,7 @@
           Begin Sponsoring
         </p>
         <p class="text-xs text-line m-0">
-          {{ operation.operationRecord.sponsored_id }}
+          {{ operation.operationRecord.sponsored_id | publicKey }}
         </p>
       </div>
 
@@ -281,7 +281,7 @@
           End Sponsoring
         </p>
         <p class="text-xs text-line m-0">
-          {{ operation.operationRecord.begin_sponsor }}
+          {{ operation.operationRecord.begin_sponsor | publicKey }}
         </p>
       </div>
 
