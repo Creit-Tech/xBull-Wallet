@@ -1,609 +1,611 @@
-<div class="w-full text-center mb-4">
-  <h2 class="m-0 p-0 text-off-white font-bold text-xl">
-    Sign Request
-  </h2>
+<section class="max-w-md w-full mx-auto flex flex-col">
+  <div class="w-full text-center mb-4">
+    <h2 class="m-0 p-0 text-off-white font-bold text-xl">
+      Sign Request
+    </h2>
 
-  <p *ngIf="from !== 'wallet'" class="pt-4 text-xs ">
-    From: {{ from }}
-  </p>
-
-  <div class="w-full flex justify-between">
-    <p class="pt-4 text-xs ">
-      <b>Network: {{ networkBeingUsed$ | async }}</b>
+    <p *ngIf="from !== 'wallet'" class="pt-4 text-xs ">
+      From: {{ from }}
     </p>
 
-    <p *ngIf="selectedAccount$ | async as selectedAccount"
-       appClipboard [textToCopy]="selectedAccount.publicKey"
-       class="pt-4 text-xs  cursor-pointer">
-      <b>Signing with: {{ selectedAccount.publicKey | publicKey }}</b>
-    </p>
+    <div class="w-full flex justify-between">
+      <p class="pt-4 text-xs ">
+        <b>Network: {{ networkBeingUsed$ | async }}</b>
+      </p>
+
+      <p *ngIf="selectedAccount$ | async as selectedAccount"
+         appClipboard [textToCopy]="selectedAccount.publicKey"
+         class="pt-4 text-xs  cursor-pointer">
+        <b>Signing with: {{ selectedAccount.publicKey | publicKey }}</b>
+      </p>
+    </div>
   </div>
-</div>
 
-<section class="w-full mb-8">
-  <dl>
-    <dt class="text-off-white text-base font-bold mb-1 w-full">Sequence number:</dt>
-    <dd class=" break-all text-sm mb-3 w-full">{{ sequenceNumber$ | async }}</dd>
+  <section class="w-full mb-8">
+    <dl>
+      <dt class="text-off-white text-base font-bold mb-1 w-full">Sequence number:</dt>
+      <dd class=" break-all text-sm mb-3 w-full">{{ sequenceNumber$ | async }}</dd>
 
-    <ng-container *ngIf="source$ | async as source">
-      <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction source:</dt>
-      <dd appClipboard [textToCopy]="source"
-          class=" break-all text-sm mb-3 w-full cursor-pointer">
-        {{ source | publicKey }}
-      </dd>
-    </ng-container>
-
-    <ng-container *ngFor="let operation of (operations$ | async); let i = index">
-
-      <div class="w-full pt-2 mb-6 border-placeholder border-b-1 border-b-2" *ngIf="i !== 0"></div>
-
-      <ng-container *ngIf="operation.type === 'createAccount'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Create Acccount</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to send:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.startingBalance | number: '0.0-7' }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'payment'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Payment</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
-
-        <ng-container *ngIf="operation.asset.issuer">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to send:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'changeTrust'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Change trust</dd>
-
-        <!--            We are using $any here because the types use functions and TS can't know which one is the correct-->
-        <ng-container *ngIf="operation.line.getAssetType() === 'liquidity_pool_shares'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset A:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.code }}</dd>
-          <dd appClipboard [textToCopy]="$any(operation).line.assetA.issuer"
-              class="cursor-pointer  break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.issuer | publicKey }}</dd>
-
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset B:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.code }}</dd>
-          <dd appClipboard [textToCopy]="$any(operation).line.assetB.issuer"
-              class="cursor-pointer  break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.issuer | publicKey }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="operation.line.getAssetType() !== 'liquidity_pool_shares'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation.line).code }}</dd>
-
-          <ng-container *ngIf="$any(operation.line).issuer">
-            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-            <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation.line).issuer }}</dd>
-          </ng-container>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Limit:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'pathPaymentStrictSend' || operation.type === 'pathPaymentStrictReceive'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">
-          Path payment strict  {{ operation.type === 'pathPaymentStrictSend' ? 'send' : 'receive' }}
+      <ng-container *ngIf="source$ | async as source">
+        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction source:</dt>
+        <dd appClipboard [textToCopy]="source"
+            class=" break-all text-sm mb-3 w-full cursor-pointer">
+          {{ source | publicKey }}
         </dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
-
-        <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Sending amount:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendAmount | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="operation.type === 'pathPaymentStrictReceive'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount to send:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendMax | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Sending Asset:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendAsset.code }}</dd>
-
-        <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination minimum:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destMin | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="operation.type === 'pathPaymentStrictReceive'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination amount:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destAmount | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Destination Asset:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.destAsset.code }}</dd>
-
-        <!--          TODO: add the path-->
       </ng-container>
 
-      <ng-container *ngIf="operation.type === 'manageBuyOffer' || operation.type === 'manageSellOffer' || operation.type === 'createPassiveSellOffer'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">
-          <ng-container *ngIf="operation.type === 'createPassiveSellOffer'">Passive</ng-container> {{ operation.type === 'manageBuyOffer' ? 'Buy' : 'Sell' }} Offer
-        </dd>
+      <ng-container *ngFor="let operation of (operations$ | async); let i = index">
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Selling:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.selling.code }}</dd>
+        <div class="w-full pt-2 mb-6 border-placeholder border-b-1 border-b-2" *ngIf="i !== 0"></div>
 
-        <ng-container *ngIf="operation.selling.issuer">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Selling Asset Issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.selling.issuer }}</dd>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Buying:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.buying.code }}</dd>
-
-        <ng-container *ngIf="operation.buying.issuer">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Buying Asset Issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.buying.issuer }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="operation.type === 'manageBuyOffer'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to Buy:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.buyAmount | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="operation.type === 'manageSellOffer'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to Sell:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
-        </ng-container>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Price per unit to Buy:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.price | number: '0.0-7' }}</dd>
-
-        <ng-container *ngIf="operation.type !== 'createPassiveSellOffer' && operation.offerId && operation.offerId != '0'">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Offer ID:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
-        </ng-container>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'setOptions'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Set Options</dd>
-
-        <ng-container *ngIf="!!operation.inflationDest">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Inflation destination:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.inflationDest }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.clearFlags">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Clear flags:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.clearFlags }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.setFlags">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Set flags:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.setFlags }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.masterWeight || operation.masterWeight == 0">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Master Weight:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.masterWeight }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.lowThreshold || operation.lowThreshold == 0">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Low Threshold:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.lowThreshold }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.medThreshold || operation.medThreshold == 0">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Medium Threshold:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.medThreshold }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.highThreshold || operation.highThreshold == 0">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">High Threshold:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.highThreshold }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.homeDomain || operation.homeDomain === ''">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Home Domain:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.homeDomain }}</dd>
-        </ng-container>
-
-        <ng-container *ngIf="!!operation.signer">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Signer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer | json }}</dd>
-        </ng-container>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'allowTrust' || operation.type === 'setTrustLineFlags'">
-        <ng-container *ngIf="operation.type === 'allowTrust'">
+        <ng-container *ngIf="operation.type === 'createAccount'">
           <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">Allow Trust</dd>
+          <dd class=" break-all text-sm mb-3 w-full">Create Acccount</dd>
 
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Authorized:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.authorize }}</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
 
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to send:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.startingBalance | number: '0.0-7' }}</dd>
         </ng-container>
 
-        <ng-container *ngIf="operation.type === 'setTrustLineFlags'">
+        <ng-container *ngIf="operation.type === 'payment'">
           <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">Set Trust Line Flags</dd>
+          <dd class=" break-all text-sm mb-3 w-full">Payment</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
           <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
 
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+          <ng-container *ngIf="operation.asset.issuer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+          </ng-container>
 
-          <ng-container *ngIf="operation.flags.authorized">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to send:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'changeTrust'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Change trust</dd>
+
+          <!--            We are using $any here because the types use functions and TS can't know which one is the correct-->
+          <ng-container *ngIf="operation.line.getAssetType() === 'liquidity_pool_shares'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset A:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.code }}</dd>
+            <dd appClipboard [textToCopy]="$any(operation).line.assetA.issuer"
+                class="cursor-pointer  break-all text-sm mb-3 w-full">{{ $any(operation).line.assetA.issuer | publicKey }}</dd>
+
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset B:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.code }}</dd>
+            <dd appClipboard [textToCopy]="$any(operation).line.assetB.issuer"
+                class="cursor-pointer  break-all text-sm mb-3 w-full">{{ $any(operation).line.assetB.issuer | publicKey }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.line.getAssetType() !== 'liquidity_pool_shares'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation.line).code }}</dd>
+
+            <ng-container *ngIf="$any(operation.line).issuer">
+              <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+              <dd class=" break-all text-sm mb-3 w-full">{{ $any(operation.line).issuer }}</dd>
+            </ng-container>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Limit:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.limit | number: '0.0-7' }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'pathPaymentStrictSend' || operation.type === 'pathPaymentStrictReceive'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">
+            Path payment strict  {{ operation.type === 'pathPaymentStrictSend' ? 'send' : 'receive' }}
+          </dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+
+          <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Sending amount:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendAmount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'pathPaymentStrictReceive'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount to send:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendMax | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Sending Asset:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.sendAsset.code }}</dd>
+
+          <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Destination minimum:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.destMin | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'pathPaymentStrictReceive'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Destination amount:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.destAmount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination Asset:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destAsset.code }}</dd>
+
+          <!--          TODO: add the path-->
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'manageBuyOffer' || operation.type === 'manageSellOffer' || operation.type === 'createPassiveSellOffer'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">
+            <ng-container *ngIf="operation.type === 'createPassiveSellOffer'">Passive</ng-container> {{ operation.type === 'manageBuyOffer' ? 'Buy' : 'Sell' }} Offer
+          </dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Selling:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.selling.code }}</dd>
+
+          <ng-container *ngIf="operation.selling.issuer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Selling Asset Issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.selling.issuer }}</dd>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Buying:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.buying.code }}</dd>
+
+          <ng-container *ngIf="operation.buying.issuer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Buying Asset Issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.buying.issuer }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'manageBuyOffer'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to Buy:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.buyAmount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.type === 'manageSellOffer'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Amount to Sell:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Price per unit to Buy:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.price | number: '0.0-7' }}</dd>
+
+          <ng-container *ngIf="operation.type !== 'createPassiveSellOffer' && operation.offerId && operation.offerId != '0'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Offer ID:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'setOptions'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Set Options</dd>
+
+          <ng-container *ngIf="!!operation.inflationDest">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Inflation destination:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.inflationDest }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.clearFlags">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Clear flags:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.clearFlags }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.setFlags">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Set flags:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.setFlags }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.masterWeight || operation.masterWeight == 0">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Master Weight:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.masterWeight }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.lowThreshold || operation.lowThreshold == 0">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Low Threshold:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.lowThreshold }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.medThreshold || operation.medThreshold == 0">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Medium Threshold:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.medThreshold }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.highThreshold || operation.highThreshold == 0">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">High Threshold:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.highThreshold }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.homeDomain || operation.homeDomain === ''">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Home Domain:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.homeDomain }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="!!operation.signer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Signer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer | json }}</dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'allowTrust' || operation.type === 'setTrustLineFlags'">
+          <ng-container *ngIf="operation.type === 'allowTrust'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">Allow Trust</dd>
+
             <dt class="text-off-white text-base font-bold mb-1 w-full">Authorized:</dt>
-            <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.authorized }}</dd>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.authorize }}</dd>
+
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.assetCode }}</dd>
           </ng-container>
 
-          <ng-container *ngIf="operation.flags.authorizedToMaintainLiabilities">
-            <dt class="text-off-white text-base font-bold mb-1 w-full">Authorized To Maintain Liabilities:</dt>
-            <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.authorizedToMaintainLiabilities }}</dd>
+          <ng-container *ngIf="operation.type === 'setTrustLineFlags'">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">Set Trust Line Flags</dd>
+
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Code:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset Issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+
+            <ng-container *ngIf="operation.flags.authorized">
+              <dt class="text-off-white text-base font-bold mb-1 w-full">Authorized:</dt>
+              <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.authorized }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.flags.authorizedToMaintainLiabilities">
+              <dt class="text-off-white text-base font-bold mb-1 w-full">Authorized To Maintain Liabilities:</dt>
+              <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.authorizedToMaintainLiabilities }}</dd>
+            </ng-container>
+
+            <ng-container *ngIf="operation.flags.clawbackEnabled">
+              <dt class="text-off-white text-base font-bold mb-1 w-full">Clawback Enabled:</dt>
+              <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.clawbackEnabled }}</dd>
+            </ng-container>
           </ng-container>
 
-          <ng-container *ngIf="operation.flags.clawbackEnabled">
-            <dt class="text-off-white text-base font-bold mb-1 w-full">Clawback Enabled:</dt>
-            <dd class=" break-all text-sm mb-3 w-full">{{ operation.flags.clawbackEnabled }}</dd>
-          </ng-container>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Trustor:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.trustor }}</dd>
         </ng-container>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Trustor:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.trustor }}</dd>
-      </ng-container>
+        <ng-container *ngIf="operation.type === 'accountMerge'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Account Merge</dd>
 
-      <ng-container *ngIf="operation.type === 'accountMerge'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Account Merge</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'manageData'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Manage Data</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Name:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Value:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.value }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'bumpSequence'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Bump Sequence</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Bump to:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.bumpTo }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'claimClaimableBalance'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Claim Claimable Balance</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
-
-        <!--            We understand this is not a public key but we want to hide it mostly-->
-        <dd appClipboard [textToCopy]="operation.balanceId"
-            class=" break-all text-sm mb-3 w-full cursor-pointer">
-          {{ operation.balanceId | publicKey }}
-        </dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'createClaimableBalance'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Create Claimable Balance</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
-
-        <ng-container *ngIf="operation.asset.issuer">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Destination:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
         </ng-container>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Claimants:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">
-          <ul>
-            <li class="w-full mb-4" *ngFor="let claimant of operation.claimants">
-              <div class="w-full">
-                <p class=" text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
-                  <span class="text-off-white text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
-                </p>
-              </div>
+        <ng-container *ngIf="operation.type === 'manageData'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Manage Data</dd>
 
-              <ng-template #predicateTemplate let-predicateValue="predicateValue">
-                <section class="pl-4 border-label border-l-2">
-                  <div *ngIf="!predicateValue._value" class="w-full">
-                    <p class="">
-                      Can claim it without conditions
-                    </p>
-                  </div>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Name:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
 
-                  <div *ngIf="predicateValue._arm === 'absBefore'" class="w-full">
-                    <p class="">
-                      <b class="text-off-white">Until:</b> {{ dateFromEpoch(predicateValue._value.low) | date: 'MMM dd, yyyy HH:mm' }}
-                    </p>
-                  </div>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Value:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.value }}</dd>
+        </ng-container>
 
-                  <div *ngIf="predicateValue._arm === 'relBefore'" class="w-full">
-                    <p class="">
-                      <b class="text-off-white">After:</b> {{ predicateValue._value.low }} seconds
-                    </p>
-                  </div>
+        <ng-container *ngIf="operation.type === 'bumpSequence'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Bump Sequence</dd>
 
-                  <ng-container *ngIf="predicateValue._arm === 'andPredicates'" class="w-full">
-                    <div class="w-full">
-                      <b class="text-off-white">And:</b>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Bump to:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.bumpTo }}</dd>
+        </ng-container>
 
-                      <ng-container *ngFor="let predicate of predicateValue._value">
+        <ng-container *ngIf="operation.type === 'claimClaimableBalance'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Claim Claimable Balance</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
+
+          <!--            We understand this is not a public key but we want to hide it mostly-->
+          <dd appClipboard [textToCopy]="operation.balanceId"
+              class=" break-all text-sm mb-3 w-full cursor-pointer">
+            {{ operation.balanceId | publicKey }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'createClaimableBalance'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Create Claimable Balance</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
+          <ng-container *ngIf="operation.asset.issuer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+          </ng-container>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Claimants:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">
+            <ul>
+              <li class="w-full mb-4" *ngFor="let claimant of operation.claimants">
+                <div class="w-full">
+                  <p class=" text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
+                    <span class="text-off-white text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
+                  </p>
+                </div>
+
+                <ng-template #predicateTemplate let-predicateValue="predicateValue">
+                  <section class="pl-4 border-label border-l-2">
+                    <div *ngIf="!predicateValue._value" class="w-full">
+                      <p class="">
+                        Can claim it without conditions
+                      </p>
+                    </div>
+
+                    <div *ngIf="predicateValue._arm === 'absBefore'" class="w-full">
+                      <p class="">
+                        <b class="text-off-white">Until:</b> {{ dateFromEpoch(predicateValue._value.low) | date: 'MMM dd, yyyy HH:mm' }}
+                      </p>
+                    </div>
+
+                    <div *ngIf="predicateValue._arm === 'relBefore'" class="w-full">
+                      <p class="">
+                        <b class="text-off-white">After:</b> {{ predicateValue._value.low }} seconds
+                      </p>
+                    </div>
+
+                    <ng-container *ngIf="predicateValue._arm === 'andPredicates'" class="w-full">
+                      <div class="w-full">
+                        <b class="text-off-white">And:</b>
+
+                        <ng-container *ngFor="let predicate of predicateValue._value">
+                          <ng-template
+                            [ngTemplateOutlet]="predicateTemplate"
+                            [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                          </ng-template>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="predicateValue._arm === 'orPredicates'" class="w-full">
+                      <div class="w-full">
+                        <b class="text-off-white">Or:</b>
+
+                        <ng-container *ngFor="let predicate of predicateValue._value">
+                          <ng-template
+                            [ngTemplateOutlet]="predicateTemplate"
+                            [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                          </ng-template>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="predicateValue._arm === 'notPredicate'" class="w-full">
+                      <div class="w-full">
+                        <b class="text-off-white">Not:</b>
+
                         <ng-template
                           [ngTemplateOutlet]="predicateTemplate"
-                          [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                          [ngTemplateOutletContext]="{ predicateValue: predicateValue._value }">
                         </ng-template>
-                      </ng-container>
-                    </div>
-                  </ng-container>
+                      </div>
+                    </ng-container>
+                  </section>
 
-                  <ng-container *ngIf="predicateValue._arm === 'orPredicates'" class="w-full">
-                    <div class="w-full">
-                      <b class="text-off-white">Or:</b>
+                </ng-template>
 
-                      <ng-container *ngFor="let predicate of predicateValue._value">
-                        <ng-template
-                          [ngTemplateOutlet]="predicateTemplate"
-                          [ngTemplateOutletContext]="{ predicateValue: predicate }">
-                        </ng-template>
-                      </ng-container>
-                    </div>
-                  </ng-container>
+                <ng-template
+                  [ngTemplateOutlet]="predicateTemplate"
+                  [ngTemplateOutletContext]="{ predicateValue: claimant.predicate }">
+                </ng-template>
 
-                  <ng-container *ngIf="predicateValue._arm === 'notPredicate'" class="w-full">
-                    <div class="w-full">
-                      <b class="text-off-white">Not:</b>
+              </li>
+            </ul>
+          </dd>
 
-                      <ng-template
-                        [ngTemplateOutlet]="predicateTemplate"
-                        [ngTemplateOutletContext]="{ predicateValue: predicateValue._value }">
-                      </ng-template>
-                    </div>
-                  </ng-container>
-                </section>
+        </ng-container>
 
-              </ng-template>
+        <ng-container *ngIf="operation.type === 'beginSponsoringFutureReserves'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Begin Sponsoring Future Reserves</dd>
 
-              <ng-template
-                [ngTemplateOutlet]="predicateTemplate"
-                [ngTemplateOutletContext]="{ predicateValue: claimant.predicate }">
-              </ng-template>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Sponsored Id:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.sponsoredId }}</dd>
+        </ng-container>
 
-            </li>
-          </ul>
-        </dd>
+        <ng-container *ngIf="operation.type === 'endSponsoringFutureReserves'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">End Sponsoring Future Reserves</dd>
+        </ng-container>
 
-      </ng-container>
+        <ng-container *ngIf="operation.type === 'revokeAccountSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Account Sponsorship</dd>
 
-      <ng-container *ngIf="operation.type === 'beginSponsoringFutureReserves'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Begin Sponsoring Future Reserves</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Revoke:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Account sponsorship</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Sponsored Id:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.sponsoredId }}</dd>
-      </ng-container>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+        </ng-container>
 
-      <ng-container *ngIf="operation.type === 'endSponsoringFutureReserves'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">End Sponsoring Future Reserves</dd>
-      </ng-container>
+        <ng-container *ngIf="operation.type === 'revokeTrustlineSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Trustline Sponsorship</dd>
 
-      <ng-container *ngIf="operation.type === 'revokeAccountSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Account Sponsorship</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Revoke:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Account sponsorship</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
-      </ng-container>
+          <ng-container *ngIf="!!operation.asset.issuer">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Asset issuer:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+          </ng-container>
+        </ng-container>
 
-      <ng-container *ngIf="operation.type === 'revokeTrustlineSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Trustline Sponsorship</dd>
+        <ng-container *ngIf="operation.type === 'revokeOfferSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Offer Sponsorship</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Offer id:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Seller:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.seller }}</dd>
+        </ng-container>
 
-        <ng-container *ngIf="!!operation.asset.issuer">
+        <ng-container *ngIf="operation.type === 'revokeDataSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Data Sponsorship</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Name:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'revokeClaimableBalanceSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
+          <dd appClipboard [textToCopy]="operation.balanceId" class=" break-all text-sm mb-3 w-full">{{ operation.balanceId | publicKey }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'revokeLiquidityPoolSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Liquidity pool Sponsorship</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Pool ID:</dt>
+          <dd appClipboard [textToCopy]="operation.liquidityPoolId" class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId | publicKey }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'revokeSignerSponsorship'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Revoke Signer Sponsorship</dd>
+
+          <ng-container *ngIf="operation.signer.preAuthTx">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Auth tx:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer.preAuthTx }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.signer.ed25519PublicKey">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Stellar account:</dt>
+            <dd appClipboard [textToCopy]="operation.signer.ed25519PublicKey" class=" break-all text-sm mb-3 w-full">{{ operation.signer.ed25519PublicKey | publicKey }}</dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.signer.sha256Hash">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">Hash:</dt>
+            <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer.sha256Hash }}</dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'clawback'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Clawback</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">From:</dt>
+          <dd appClipboard [textToCopy]="operation.from" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.from | publicKey }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
+
           <dt class="text-off-white text-base font-bold mb-1 w-full">Asset issuer:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
-        </ng-container>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'revokeOfferSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Offer Sponsorship</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Offer id:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.offerId }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Seller:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.seller }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'revokeDataSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Data Sponsorship</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Name:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.name }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Account:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.account }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'revokeClaimableBalanceSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Claimable balance Sponsorship</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
-        <dd appClipboard [textToCopy]="operation.balanceId" class=" break-all text-sm mb-3 w-full">{{ operation.balanceId | publicKey }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'revokeLiquidityPoolSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Liquidity pool Sponsorship</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Pool ID:</dt>
-        <dd appClipboard [textToCopy]="operation.liquidityPoolId" class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId | publicKey }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'revokeSignerSponsorship'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Revoke Signer Sponsorship</dd>
-
-        <ng-container *ngIf="operation.signer.preAuthTx">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Auth tx:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer.preAuthTx }}</dd>
+          <dd appClipboard [textToCopy]="operation.asset.issuer" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.asset.issuer | publicKey }}</dd>
         </ng-container>
 
-        <ng-container *ngIf="operation.signer.ed25519PublicKey">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Stellar account:</dt>
-          <dd appClipboard [textToCopy]="operation.signer.ed25519PublicKey" class=" break-all text-sm mb-3 w-full">{{ operation.signer.ed25519PublicKey | publicKey }}</dd>
+        <ng-container *ngIf="operation.type === 'clawbackClaimableBalance'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Clawback Claimable Balance</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
+          <dd appClipboard [textToCopy]="operation.balanceId" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.balanceId | publicKey }}</dd>
         </ng-container>
 
-        <ng-container *ngIf="operation.signer.sha256Hash">
-          <dt class="text-off-white text-base font-bold mb-1 w-full">Hash:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.signer.sha256Hash }}</dd>
+        <ng-container *ngIf="operation.type === 'liquidityPoolDeposit'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Liquidity Pool Deposit</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount A:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxAmountA | number: '0.0-7' }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount B:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxAmountB | number: '0.0-7' }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Min price:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.minPrice | number: '0.0-7' }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Max price:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxPrice | number: '0.0-7' }}</dd>
         </ng-container>
+
+        <ng-container *ngIf="operation.type === 'liquidityPoolWithdraw'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">Liquidity Pool Withdraw</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Min amount A:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.minAmountA | number: '0.0-7' }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Min amount B:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.minAmountB | number: '0.0-7' }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="!!operation.source">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">Operation source:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
+        </ng-container>
+
       </ng-container>
 
-      <ng-container *ngIf="operation.type === 'clawback'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Clawback</dd>
+      <div class="py-4"></div>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount }}</dd>
+      <dt class="text-off-white text-base font-bold mb-1 w-full">Fee:</dt>
+      <dd class=" break-all text-sm mb-3 w-full">{{ (fee$ | async) }} XLM</dd>
 
-        <dt class="text-off-white text-base font-bold mb-1 w-full">From:</dt>
-        <dd appClipboard [textToCopy]="operation.from" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.from | publicKey }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset code:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Asset issuer:</dt>
-        <dd appClipboard [textToCopy]="operation.asset.issuer" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.asset.issuer | publicKey }}</dd>
+      <ng-container *ngIf="memoText$ | async">
+        <dt class="text-off-white text-base font-bold mb-1 w-full">Memo:</dt>
+        <dd class=" break-all text-sm mb-3 w-full">{{ (memoText$ | async) }}</dd>
       </ng-container>
+    </dl>
+  </section>
 
-      <ng-container *ngIf="operation.type === 'clawbackClaimableBalance'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Clawback Claimable Balance</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Balance ID:</dt>
-        <dd appClipboard [textToCopy]="operation.balanceId" class=" break-all text-sm mb-3 w-full cursor-pointer">{{ operation.balanceId | publicKey }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'liquidityPoolDeposit'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Liquidity Pool Deposit</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount A:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxAmountA | number: '0.0-7' }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Max amount B:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxAmountB | number: '0.0-7' }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Min price:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.minPrice | number: '0.0-7' }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Max price:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.maxPrice | number: '0.0-7' }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="operation.type === 'liquidityPoolWithdraw'">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Transaction type:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">Liquidity Pool Withdraw</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Liquidity pool ID:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.liquidityPoolId }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Amount:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.amount | number: '0.0-7' }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Min amount A:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.minAmountA | number: '0.0-7' }}</dd>
-
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Min amount B:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.minAmountB | number: '0.0-7' }}</dd>
-      </ng-container>
-
-      <ng-container *ngIf="!!operation.source">
-        <dt class="text-off-white text-base font-bold mb-1 w-full">Operation source:</dt>
-        <dd class=" break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
-      </ng-container>
-
-    </ng-container>
-
-    <div class="py-4"></div>
-
-    <dt class="text-off-white text-base font-bold mb-1 w-full">Fee:</dt>
-    <dd class=" break-all text-sm mb-3 w-full">{{ (fee$ | async) }} XLM</dd>
-
-    <ng-container *ngIf="memoText$ | async">
-      <dt class="text-off-white text-base font-bold mb-1 w-full">Memo:</dt>
-      <dd class=" break-all text-sm mb-3 w-full">{{ (memoText$ | async) }}</dd>
-    </ng-container>
-  </dl>
-</section>
-
-<section class="w-full flex">
-  <div class="flex-1 pr-2">
-    <button (click)="onClose()"
-            nz-button
-            nzType="primary"
-            nzSize="large"
-            nzBlock
-            nzDanger>
-      Deny
-    </button>
-  </div>
-  <div class="flex-1 pl-2">
-    <button (click)="onAccepted()"
-            nz-button
-            nzType="primary"
-            nzSize="large"
-            nzBlock>
-      Accept
-    </button>
-  </div>
+  <section class="w-full flex">
+    <div class="flex-1 pr-2">
+      <button (click)="onClose()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzBlock
+              nzDanger>
+        Deny
+      </button>
+    </div>
+    <div class="flex-1 pl-2">
+      <button (click)="onAccepted()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzBlock>
+        Accept
+      </button>
+    </div>
+  </section>
 </section>
 
 

@@ -16,21 +16,6 @@ const routes: Routes = [
       .then(m => m.GenerateAccountModule),
   },
   {
-    path: 'wallet',
-    component: MainLayoutV1Component,
-    data: {
-      activeIcon: 'wallet'
-    },
-    canActivate: [
-      IsThereWalletsGuard
-    ],
-    canActivateChild: [
-      IsThereWalletsGuard
-    ],
-    loadChildren: () => import('./modules/wallet/wallet.module')
-      .then(m => m.WalletModule)
-  },
-  {
     path: 'trade',
     component: MainLayoutComponent,
     data: {
@@ -96,6 +81,28 @@ const routes: Routes = [
   {
     path: 'ios-block-message',
     component: IosBlockPageComponent
+  },
+  {
+    path: '',
+    component: MainLayoutV1Component,
+    canActivate: [
+      IsThereWalletsGuard
+    ],
+    canActivateChild: [
+      IsThereWalletsGuard
+    ],
+    children: [
+      {
+        path: 'wallet',
+        loadChildren: () => import('./modules/wallet/wallet.module')
+          .then(m => m.WalletModule),
+      },
+      {
+        path: 'swaps',
+        loadChildren: () => import('./modules/swaps/swaps.module')
+          .then(m => m.SwapsModule),
+      }
+    ]
   },
   {
     path: '**',

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   HorizonApisQuery, IHorizonApi,
-  IWalletAsset,
+  IWalletAsset, IWalletAssetIssued, IWalletAssetModel, IWalletAssetNative,
   IWalletIssuedAsset,
   IWalletNativeAsset,
   WalletsAccountsQuery,
@@ -35,13 +35,13 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(switchMap(assetId => this.walletsAssetsQuery.getAssetsById([assetId])))
     .pipe(map(assets => assets.shift()));
 
-  nativeAsset$: Observable<IWalletNativeAsset<'full'>> = this.asset$
+  nativeAsset$: Observable<IWalletAssetNative> = this.asset$
     .pipe(filter(asset => !!asset && asset._id === 'native')) as any;
 
-  issuedAsset$: Observable<IWalletIssuedAsset<'full'>> = this.asset$
+  issuedAsset$: Observable<IWalletAssetIssued> = this.asset$
     .pipe(filter(asset => !!asset && asset._id !== 'native')) as any;
 
-  fullDataLoaded$: Observable<boolean> = this.asset$
+  fullDataLoaded$: Observable<boolean | undefined> = this.asset$
     .pipe(map(asset => !!asset && asset.assetFullDataLoaded));
 
   removingAssets$ = this.walletsAssetsQuery.removingAsset$;
@@ -62,7 +62,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(filter((asset) => !!asset))
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
-      .subscribe(([asset, horizonApi]: [IWalletAsset<'issued'>, IHorizonApi]) => {
+      .subscribe(([asset, horizonApi]: [IWalletAssetIssued, IHorizonApi]) => {
         this.walletsAssetsService.requestAssetData$.next({
           ...asset,
           horizonApi,

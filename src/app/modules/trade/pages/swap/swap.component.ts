@@ -1,6 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
+import {
+  IWalletAsset,
+  IWalletAssetModel,
+  IWalletsAccount,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+  WalletsOffersQuery
+} from '~root/state';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -44,7 +51,7 @@ export class SwapComponent implements OnInit, OnDestroy {
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  heldAssets$: Observable<IWalletAsset[]> = this.selectedAccount$
+  heldAssets$: Observable<IWalletAssetModel[]> = this.selectedAccount$
     .pipe(switchMap(selectedAccount => {
       const assetsIds = !!selectedAccount.accountRecord
         ? this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances).map(balanceLine => {

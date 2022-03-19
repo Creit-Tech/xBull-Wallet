@@ -3,7 +3,7 @@ import {BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, thro
 import {
   HorizonApisQuery,
   IHorizonApi,
-  IWalletAsset,
+  IWalletAsset, IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAssetsQuery
@@ -33,7 +33,7 @@ export class AssetItemComponent implements OnInit, OnDestroy {
     this.balanceLine$.next(data);
   }
 
-  asset$: Observable<IWalletAsset | undefined> = this.balanceLine$
+  asset$: Observable<IWalletAssetModel | undefined> = this.balanceLine$
     .pipe(switchMap(balanceLine =>
       this.walletsAssetsQuery.getAssetsById([
         this.walletsAssetsService.formatBalanceLineId(balanceLine)
@@ -41,13 +41,14 @@ export class AssetItemComponent implements OnInit, OnDestroy {
     ))
     .pipe(map(results => results.shift()));
 
-  assetCode$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset | undefined>)
+
+  assetCode$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAssetModel | undefined>)
     .pipe(map(asset => asset?.assetCode));
 
-  assetImg$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<any, 'full'> | undefined>)
+  assetImg$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAssetModel | undefined>)
     .pipe(map(asset => asset?.image));
 
-  domain$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAsset<any, 'full'> | undefined>)
+  domain$: Observable<string | undefined> = (this.asset$ as Observable<IWalletAssetModel | undefined>)
     .pipe(map(asset => asset?.domain));
 
   amount$: Observable<string> = this.balanceLine$

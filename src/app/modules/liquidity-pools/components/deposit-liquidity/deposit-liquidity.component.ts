@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   BalanceAssetType,
   HorizonApisQuery,
-  IWalletAsset, IWalletsAccount,
+  IWalletAsset, IWalletAssetModel, IWalletsAccount,
   LpAssetsQuery, LpAssetsStore,
   WalletsAccountsQuery,
   WalletsAssetsQuery,
@@ -74,7 +74,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     errorPercentage: new FormControl(0.005, Validators.required),
   });
 
-  assetA$: Observable<IWalletAsset | undefined> = this.depositForm.valueChanges
+  assetA$: Observable<IWalletAssetModel | undefined> = this.depositForm.valueChanges
     .pipe(startWith(this.depositForm.value))
     .pipe(pluck('assetABalanceLine'))
     .pipe(filter<any>(Boolean))
@@ -89,7 +89,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return this.calculateAvailableFunds(selectedAsset, selectedAccount);
     }));
 
-  assetB$: Observable<IWalletAsset | undefined> = this.depositForm.valueChanges
+  assetB$: Observable<IWalletAssetModel | undefined> = this.depositForm.valueChanges
     .pipe(startWith(this.depositForm.value))
     .pipe(pluck('assetBBalanceLine'))
     .pipe(filter<any>(Boolean))
@@ -310,7 +310,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  calculateAvailableFunds(selectedAsset: IWalletAsset | undefined, selectedAccount: IWalletsAccount): number {
+  calculateAvailableFunds(selectedAsset: IWalletAssetModel | undefined, selectedAccount: IWalletsAccount): number {
     if (!selectedAsset || !selectedAccount.accountRecord) {
       console.warn('Balance or Account record is undefined');
       return new BigNumber(0).toNumber();

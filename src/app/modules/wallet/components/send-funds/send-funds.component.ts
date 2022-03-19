@@ -1,6 +1,13 @@
 import {AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOperationsQuery } from '~root/state';
+import {
+  IWalletAssetIssued,
+  IWalletAssetModel,
+  IWalletsAccount,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+  WalletsOperationsQuery
+} from '~root/state';
 import {filter, map, pluck, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
@@ -49,7 +56,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  heldAssets$: Observable<IWalletAsset[]> = this.selectedAccount$
+  heldAssets$: Observable<IWalletAssetModel[]> = this.selectedAccount$
     .pipe(switchMap(selectedAccount => {
       const assetsIds = !!selectedAccount.accountRecord
         ? this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances).map(balanceLine => {
@@ -162,7 +169,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
         Operation.payment({
           asset: selectedAsset._id === 'native'
             ? Asset.native()
-            : new Asset(selectedAsset.assetCode, (selectedAsset as IWalletAsset<'issued'>).assetIssuer),
+            : new Asset(selectedAsset.assetCode, (selectedAsset as IWalletAssetIssued).assetIssuer),
           destination: this.form.value.publicKey,
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
