@@ -33,6 +33,7 @@ export class XdrSignerComponent implements OnInit {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  @Output() acceptHandler!: (signedXdr: string) => void;
   @Output() accept: EventEmitter<string> = new EventEmitter<string>();
 
   @Input() from: string | 'wallet' = 'wallet';
@@ -189,11 +190,10 @@ export class XdrSignerComponent implements OnInit {
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(xdr => {
         this.signing$.next(false);
-        this.accept.emit(xdr);
+        this.emitData(xdr);
       }, error => {
         console.log(error);
         this.nzMessageService.error(`We couldn't sign the transaction, please try again or contact support`);
-
         this.signing$.next(false);
       });
   }
@@ -234,7 +234,7 @@ export class XdrSignerComponent implements OnInit {
       )))
       .subscribe(xdr => {
         this.signing$.next(false);
-        this.accept.emit(xdr);
+        this.emitData(xdr);
         drawerRef.close();
       }, error => {
         drawerRef.close();
@@ -289,7 +289,7 @@ export class XdrSignerComponent implements OnInit {
       });
 
       this.signing$.next(false);
-      this.accept.emit(signedXDR);
+      this.emitData(signedXDR);
     } catch (e: any) {
       this.signing$.next(false);
       this.nzMessageService.error(e?.message || `Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
@@ -317,7 +317,7 @@ export class XdrSignerComponent implements OnInit {
         networkPassphrase: this.stellarSdkService.networkPassphrase,
       });
 
-      this.accept.emit(signedXDR);
+      this.emitData(signedXDR);
     } catch (e: any) {
       console.error(e);
       this.signing$.next(false);
@@ -327,6 +327,17 @@ export class XdrSignerComponent implements OnInit {
     }
 
     this.signing$.next(false);
+  }
+
+  emitData(signedXDR: string): void {
+    if (!!this.acceptHandler) {
+      console.log('dqud9012ud12bghd');
+      this.acceptHandler(signedXDR);
+      this.nzDrawerRef.close();
+    }
+
+    this.accept.emit(signedXDR);
+    this.nzDrawerRef.close();
   }
 
 

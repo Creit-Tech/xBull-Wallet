@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { IWalletAsset, IWalletsAccount, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
+import {
+  IWalletAssetModel,
+  IWalletsAccount,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+  WalletsOffersQuery
+} from '~root/state';
 import { map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -44,7 +50,7 @@ export class LimitComponent implements OnInit, OnDestroy {
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  heldAssets$: Observable<IWalletAsset[]> = this.selectedAccount$
+  heldAssets$: Observable<IWalletAssetModel[]> = this.selectedAccount$
     .pipe(switchMap(selectedAccount => {
       const assetsIds = !!selectedAccount.accountRecord
         ? this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances).map(balanceLine => {

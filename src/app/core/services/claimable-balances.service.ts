@@ -20,6 +20,7 @@ export class ClaimableBalancesService {
     try {
       const response = await this.stellarSdkService.Server
         .claimableBalances()
+        .limit(100)
         .claimant(claimantPublicKey)
         .call();
 

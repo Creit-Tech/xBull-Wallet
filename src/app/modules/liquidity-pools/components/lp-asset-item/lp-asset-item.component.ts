@@ -107,7 +107,8 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
         this.walletsAssetsService.saveInitialAssetState({
           _id: `${assetCode}_${assetIssuer}`,
           assetCode,
-          assetIssuer
+          assetIssuer,
+          networkPassphrase: horizonApi.networkPassphrase,
         });
 
         this.walletsAssetsService.requestAssetData$.next({

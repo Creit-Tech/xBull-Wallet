@@ -46,6 +46,10 @@ export class WalletsOffersService {
     return this.submitAndUpdateStore(xdr, 'sendingPathPaymentStrictReceive');
   }
 
+  sendPathPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+    return this.submitAndUpdateStore(xdr, 'sendingPathPayment');
+  }
+
   sendManageBuyOffer(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingOffer');
   }

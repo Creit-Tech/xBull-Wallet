@@ -18,15 +18,17 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
-          routerLink="/swap"
+          routerLink="/swaps"
+          routerLinkActive="bg-primary text-white"
           nz-menu-item class="flex">
         <i class="fa-solid fa-rotate" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Swap</span>
+        <span *ngIf="!isCollapsed">Swaps</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           routerLink="/trade"
+          routerLinkActive="bg-primary text-white"
           nz-menu-item class="flex">
         <i class="fa-solid fa-chart-line" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">Trade</span>
@@ -35,6 +37,7 @@
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           routerLink="/liquidity-tools"
+          routerLinkActive="bg-primary text-white"
           nz-menu-item class="flex">
         <i class="fa-solid fa-water-ladder" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">Liquidity pools</span>
@@ -43,6 +46,7 @@
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           routerLink="/settings"
+          routerLinkActive="bg-primary text-white"
           nz-menu-item class="flex">
         <i class="fa-solid fa-gear" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">Settings</span>
@@ -55,7 +59,7 @@
       <app-layout-v1-header class="w-full"></app-layout-v1-header>
     </nz-header>
 
-    <nz-content class="overflow-y-auto no-scrollbar">
+    <nz-content class="overflow-y-auto no-scrollbar h-full flex flex-col">
       <router-outlet></router-outlet>
       <nz-footer class="mt-auto">
         xBull Wallet - An Open Source Stellar Wallet created by Creit Tech

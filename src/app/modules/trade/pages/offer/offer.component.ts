@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-  IWalletAsset,
+  IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
   WalletsAssetsQuery,
@@ -37,7 +37,7 @@ export class OfferComponent implements OnInit, OnDestroy {
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  heldAssets$: Observable<IWalletAsset[]> = this.selectedAccount$
+  heldAssets$: Observable<IWalletAssetModel[]> = this.selectedAccount$
     .pipe(switchMap(selectedAccount => {
       const assetsIds = !!selectedAccount.accountRecord
         ? this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances).map(balanceLine => {
