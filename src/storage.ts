@@ -47,6 +47,7 @@ const persistStateParams: Partial<PersistStateParams> = {
   preStoreUpdate(storeName: string, state: any, initialState: any): any {
     return migrationsHandler(storeName, state, initialState);
   },
+  preStorageUpdateOperator: () => debounceTime(150),
 };
 
 if (environment.platform === 'extension') {

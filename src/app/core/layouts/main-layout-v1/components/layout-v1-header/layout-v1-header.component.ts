@@ -4,6 +4,9 @@ import { MobileMenuComponent } from '~root/core/layouts/main-layout-v1/component
 import {
   LayoutV1AccountHorizonSelectorComponent
 } from '~root/core/layouts/main-layout-v1/components/layout-v1-account-horizon-selector/layout-v1-account-horizon-selector.component';
+import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-layout-v1-header',
@@ -11,8 +14,15 @@ import {
   styleUrls: ['./layout-v1-header.component.scss']
 })
 export class LayoutV1HeaderComponent implements OnInit {
+  selectedPublicKey$: Observable<string> = this.walletsAccountsQuery.getSelectedAccount$
+    .pipe(map(selectedAccount => selectedAccount.publicKey));
+
+  selectedHorizonApiName$: Observable<string> = this.horizonApisQuery.getSelectedHorizonApi$
+    .pipe(map(horizonApi => horizonApi.name));
 
   constructor(
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly horizonApisQuery: HorizonApisQuery,
     private readonly nzDrawerService: NzDrawerService,
   ) { }
 

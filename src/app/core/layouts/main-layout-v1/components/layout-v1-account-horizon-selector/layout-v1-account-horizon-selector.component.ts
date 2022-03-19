@@ -24,7 +24,7 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   wallets$ = this.walletsQuery.selectAll();
-  selectedWalletId$ = this.walletsQuery.getSelectedWallet$;
+  selectedWallet$ = this.walletsQuery.getSelectedWallet$;
 
   horizonApis: Observable<IHorizonApi[]> = this.horizonApisQuery.selectAll();
   selectedHorizonApi$: Observable<IHorizonApi> = this.horizonApisQuery.getSelectedHorizonApi$;
@@ -82,7 +82,7 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
         this.horizonSelectControl.setValue(horizon._id, { emitEvent: false });
       });
 
-    this.selectedWalletId$
+    this.selectedWallet$
       .pipe(take(1))
       .subscribe(horizon => {
         this.walletSelectControl.setValue(horizon._id);

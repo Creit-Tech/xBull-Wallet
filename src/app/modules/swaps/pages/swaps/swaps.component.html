@@ -1,6 +1,23 @@
+<section class="p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Swap Assets
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
 <section class="w-full flex justify-center items-center">
 
-  <div class="max-w-md w-full p-4">
+  <div class="max-w-md w-full px-4">
     <nz-spin [nzSpinning]="sendingPathPayment$ | async">
       <nz-card class="w-full ant-card-no-padding p-4 mb-6">
 
@@ -134,7 +151,7 @@
           Swap rate:
         </div>
 
-        <div class="opacity-90 flex items-center">
+        <div class="opacity-80 flex items-center">
           <span>{{ exchangeRate.amount }} {{ exchangeRate.numerator }}/{{ exchangeRate.denominator }}</span>
         </div>
       </nz-list-item>
@@ -149,7 +166,7 @@
 
         </div>
 
-        <div class="opacity-90">
+        <div class="opacity-80">
           <span *ngIf="formPathType.value === 'receive'">
             {{ maxToSend(fromAssetAmount.value) }}
           </span>

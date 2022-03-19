@@ -1,21 +1,17 @@
-<section style="grid-template-rows: repeat(3, auto) 6fr auto"
+<section style="grid-template-rows: repeat(3, auto) 6fr"
          class="w-full h-full grid grid-cols-1">
   <section class="col-span-1 px-4 pt-4">
     <h2 class="mb-4 text-center font-bold">
-      Horizon Api
+      Network Node
     </h2>
 
-    <nz-select [formControl]="horizonSelectControl" class="w-full mb-4">
+    <nz-select [formControl]="horizonSelectControl" class="w-full">
       <ng-container *ngFor="let horizonApi of (horizonApis | async); let i = index">
         <nz-option [nzValue]="horizonApi._id"
                    [nzLabel]="horizonApi.name">
         </nz-option>
       </ng-container>
     </nz-select>
-
-    <button (click)="closeDrawer()" routerLink="/settings/horizon-apis" nz-button nzBlock nzType="primary">
-      Add Horizon API
-    </button>
   </section>
 
   <nz-divider></nz-divider>
@@ -39,13 +35,13 @@
       <ng-container *ngFor="let walletAccount of (walletAccountsPublicKeys$ | async); let i = index">
         <nz-list-item (click)="onWalletAccountSelected(walletAccount)"
                       class="flex flex-col transition items-start font-normal hover:text-primary">
-          <div>
-            {{ i }}: {{ walletAccount.publicKey | publicKey }}
+          <div class="w-full text-center">
+            {{ walletAccount.publicKey | publicKey }}
             <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">
-              (Active)
+              <span class="opacity-50">(Active)</span>
             </ng-container>
           </div>
-          <div>
+          <div class="w-full text-center opacity-80">
             {{ walletAccount.name }}
           </div>
         </nz-list-item>
@@ -54,8 +50,8 @@
   </section>
 
   <section class="col-span-1 p-4">
-    <button (click)="closeDrawer()" routerLink="/create-account" nz-button nzType="primary" nzBlock>
-      Add wallet
+    <button (click)="closeDrawer()" routerLink="/settings/wallets/{{ (selectedWallet$ | async)?._id }}" nz-button nzBlock>
+      Edit selected wallet
     </button>
   </section>
 </section>

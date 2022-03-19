@@ -5,9 +5,9 @@
 
   <div class="h-full w-6/12 md:w-auto flex items-center justify-center">
     <button (click)="openAccountHorizonSelector()" nz-button class="h-auto px-4" nzSize="small" nzType="text">
-      GDJQ......JJCJ
+      {{ ((selectedPublicKey$ | async) || '') | publicKey }}
       <br>
-      <small>Main Network</small>
+      <small>{{ selectedHorizonApiName$ | async }}</small>
     </button>
   </div>
 
