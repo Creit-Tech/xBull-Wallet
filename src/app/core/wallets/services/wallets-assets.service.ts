@@ -277,6 +277,10 @@ export class WalletsAssetsService {
   * */
   filterBalancesLines(balances: Horizon.BalanceLine[]): BalanceAssetType[] {
     return balances
-      .filter(balance => balance.asset_type !== 'liquidity_pool_shares') as BalanceAssetType[];
+      .filter(balance =>
+        balance.asset_type === 'native'
+        || balance.asset_type === 'credit_alphanum4'
+        || balance.asset_type === 'credit_alphanum12'
+      ) as BalanceAssetType[];
   }
 }

@@ -1,7 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { ILpAsset, IWalletsAccount, LpAssetsQuery, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
-import { switchMap } from 'rxjs/operators';
+import {
+  ILpAsset, IWalletAssetIssued,
+  IWalletAssetNative,
+  IWalletsAccount,
+  LpAssetsQuery,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery
+} from '~root/state';
+import { map, switchMap } from 'rxjs/operators';
+import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { Horizon } from 'stellar-sdk';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -11,6 +20,15 @@ import { switchMap } from 'rxjs/operators';
 export class WalletDashboardComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
+
+  accountBalances$ = this.selectedAccount$
+    .pipe(map(selectedAccount => {
+      if (!selectedAccount || !selectedAccount.accountRecord) {
+        return [];
+      }
+
+      return this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances);
+    }));
 
   // lpAssetsBalances$: Observable<ILpAsset[]> = this.lpAssetsQuery.selectAll()
   //   .pipe(switchMap(lpAssets => {
@@ -51,6 +69,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   constructor(
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
+    private readonly walletsAssetsService: WalletsAssetsService,
     private readonly lpAssetsQuery: LpAssetsQuery,
   ) { }
 
@@ -70,10 +89,23 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     this.listOfDisplayData = this.listOfData.filter((item: DataItem) => item.name.indexOf(this.searchValue) !== -1);
   }
 
+  trackByBalanceline(index: number, item: Horizon.BalanceLine): string {
+    return item.balance;
+  }
+
 }
 
 interface DataItem {
   name: string;
   age: number;
   address: string;
+}
+
+interface IAssetItem {
+  asset: IWalletAssetNative | IWalletAssetIssued;
+  assetCode: string;
+  domain: string;
+  balance: string;
+  available: string;
+  image?: string;
 }

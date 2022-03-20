@@ -1,121 +1,33 @@
+<section class="pt-4 px-4 w-full">
+  <nz-breadcrumb class="flex">
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center">
+        Wallet
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</section>
+
 <section class="container mx-auto p-4 flex grid grid-cols-12 gap-4">
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
 
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
+  <section class="col-span-12 md:col-span-6">
 
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
-  <nz-card class="col-span-3 ant-card-no-padding p-4">
-    dwdf
-  </nz-card>
+  </section>
 
-  <nz-table class="col-span-12" #nzTable
-            [nzData]="listOfDisplayData"
-            nzTableLayout="fixed">
-    <thead>
-    <tr>
-      <th nzCustomFilter>
-        Name
-        <nz-filter-trigger [(nzVisible)]="visible" [nzActive]="searchValue.length > 0" [nzDropdownMenu]="menu">
-          <i nz-icon nzType="search"></i>
-        </nz-filter-trigger>
-      </th>
-      <th>Age</th>
-      <th>Address</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let data of nzTable.data">
-      <td>{{ data.name }}</td>
-      <td>{{ data.age }}</td>
-      <td>{{ data.address }}</td>
-    </tr>
-    </tbody>
-  </nz-table>
-  <nz-dropdown-menu #menu="nzDropdownMenu">
-    <div class="ant-table-filter-dropdown">
-      <div class="search-box">
-        <input type="text" nz-input placeholder="Search name" />
-        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">Search</button>
-        <button nz-button nzSize="small" (click)="reset()">Reset</button>
-      </div>
-    </div>
-  </nz-dropdown-menu>
+  <section class="col-span-12 md:col-span-6">
+    <nz-card class="w-full ant-card-no-padding">
+      <nz-list class="w-full">
+        <nz-list-item *ngFor="let balance of (accountBalances$ | async); trackBy: trackByBalanceline" class="w-full">
+          <app-wallet-asset-item class="block w-full px-4"
+                                 [balanceLine]="balance">
+          </app-wallet-asset-item>
+        </nz-list-item>
+      </nz-list>
+    </nz-card>
+  </section>
 </section>
