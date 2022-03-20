@@ -39,6 +39,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { WalletAssetItemComponent } from './components/wallet-asset-item/wallet-asset-item.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 
 @NgModule({
@@ -84,6 +85,7 @@ import { WalletAssetItemComponent } from './components/wallet-asset-item/wallet-
     NzTableModule,
     NzDropDownModule,
     NzBreadCrumbModule,
+    NgxChartsModule,
   ],
 })
 export class WalletModule { }

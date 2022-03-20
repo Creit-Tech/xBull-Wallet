@@ -293,6 +293,14 @@ export class WalletsAssetsService {
       return;
     }
 
+    if (counterAssetId === asset._id) {
+      this.walletsAssetsStore.upsert(asset._id, {
+        counterPrice: '1',
+        counterId: counterAssetId,
+      });
+      return;
+    }
+
     let horizonResponse;
     try {
       horizonResponse = await this.stellarSdkService.Server.tradeAggregation(
@@ -310,7 +318,7 @@ export class WalletsAssetsService {
       return;
     }
 
-    const latestPrice = horizonResponse.records.shift()
+    const latestPrice = horizonResponse.records.shift();
 
     if (!latestPrice) {
       return;

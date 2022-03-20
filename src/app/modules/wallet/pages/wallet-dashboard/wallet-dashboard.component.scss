@@ -1,0 +1,13 @@
+@screen xl {
+  :host {
+    @apply h-full;
+  }
+
+  .main-container {
+    grid-template-rows: auto repeat(6, 1fr);
+  }
+
+  .inner-card-grid-container {
+    grid-template-rows: auto auto 1fr;
+  }
+}

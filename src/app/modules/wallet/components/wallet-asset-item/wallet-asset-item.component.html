@@ -17,7 +17,7 @@
 
     <div class="w-5/12 flex flex-col items-end">
       <p class="text-sm m-0 font-bold">
-        ${{ availableFunds$ | async | number: '0.0-7' }}
+        {{ availableFunds$ | async | number: '0.0-7' }}
       </p>
       <small class="text-xs opacity-50 truncate">
         <span *ngIf="!!asset.counterId && asset.counterId !== asset._id">
