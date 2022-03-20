@@ -1,4 +1,4 @@
-<section class="pt-4 px-4 w-full">
+<section class="container mx-auto pt-4 px-4 w-full">
   <nz-breadcrumb class="flex">
     <nz-breadcrumb-item class="flex items-center">
       <a class="flex items-center" routerLink="/">
@@ -14,15 +14,113 @@
 </section>
 
 <section class="container mx-auto p-4 flex grid grid-cols-12 gap-4">
+<!--  <section class="col-span-12 flex justify-center">-->
+<!--    <div class="px-2">-->
+<!--      <button nz-button nzType="primary">-->
+<!--        Send <i class="ml-2 fa-solid fa-arrow-up"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div class="px-2">-->
+<!--      <button nz-button nzType="primary">-->
+<!--        Receive <i class="ml-2 fa-solid fa-arrow-down"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--    <div class="px-2">-->
+<!--      <button nz-button>-->
+<!--        Add <i class="ml-2 fa-solid fa-plus"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+<!--  </section>-->
 
   <section class="col-span-12 md:col-span-6">
+    <nz-card class="w-fulll ant-card-no-padding p-4">
+      <section class="flex flex-col">
+        <div class="w-full mb-2">
+          <h1 class="opacity-80 text-base font-bold m-0">
+            Account balance
+          </h1>
 
+          <h2 class=" text-xl font-bold m-0">
+            ${{ counterAssetCode$ | async }} {{ totalBalanceOnCounterAsset$ | async | number: '0.0-7' }}
+          </h2>
+        </div>
+
+        <nz-list class="w-full">
+<!--          <nz-list-item>-->
+<!--            <div>-->
+<!--              <p class="font-semibold">Total balance:</p>-->
+<!--            </div>-->
+
+<!--            <div>-->
+<!--              ${{ counterAssetCode$ | async }} {{ totalBalanceOnCounterAsset$ | async | number: '0.0-7' }}-->
+<!--            </div>-->
+<!--          </nz-list-item>-->
+
+          <nz-list-item>
+            <div>
+              <p class="font-semibold">Trusting assets:</p>
+            </div>
+
+            <div>
+              {{ ((accountBalancesAssets$ | async) || []).length }}
+            </div>
+          </nz-list-item>
+
+          <nz-list-item>
+            <div>
+              <p class="font-semibold">Pool shares:</p>
+            </div>
+
+            <div>
+              {{ lpAssetsBalancesTotalShares$ | async | number: '0.0-7' }}
+            </div>
+          </nz-list-item>
+
+          <nz-list-item>
+            <div>
+              <p class="font-semibold">Locked XLMs:</p>
+            </div>
+
+            <div>
+              4528.2412445
+            </div>
+          </nz-list-item>
+        </nz-list>
+      </section>
+    </nz-card>
   </section>
 
   <section class="col-span-12 md:col-span-6">
-    <nz-card class="w-full ant-card-no-padding">
+    <ng-container *ngIf="!!(lpAssetsBalances$ | async)?.length">
+      <nz-card class="w-full ant-card-no-padding pt-4 pb-2">
+        <div class="w-full text-center mb-2">
+          <h1 class="text-xl font-bold m-0">
+            Liquidity pool shares
+          </h1>
+        </div>
+
+        <nz-list class="w-full">
+          <nz-list-item *ngFor="let balance of (lpAssetsBalances$ | async); trackBy: trackByBalanceline" class="w-full">
+            <app-lp-asset-item class="w-full px-4 cursor-pointer"
+                               [lpAssetId]="balance.liquidity_pool_id"
+                               [sharesAmount]="balance.balance">
+            </app-lp-asset-item>
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+    </ng-container>
+  </section>
+
+  <section class="col-span-12 md:col-span-6">
+    <nz-card class="w-full ant-card-no-padding pt-4 pb-2">
+      <div class="w-full text-center mb-2">
+        <h1 class="text-xl font-bold m-0">
+          My assets
+        </h1>
+      </div>
+
       <nz-list class="w-full">
-        <nz-list-item *ngFor="let balance of (accountBalances$ | async); trackBy: trackByBalanceline" class="w-full">
+        <nz-list-item *ngFor="let balance of (accountBalancesAssets$ | async); trackBy: trackByBalanceline" class="w-full">
           <app-wallet-asset-item class="block w-full px-4"
                                  [balanceLine]="balance">
           </app-wallet-asset-item>
@@ -30,4 +128,6 @@
       </nz-list>
     </nz-card>
   </section>
+
+
 </section>

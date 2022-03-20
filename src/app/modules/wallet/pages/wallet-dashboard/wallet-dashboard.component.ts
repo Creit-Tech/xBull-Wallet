@@ -8,9 +8,12 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import { map, switchMap } from 'rxjs/operators';
+import { distinctUntilChanged, filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { Horizon } from 'stellar-sdk';
+import BalanceLineLiquidityPool = Horizon.BalanceLineLiquidityPool;
+import BalanceLine = Horizon.BalanceLine;
+import BigNumber from 'bignumber.js';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -21,7 +24,10 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  accountBalances$ = this.selectedAccount$
+  accountBalanceLines$: Observable<BalanceLine[]> = this.selectedAccount$
+    .pipe(map(selectedAccount => selectedAccount?.accountRecord?.balances || []));
+
+  accountBalancesAssets$ = this.selectedAccount$
     .pipe(map(selectedAccount => {
       if (!selectedAccount || !selectedAccount.accountRecord) {
         return [];
@@ -30,41 +36,46 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
       return this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord.balances);
     }));
 
-  // lpAssetsBalances$: Observable<ILpAsset[]> = this.lpAssetsQuery.selectAll()
-  //   .pipe(switchMap(lpAssets => {
-  //     return this.selectedAccount$
-  //       .pipe(selectedAccount => {
-  //         return lpAssets.filter(lpAsset => {
-  //           selectedAccount.
-  //         })
-  //       });
-  //   }));
+  counterAssetCode$ = this.walletsAssetsQuery.counterAsset$
+    .pipe(map(asset => asset?.assetCode));
 
-  searchValue = '';
-  visible = false;
-  listOfData: DataItem[] = [
-    {
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park'
-    },
-    {
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park'
-    },
-    {
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park'
-    },
-    {
-      name: 'Jim Red',
-      age: 32,
-      address: 'London No. 2 Lake Park'
-    }
-  ];
-  listOfDisplayData = [...this.listOfData];
+  totalBalanceOnCounterAsset$: Observable<string> = this.accountBalanceLines$
+    .pipe(map(bs => this.walletsAssetsService.filterBalancesLines(bs)))
+    .pipe(distinctUntilChanged((a, b) => {
+      return JSON.stringify(a) === JSON.stringify(b);
+    }))
+    .pipe(map(accountBalanceLines => {
+      return accountBalanceLines.reduce((total, current) => {
+        const asset = this.walletsAssetsQuery.getEntity(this.walletsAssetsService.formatBalanceLineId(current));
+
+        return !asset || !asset.counterPrice
+          ? total
+          : new BigNumber(total)
+            .plus(
+              new BigNumber(asset.counterPrice).multipliedBy(current.balance)
+            );
+      }, new BigNumber(0))
+        .toFixed(7);
+    }));
+
+  lpAssetsBalances$: Observable<BalanceLineLiquidityPool[]> = this.selectedAccount$
+    .pipe(map(selectedAccount => {
+      if (!selectedAccount || !selectedAccount.accountRecord) {
+        return [];
+      }
+
+      return selectedAccount.accountRecord
+        .balances
+        .filter(b => b.asset_type === 'liquidity_pool_shares') as BalanceLineLiquidityPool[];
+    }));
+
+  lpAssetsBalancesTotalShares$: Observable<string> = this.lpAssetsBalances$
+    .pipe(map(lpAssetsBalances =>
+      lpAssetsBalances.reduce((total, current) => {
+        return new BigNumber(total).plus(current.balance);
+      }, new BigNumber(0))
+    ))
+    .pipe(map(value => value.toFixed(7)));
 
   constructor(
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
@@ -77,16 +88,6 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-  }
-
-  reset(): void {
-    this.searchValue = '';
-    this.search();
-  }
-
-  search(): void {
-    this.visible = false;
-    this.listOfDisplayData = this.listOfData.filter((item: DataItem) => item.name.indexOf(this.searchValue) !== -1);
   }
 
   trackByBalanceline(index: number, item: Horizon.BalanceLine): string {

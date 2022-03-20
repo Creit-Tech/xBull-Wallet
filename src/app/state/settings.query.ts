@@ -21,6 +21,8 @@ export class SettingsQuery extends Query<SettingsState> {
   backgroundImg$ = this.select(state => state.backgroundImg);
   backgroundCover$ = this.select(state => state.backgroundCover);
 
+  counterAssetId$ = this.select(state => state.counterAssetId);
+
   constructor(protected store: SettingsStore) {
     super(store);
   }

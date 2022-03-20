@@ -1,6 +1,6 @@
 <ng-container *ngIf="(lpAsset$ | async)?.dataLoaded; else skeletonTemplate">
   <div *ngFor="let reserve of (reserves$ | async)"
-       class="w-10 h-10 mr-4 flex bg-off-white rounded-3xl p-1.5 overflow-hidden">
+       class="w-8 h-8 mr-4 flex bg-white rounded-full p-1 overflow-hidden">
     <img class="w-full h-full rounded-3xl"
          *ngIf="reserve?.image; else imgSkeleton"
          [src]="reserve.image" alt=""/>
@@ -10,14 +10,15 @@
   </div>
 
   <div class="ml-auto flex flex-col items-end">
-    <p *ngIf="parseCodes(reserves$ | async) as codes; else codesPlaceholder" class="m-0 p-0 text-off-white text-sm font-bold">
+    <p *ngIf="parseCodes(reserves$ | async) as codes; else codesPlaceholder"
+       class="m-0 p-0 text-sm font-bold">
       {{ codes }}
     </p>
     <ng-template #codesPlaceholder>
       <div class="w-16 h-5 mb-1 skeleton-box"></div>
     </ng-template>
 
-    <p class="text-placeholder text-xs m-0 p-0">
+    <p class="opacity-50 text-xs m-0 p-0">
       Shares: {{ (sharesAmount$ | async) | number: '1.2-7' }}
     </p>
   </div>

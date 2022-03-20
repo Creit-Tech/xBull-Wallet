@@ -7,14 +7,15 @@ import {
   IWalletNativeAsset,
   IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore, IWalletIssuedAsset, IWalletAssetNative, IWalletAssetIssued,
+  WalletsAssetsStore, IWalletIssuedAsset, IWalletAssetNative, IWalletAssetIssued, SettingsQuery,
 } from '~root/state';
 import { from, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, concatAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatAll, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
-import { add, isAfter } from 'date-fns';
+import { add, isAfter, subMinutes, subYears } from 'date-fns';
+import BigNumber from 'bignumber.js';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +78,7 @@ export class WalletsAssetsService {
     private readonly http: HttpClient,
     private readonly stellarSdkService: StellarSdkService,
     private readonly lpAssetsStore: LpAssetsStore,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   // DEPRECATED
@@ -282,5 +284,41 @@ export class WalletsAssetsService {
         || balance.asset_type === 'credit_alphanum4'
         || balance.asset_type === 'credit_alphanum12'
       ) as BalanceAssetType[];
+  }
+
+  async updateAssetPriceAgainstCounter(asset: IWalletAssetIssued | IWalletAssetNative): Promise<void> {
+    const counterAssetId = await this.settingsQuery.counterAssetId$.pipe(take(1)).toPromise();
+
+    if (!counterAssetId) {
+      return;
+    }
+
+    let horizonResponse;
+    try {
+      horizonResponse = await this.stellarSdkService.Server.tradeAggregation(
+        this.sdkAssetFromAssetId(asset._id),
+        this.sdkAssetFromAssetId(counterAssetId),
+        subYears(new Date(), 1).getTime(),
+        new Date().getTime(),
+        60000,
+        0
+      )
+        .order('desc')
+        .limit(5)
+        .call();
+    } catch (e) {
+      return;
+    }
+
+    const latestPrice = horizonResponse.records.shift()
+
+    if (!latestPrice) {
+      return;
+    }
+
+    this.walletsAssetsStore.upsert(asset._id, {
+      counterPrice: latestPrice.avg,
+      counterId: counterAssetId,
+    });
   }
 }

@@ -1,15 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
+import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { Horizon } from 'stellar-sdk';
 import {
   BalanceAssetType,
   HorizonApisQuery,
   IWalletAssetIssued,
-  IWalletAssetNative,
+  IWalletAssetNative, WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
 import { filter, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import BigNumber from 'bignumber.js';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 
 @Component({
   selector: 'app-wallet-asset-item',
@@ -31,13 +33,59 @@ export class WalletAssetItemComponent implements OnInit, OnDestroy {
       );
     }));
 
+  amount$: Observable<string> = this.balanceLine$
+    .pipe(map(data => data.balance));
+
+  // This is the value in regard to the counter asset
+  value$: Observable<string> = combineLatest([
+    this.asset$,
+    this.balanceLine$
+  ])
+    .pipe(map(([asset, balanceLine]) => {
+      return new BigNumber(asset?.counterPrice || '0').multipliedBy(balanceLine.balance)
+        .toFixed(7);
+    }));
+
+  counterAssetTicker$: Observable<string> = this.asset$
+    .pipe(map(asset => {
+      if (!asset || !asset.counterId) {
+        return '';
+      }
+
+      const counterAsset = this.walletsAssetsService.sdkAssetFromAssetId(asset.counterId);
+      return counterAsset.getCode();
+    }));
+
+  availableFunds$: Observable<string> = combineLatest([
+    this.balanceLine$,
+    this.walletsAccountsQuery.getSelectedAccount$,
+  ])
+    .pipe(filter(values => values.every(value => !!value)))
+    .pipe(map(([balanceLine, selectedAccount]) => {
+      if (!balanceLine || !selectedAccount?.accountRecord) {
+        console.warn('Balance or Account record is undefined');
+        return new BigNumber(0).toString();
+      }
+
+      return this.stellarSdkService
+        .calculateAvailableBalance({
+          account: selectedAccount.accountRecord,
+          balanceLine
+        })
+        .toString();
+    }));
+
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
   ) { }
 
   ngOnInit(): void {
+    this.streamAssetPrice();
+
     this.balanceLine$
       .pipe(filter<any>(balanceLine => {
         return balanceLine.asset_type === 'credit_alphanum12' || balanceLine.asset_type === 'credit_alphanum4';
@@ -68,6 +116,16 @@ export class WalletAssetItemComponent implements OnInit, OnDestroy {
           horizonApi,
           forceUpdate: false
         });
+      });
+  }
+
+  streamAssetPrice(): void {
+    this.asset$
+      .pipe<any>(filter(asset => !!asset))
+      .pipe(take(1))
+      .subscribe(asset => {
+        this.walletsAssetsService.updateAssetPriceAgainstCounter(asset)
+          .then();
       });
   }
 

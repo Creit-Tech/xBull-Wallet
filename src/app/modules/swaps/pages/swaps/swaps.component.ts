@@ -40,7 +40,7 @@ export class SwapsComponent implements OnInit, OnDestroy {
         return of([]);
       }
 
-      const assetsIds = selectedWalletAccount.accountRecord.balances
+      const assetsIds = this.walletsAssetsService.filterBalancesLines(selectedWalletAccount.accountRecord.balances)
         .map(b => this.walletsAssetsService.formatBalanceLineId(b));
 
       return this.walletsAssetsQuery.getAssetsById(assetsIds);
