@@ -331,7 +331,6 @@ export class XdrSignerComponent implements OnInit {
 
   emitData(signedXDR: string): void {
     if (!!this.acceptHandler) {
-      console.log('dqud9012ud12bghd');
       this.acceptHandler(signedXDR);
       this.nzDrawerRef.close();
     }

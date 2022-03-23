@@ -54,6 +54,7 @@
     "@ionic/angular": "^6.0.11",
     "@ledgerhq/hw-app-str": "^6.24.1",
     "@ledgerhq/hw-transport-webusb": "^6.24.1",
+    "@swimlane/ngx-charts": "^20.1.0",
     "@tailwindcss/forms": "^0.3.4",
     "@trezor/rollout": "^1.2.1",
     "bignumber.js": "^9.0.2",

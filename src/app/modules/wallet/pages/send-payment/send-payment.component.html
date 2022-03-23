@@ -1,0 +1,117 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/wallet">
+          Wallet
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Send payment
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-md w-full px-4">
+    <nz-spin [nzSpinning]="sendingPayment$ | async">
+      <nz-card class="w-full ant-card-no-padding p-4 mb-6">
+        <section class="flex flex-col">
+          <div class="w-full text-center mb-4">
+            <h1 class="text-lg font-semibold">Send payment</h1>
+          </div>
+        </section>
+
+        <section [formGroup]="form" class="w-full mb-6">
+          <div class="w-full mb-4">
+            <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qr">
+              <input type="text" nz-input nzSize="large" placeholder="Public key" formControlName="publicKey">
+            </nz-input-group>
+
+            <ng-template #keyIcon>
+              <i class="fa-solid fa-key"></i>
+            </ng-template>
+
+            <ng-template #qr>
+              <i (click)="scanQr()"
+                 *ngIf="isMobilePlatform"
+                 nz-icon nzType="qrcode"
+                 nzTheme="outline" class="cursor-pointer"></i>
+            </ng-template>
+          </div>
+
+          <div class="w-full mb-4">
+            <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon">
+              <input type="text" nz-input nzSize="large" placeholder="Memo (optional)" formControlName="memo">
+            </nz-input-group>
+
+            <ng-template #tagIcon>
+              <i class="fa-solid fa-tag"></i>
+            </ng-template>
+          </div>
+
+          <div *ngIf="selectOptions$ | async as selectOptions" class="w-full mb-4">
+            <nz-input-group nzSize="large" [nzPrefix]="coinsIcon">
+              <nz-select class="w-full"
+                         [nzBorderless]="true"
+                         formControlName="assetCode"
+                         nzPlaceHolder="Select an asset">
+                <nz-option *ngFor="let option of selectOptions" [nzValue]="option.value" [nzLabel]="option.name"></nz-option>
+              </nz-select>
+            </nz-input-group>
+
+            <ng-template #coinsIcon>
+              <i class="fa-solid fa-coins"></i>
+            </ng-template>
+          </div>
+
+          <div class="w-full">
+            <nz-input-group nzSize="large" [nzAddOnBefore]="globeIcon" [nzSuffix]="maxButton">
+              <input mask="separator.8"
+                     thousandSeparator=""
+                     type="text" nz-input nzSize="large" placeholder="Amount" formControlName="amount">
+            </nz-input-group>
+
+            <ng-template #globeIcon>
+              <i class="fa-solid fa-globe"></i>
+            </ng-template>
+
+            <ng-template #maxButton>
+              <button *ngIf="availableFunds$ | async" (click)="setMax()" nz-button>
+                Max
+              </button>
+            </ng-template>
+          </div>
+        </section>
+
+        <div class="w-full text-center opacity-50 mb-7">
+          <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
+            Available: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
+          </ng-container>
+
+          <ng-template #notSelectedAsset>
+            Available: Asset not selected
+          </ng-template>
+        </div>
+
+        <div class="w-full">
+          <button (click)="onSubmitClick$.next()"
+                  [nzLoading]="loadingSubmitButton$ | async"
+                  [disabled]="form.invalid"
+                  nz-button nzType="primary"
+                  nzBlock nzSize="large">
+            Send payment
+          </button>
+        </div>
+      </nz-card>
+    </nz-spin>
+  </div>
+</section>

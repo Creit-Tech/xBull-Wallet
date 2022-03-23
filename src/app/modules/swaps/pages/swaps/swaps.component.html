@@ -1,4 +1,4 @@
-<section class="p-4">
+<section class="container mx-auto p-4">
   <section class="w-full">
     <nz-breadcrumb class="flex">
       <nz-breadcrumb-item class="flex items-center">
@@ -51,7 +51,7 @@
                       nz-button>
                 <ng-container *ngIf="swapForm.value.fromAsset.asset as fromAsset; else pickAsset">
                   <div *ngIf="fromAsset.image as image" class="w-5 h-5 bg-white p-1 rounded-full mr-2">
-                    <img [src]="image" class="w-full h-full" alt="">
+                    <img [src]="image" class="w-full h-full rounded-full" alt="">
                   </div>
 
                   <p class="text-xs m-0">

@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { WalletsAssetsStore, WalletsAssetsState } from './wallets-assets.store';
-import { IWalletAssetModel } from '~root/state/wallets-asset.model';
+import {
+  IWalletAssetIssued,
+  IWalletAssetModel,
+  IWalletAssetNative,
+} from '~root/state/wallets-asset.model';
 import { Observable } from 'rxjs';
+import { SettingsQuery } from '~root/state/settings.query';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
@@ -10,7 +16,13 @@ export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
   addingAsset$ = this.select(state => state.UIState.addingAsset);
   removingAsset$ = this.select(state => state.UIState.removingAsset);
 
-  constructor(protected store: WalletsAssetsStore) {
+  counterAsset$ = this.settingsQuery.counterAssetId$
+    .pipe(switchMap(counterAssetId => this.selectEntity(counterAssetId)));
+
+  constructor(
+    protected store: WalletsAssetsStore,
+    private readonly settingsQuery: SettingsQuery,
+  ) {
     super(store);
   }
 

@@ -41,6 +41,9 @@ export interface IWalletAssetNative {
   assetCode: 'XLM';
   lastTimeUpdated?: Date;
 
+  counterPrice?: string;
+  counterId?: string;
+
   assetExtraDataLoaded?: boolean;
   assetFullDataLoaded?: boolean;
   domain?: string;
@@ -107,6 +110,9 @@ export interface IWalletAssetIssued {
   assetCode: string;
   assetIssuer: string;
   lastTimeUpdated?: Date;
+
+  counterPrice?: string;
+  counterId?: string;
 
   assetExtraDataLoaded?: boolean;
   assetFullDataLoaded?: boolean;

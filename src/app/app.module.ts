@@ -48,7 +48,7 @@ registerLocaleData(en);
     MainLayoutV1Component,
     MobileMenuComponent,
     LayoutV1HeaderComponent,
-    LayoutV1AccountHorizonSelectorComponent
+    LayoutV1AccountHorizonSelectorComponent,
   ],
   imports: [
     BrowserModule,

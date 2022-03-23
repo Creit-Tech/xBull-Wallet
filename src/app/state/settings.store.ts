@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { IWalletAssetIssued, IWalletAssetNative } from '~root/state/wallets-asset.model';
 
 export interface SettingsState {
   UIState: {
@@ -28,6 +29,11 @@ export interface SettingsState {
   // Background settings
   backgroundImg?: string;
   backgroundCover?: string;
+
+  // Counter asset
+  // This is to use an asset as the base price
+  // Default values are USDC on both testnet and pubnet
+  counterAssetId: IWalletAssetIssued['_id'] | IWalletAssetNative['_id'];
 }
 
 export function createInitialState(): SettingsState {
@@ -67,7 +73,8 @@ export function createInitialState(): SettingsState {
       'set_trust_line_flags',
       'liquidity_pool_deposit',
       'liquidity_pool_withdraw',
-    ]
+    ],
+    counterAssetId: 'native',
   };
 }
 
