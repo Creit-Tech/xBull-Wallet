@@ -72,7 +72,7 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
         publicKey: walletAccount.publicKey,
       });
 
-      this.nzMessageService.success('Horizon updated');
+      this.nzMessageService.success('Horizon selected');
     });
 
   ngOnInit(): void {
@@ -95,7 +95,7 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
       publicKey: walletAccount.publicKey,
     });
 
-    this.nzMessageService.success(`Selected account updated`);
+    this.nzMessageService.success(`Account selected`);
   }
 
   closeDrawer(): void {

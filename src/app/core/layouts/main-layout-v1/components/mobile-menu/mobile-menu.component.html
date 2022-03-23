@@ -36,7 +36,10 @@
       </button>
     </div>
     <div class="col-span-1 row-span-1">
-      <button nz-button nzBlock nzSize="large">
+      <button (click)="closeDrawer()"
+              routerLink="/wallet/receive"
+              nz-button nzBlock
+              nzSize="large">
         Receive
       </button>
     </div>

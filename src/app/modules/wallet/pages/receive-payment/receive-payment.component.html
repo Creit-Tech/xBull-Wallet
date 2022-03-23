@@ -1,0 +1,53 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/wallet">
+          Wallet
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Receive payment
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-md w-full px-4">
+    <nz-card class="w-full ant-card-no-padding p-4 mb-6">
+      <section class="flex flex-col">
+        <div class="w-full text-center mb-4">
+          <h1 class="text-lg font-semibold">Receive payment</h1>
+        </div>
+      </section>
+
+      <section class="w-full mb-4">
+        <figure class="mx-auto rounded-2xl w-44 h-44 overflow-hidden">
+          <img [src]="qrCode$ | async" alt="public_key" class="m-0 p-0 w-full h-auto" />
+        </figure>
+      </section>
+
+      <ng-container *ngIf="publicKey$ | async as publicKey">
+        <section class="w-full md:w-10/12 mx-auto mb-4">
+          <p class="w-full break-all cursor-pointer m-0 p-0 text-center text-base">
+            {{ publicKey }}
+          </p>
+        </section>
+
+        <section class="w-full text-center">
+          <button nz-button nzSize="large" appClipboard [textToCopy]="publicKey">
+            Copy Address
+          </button>
+        </section>
+      </ng-container>
+    </nz-card>
+  </div>
+</section>

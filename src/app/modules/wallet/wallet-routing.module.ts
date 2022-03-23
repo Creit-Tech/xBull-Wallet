@@ -6,6 +6,7 @@ import { WalletOffersComponent } from '~root/modules/wallet/pages/wallet-offers/
 import { WalletTransactionsComponent } from '~root/modules/wallet/pages/wallet-transactions/wallet-transactions.component';
 import { WalletDashboardComponent } from '~root/modules/wallet/pages/wallet-dashboard/wallet-dashboard.component';
 import { SendPaymentComponent } from '~root/modules/wallet/pages/send-payment/send-payment.component';
+import { ReceivePaymentComponent } from '~root/modules/wallet/pages/receive-payment/receive-payment.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'payment',
     component: SendPaymentComponent,
+  },
+  {
+    path: 'receive',
+    component: ReceivePaymentComponent,
   },
   {
     path: '',

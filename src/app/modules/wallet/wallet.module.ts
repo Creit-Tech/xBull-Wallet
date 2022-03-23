@@ -41,6 +41,7 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { WalletAssetItemComponent } from './components/wallet-asset-item/wallet-asset-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SendPaymentComponent } from './pages/send-payment/send-payment.component';
+import { ReceivePaymentComponent } from './pages/receive-payment/receive-payment.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { SendPaymentComponent } from './pages/send-payment/send-payment.componen
     WalletDashboardComponent,
     WalletAssetItemComponent,
     SendPaymentComponent,
+    ReceivePaymentComponent,
   ],
   imports: [
     CommonModule,
