@@ -40,6 +40,7 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { WalletAssetItemComponent } from './components/wallet-asset-item/wallet-asset-item.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { SendPaymentComponent } from './pages/send-payment/send-payment.component';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     WalletTransactionItemComponent,
     WalletDashboardComponent,
     WalletAssetItemComponent,
+    SendPaymentComponent,
   ],
   imports: [
     CommonModule,

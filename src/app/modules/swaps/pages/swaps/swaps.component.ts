@@ -103,15 +103,17 @@ export class SwapsComponent implements OnInit, OnDestroy {
             return '0';
           }
           const targetBalance = this.walletsAssetsService.filterBalancesLines(walletAccount.accountRecord.balances).find(b => {
-            if (b.asset_type === 'native') {
-              return 'native' === value.asset._id;
-            } else {
-              return b.asset_code === value.asset.assetCode
-                && b.asset_issuer === (value.asset as IWalletAssetIssued).assetIssuer;
-            }
+            return value.asset._id === this.walletsAssetsService.formatBalanceLineId(b);
           });
 
-          return !targetBalance ? '0' : new BigNumber(targetBalance.balance).toFixed(7);
+          if (!targetBalance) {
+            return '0';
+          }
+
+          return this.stellarSdkService.calculateAvailableBalance({
+            account: walletAccount.accountRecord,
+            balanceLine: targetBalance
+          }).toFixed(7);
         }));
     }));
 

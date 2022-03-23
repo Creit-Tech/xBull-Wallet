@@ -1,6 +1,6 @@
-<section class="flex w-full justify-between md:justify-center items-center h-full">
-  <div class="md:hidden w-3/12">
-    <img src="/assets/icons/xbull-dark.png" class="h-11" alt="xbull-logo">
+<section class="flex w-full justify-between items-center h-full">
+  <div class="w-3/12">
+    <img src="/assets/icons/xbull-dark.png" class="h-11 md:hidden" alt="xbull-logo">
   </div>
 
   <div class="h-full w-6/12 md:w-auto flex items-center justify-center">
@@ -8,6 +8,16 @@
             class="h-auto px-4 flex flex-col" nzSize="small" nzType="text">
       <span class="font-bold">{{ ((selectedPublicKey$ | async) || '') | publicKey }}</span>
       <small class="opacity-80">{{ selectedHorizonApiName$ | async }}</small>
+    </button>
+  </div>
+
+  <div class="hidden md:flex w-3/12 md:w-auto justify-center items-center grid grid-rows-1 grid-cols-2 gap-4">
+    <button nz-button nzType="primary" class="cols-span-1 row-span-1" routerLink="/wallet/payment">
+      Send <i class="fa-solid fa-paper-plane ml-2"></i>
+    </button>
+
+    <button nz-button class="col-span-1 row-span-1" routerLink="/wallet/receive">
+      Receive <i class="fa-solid fa-circle-arrow-down ml-2"></i>
     </button>
   </div>
 
