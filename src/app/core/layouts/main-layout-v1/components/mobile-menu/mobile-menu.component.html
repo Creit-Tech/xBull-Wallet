@@ -1,26 +1,26 @@
 <section class="w-full h-full grid grid-cols-12 gap-4" style="grid-template-rows: 1fr auto;">
   <ul class="col-span-12 row-span-1" nz-menu nzMode="inline" nzTheme="dark">
-    <li (click)="closeDrawer()" routerLink="/wallet" routerLinkActive="bg-primary text-white" nz-menu-item class="flex">
+    <li (click)="closeDrawer()" routerLink="/wallet" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-wallet"></i>
       <span>Wallet</span>
     </li>
 
-    <li (click)="closeDrawer()" routerLink="/swaps" routerLinkActive="bg-primary text-white" nz-menu-item class="flex">
-      <i class="mr-4 fa-solid fa-rotate"></i>
+    <li (click)="closeDrawer()" routerLink="/swaps" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-arrow-right-arrow-left"></i>
       <span>Swaps</span>
     </li>
 
-    <li (click)="closeDrawer()" routerLink="/trade" routerLinkActive="bg-primary text-white" nz-menu-item class="flex">
+    <li (click)="closeDrawer()" routerLink="/trade" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-chart-line"></i>
       <span>Trade</span>
     </li>
 
-    <li (click)="closeDrawer()" routerLink="/liquidity-pools" routerLinkActive="bg-primary text-white" nz-menu-item class="flex">
+    <li (click)="closeDrawer()" routerLink="/liquidity-pools" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-water-ladder"></i>
       <span>Liquidity pools</span>
     </li>
 
-    <li (click)="closeDrawer()" routerLink="/settings" routerLinkActive="bg-primary text-white" nz-menu-item class="flex">
+    <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-gear"></i>
       <span>Settings</span>
     </li>

@@ -6,7 +6,7 @@
 
     <div class="h-full w-6/12 flex items-center justify-center">
       <button (click)="openAccountHorizonSelector()" nz-button
-              class="h-auto px-4 flex flex-col" nzSize="small" nzType="text">
+              class="h-auto px-4 flex flex-col items-center" nzSize="small" nzType="text">
         <span class="font-bold">{{ ((selectedPublicKey$ | async) || '') | publicKey }}</span>
         <small class="opacity-80">{{ selectedHorizonApiName$ | async }}</small>
       </button>
