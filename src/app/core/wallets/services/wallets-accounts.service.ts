@@ -201,7 +201,6 @@ export class WalletsAccountsService {
       .order('desc')
       .call()
       .then(response => {
-        console.log({ response });
         const operations = response.records.map(operationRecord => {
           return createWalletsOperation({
             ownerId: params.account._id,
@@ -216,6 +215,10 @@ export class WalletsAccountsService {
         });
 
         return operations;
+      })
+      .catch(error => {
+        this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
+        return Promise.reject(error);
       });
   }
 

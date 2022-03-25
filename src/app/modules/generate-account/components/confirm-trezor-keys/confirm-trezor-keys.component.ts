@@ -84,8 +84,6 @@ export class ConfirmTrezorKeysComponent implements OnInit {
         active: new FormControl(true),
       }));
     });
-
-    console.log({ response });
   }
 
   async onConfirm(): Promise<void> {

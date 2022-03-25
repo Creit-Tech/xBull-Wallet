@@ -17,18 +17,7 @@
 
 <section class="w-full flex justify-center items-center">
   <section class="max-w-lg w-full py-4">
-<!--    <nz-card class="w-full ant-card-no-padding p-4 mb-6">-->
-<!--      <section class="flex flex-col">-->
-<!--        <div class="w-full text-center mb-4">-->
-<!--          <h1 class="text-lg font-semibold">Account Payments</h1>-->
-<!--        </div>-->
-
-
-<!--      </section>-->
-<!--    </nz-card>-->
-
-
-    <div class="w-full text-center mb-4">
+    <div class="w-full text-center mb-4" [class.pointer-events-none]="!!(gettingAccountsOperations$ | async)">
       <nz-radio-group [formControl]="typeOfOperationsControl" nzButtonStyle="solid" style="z-index: 0">
         <label nz-radio-button nzValue="only_payments">Only Payments</label>
         <label nz-radio-button nzValue="all_operations">All Operations</label>

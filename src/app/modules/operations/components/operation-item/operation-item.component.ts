@@ -18,4 +18,8 @@ export class OperationItemComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  getAssetFromString(assetString: string): string {
+    return assetString === 'native' ? 'XLM' : assetString.split(':')[0];
+  }
+
 }
