@@ -5,6 +5,11 @@
       <span>Wallet</span>
     </li>
 
+    <li (click)="closeDrawer()" routerLink="/operations" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-list-ul"></i>
+      <span>Operations</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/swaps" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-arrow-right-arrow-left"></i>
       <span>Swaps</span>

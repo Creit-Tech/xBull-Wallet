@@ -1,0 +1,53 @@
+<section class="container mx-auto pt-4 px-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Operations
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+  <section class="max-w-lg w-full py-4">
+<!--    <nz-card class="w-full ant-card-no-padding p-4 mb-6">-->
+<!--      <section class="flex flex-col">-->
+<!--        <div class="w-full text-center mb-4">-->
+<!--          <h1 class="text-lg font-semibold">Account Payments</h1>-->
+<!--        </div>-->
+
+
+<!--      </section>-->
+<!--    </nz-card>-->
+
+
+    <div class="w-full text-center mb-4">
+      <nz-radio-group [formControl]="typeOfOperationsControl" nzButtonStyle="solid" style="z-index: 0">
+        <label nz-radio-button nzValue="only_payments">Only Payments</label>
+        <label nz-radio-button nzValue="all_operations">All Operations</label>
+      </nz-radio-group>
+    </div>
+
+    <nz-list [nzLoading]="gettingAccountsOperations$ | async" class="mb-4">
+      <ng-container *ngFor="let operation of accountOperations$ | async">
+        <nz-list-item class="w-full">
+          <app-operation-item class="w-full" [operation]="operation"></app-operation-item>
+        </nz-list-item>
+      </ng-container>
+    </nz-list>
+
+    <section *ngIf="(accountOperations$ | async)?.length" class="w-full flex justify-center">
+      <button (click)="checkOnBlockchain()" nz-button>
+        More on the the blockchain
+      </button>
+    </section>
+  </section>
+</section>
+
