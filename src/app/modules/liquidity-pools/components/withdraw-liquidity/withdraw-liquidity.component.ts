@@ -268,9 +268,8 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: transactionBuilder.build().toXDR()
       },
-      nzHeight: '88%',
-      nzPlacement: 'bottom',
-      nzTitle: '',
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Withdraw liquidity',
     });
 
     drawerRef.open();
