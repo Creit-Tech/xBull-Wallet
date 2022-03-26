@@ -50,7 +50,9 @@ export interface IWalletsOperation {
     | ManageBuyOfferOperationResponse
     | SetTrustLineFlagsOperationResponse
     | Horizon.DepositLiquidityOperationResponse
-    | Horizon.WithdrawLiquidityOperationResponse;
+    | Horizon.WithdrawLiquidityOperationResponse
+    | Horizon.ClawbackOperationResponse
+    | Horizon.ClawbackClaimableBalanceOperationResponse;
 }
 
 export function createWalletsOperation(params: {

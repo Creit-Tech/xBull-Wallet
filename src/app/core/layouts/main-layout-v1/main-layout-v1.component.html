@@ -11,9 +11,19 @@
           [class.items-center]="isCollapsed"
           routerLink="/wallet"
           nzMatchRouter
+          nzMatchRouterExact
           nz-menu-item class="flex">
         <i class="fa-solid fa-wallet" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">Wallet</span>
+      </li>
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/operations"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-list-ul" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Operations</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"
@@ -21,7 +31,7 @@
           routerLink="/swaps"
           nzMatchRouter
           nz-menu-item class="flex">
-        <i class="fa-solid fa-arrow-right-arrow-left" [class.mr-4]="!isCollapsed"></i>
+        <i class="fa-solid fa-arrows-rotate" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">Swaps</span>
       </li>
 

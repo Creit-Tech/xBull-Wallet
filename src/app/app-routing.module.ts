@@ -98,10 +98,15 @@ const routes: Routes = [
           .then(m => m.WalletModule),
       },
       {
+        path: 'operations',
+        loadChildren: () => import('./modules/operations/operations.module')
+          .then(m => m.OperationsModule)
+      },
+      {
         path: 'swaps',
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),
-      }
+      },
     ]
   },
   {

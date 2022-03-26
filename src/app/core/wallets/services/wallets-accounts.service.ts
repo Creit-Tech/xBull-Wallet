@@ -190,11 +190,12 @@ export class WalletsAccountsService {
 
   getLatestAccountOperations(params: {
     account: IWalletsAccount,
-    horizonApi: IHorizonApi
+    horizonApi: IHorizonApi,
+    onlyPayments?: boolean,
   }): Promise<IWalletsOperation[]> {
     this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: true });
-    return new this.stellarSdkService.SDK.Server(params.horizonApi.url)
-      .operations()
+    const server = new this.stellarSdkService.SDK.Server(params.horizonApi.url);
+    return (!!params.onlyPayments ? server.payments() : server.operations())
       .forAccount(params.account.publicKey)
       .limit(100)
       .order('desc')
@@ -214,6 +215,10 @@ export class WalletsAccountsService {
         });
 
         return operations;
+      })
+      .catch(error => {
+        this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
+        return Promise.reject(error);
       });
   }
 
