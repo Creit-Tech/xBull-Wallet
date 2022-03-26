@@ -6,16 +6,14 @@ import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-add-account',
   templateUrl: './add-account.component.html',
   styleUrls: ['./add-account.component.scss']
 })
-export class AddAccountComponent implements OnInit, AfterViewInit {
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  showModal = false;
-
+export class AddAccountComponent implements OnInit {
   parentWallet$: ReplaySubject<IWallet> = new ReplaySubject<IWallet>();
   @Input() set parentWallet(data: IWallet) {
     this.parentWallet$.next(data);
@@ -48,6 +46,7 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsQuery: WalletsQuery,
     private readonly nzMessageService: NzMessageService,
+    private readonly nzDrawerRef: NzDrawerRef
   ) { }
 
   ngOnInit(): void {
@@ -74,9 +73,9 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
         break;
     }
 
-    this.nzMessageService.success(`Your new account was added to the wallet ${parentWallet.name}`);
+    this.nzMessageService.success(`New account was added to the wallet: ${parentWallet.name}`);
 
-    this.close.emit();
+    this.nzDrawerRef.close();
   }
 
   async onConfirmSecretKey(parentWallet: IWalletWithSecretKey): Promise<void> {
@@ -120,17 +119,6 @@ export class AddAccountComponent implements OnInit, AfterViewInit {
       this.nzMessageService.error('We were not able to add the new account');
       throw e;
     }
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
-  }
-
-  async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.close.emit();
   }
 
 }

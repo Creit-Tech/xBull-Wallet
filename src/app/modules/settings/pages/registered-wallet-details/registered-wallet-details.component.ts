@@ -11,6 +11,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { AddAccountComponent } from '~root/modules/settings/components/add-account/add-account.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 
 @Component({
   selector: 'app-registered-wallet-details',
@@ -66,30 +67,22 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
   }
 
   async onCreateAccount(): Promise<void> {
-    const [
-      ref,
-      wallet
-    ] = await Promise.all([
-      this.componentCreatorService.createOnBody<AddAccountComponent>(AddAccountComponent),
-      this.wallet$.pipe(take(1)).toPromise()
-    ]);
+    const wallet = await this.wallet$.pipe(take(1)).toPromise();
 
     if (!wallet) {
-      return;
+      return ;
     }
 
-    ref.component.instance.parentWallet = wallet;
+    const drawerRef = this.nzDrawerService.create<AddAccountComponent>({
+      nzContent: AddAccountComponent,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Add account',
+      nzContentParams: {
+        parentWallet: wallet
+      }
+    });
 
-    ref.component.instance.close
-      .asObservable()
-      .pipe(pipe(take(1)))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    drawerRef.open();
   }
 
   async onEditName(): Promise<void> {
