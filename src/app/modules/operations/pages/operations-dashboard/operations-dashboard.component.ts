@@ -21,6 +21,10 @@ import { WalletsAccountsService } from '~root/core/wallets/services/wallets-acco
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Networks } from 'stellar-base';
 import { GlobalsService } from '~root/lib/globals/globals.service';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import {
+  OperationDetailsComponent
+} from '~root/modules/operations/components/operation-details/operation-details.component';
 
 @Component({
   selector: 'app-operations-dashboard',
@@ -56,6 +60,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly settingsQuery: SettingsQuery,
     private readonly globalsService: GlobalsService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   getLatestOperationsSubscription: Subscription = this.typeOfOperationsControl.valueChanges
@@ -86,6 +91,16 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  async onSelected(operation: IWalletsOperation): Promise<void> {
+    this.nzDrawerService.create<OperationDetailsComponent>({
+      nzContent: OperationDetailsComponent,
+      nzTitle: 'Operation Details',
+      nzCloseOnNavigation: true,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzContentParams: { operation }
+    });
   }
 
   async checkOnBlockchain(): Promise<void> {

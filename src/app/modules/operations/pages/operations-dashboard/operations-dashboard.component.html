@@ -26,7 +26,7 @@
 
     <nz-list [nzLoading]="gettingAccountsOperations$ | async" class="mb-4">
       <ng-container *ngFor="let operation of accountOperations$ | async">
-        <nz-list-item class="w-full">
+        <nz-list-item (click)="onSelected(operation)" class="w-full">
           <app-operation-item class="w-full" [operation]="operation"></app-operation-item>
         </nz-list-item>
       </ng-container>

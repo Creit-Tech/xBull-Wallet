@@ -11,12 +11,15 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OperationItemComponent } from './components/operation-item/operation-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
+import { OperationDetailsComponent } from './components/operation-details/operation-details.component';
+import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 
 
 @NgModule({
   declarations: [
     OperationsDashboardComponent,
-    OperationItemComponent
+    OperationItemComponent,
+    OperationDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -28,6 +31,7 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
     NzRadioModule,
     ReactiveFormsModule,
     SharedPipesModule,
+    ClipboardModule,
   ]
 })
 export class OperationsModule { }
