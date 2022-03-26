@@ -1,61 +1,57 @@
-<section class="w-full h-full flex flex-col py-4">
+<section class="pt-4 w-full max-w-lg mx-auto flex flex-col">
   <div class="w-full mb-2">
-    <img class="mx-auto h-24" src="/assets/images/xbull-no-background.svg" alt="xbull-wallet-logo">
+    <img class="mx-auto h-24" src="/assets/icons/xbull-dark.png" alt="xbull-wallet-logo">
   </div>
 
   <div class="w-full text-center mb-4 px-4">
-    <h1 class="text-input font-bold text-lg mb-2">xBull Wallet</h1>
-    <p class="text-label text-sm">
+    <h1 class="font-bold text-lg mb-2">xBull Wallet</h1>
+    <p class="opacity-80 text-sm w-11/12 mx-auto">
       xBull is a powerful but easy to use wallet which is aimed to serve as a bridge between websites/users and the Stellar Blockchain
     </p>
   </div>
 
-  <ul class="mb-4 flex flex-col w-full h-full mb-full overflow-y-scroll no-scrollbar">
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5 justify-between">
-      <div class="w-auto px-2">
-        <p class="m-0 text-sm font-bold text-off-white">
+  <nz-list class="mb-4" nzSize="large">
+    <nz-list-item class="flex w-full cursor-placeholder justify-between">
+      <div class="w-auto">
+        <p class="m-0 text-sm font-bold">
           Version of the wallet:
         </p>
       </div>
-      <div class="w-auto px-2">
-        <p class="text-label text-sm text-bold">
+      <div class="w-auto">
+        <p class="opacity-80 text-sm text-bold">
           {{ walletVersion }}
         </p>
       </div>
-    </li>
+    </nz-list-item>
 
-    <li class="cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
+    <nz-list-item class="cursor-pointer px-4">
       <a href="https://xbull.app?utm_source=Wallet&utm_medium=Extension&utm_campaign=organic" target="_blank" class="flex w-full justify-between">
         <div class="w-auto px-2">
-          <p class="m-0 text-sm font-bold text-off-white">
+          <p class="m-0 text-sm font-bold">
             Documentation:
           </p>
         </div>
         <div class="w-auto px-2">
-          <p class="text-label text-sm text-bold">
-            >
-          </p>
+          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </a>
-    </li>
+    </nz-list-item>
 
-    <li class="cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
+    <nz-list-item class="cursor-pointer px-4">
       <a href="https://github.com/Creit-Tech/xBull-Wallet" target="_blank" class="flex w-full justify-between">
         <div class="w-auto px-2">
-          <p class="m-0 text-sm font-bold text-off-white">
+          <p class="m-0 text-sm font-bold">
             Source code:
           </p>
         </div>
         <div class="w-auto px-2">
-          <p class="text-label text-sm text-bold">
-            >
-          </p>
+          <i class="fa-solid fa-chevron-right"></i>
         </div>
       </a>
-    </li>
-  </ul>
+    </nz-list-item>
+  </nz-list>
 
-  <div class="w-full px-2">
+  <div class="w-full px-4">
     <button routerLink="/settings"
             nz-button
             nzSize="large"

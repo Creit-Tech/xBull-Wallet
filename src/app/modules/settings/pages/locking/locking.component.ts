@@ -42,7 +42,6 @@ export class LockingComponent implements OnInit, OnDestroy {
   passwordAuthTokenActiveStatus: Subscription = this.settingsQuery.passwordAuthTokenActive$
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(status => {
-      console.log(status);
       this.useDeviceAuthControl.patchValue(status);
     });
 

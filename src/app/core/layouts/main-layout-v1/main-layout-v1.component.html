@@ -1,4 +1,4 @@
-<nz-layout class="h-full">
+<nz-layout class="h-full bg-transparent">
   <nz-sider class="hidden lg:block bg-gray"
             nzCollapsible [(nzCollapsed)]="isCollapsed">
     <div class="p-4">
@@ -63,16 +63,18 @@
       </li>
     </ul>
   </nz-sider>
-  <nz-layout>
+  <nz-layout class="bg-transparent">
 
     <nz-header class="bg-gray p-0 w-full px-4">
       <app-layout-v1-header class="w-full"></app-layout-v1-header>
     </nz-header>
 
-    <nz-content class="overflow-y-auto no-scrollbar h-full flex flex-col">
-      <router-outlet></router-outlet>
-      <nz-footer class="mt-auto">
-        xBull Wallet - An Open Source Stellar Wallet created by Creit Tech
+    <nz-content class="h-full bg-transparent grid grid-cols-1 grid-rows-1">
+      <section class="row-span-1 col-span-1 overflow-y-auto no-scrollbar pb-4">
+        <router-outlet></router-outlet>
+      </section>
+      <nz-footer class="col-span-1 p-4">
+        xBull Wallet - An Open Source Stellar Wallet <br class="md:hidden"> created by Creit Tech
       </nz-footer>
     </nz-content>
   </nz-layout>

@@ -1,52 +1,60 @@
-<section class="w-full h-full px-4 py-6 flex flex-col">
-  <section class="w-full mb-4">
-    <nz-breadcrumb class="flex">
-      <nz-breadcrumb-item class="flex items-center">
-        <a class="flex items-center" routerLink="/">
-          <i nz-icon nzType="home" nzTheme="outline"></i>
-        </a>
-      </nz-breadcrumb-item>
-      <nz-breadcrumb-item class="flex items-center">
-        <a class="flex items-center" routerLink="/settings">
-          Settings
-        </a>
-      </nz-breadcrumb-item>
-      <nz-breadcrumb-item  class="flex items-center">
+<section class="container mx-auto w-full p-4 mb-4">
+  <nz-breadcrumb class="flex">
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/settings">
+        Settings
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center">
         Anti SPAM
-      </nz-breadcrumb-item>
-    </nz-breadcrumb>
-  </section>
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</section>
 
-  <section class="w-full mb-auto">
-    <nz-list>
-      <nz-list-item class="text-off-white">
-        <p class="m-0 font-semibold">
-          Filter by Public Keys
+<section class="w-full flex justify-center items-center">
+  <section class="max-w-lg w-full py-4">
+
+    <section class="w-full flex flex-col">
+      <section class="w-full mb-4">
+        <nz-list>
+          <nz-list-item class="px-4">
+            <p class="m-0 font-semibold">
+              Filter by Public Keys
+            </p>
+            <button [routerLink]="['public-keys']" nz-button class="flex items-center justify-center">
+              <i nz-icon nzType="right" nzTheme="outline"></i>
+            </button>
+          </nz-list-item>
+          <nz-list-item [routerLink]="['claimable-assets']" class="px-4">
+            <p class="m-0 font-semibold">
+              Filter Claimable Assets
+            </p>
+            <button nz-button class="flex items-center justify-center">
+              <i nz-icon nzType="right" nzTheme="outline"></i>
+            </button>
+          </nz-list-item>
+        </nz-list>
+      </section>
+
+      <section class="w-full px-4 mb-4">
+        <p class="text-center opacity-50">
+          We can't block SPAM in the Stellar network (yet) but at least we can ignore those mfkrs!
         </p>
-        <button [routerLink]="['public-keys']" nz-button class="flex items-center justify-center">
-          <i nz-icon nzType="right" nzTheme="outline"></i>
-        </button>
-      </nz-list-item>
-      <nz-list-item [routerLink]="['claimable-assets']" class="text-off-white">
-        <p class="m-0 font-semibold">
-          Filter Claimable Assets
-        </p>
-        <button nz-button class="flex items-center justify-center">
-          <i nz-icon nzType="right" nzTheme="outline"></i>
-        </button>
-      </nz-list-item>
-    </nz-list>
-  </section>
+      </section>
 
-  <section class="w-full mb-4">
-    <p class="text-center text-label">
-      We can't block SPAM in the Stellar network (yet) but at least we can ignore those mfkrs!
-    </p>
-  </section>
+      <section class="w-full px-4" routerLink="/settings">
+        <button nzSize="large" nz-button class="w-full">
+          Go back
+        </button>
+      </section>
+    </section>
 
-  <section class="w-full" routerLink="/settings">
-    <button nzSize="large" nz-button class="w-full">
-      Go back
-    </button>
   </section>
 </section>

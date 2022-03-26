@@ -1,58 +1,66 @@
-<section class="w-full min-h-full py-6 flex flex-col">
-  <section class="w-full px-4 mb-4">
-    <nz-breadcrumb class="flex">
-      <nz-breadcrumb-item class="flex items-center">
-        <a class="flex items-center" routerLink="/">
-          <i nz-icon nzType="home" nzTheme="outline"></i>
-        </a>
-      </nz-breadcrumb-item>
-      <nz-breadcrumb-item class="flex items-center">
-        <a class="flex items-center" routerLink="/settings">
-          Settings
-        </a>
-      </nz-breadcrumb-item>
-      <nz-breadcrumb-item class="flex items-center">
-        Background Image
-      </nz-breadcrumb-item>
-    </nz-breadcrumb>
-  </section>
+<section class="container mx-auto w-full p-4 mb-4">
+  <nz-breadcrumb class="flex">
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/settings">
+        Settings
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center">
+        Background image
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</section>
 
-  <section class="w-full px-2 flex flex-wrap">
-    <div class="w-full px-2">
-      <nz-select nzPlaceHolder="Select an image" nzSize="large"
-                 class="w-full mb-4" [formControl]="backgroundImageControl">
-        <nz-option *ngFor="let assetValue of (assetsWithFundsInTheWallet$ | async)"
-                   [nzLabel]="assetValue.code"
-                   [nzValue]="assetValue.image"></nz-option>
-      </nz-select>
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-lg w-full">
+    <div class="w-full text-center mb-4">
+      <h1 class="text-lg font-semibold">Set a background for your wallet</h1>
     </div>
 
-    <div class="w-full px-2 mb-4 flex">
+    <section class="w-full px-2 flex flex-wrap">
+      <div class="w-full px-2">
+        <nz-select nzPlaceHolder="Select an image" nzSize="large"
+                   class="w-full mb-4" [formControl]="backgroundImageControl">
+          <nz-option *ngFor="let assetValue of (assetsWithFundsInTheWallet$ | async)"
+                     [nzLabel]="assetValue.code"
+                     [nzValue]="assetValue.image"></nz-option>
+        </nz-select>
+      </div>
 
-      <nz-slider [nzMarks]="sliderMarks"
-                 [formControl]="colorCoverControl"
-                 class="w-10/12 mx-auto"
-                 [nzMax]="100"
-                 [nzMin]="0">
-      </nz-slider>
-    </div>
+      <div class="w-full px-2 mb-4 flex">
 
-    <div class="w-full px-2 mb-4">
-      <button (click)="removeBackground()" class="w-full" nz-button nzSize="large" nzType="primary" nzDanger>
-        Remove background
+        <nz-slider [nzMarks]="sliderMarks"
+                   [formControl]="colorCoverControl"
+                   class="w-10/12 mx-auto"
+                   [nzMax]="100"
+                   [nzMin]="0">
+        </nz-slider>
+      </div>
+
+      <div class="w-full px-2 mb-4">
+        <button (click)="removeBackground()" class="w-full" nz-button nzSize="large" nzType="primary" nzDanger>
+          Remove background
+        </button>
+      </div>
+    </section>
+
+    <section class="w-full mt-auto px-4">
+      <div class="w-full">
+        <p class="mx-auto w-9/12 m-4 text-xs text-center">
+          A dark background is recommended so you can read everything easier.
+        </p>
+      </div>
+
+      <button [routerLink]="['../']" nzSize="large" nz-button class="w-full">
+        Go back
       </button>
-    </div>
-  </section>
-
-  <section class="w-full mt-auto px-4">
-    <div class="w-full">
-      <p class="mx-auto w-9/12 m-4 text-xs text-center">
-        A dark background is recommended so you can read everything easier.
-      </p>
-    </div>
-
-    <button [routerLink]="['../']" nzSize="large" nz-button class="w-full">
-      Go back
-    </button>
-  </section>
+    </section>
+  </div>
 </section>
