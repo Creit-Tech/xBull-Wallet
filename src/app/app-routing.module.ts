@@ -48,21 +48,6 @@ const routes: Routes = [
       .then(m => m.LabModule)
   },
   {
-    path: 'settings',
-    component: MainLayoutComponent,
-    data: {
-      activeIcon: 'settings'
-    },
-    canActivate: [
-      IsThereWalletsGuard
-    ],
-    canActivateChild: [
-      IsThereWalletsGuard
-    ],
-    loadChildren: () => import('./modules/settings/settings.module')
-      .then(m => m.SettingsModule)
-  },
-  {
     path: 'sign-from-background',
     component: BackgroundComponent,
   },
@@ -100,6 +85,11 @@ const routes: Routes = [
         path: 'liquidity-pools',
         loadChildren: () => import('./modules/liquidity-pools/liquidity-pools.module')
           .then(m => m.LiquidityPoolsModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./modules/settings/settings.module')
+          .then(m => m.SettingsModule)
       },
     ]
   },

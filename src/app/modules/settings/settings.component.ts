@@ -59,9 +59,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
   async conDefaultFeeClicked(): Promise<void> {
     const drawerRef = this.nzDrawerService.create<DefaultFeeFormComponent>({
       nzContent: DefaultFeeFormComponent,
-      nzPlacement: 'bottom',
-      nzHeight: 'auto',
-      nzTitle: ''
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Set default fee'
     });
 
     drawerRef.open();
