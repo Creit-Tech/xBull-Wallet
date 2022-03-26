@@ -380,9 +380,8 @@ export class SwapsComponent implements OnInit, OnDestroy {
     const formattedXDR = transactionBuilder.build().toXDR();
 
     this.nzDrawerService.create<XdrSignerComponent>({
-      nzPlacement: 'bottom',
       nzContent: XdrSignerComponent,
-      nzHeight: '100%',
+      nzWrapClassName: 'drawer-full-w-320',
       nzCloseOnNavigation: true,
       nzTitle: 'Swap confirmation',
       nzContentParams: {

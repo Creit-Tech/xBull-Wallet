@@ -221,9 +221,8 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
             });
         }
       },
-      nzPlacement: 'bottom',
-      nzHeight: '100%',
-      nzTitle: 'Payment confirmation'
+      nzTitle: 'Payment confirmation',
+      nzWrapClassName: 'drawer-full-w-320',
     });
 
     drawerRef.open();
