@@ -63,18 +63,6 @@ const routes: Routes = [
       .then(m => m.SettingsModule)
   },
   {
-    path: 'liquidity-pools',
-    component: MainLayoutComponent,
-    canActivate: [
-      IsThereWalletsGuard
-    ],
-    canActivateChild: [
-      IsThereWalletsGuard
-    ],
-    loadChildren: () => import('./modules/liquidity-pools/liquidity-pools.module')
-      .then(m => m.LiquidityPoolsModule)
-  },
-  {
     path: 'sign-from-background',
     component: BackgroundComponent,
   },
@@ -106,6 +94,12 @@ const routes: Routes = [
         path: 'swaps',
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),
+      },
+
+      {
+        path: 'liquidity-pools',
+        loadChildren: () => import('./modules/liquidity-pools/liquidity-pools.module')
+          .then(m => m.LiquidityPoolsModule)
       },
     ]
   },

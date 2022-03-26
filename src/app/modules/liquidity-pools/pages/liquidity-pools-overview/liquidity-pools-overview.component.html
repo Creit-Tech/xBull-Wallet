@@ -1,9 +1,9 @@
-<section class="w-full min-h-full px-4 py-6 flex flex-col">
-  <section class="w-full mb-4">
+<section class="container mx-auto p-4">
+  <section class="w-full">
     <nz-breadcrumb class="flex">
       <nz-breadcrumb-item class="flex items-center">
         <a class="flex items-center" routerLink="/">
-          <i nz-icon nzType="home" nzTheme="outline"></i>
+          <i class="fa-solid fa-home"></i>
         </a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item class="flex items-center">
@@ -13,33 +13,41 @@
       </nz-breadcrumb-item>
     </nz-breadcrumb>
   </section>
+</section>
 
-  <nz-tabset nzCentered>
-    <ng-template #depositTitle>
-      <div class="flex items-center">
-        Deposit
-      </div>
-    </ng-template>
-    <nz-tab [nzTitle]="depositTitle">
-      <app-deposit-liquidity></app-deposit-liquidity>
-    </nz-tab>
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-md w-full px-4">
+    <nz-card class="w-full ant-card-no-padding p-4 mb-6">
+      <section class="flex flex-col">
+        <nz-tabset nzCentered>
+          <ng-template #depositTitle>
+            <div class="flex items-center">
+              Deposit
+            </div>
+          </ng-template>
+          <nz-tab [nzTitle]="depositTitle">
+            <app-deposit-liquidity></app-deposit-liquidity>
+          </nz-tab>
 
-    <ng-template #withdrawTitle>
-      <div class="flex items-center">
-        Withdraw
-      </div>
-    </ng-template>
-    <nz-tab [nzTitle]="withdrawTitle">
-      <app-withdraw-liquidity></app-withdraw-liquidity>
-    </nz-tab>
+          <ng-template #withdrawTitle>
+            <div class="flex items-center">
+              Withdraw
+            </div>
+          </ng-template>
+          <nz-tab [nzTitle]="withdrawTitle">
+            <app-withdraw-liquidity></app-withdraw-liquidity>
+          </nz-tab>
 
-<!--    <nz-tab [nzTitle]="searchTitle">-->
-<!--      <app-search-liquidity-pools></app-search-liquidity-pools>-->
-<!--    </nz-tab>-->
-<!--    <ng-template #searchTitle>-->
-<!--      <div class="flex items-center">-->
-<!--        Search-->
-<!--      </div>-->
-<!--    </ng-template>-->
-  </nz-tabset>
+          <!--    <nz-tab [nzTitle]="searchTitle">-->
+          <!--      <app-search-liquidity-pools></app-search-liquidity-pools>-->
+          <!--    </nz-tab>-->
+          <!--    <ng-template #searchTitle>-->
+          <!--      <div class="flex items-center">-->
+          <!--        Search-->
+          <!--      </div>-->
+          <!--    </ng-template>-->
+        </nz-tabset>
+      </section>
+    </nz-card>
+  </div>
 </section>

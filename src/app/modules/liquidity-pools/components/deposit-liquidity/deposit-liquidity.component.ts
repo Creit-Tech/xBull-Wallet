@@ -469,9 +469,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.transactionBuilder.build().toXDR(),
       },
-      nzPlacement: 'bottom',
-      nzHeight: '88%',
-      nzTitle: ''
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Deposit liquidity'
     });
 
     drawerRef.open();
@@ -559,9 +558,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.transactionBuilder.build().toXDR(),
       },
-      nzPlacement: 'bottom',
-      nzHeight: '88%',
-      nzTitle: ''
+      nzTitle: 'Create pool',
+      nzWrapClassName: 'drawer-full-w-320',
     });
 
     drawerRef.open();
