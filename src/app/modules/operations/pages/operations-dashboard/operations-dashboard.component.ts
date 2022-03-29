@@ -11,7 +11,7 @@ import { FormControl, Validators } from '@angular/forms';
 import {
   debounceTime,
   distinctUntilKeyChanged,
-  filter,
+  filter, map,
   startWith,
   switchMap, take,
   takeUntil,
@@ -49,6 +49,13 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
       });
     }))
     .pipe(debounceTime(10));
+
+  filteredOperations$: Observable<IWalletsOperation[]> = combineLatest([
+    this.accountOperations$,
+    this.settingsQuery.operationTypesToShow$
+  ]).pipe(map(([operations, operationTypesToShow]) => {
+    return operations.filter(operation => operationTypesToShow.indexOf(operation.operationRecord.type) !== -1);
+  }));
 
   typeOfOperationsControl: FormControl = new FormControl('only_payments', Validators.required);
 

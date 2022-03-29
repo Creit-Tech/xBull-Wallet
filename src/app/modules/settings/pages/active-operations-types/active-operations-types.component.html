@@ -1,216 +1,292 @@
-<section class="w-full h-full flex flex-col py-4">
-  <p class="text-label font-semibold text-sm px-4">
-    Operation types to show
-  </p>
+<section class="container mx-auto w-full p-4">
+  <nz-breadcrumb class="flex">
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center" routerLink="/settings">
+        Settings
+      </a>
+    </nz-breadcrumb-item>
+    <nz-breadcrumb-item class="flex items-center">
+      <a class="flex items-center">
+        Operation types
+      </a>
+    </nz-breadcrumb-item>
+  </nz-breadcrumb>
+</section>
 
-  <ul [formGroup]="form" class="flex flex-col w-full h-full mb-full overflow-y-scroll no-scrollbar">
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Create account
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="create_account"></app-toggle>
-      </div>
-    </li>
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-lg w-full">
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Payment
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="payment"></app-toggle>
-      </div>
-    </li>
+    <nz-list [formGroup]="form" nzSize="large">
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Create account
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="create_account"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Path payment receive
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="path_payment_strict_receive"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Payment
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="payment"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Path payment Send
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="path_payment_strict_send"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Path payment receive
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="path_payment_strict_receive"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Passive sell offer
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="create_passive_sell_offer"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Path payment Send
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="path_payment_strict_send"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Manage sell offer
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="manage_sell_offer"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Passive sell offer
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="create_passive_sell_offer"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Manage buy offer
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="manage_buy_offer"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Manage sell offer
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="manage_sell_offer"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Set options
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="set_options"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Manage buy offer
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="manage_buy_offer"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Change trust
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="change_trust"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Set options
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="set_options"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Allow trust
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="allow_trust"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Change trust
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="change_trust"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Account merge
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="account_merge"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Allow trust
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="allow_trust"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Manage data
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="manage_data"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Account merge
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="account_merge"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Bump data
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="bump_sequence"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Manage data
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="manage_data"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Begin sponsoring
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="begin_sponsoring_future_reserves"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Bump data
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="bump_sequence"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          End sponsoring
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="end_sponsoring_future_reserves"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Create Claimable Balance
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="create_claimable_balance"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Set trust line flags
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="set_trust_line_flags"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Claim Claimable Balance
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="claim_claimable_balance"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Liquidity Pool Deposit
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="liquidity_pool_deposit"></app-toggle>
-      </div>
-    </li>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Bump data
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="bump_sequence"></nz-switch>
+        </div>
+      </nz-list-item>
 
-    <li class="flex w-full items-center justify-between cursor-pointer px-6 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Liquidity Pool Withdraw
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle formControlName="liquidity_pool_withdraw"></app-toggle>
-      </div>
-    </li>
-  </ul>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Begin sponsoring
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="begin_sponsoring_future_reserves"></nz-switch>
+        </div>
+      </nz-list-item>
 
-  <div class="w-full flex flex-wrap pt-4 px-4">
-    <div class="w-full px-2">
-      <button routerLink="/settings"
-              nz-button
-              nzSize="large"
-              nzBlock>
-        Return to settings
-      </button>
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            End sponsoring
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="end_sponsoring_future_reserves"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Clawback
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="clawback"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Clawback Claimable Balance
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="clawback_claimable_balance"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Set trust line flags
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="set_trust_line_flags"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Liquidity Pool Deposit
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="liquidity_pool_deposit"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="flex w-full items-center justify-between px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Liquidity Pool Withdraw
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch formControlName="liquidity_pool_withdraw"></nz-switch>
+        </div>
+      </nz-list-item>
+    </nz-list>
+
+
+    <div class="w-full flex flex-wrap pt-4 px-4">
+      <div class="w-full px-2">
+        <button routerLink="/settings"
+                nz-button
+                nzSize="large"
+                nzBlock>
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          Return to settings
+        </button>
+      </div>
     </div>
   </div>
 </section>

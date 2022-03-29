@@ -1,43 +1,66 @@
-<section class="w-full h-full flex flex-col py-4">
-  <p class="text-label font-semibold text-sm px-4">
-    Wallets registered
-  </p>
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/settings">
+          Settings
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Wallets
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
 
-  <ul class="flex flex-col w-full h-full mb-full overflow-y-scroll no-scrollbar">
-    <li *ngFor="let wallet of allWallets$ | async"
-        [routerLink]="['/settings/wallets', wallet._id]"
-        class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5 justify-between">
-      <div class="w-auto px-2">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Wallet {{ wallet.name }}
-        </p>
-      </div>
-      <div class="w-auto px-2">
-        <p class="text-label text-sm text-bold">
-          >
-        </p>
-      </div>
-    </li>
-  </ul>
-
-  <div class="w-full flex flex-wrap pt-4 px-4">
-    <div class="w-full px-2 mb-4">
-      <button routerLink="/create-account"
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              nzBlock>
-        Add Wallet
-      </button>
+<section class="w-full flex justify-center items-center">
+  <section class="max-w-lg w-full py-4">
+    <div class="w-full text-center mb-4">
+      <h1 class="text-lg font-semibold">Your created wallets</h1>
     </div>
 
-    <div class="w-full px-2">
-      <button routerLink="/settings"
-              nz-button
-              nzSize="large"
-              nzBlock>
-        Return to settings
-      </button>
+    <nz-list class="mb-4" nzSize="large">
+      <nz-list-item *ngFor="let wallet of allWallets$ | async"
+          [routerLink]="['/settings/wallets', wallet._id]"
+          class="cursor-pointer px-4 grid grid-rows-1 gap-4" style="grid-template-columns: 1fr auto">
+        <div class="col-span-auto row-span-1">
+          <p class="m-0 text-sm font-bold">
+            Wallet {{ wallet.name }}
+          </p>
+        </div>
+        <div class="col-span-auto row-span-1">
+          <i class="fa-solid fa-chevron-right"></i>
+        </div>
+      </nz-list-item>
+    </nz-list>
+
+    <div class="w-full grid grid-cols-2 grid-rows-2 px-4 gap-4">
+      <div class="lg:order-2 col-span-2 lg:col-span-1 row-span-1 row-span-2">
+        <button routerLink="/create-account"
+                nz-button
+                nzType="primary"
+                nzSize="large"
+                nzBlock>
+          Add Wallet
+        </button>
+      </div>
+
+      <div class="lg:order-1 col-span-2 lg:col-span-1 row-span-1 row-span-2">
+        <button routerLink="/settings"
+                nz-button
+                nzSize="large"
+                nzBlock>
+          <i class="fa-solid fa-arrow-left mr-2"></i>
+          Return to settings
+        </button>
+      </div>
     </div>
-  </div>
+  </section>
 </section>

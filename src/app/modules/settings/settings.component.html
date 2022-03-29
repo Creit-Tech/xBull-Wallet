@@ -1,158 +1,172 @@
-<section class="w-full h-full flex flex-col py-4">
-  <p class="text-label font-semibold text-sm px-4">
-    Settings
-  </p>
-
-  <ul>
-    <li class="flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Advanced mode
-        </p>
-      </div>
-      <div class="w-auto">
-        <app-toggle [formControl]="advanceModeControl"></app-toggle>
-      </div>
-    </li>
-
-    <li class="flex w-full justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/wallets">
-      <div class="w-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Wallets
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm text-bold">
-          {{ (selectedWallet$ | async)?.name }} >
-        </p>
-      </div>
-    </li>
-
-    <li *ngIf="advanceMode$ | async" class="flex justify-between w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/horizon-apis">
-      <div class="w-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Horizon APIs
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm text-bold">
-          {{ (selectedHorizonApi$ | async)?.name }}
-        </p>
-      </div>
-    </li>
-
-    <li class="opacity-50 pointer-events-none flex w-full items-center justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Language
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm text-bold">
-          English
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        (click)="conDefaultFeeClicked()">
-      <div class="w-8/12 mr-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Default Fee
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm text-bold">
-          {{ defaultFee$ | async }} Stroops
-        </p>
-      </div>
-    </li>
-
-    <li *ngIf="advanceMode$ | async"
-        class="flex w-full items-center  justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/active-operations-types">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Active operation types
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full items-center  justify-between cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/sites-connected">
-      <div class="w-8/12">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Sites connected
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/anti-spam">
-      <div class="w-8/12 mr-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Anti SPAM
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/background-image">
-      <div class="w-8/12 mr-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Background image
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/locking">
-      <div class="w-8/12 mr-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          Lock settings
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-
-    <li class="flex w-full cursor-pointer px-4 border-b-2 transition border-body hover:border-placeholder py-5"
-        routerLink="/settings/about">
-      <div class="w-8/12 mr-auto">
-        <p class="m-0 text-sm font-bold text-off-white">
-          About
-        </p>
-      </div>
-      <div class="w-auto">
-        <p class="text-label text-sm">
-          <b>></b>
-        </p>
-      </div>
-    </li>
-  </ul>
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Settings
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
 </section>
+
+<section class="w-full flex justify-center items-center">
+  <div class="max-w-lg w-full">
+
+    <nz-list nzSize="large">
+      <nz-list-item class="px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Advanced mode
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch [formControl]="advanceModeControl"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4" routerLink="/settings/wallets">
+        <div class="w-auto">
+          <p class="m-0 text-sm font-bold">
+            Wallets
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm text-bold">
+            {{ (selectedWallet$ | async)?.name }} <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/horizon-apis">
+        <div class="w-auto">
+          <p class="m-0 text-sm font-bold">
+            Horizon APIs
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm text-bold">
+            {{ (selectedHorizonApi$ | async)?.name }}
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="opacity-50 pointer-events-none px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Language
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm text-bold">
+            English
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4"
+          (click)="conDefaultFeeClicked()">
+        <div class="w-8/12 mr-auto">
+          <p class="m-0 text-sm font-bold">
+            Default Fee
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm text-bold">
+            {{ defaultFee$ | async }} Stroops
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/active-operations-types">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Active operation types
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4" routerLink="/settings/sites-connected">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Sites connected
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4"
+          routerLink="/settings/anti-spam">
+        <div class="w-8/12 mr-auto">
+          <p class="m-0 text-sm font-bold">
+            Anti SPAM
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4"
+          routerLink="/settings/background-image">
+        <div class="w-8/12 mr-auto">
+          <p class="m-0 text-sm font-bold">
+            Background image
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4"
+          routerLink="/settings/locking">
+        <div class="w-8/12 mr-auto">
+          <p class="m-0 text-sm font-bold">
+            Lock settings
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="cursor-pointer px-4"
+          routerLink="/settings/about">
+        <div class="w-8/12 mr-auto">
+          <p class="m-0 text-sm font-bold">
+            About
+          </p>
+        </div>
+        <div class="w-auto">
+          <p class="opacity-80 text-sm">
+            <i class="fa-solid fa-chevron-right"></i>
+          </p>
+        </div>
+      </nz-list-item>
+
+    </nz-list>
+
+  </div>
+</section>
+

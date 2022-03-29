@@ -1,6 +1,6 @@
 <section class="h-full w-full relative">
   <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-white font-bold text-xl">
+    <h2 class="m-0 p-0 font-bold text-xl">
       Set default fee
     </h2>
   </div>
@@ -13,18 +13,18 @@
     </div>
   </form>
 
-  <div class="w-full text-center text-label mb-7">
+  <div class="w-full text-center opacity-80 mb-7">
     <ng-container *ngIf="(recommendedFee$ | async) as recommendedFee; else recommendedFeNotLoaded">
       Recommended fee is: {{ recommendedFee }}
     </ng-container>
     <ng-template #recommendedFeNotLoaded>
-      1 Troop = 0.0000001 XLM
+      1 Stroop = 0.0000001 XLM
     </ng-template>
   </div>
 
   <div class="w-full mb-4 relative">
     <nz-spin [nzSpinning]="gettingRecommendedFee$ | async">
-      <button nz-button nzType="primary" nzGhost nzBlock nzSize="large"
+      <button nz-button nzBlock nzSize="large"
               (click)="onGetRecommendedFee()"
               [disabled]="gettingRecommendedFee$ | async">
         Get recommended fee
