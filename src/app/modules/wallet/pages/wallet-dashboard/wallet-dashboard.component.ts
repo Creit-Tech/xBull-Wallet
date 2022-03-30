@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { merge, Observable, Subject } from 'rxjs';
 import {
   IWalletAssetIssued,
   IWalletAssetNative,
@@ -8,13 +8,21 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import { distinctUntilChanged, map, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { Horizon } from 'stellar-sdk';
+import { AssetType, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import BalanceLineLiquidityPool = Horizon.BalanceLineLiquidityPool;
 import BalanceLine = Horizon.BalanceLine;
+import { FormControl, FormGroup } from '@angular/forms';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import BalanceLineNative = Horizon.BalanceLineNative;
+import {
+  LpAssetDetailsComponent
+} from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -24,6 +32,8 @@ import BalanceLine = Horizon.BalanceLine;
 export class WalletDashboardComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
+
+  graphTypeControl: FormControl = new FormControl('value_distribution');
 
   accountBalanceLines$: Observable<BalanceLine[]> = this.selectedAccount$
     .pipe(map(selectedAccount => selectedAccount?.accountRecord?.balances || []))
@@ -50,6 +60,24 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
             : new BigNumber(asset.counterPrice).multipliedBy(b.balance)
         };
       });
+    }));
+
+  lockedXLMs$: Observable<string> = this.accountBalancesRegularAssets$
+    .pipe(withLatestFrom(this.selectedAccount$))
+    .pipe(map(([balances, selectedAccount]) => {
+      const nativeValue: BalanceLineNative = balances.find(b => b.asset_type === 'native') as BalanceLineNative;
+      if (!selectedAccount.accountRecord) {
+        return  '0';
+      }
+
+      return new BigNumber(nativeValue.balance)
+        .minus(
+          this.stellarSdkService.calculateAvailableBalance({
+            account: selectedAccount.accountRecord,
+            balanceLine: nativeValue
+          })
+        )
+        .toFixed(7);
     }));
 
   totalBalanceOnCounterAsset$: Observable<string> = this.assetsBalancesWithCounterValues$
@@ -80,7 +108,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     ))
     .pipe(map(value => value.toFixed(7)));
 
-  // Graphs
+  // ----- Graphs
   balanceGraphValues$: Observable<Array<{ name?: string; value: number }>> = this.assetsBalancesWithCounterValues$
     .pipe(withLatestFrom(this.totalBalanceOnCounterAsset$))
     .pipe(map(([values, totalBalanceOnCounterAsset]) => values.map(value => {
@@ -116,12 +144,15 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   graphTooltipFormatter = (value: any) => {
     return `<b>${value.data.name}</b><br><span>${new BigNumber(value.data.value).toFixed(2)}%</span>`;
   }
+  // ----- END Graphs
 
   constructor(
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly lpAssetsQuery: LpAssetsQuery,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
@@ -132,6 +163,32 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
 
   trackByBalanceline(index: number, item: Horizon.BalanceLine): string {
     return item.balance;
+  }
+
+  async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
+    const drawerRef = this.nzDrawerService.create<AssetDetailsComponent>({
+      nzContent: AssetDetailsComponent,
+      nzTitle: 'Asset details',
+      nzWrapClassName: 'drawer-full-w-320',
+      nzContentParams: {
+        assetId: this.walletsAssetsService.formatBalanceLineId(balanceLine)
+      }
+    });
+
+    drawerRef.open();
+  }
+
+  async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
+    const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
+      nzContent: LpAssetDetailsComponent,
+      nzTitle: 'Liquidity Pool details',
+      nzWrapClassName: 'drawer-full-w-320',
+      nzContentParams: {
+        lpAssetId: balanceLine.liquidity_pool_id,
+      }
+    });
+
+    drawerRef.open();
   }
 
 }

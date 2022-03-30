@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import {
   HorizonApisQuery,
   ILpAssetLoaded,
@@ -68,6 +68,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
 
   onRemoveSubscription: Subscription = this.removeActionButton$
     .asObservable()
+    .pipe(debounceTime(100))
     .pipe(tap(() => this.disableActionButton$.next(true)))
     .pipe(switchMap(() => {
       return this.removeAsset()
@@ -155,63 +156,39 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
         })
       );
 
-    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+    this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzContentParams: {
         xdr: transactionBuilder.build().toXDR(),
+        acceptHandler: async signedXdr1 => {
+          if (!signedXdr1) {
+            this.nzMessageService.error('Unexpected error, contact support.');
+            return;
+          }
+
+          try {
+            await this.walletsAssetsService.removeAssetFromAccount(signedXdr1);
+            this.nzMessageService.success(`LP Asset removed correctly.`);
+            this.nzDrawerRef.close();
+          } catch (e: any) {
+            console.error(e);
+            this.nzMessageService.success(`We were not able to remove the LP asset, please make sure you follow all the requirements to remove an Asset from your account.`, {
+              nzDuration: 5000,
+            });
+            return;
+          }
+
+          this.walletsAccountsService.getAccountData({
+            account: selectedAccount,
+            horizonApi
+          }).toPromise()
+            .then()
+            .catch(e => console.error(e));
+        }
       },
-      nzPlacement: 'bottom',
-      nzHeight: '88%',
-      nzTitle: ''
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Remove LP Asset',
     });
-
-    drawerRef.open();
-
-    await drawerRef.afterOpen.pipe(take(1)).toPromise();
-
-    const componentRef = drawerRef.getContentComponent();
-
-    if (!componentRef) {
-      this.nzMessageService.error(`We were not able to prepare the XDR to sign, please contact support.`);
-      return;
-    }
-
-    let signedXdr: string;
-    try {
-      signedXdr = await componentRef.accept
-        .pipe(take(1))
-        .pipe(takeUntil(this.componentDestroyed$))
-        .toPromise();
-
-      drawerRef.close();
-    } catch (e: any) {
-      console.error(e);
-      this.nzMessageService.error(`We couldn't sign the XDR, please try again.`);
-      return;
-    }
-
-    if (!signedXdr) {
-      return;
-    }
-
-    try {
-      await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
-      this.nzMessageService.success(`LP Asset removed correctly.`);
-      this.nzDrawerRef.close();
-    } catch (e: any) {
-      console.error(e);
-      this.nzMessageService.success(`We were not able to remove the LP asset, please make sure you follow all the requirements to remove an Asset from your account.`, {
-        nzDuration: 5000,
-      });
-      return;
-    }
-
-    this.walletsAccountsService.getAccountData({
-      account: selectedAccount,
-      horizonApi
-    }).toPromise()
-      .then()
-      .catch(e => console.error(e));
   }
 
 }

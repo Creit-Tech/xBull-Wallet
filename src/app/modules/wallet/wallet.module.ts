@@ -42,6 +42,8 @@ import { WalletAssetItemComponent } from './components/wallet-asset-item/wallet-
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { SendPaymentComponent } from './pages/send-payment/send-payment.component';
 import { ReceivePaymentComponent } from './pages/receive-payment/receive-payment.component';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 
 @NgModule({
@@ -90,6 +92,8 @@ import { ReceivePaymentComponent } from './pages/receive-payment/receive-payment
     NzDropDownModule,
     NzBreadCrumbModule,
     NgxChartsModule,
+    NzRadioModule,
+    NzEmptyModule,
   ],
 })
 export class WalletModule { }

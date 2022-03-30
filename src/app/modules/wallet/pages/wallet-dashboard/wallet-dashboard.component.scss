@@ -1,13 +1,13 @@
-@screen xl {
+@screen lg {
   :host {
     @apply h-full;
   }
 
   .main-container {
-    grid-template-rows: auto repeat(6, 1fr);
+    grid-template-rows: auto 1fr;
   }
 
   .inner-card-grid-container {
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr auto;
   }
 }
