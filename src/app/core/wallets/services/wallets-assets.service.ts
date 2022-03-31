@@ -9,13 +9,16 @@ import {
   WalletsAssetsState,
   WalletsAssetsStore, IWalletIssuedAsset, IWalletAssetNative, IWalletAssetIssued, SettingsQuery,
 } from '~root/state';
-import { from, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { from, merge, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, concatAll, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
 import { add, isAfter, subMinutes, subYears } from 'date-fns';
 import BigNumber from 'bignumber.js';
+import { createCuratedAsset, ICuratedAsset } from '~root/state/curated-assets/curated-asset.model';
+import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.store';
+import { applyTransaction } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +82,7 @@ export class WalletsAssetsService {
     private readonly stellarSdkService: StellarSdkService,
     private readonly lpAssetsStore: LpAssetsStore,
     private readonly settingsQuery: SettingsQuery,
+    private readonly curatedAssetsStore: CuratedAssetsStore,
   ) { }
 
   // DEPRECATED
@@ -329,4 +333,31 @@ export class WalletsAssetsService {
       counterId: counterAssetId,
     });
   }
+
+  getCuratedAssetsByCreitTech(): Observable<ICuratedAsset[]> {
+    this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: true });
+    return this.http.get<{ assets: IStellarCuratedAsset[] }>(`https://raw.githubusercontent.com/Creit-Tech/stellar-assets/main/dist/curated-by-creit-tech.json`)
+      .pipe(map(response => {
+        const parsedAssets = response.assets.map(asset => createCuratedAsset({
+          ...asset,
+          type: 'by_creit_tech',
+        }));
+        applyTransaction(() => {
+          this.curatedAssetsStore.upsertMany(parsedAssets);
+          this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: false });
+        });
+        return parsedAssets;
+      }))
+      .pipe(catchError(e => {
+        this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: false });
+        return throwError(e);
+      }));
+  }
+}
+
+export interface IStellarCuratedAsset {
+  code: string;
+  publicKey: string;
+  domain: string;
+  image: string;
 }

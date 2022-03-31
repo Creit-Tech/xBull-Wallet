@@ -1,6 +1,6 @@
 <nz-tabset class="max-w-md mx-auto w-full">
 
-  <nz-tab nzTitle="My Assets">
+  <nz-tab *ngIf="!disableMyAssets" nzTitle="My Assets">
     <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
       <section class="col-span-1">
         <nz-input-group nzSize="large" [nzSuffix]="searchInputControlIcon">
@@ -21,26 +21,26 @@
     </section>
   </nz-tab>
 
-<!--  <nz-tab nzTitle="Curated Assets">-->
-<!--    <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">-->
-<!--      <section class="col-span-1">-->
-<!--        <nz-input-group nzSize="large" [nzSuffix]="searchCuratedInputControlIcon">-->
-<!--          <input [formControl]="searchCuratedInputControl" type="text" nz-input placeholder="Ex: Write the code or issuer key">-->
-<!--        </nz-input-group>-->
-<!--        <ng-template #searchCuratedInputControlIcon>-->
-<!--          <i class="fa-solid fa-search"></i>-->
-<!--        </ng-template>-->
-<!--      </section>-->
+  <nz-tab *ngIf="!disableCuratedAssetByCreitTech && (isPubnet$ | async)" nzTitle="Curated By Creit Tech">
+    <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+      <section class="col-span-1">
+        <nz-input-group nzSize="large" [nzSuffix]="searchCuratedInputControlIcon">
+          <input [formControl]="searchCuratedInputControl" type="text" nz-input placeholder="Ex: Write the code or issuer key">
+        </nz-input-group>
+        <ng-template #searchCuratedInputControlIcon>
+          <i class="fa-solid fa-search"></i>
+        </ng-template>
+      </section>
 
-<!--      <section class="col-span-1 overflow-y-auto no-scrollbar">-->
-<!--        <nz-list>-->
-<!--          <nz-list-item *ngFor="let asset of (searchedAssets$ | async)" class="flex items-center w-full">-->
-<!--            <ng-container *ngTemplateOutlet="innerListItem; context:{ asset }"></ng-container>-->
-<!--          </nz-list-item>-->
-<!--        </nz-list>-->
-<!--      </section>-->
-<!--    </section>-->
-<!--  </nz-tab>-->
+      <section class="col-span-1 overflow-y-auto no-scrollbar">
+        <nz-list>
+          <nz-list-item *ngFor="let asset of (curatedByCreitTech$ | async)" class="flex items-center w-full">
+            <ng-container *ngTemplateOutlet="innerListItem; context:{ asset }"></ng-container>
+          </nz-list-item>
+        </nz-list>
+      </section>
+    </section>
+  </nz-tab>
 
   <nz-tab *ngIf="!disableCustomAsset" nzTitle="Custom Asset">
     <section [formGroup]="customAssetForm">

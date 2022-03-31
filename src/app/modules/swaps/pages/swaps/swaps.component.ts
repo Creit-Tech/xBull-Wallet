@@ -198,6 +198,7 @@ export class SwapsComponent implements OnInit, OnDestroy {
           }
         },
         disableCustomAsset: formValue === 'from',
+        disableCuratedAssetByCreitTech: formValue === 'from',
       }
     });
 

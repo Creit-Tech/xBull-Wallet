@@ -144,8 +144,8 @@ export class WalletAssetsComponent implements OnInit, OnDestroy {
       .pipe(take(1))
       .pipe(takeUntil(merge(this.componentDestroyed$.asObservable(), ref.destroyed$.asObservable())))
       .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
+        // ref.component.instance.onClose()
+        //   .then(() => ref.close());
       });
 
     ref.open();
