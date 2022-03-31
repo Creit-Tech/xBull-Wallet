@@ -1,6 +1,6 @@
 <section class="min-h-full w-full flex flex-col px-4 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center">
-    <img src="/assets/icons/xbull-icon.svg" class="h-40" alt="xbull-logo">
+    <img src="/assets/icons/xbull-dark.svg" class="h-40" alt="xbull-logo">
   </div>
 
   <div class="w-full flex flex-wrap my-auto">
@@ -36,14 +36,14 @@
     <button nz-button nzType="link"
             nzSize="large"
             *ngIf="isThereWallet$ | async"
-            routerLink="/wallet/assets"
+            routerLink="/wallet"
             class="w-full">
       Go back to wallets
     </button>
   </div>
 
   <div class="w-full text-center">
-    <small class="text-label text-base">
+    <small class="opacity-80 text-base">
       xBull Wallet {{ walletVersion }}
     </small>
   </div>
