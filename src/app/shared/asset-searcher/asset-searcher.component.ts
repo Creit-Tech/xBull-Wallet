@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HorizonApisQuery, IWalletAssetIssued, IWalletAssetNative, WalletsAssetsQuery } from '~root/state';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { applyTransaction, Order } from '@datorama/akita';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { CuratedAssetsQuery } from '~root/state/curated-assets/curated-assets.query';
 
 @Component({
   selector: 'app-asset-searcher',
@@ -20,13 +21,24 @@ export class AssetSearcherComponent implements OnInit {
   }
 
   @Input()
+  disableMyAssets?: boolean;
+
+  @Input()
   disableCustomAsset?: boolean;
+
+  @Input()
+  disableCuratedAssetByCreitTech?: boolean;
 
   @Output()
   assetSelected: EventEmitter<IWalletAssetNative | IWalletAssetIssued> = new EventEmitter<IWalletAssetNative | IWalletAssetIssued>();
 
   @Input()
   assetSelectedFunc?: (asset: IWalletAssetNative | IWalletAssetIssued) => any;
+
+  isPubnet$ = this.horizonApisQuery.getSelectedHorizonApi$
+    .pipe(map(horizon =>
+      horizon?.networkPassphrase === this.stellarSdkService.SDK.Networks.PUBLIC
+    ));
 
   searchInputControl = new FormControl('', [Validators.required]);
   searchCuratedInputControl = new FormControl('', [Validators.required]);
@@ -44,6 +56,34 @@ export class AssetSearcherComponent implements OnInit {
     ]),
     limit: new FormControl(''),
   });
+
+  curatedByCreitTech$ = combineLatest([
+    this.searchCuratedInputControl
+      .valueChanges
+      .pipe(debounceTime(80))
+      .pipe(startWith('')),
+    this.curatedAssetsQuery.curatedByCreitTech$
+      .pipe(map(assets => assets.map(asset => ({
+        _id: asset._id,
+        assetCode: asset.code,
+        assetIssuer: asset.publicKey,
+        image: asset.image,
+        domain: asset.domain,
+      }))))
+  ])
+    .pipe(map(([searchValue, defaultAssets]) => {
+      if (!searchValue) {
+        return defaultAssets;
+      }
+
+      return defaultAssets.filter(asset => {
+        if (!!(asset as IWalletAssetIssued).assetIssuer) {
+          return asset.assetCode === searchValue || asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
+        } else {
+          return asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
+        }
+      });
+    }));
 
   filteredDefaultAssets$ = this.searchInputControl
     .valueChanges
@@ -89,6 +129,7 @@ export class AssetSearcherComponent implements OnInit {
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly nzDrawerRef: NzDrawerRef,
+    private readonly curatedAssetsQuery: CuratedAssetsQuery,
   ) { }
 
   // getAssetsFromHorizonSubscription: Subscription = this.searchInputControl
@@ -158,6 +199,9 @@ export class AssetSearcherComponent implements OnInit {
           });
         });
       });
+
+    this.walletsAssetsService.getCuratedAssetsByCreitTech()
+      .subscribe();
   }
 
   onAssetSelected(asset: IWalletAssetNative | IWalletAssetIssued): void {

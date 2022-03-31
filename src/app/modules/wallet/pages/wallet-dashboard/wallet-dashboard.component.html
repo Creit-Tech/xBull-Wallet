@@ -143,7 +143,7 @@
           </nz-list>
 
           <div class="w-full lg:col-span-12 lg:row-span-auto text-center">
-            <button nz-button>
+            <button [nzLoading]="addingAsset$ | async" nz-button (click)="addAsset()">
               Add asset
             </button>
           </div>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
 import {
+  HorizonApisQuery,
   IWalletAssetIssued,
   IWalletAssetNative,
   IWalletsAccount,
@@ -10,7 +11,7 @@ import {
 } from '~root/state';
 import { distinctUntilChanged, map, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { AssetType, Horizon } from 'stellar-sdk';
+import { AccountResponse, AssetType, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import BalanceLineLiquidityPool = Horizon.BalanceLineLiquidityPool;
@@ -23,6 +24,9 @@ import {
 } from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
+import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -34,6 +38,9 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
   graphTypeControl: FormControl = new FormControl('value_distribution');
+
+  disableAddAssetButton$ = new BehaviorSubject<boolean>(false);
+  addingAsset$ = this.walletsAssetsQuery.addingAsset$;
 
   accountBalanceLines$: Observable<BalanceLine[]> = this.selectedAccount$
     .pipe(map(selectedAccount => selectedAccount?.accountRecord?.balances || []))
@@ -59,7 +66,8 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
             ? new BigNumber(0)
             : new BigNumber(asset.counterPrice).multipliedBy(b.balance)
         };
-      });
+      })
+        .filter(data => !!data.asset);
     }));
 
   lockedXLMs$: Observable<string> = this.accountBalancesRegularAssets$
@@ -113,7 +121,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     .pipe(withLatestFrom(this.totalBalanceOnCounterAsset$))
     .pipe(map(([values, totalBalanceOnCounterAsset]) => values.map(value => {
       return {
-        name: value.asset?.assetCode,
+        name: value.asset?.assetCode || '',
         value: new BigNumber(value.counterValue).dividedBy(totalBalanceOnCounterAsset).multipliedBy(100).toNumber()
       };
     })));
@@ -128,7 +136,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
         const balanceLineId = this.walletsAssetsService.formatBalanceLineId(b);
         const asset = this.walletsAssetsService.sdkAssetFromAssetId(balanceLineId);
         return {
-          name: asset.code,
+          name: asset.code || '',
           value: new BigNumber(b.balance).dividedBy(totalBalanceOfAssets).multipliedBy(100).toNumber(),
         };
       });
@@ -153,6 +161,8 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     private readonly lpAssetsQuery: LpAssetsQuery,
     private readonly stellarSdkService: StellarSdkService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly nzMessageService: NzMessageService,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   ngOnInit(): void {
@@ -163,6 +173,105 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
 
   trackByBalanceline(index: number, item: Horizon.BalanceLine): string {
     return item.balance;
+  }
+
+  async addAsset(): Promise<void> {
+    this.nzDrawerService.create<AssetSearcherComponent>({
+      nzContent: AssetSearcherComponent,
+      nzPlacement: 'bottom',
+      nzTitle: 'Select Asset',
+      nzHeight: '100%',
+      nzCloseOnNavigation: true,
+      nzContentParams: {
+        assetSelectedFunc: async asset => {
+          this.disableAddAssetButton$.next(true);
+          try {
+            await this.signAndConfirmAddAsset(asset as IWalletAssetIssued);
+          } catch (e) {}
+          this.disableAddAssetButton$.next(false);
+        },
+        disableMyAssets: true,
+      }
+    });
+  }
+
+  async signAndConfirmAddAsset(asset: IWalletAssetIssued): Promise<void> {
+    if (!asset) {
+      return;
+    }
+
+    const selectedAccount = await this.walletsAccountsQuery.getSelectedAccount$
+      .pipe(take(1))
+      .toPromise();
+
+    if (!selectedAccount) {
+      return;
+    }
+
+    let loadedAccount: AccountResponse;
+    try {
+      loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+    } catch (e) {
+      this.nzMessageService.error('There was an error when fetching your account from the network');
+      return;
+    }
+
+    const account = new this.stellarSdkService.SDK.Account(loadedAccount.accountId(), loadedAccount.sequence);
+
+    const transaction = new this.stellarSdkService.SDK.TransactionBuilder(account, {
+      networkPassphrase: this.stellarSdkService.networkPassphrase,
+      fee: this.stellarSdkService.fee,
+    })
+      .addOperation(
+        this.stellarSdkService.SDK.Operation.changeTrust({
+          asset: new this.stellarSdkService.SDK.Asset(
+            asset.assetCode,
+            asset.assetIssuer
+          )
+        }),
+      )
+      .setTimeout(this.stellarSdkService.defaultTimeout)
+      .build();
+
+    this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Add asset',
+      nzContentParams: {
+        xdr: transaction.toXDR(),
+        acceptHandler: async signedXdr => {
+          if (!signedXdr) {
+            this.nzMessageService.error('Unexpected error, contact support.');
+            return;
+          }
+
+          try {
+            await this.walletsAssetsService.addAssetToAccount(signedXdr);
+            this.nzMessageService.success(`Asset added correctly.`);
+          } catch (e) {
+            console.error(e);
+            this.nzMessageService.success(`The network rejected the transaction, please make sure you follow all the requirements to add an Asset to your account.`, {
+              nzDuration: 5000,
+            });
+            return;
+          }
+
+          const horizonApi = await this.horizonApisQuery.getSelectedHorizonApi$
+            .pipe(take(1)).toPromise();
+
+          this.walletsAssetsService.requestAssetInformation$.next({
+            asset: {
+              _id: asset._id,
+              assetIssuer: asset.assetIssuer,
+              assetCode: asset.assetCode,
+              networkPassphrase: horizonApi.networkPassphrase,
+            },
+            horizonApi,
+            forceUpdate: false
+          });
+        }
+      }
+    });
   }
 
   async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
