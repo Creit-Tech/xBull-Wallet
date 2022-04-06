@@ -11,7 +11,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
-    path: resolve(__dirname, 'dist/xbull'),
+    path: resolve(__dirname, 'dist/extension'),
   },
   module: {
     rules: [
@@ -38,13 +38,13 @@ module.exports = {
       patterns: [
         {
           from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js',
-          to: resolve(__dirname, "dist/xbull/browser-polyfill.js"),
+          to: resolve(__dirname, "dist/extension/browser-polyfill.js"),
           toType: "file",
           force: true,
         },
         {
           from: resolve(__dirname, "src/manifest." + (process.env.MANIFEST_VERSION || 'v3') + '.json'),
-          to: resolve(__dirname, "dist/xbull/manifest.json"),
+          to: resolve(__dirname, "dist/extension/manifest.json"),
           toType: "file",
           force: true,
         },

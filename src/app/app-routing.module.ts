@@ -95,7 +95,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '/wallet/assets',
+    redirectTo: '/wallet',
   }
 ];
 

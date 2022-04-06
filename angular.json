@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/xbull",
+            "outputPath": "dist/website",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -54,10 +54,65 @@
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/website",
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": {
+                "styles": {
+                  "inlineCritical": false,
+                  "minify": true
+                },
+                "fonts": {
+                  "inline": true
+                },
+                "scripts": true
+              },
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "3mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ]
+            },
+            "extension": {
+              "outputPath": "dist/extension",
+              "index": {
+                "input": "src/index-extension.html",
+                "output": "index.html"
+              },
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.extension.ts"
+                }
+              ]
+            },
+            "extension-production": {
+              "outputPath": "dist/extension",
+              "index": {
+                "input": "src/index-extension.html",
+                "output": "index.html"
+              },
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.extension.prod.ts"
                 }
               ],
               "optimization": {
