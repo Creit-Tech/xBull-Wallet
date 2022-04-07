@@ -54,10 +54,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [
-    // We use the strategy class to avoid undesired classes on elements
-    require("@tailwindcss/forms")({
-      strategy: 'class',
-    })
-  ],
+  plugins: [],
 };
