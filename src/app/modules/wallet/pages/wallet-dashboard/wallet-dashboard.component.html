@@ -28,14 +28,14 @@
             </h2>
           </div>
 
-          <div class="w-full px-4 text-center">
+          <div class="w-full px-4 text-center hidden md:block">
             <nz-radio-group [formControl]="graphTypeControl" nzButtonStyle="solid" style="z-index: 0">
               <label nz-radio-button nzValue="value_distribution">Value distribution</label>
               <label nz-radio-button nzValue="asset_allocation">Asset allocation</label>
             </nz-radio-group>
           </div>
 
-          <div class="w-full flex justify-center p-4">
+          <div class="w-full flex justify-center p-4 hidden md:block">
             <ngx-charts-pie-chart
               *ngIf="graphTypeControl.value === 'value_distribution'"
               [view]="[250, 250]"

@@ -158,4 +158,8 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
+  closeDrawer(): void {
+    this.nzDrawerRef.close();
+  }
+
 }

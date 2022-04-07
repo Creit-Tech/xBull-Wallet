@@ -96,16 +96,22 @@
     </dl>
   </section>
 
-  <section class="w-full flex pb-4">
-    <div *ngIf="issuedAsset$ | async" class="flex-1 pr-2">
+  <section class="w-full flex flex-wrap pb-4">
+    <div class="w-full pb-4">
+      <button nz-button nzBlock
+              routerLink="/wallet/payment"
+              (click)="closeDrawer()"
+              [queryParams]="{ assetId: assetId$ | async }"
+              nzSize="large" nzType="primary">
+        <span>Send <i class="fa-solid fa-paper-plane"></i></span>
+      </button>
+    </div>
+    <div *ngIf="issuedAsset$ | async" class="w-full">
       <button (click)="onRemove()" nz-button nzBlock
               [nzLoading]="!!(removingAssets$ | async)"
               nzSize="large" nzType="primary" nzDanger>
-        Remove
+        <span>Remove <i class="fa-solid fa-times"></i></span>
       </button>
     </div>
-    <!--      <div class="flex-1 pl-2">-->
-    <!--        <button class="w-full btn btn&#45;&#45;small btn-off-black">Send</button>-->
-    <!--      </div>-->
   </section>
 </section>

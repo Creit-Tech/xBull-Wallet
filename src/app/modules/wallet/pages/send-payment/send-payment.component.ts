@@ -26,6 +26,7 @@ import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { Account, Asset, Operation, TransactionBuilder } from 'stellar-base';
 import { Memo } from 'stellar-sdk';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-send-payment',
@@ -50,7 +51,7 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
       Validators.maxLength(56),
     ]),
     memo: new FormControl(''),
-    assetCode: new FormControl('', [Validators.required]),
+    assetCode: new FormControl('native', [Validators.required]), // it's called asset code but it's actually the id
     amount: new FormControl('', [Validators.required])
   });
 
@@ -126,6 +127,7 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
     private readonly nzMessageService: NzMessageService,
     private readonly nzModalService: NzModalService,
     private readonly qrScannerService: QrScannerService,
+    private readonly route: ActivatedRoute,
   ) { }
 
   onSubmitSubscription: Subscription = this.onSubmitClick$
@@ -138,6 +140,13 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
     });
 
   ngOnInit(): void {
+    this.route.queryParams
+      .pipe(take(1))
+      .subscribe(params => {
+        if (params.assetId) {
+          this.form.controls.assetCode.setValue(params.assetId);
+        }
+      });
   }
 
   ngOnDestroy(): void {
