@@ -66,6 +66,11 @@ const routes: Routes = [
     ],
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'wallet'
+      },
+      {
         path: 'wallet',
         loadChildren: () => import('./modules/wallet/wallet.module')
           .then(m => m.WalletModule),
@@ -85,6 +90,11 @@ const routes: Routes = [
         path: 'liquidity-pools',
         loadChildren: () => import('./modules/liquidity-pools/liquidity-pools.module')
           .then(m => m.LiquidityPoolsModule)
+      },
+      {
+        path: 'airdrops',
+        loadChildren: () => import('./modules/claimable-balances/claimable-balances.module')
+          .then(m => m.ClaimableBalancesModule)
       },
       {
         path: 'settings',

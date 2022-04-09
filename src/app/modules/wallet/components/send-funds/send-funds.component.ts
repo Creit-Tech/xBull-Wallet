@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Inject, OnDestroy, OnInit, Output} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
-  IWalletAssetIssued,
   IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
@@ -169,7 +168,7 @@ export class SendFundsComponent implements OnInit, AfterViewInit, OnDestroy {
         Operation.payment({
           asset: selectedAsset._id === 'native'
             ? Asset.native()
-            : new Asset(selectedAsset.assetCode, (selectedAsset as IWalletAssetIssued).assetIssuer),
+            : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
           destination: this.form.value.publicKey,
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })

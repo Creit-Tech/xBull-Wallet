@@ -7,7 +7,7 @@ import {
   IWalletNativeAsset,
   IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore, IWalletIssuedAsset, IWalletAssetNative, IWalletAssetIssued, SettingsQuery,
+  WalletsAssetsStore, IWalletIssuedAsset, SettingsQuery, IWalletAssetModel,
 } from '~root/state';
 import { from, merge, Observable, of, Subject, Subscription, throwError } from 'rxjs';
 import { catchError, concatAll, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class WalletsAssetsService {
 
   // This is the new version, stop using the one above
   requestAssetInformation$: Subject<{
-    asset: IWalletAssetIssued | IWalletAssetNative,
+    asset: IWalletAssetModel,
     horizonApi: IHorizonApi,
     forceUpdate: boolean,
   }> = new Subject();
@@ -63,7 +63,7 @@ export class WalletsAssetsService {
         }))
         .pipe(filter(Boolean))
         .pipe(map(_ => ({
-          asset: params.asset as IWalletAssetIssued,
+          asset: params.asset as IWalletAssetModel,
           horizonApi: params.horizonApi,
         })));
     }))
@@ -235,6 +235,24 @@ export class WalletsAssetsService {
     }
   }
 
+  assetIdFromAssetString(asset: string): string {
+    if (asset === 'native') {
+      return 'native';
+    } else {
+      return `${asset.split(':')[0]}_${asset.split(':')[1]}`;
+    }
+  }
+
+  sdkAssetFromAssetString(asset: string): Asset {
+    if (asset === 'native') {
+      return this.stellarSdkService.SDK.Asset.native();
+    }
+
+    const [code, issuer] = asset.split(':');
+
+    return new this.stellarSdkService.SDK.Asset(code, issuer);
+  }
+
   saveInitialAssetState(data: {
     _id: IWalletIssuedAsset['_id'];
     assetCode: IWalletIssuedAsset['assetCode'];
@@ -290,7 +308,7 @@ export class WalletsAssetsService {
       ) as BalanceAssetType[];
   }
 
-  async updateAssetPriceAgainstCounter(asset: IWalletAssetIssued | IWalletAssetNative): Promise<void> {
+  async updateAssetPriceAgainstCounter(asset: IWalletAssetModel): Promise<void> {
     const counterAssetId = await this.settingsQuery.counterAssetId$.pipe(take(1)).toPromise();
 
     if (!counterAssetId) {

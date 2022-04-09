@@ -35,20 +35,6 @@ interface INativeAssetFull extends IBaseNativeAsset {
   domain: string;
   image: string;
 }
-
-export interface IWalletAssetNative {
-  _id: 'native';
-  assetCode: 'XLM';
-  lastTimeUpdated?: Date;
-
-  counterPrice?: string;
-  counterId?: string;
-
-  assetExtraDataLoaded?: boolean;
-  assetFullDataLoaded?: boolean;
-  domain?: string;
-  image?: string;
-}
 // DEPRECATED
 interface IBaseIssuedAsset {
   _id: string; // This must be `${asset_code}_${asset_issuer}`
@@ -105,9 +91,9 @@ interface IIssuedAssetFull extends IBaseIssuedAsset {
   orgOfficialEmail?: string;
 }
 
-export interface IWalletAssetIssued {
-  _id: string; // This must be `${asset_code}_${asset_issuer}`
-  assetCode: string;
+export interface IWalletAssetModel {
+  _id: 'native' | string; // This must be `${asset_code}_${asset_issuer}`
+  assetCode: 'XLM' | string;
   assetIssuer: string;
   lastTimeUpdated?: Date;
 
@@ -134,8 +120,6 @@ export interface IWalletAssetIssued {
 
   networkPassphrase: string;
 }
-
-export type IWalletAssetModel = IWalletAssetIssued | IWalletAssetNative;
 
 // DEPRECATED
 export type IWalletNativeAsset<T extends AssetStatus = AssetStatus> = T extends 'unloaded'

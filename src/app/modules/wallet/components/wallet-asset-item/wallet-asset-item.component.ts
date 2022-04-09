@@ -4,8 +4,8 @@ import { Horizon } from 'stellar-sdk';
 import {
   BalanceAssetType,
   HorizonApisQuery,
-  IWalletAssetIssued,
-  IWalletAssetNative, WalletsAccountsQuery,
+  IWalletAssetModel,
+  WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
 import { filter, map, switchMap, take, withLatestFrom } from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class WalletAssetItemComponent implements OnInit, OnDestroy {
     this.balanceLine$.next(data);
   }
 
-  asset$: Observable<IWalletAssetNative | IWalletAssetIssued | undefined> = this.balanceLine$
+  asset$: Observable<IWalletAssetModel | undefined> = this.balanceLine$
     .pipe(switchMap(balanceLine => {
       return this.walletsAssetsQuery.selectEntity(
         this.walletsAssetsService.formatBalanceLineId(balanceLine)
@@ -92,7 +92,7 @@ export class WalletAssetItemComponent implements OnInit, OnDestroy {
       }))
       .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
       .pipe(switchMap(([balanceLine, horizonApi]) => {
-        return (this.asset$ as Observable<IWalletAssetIssued>)
+        return (this.asset$ as Observable<IWalletAssetModel>)
           .pipe(map(asset => {
             if (!!asset) {
               return asset;

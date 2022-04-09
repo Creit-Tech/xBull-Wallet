@@ -1,9 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
 import {
-  HorizonApisQuery,
-  IWalletAssetIssued,
-  IWalletAssetNative,
+  HorizonApisQuery, IWalletAssetModel,
   IWalletsAccount,
   LpAssetsQuery,
   WalletsAccountsQuery,
@@ -56,7 +54,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   counterAssetCode$ = this.walletsAssetsQuery.counterAsset$
     .pipe(map(asset => asset?.assetCode));
 
-  assetsBalancesWithCounterValues$: Observable<Array<{ asset?: IWalletAssetIssued | IWalletAssetNative; counterValue: BigNumber }>> = this.accountBalancesRegularAssets$
+  assetsBalancesWithCounterValues$: Observable<Array<{ asset?: IWalletAssetModel; counterValue: BigNumber }>> = this.accountBalancesRegularAssets$
     .pipe(map(accountBalanceLines => {
       return accountBalanceLines.map(b => {
         const asset = this.walletsAssetsQuery.getEntity(this.walletsAssetsService.formatBalanceLineId(b));
@@ -186,7 +184,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
         assetSelectedFunc: async asset => {
           this.disableAddAssetButton$.next(true);
           try {
-            await this.signAndConfirmAddAsset(asset as IWalletAssetIssued);
+            await this.signAndConfirmAddAsset(asset);
           } catch (e) {}
           this.disableAddAssetButton$.next(false);
         },
@@ -195,7 +193,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  async signAndConfirmAddAsset(asset: IWalletAssetIssued): Promise<void> {
+  async signAndConfirmAddAsset(asset: IWalletAssetModel): Promise<void> {
     if (!asset) {
       return;
     }
@@ -309,7 +307,7 @@ interface DataItem {
 }
 
 interface IAssetItem {
-  asset: IWalletAssetNative | IWalletAssetIssued;
+  asset: IWalletAssetModel;
   assetCode: string;
   domain: string;
   balance: string;

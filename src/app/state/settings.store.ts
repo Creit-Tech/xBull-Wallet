@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
-import { IWalletAssetIssued, IWalletAssetNative } from '~root/state/wallets-asset.model';
+import { IWalletAssetModel } from '~root/state/wallets-asset.model';
 
 export interface SettingsState {
   UIState: {
@@ -33,7 +33,7 @@ export interface SettingsState {
   // Counter asset
   // This is to use an asset as the base price
   // Default values are USDC on both testnet and pubnet
-  counterAssetId: IWalletAssetIssued['_id'] | IWalletAssetNative['_id'];
+  counterAssetId: IWalletAssetModel['_id'];
 }
 
 export function createInitialState(): SettingsState {

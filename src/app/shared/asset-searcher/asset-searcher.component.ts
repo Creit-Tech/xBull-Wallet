@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { HorizonApisQuery, IWalletAssetIssued, IWalletAssetNative, WalletsAssetsQuery } from '~root/state';
+import {
+  HorizonApisQuery,
+  IWalletAssetModel,
+  WalletsAssetsQuery
+} from '~root/state';
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -15,8 +19,8 @@ import { CuratedAssetsQuery } from '~root/state/curated-assets/curated-assets.qu
   styleUrls: ['./asset-searcher.component.scss']
 })
 export class AssetSearcherComponent implements OnInit {
-  defaultAssets$: BehaviorSubject<(IWalletAssetNative | IWalletAssetIssued)[]> = new BehaviorSubject<(IWalletAssetNative | IWalletAssetIssued)[]>([]);
-  @Input() set defaultAssets(data: (IWalletAssetNative | IWalletAssetIssued)[]) {
+  defaultAssets$: BehaviorSubject<(IWalletAssetModel)[]> = new BehaviorSubject<(IWalletAssetModel)[]>([]);
+  @Input() set defaultAssets(data: (IWalletAssetModel)[]) {
     this.defaultAssets$.next(data || []);
   }
 
@@ -30,10 +34,10 @@ export class AssetSearcherComponent implements OnInit {
   disableCuratedAssetByCreitTech?: boolean;
 
   @Output()
-  assetSelected: EventEmitter<IWalletAssetNative | IWalletAssetIssued> = new EventEmitter<IWalletAssetNative | IWalletAssetIssued>();
+  assetSelected: EventEmitter<IWalletAssetModel> = new EventEmitter<IWalletAssetModel>();
 
   @Input()
-  assetSelectedFunc?: (asset: IWalletAssetNative | IWalletAssetIssued) => any;
+  assetSelectedFunc?: (asset: IWalletAssetModel) => any;
 
   isPubnet$ = this.horizonApisQuery.getSelectedHorizonApi$
     .pipe(map(horizon =>
@@ -77,7 +81,7 @@ export class AssetSearcherComponent implements OnInit {
       }
 
       return defaultAssets.filter(asset => {
-        if (!!(asset as IWalletAssetIssued).assetIssuer) {
+        if (!!asset.assetIssuer) {
           return asset.assetCode === searchValue || asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
         } else {
           return asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
@@ -96,7 +100,7 @@ export class AssetSearcherComponent implements OnInit {
       }
 
       return defaultAssets.filter(asset => {
-        if (!!(asset as IWalletAssetIssued).assetIssuer) {
+        if (!!asset.assetIssuer) {
           return asset.assetCode === searchValue || asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
         } else {
           return asset.assetCode.toLowerCase().includes(searchValue.toLowerCase());
@@ -204,7 +208,7 @@ export class AssetSearcherComponent implements OnInit {
       .subscribe();
   }
 
-  onAssetSelected(asset: IWalletAssetNative | IWalletAssetIssued): void {
+  onAssetSelected(asset: IWalletAssetModel): void {
     this.assetSelected.emit(asset);
 
     if (!!this.assetSelectedFunc) {

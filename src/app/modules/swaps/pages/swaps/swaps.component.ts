@@ -2,9 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import {
-  IWalletAssetIssued,
   IWalletAssetModel,
-  IWalletAssetNative,
   WalletsAccountsQuery,
   WalletsAssetsQuery, WalletsOffersQuery
 } from '~root/state';
@@ -213,8 +211,8 @@ export class SwapsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const fromAsset: IWalletAssetIssued | IWalletAssetNative = this.swapForm.value.fromAsset.asset;
-    const toAsset: IWalletAssetIssued | IWalletAssetNative = this.swapForm.value.toAsset.asset;
+    const fromAsset: IWalletAssetModel = this.swapForm.value.fromAsset.asset;
+    const toAsset: IWalletAssetModel = this.swapForm.value.toAsset.asset;
 
     let response: { records: ServerApi.PaymentPathRecord[] };
     if (this.pathTypeValue === 'send') {
@@ -300,15 +298,15 @@ export class SwapsComponent implements OnInit, OnDestroy {
     const selectedAccount = await this.walletAccountsQuery.getSelectedAccount$.pipe(take(1)).toPromise();
     const updatedPath = this.pathValue;
 
-    const fromAsset: IWalletAssetIssued | IWalletAssetNative = this.swapForm.value.fromAsset.asset;
+    const fromAsset: IWalletAssetModel = this.swapForm.value.fromAsset.asset;
     const fromAssetClass = fromAsset._id === 'native'
       ? this.stellarSdkService.SDK.Asset.native()
-      : new this.stellarSdkService.SDK.Asset(fromAsset.assetCode, (fromAsset as IWalletAssetIssued).assetIssuer);
+      : new this.stellarSdkService.SDK.Asset(fromAsset.assetCode, fromAsset.assetIssuer);
 
-    const toAsset: IWalletAssetIssued | IWalletAssetNative = this.swapForm.value.toAsset.asset;
+    const toAsset: IWalletAssetModel = this.swapForm.value.toAsset.asset;
     const toAssetClass = toAsset._id === 'native'
       ? this.stellarSdkService.SDK.Asset.native()
-      : new this.stellarSdkService.SDK.Asset(toAsset.assetCode, (toAsset as IWalletAssetIssued).assetIssuer);
+      : new this.stellarSdkService.SDK.Asset(toAsset.assetCode, toAsset.assetIssuer);
 
     let loadedAccount: AccountResponse;
     try {
@@ -337,7 +335,7 @@ export class SwapsComponent implements OnInit, OnDestroy {
         .find(b => {
           return b.asset_type !== 'native'
             && b.asset_code === toAsset.assetCode
-            && b.asset_issuer === (toAsset as IWalletAssetIssued).assetIssuer;
+            && b.asset_issuer === toAsset.assetIssuer;
         });
     }
 
@@ -403,7 +401,7 @@ export class SwapsComponent implements OnInit, OnDestroy {
 
 interface IAssetFormField {
   amount: number;
-  asset: IWalletAssetNative | IWalletAssetIssued;
+  asset: IWalletAssetModel;
 }
 
 interface IExchangeRate {

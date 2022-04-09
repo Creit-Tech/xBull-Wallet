@@ -39,7 +39,7 @@ export class ClaimClaimableBalanceComponent implements AfterViewInit, OnDestroy 
   claimableBalances$ = this.getBalances$
     .pipe(switchMap(() => this.selectedAccount$))
     .pipe(switchMap((selectedAccount) => {
-      return this.claimableBalancesService.getClaimableBalancesForClaimant(selectedAccount.publicKey);
+      return this.claimableBalancesService.getClaimableBalancesForClaimant(selectedAccount);
     }))
     .pipe(pluck('records'))
     .pipe(withLatestFrom(this.antiSpamClaimableAssets$))

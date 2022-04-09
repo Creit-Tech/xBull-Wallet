@@ -55,6 +55,15 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          routerLink="/airdrops"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-parachute-box" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Airdrops</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/settings"
           nzMatchRouter
           nz-menu-item class="flex">

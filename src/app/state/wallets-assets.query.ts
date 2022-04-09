@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { WalletsAssetsStore, WalletsAssetsState } from './wallets-assets.store';
 import {
-  IWalletAssetIssued,
   IWalletAssetModel,
-  IWalletAssetNative,
 } from '~root/state/wallets-asset.model';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
-import { switchMap } from 'rxjs/operators';
+import { distinctUntilKeyChanged, switchMap } from 'rxjs/operators';
+import { WalletsAccountsQuery } from '~root/state/wallets-accounts.query';
+import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 
 @Injectable({ providedIn: 'root' })
 export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
@@ -19,9 +19,22 @@ export class WalletsAssetsQuery extends QueryEntity<WalletsAssetsState> {
   counterAsset$ = this.settingsQuery.counterAssetId$
     .pipe(switchMap(counterAssetId => this.selectEntity(counterAssetId)));
 
+  selectedAccountAssets$ = this.walletsAccountsQuery.getSelectedAccount$
+    .pipe(distinctUntilKeyChanged('_id'))
+    .pipe(switchMap(selectedAccount => {
+      const assetsBalances = selectedAccount.accountRecord?.balances || [];
+
+      return this.selectAll({
+        filterBy: entity => !!this.walletsAssetsService.filterBalancesLines(assetsBalances)
+          .find(b => this.walletsAssetsService.formatBalanceLineId(b) === entity._id)
+      });
+    }));
+
   constructor(
     protected store: WalletsAssetsStore,
     private readonly settingsQuery: SettingsQuery,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsAssetsService: WalletsAssetsService,
   ) {
     super(store);
   }

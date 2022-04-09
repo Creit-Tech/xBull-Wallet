@@ -2,7 +2,6 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
-  IWalletAssetIssued,
   IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
@@ -182,7 +181,7 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
         Operation.payment({
           asset: selectedAsset._id === 'native'
             ? Asset.native()
-            : new Asset(selectedAsset.assetCode, (selectedAsset as IWalletAssetIssued).assetIssuer),
+            : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
           destination: this.form.value.publicKey,
           amount: new BigNumber(this.form.value.amount).toFixed(7),
         })
