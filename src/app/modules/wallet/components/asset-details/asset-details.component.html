@@ -106,6 +106,15 @@
         <span>Send <i class="fa-solid fa-paper-plane"></i></span>
       </button>
     </div>
+    <div class="w-full pb-4">
+      <button nz-button nzBlock
+              routerLink="/swaps"
+              (click)="closeDrawer()"
+              [queryParams]="{ fromAssetId: assetId$ | async }"
+              nzSize="large">
+        <span>Swap <i class="fa-solid fa-arrows-rotate"></i></span>
+      </button>
+    </div>
     <div *ngIf="issuedAsset$ | async" class="w-full">
       <button (click)="onRemove()" nz-button nzBlock
               [nzLoading]="!!(removingAssets$ | async)"

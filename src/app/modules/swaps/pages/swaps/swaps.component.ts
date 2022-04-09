@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import {
@@ -6,7 +6,7 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery, WalletsOffersQuery
 } from '~root/state';
-import { debounceTime, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, delay, map, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -16,13 +16,14 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-swaps',
   templateUrl: './swaps.component.html',
   styleUrls: ['./swaps.component.scss']
 })
-export class SwapsComponent implements OnInit, OnDestroy {
+export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   selectedWalletAccount$ = this.walletAccountsQuery.getSelectedAccount$;
@@ -124,6 +125,7 @@ export class SwapsComponent implements OnInit, OnDestroy {
     private readonly nzDrawerService: NzDrawerService,
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletOffersQuery: WalletsOffersQuery,
+    private readonly route: ActivatedRoute,
   ) { }
 
   updatePathFromHorizonSubscription: Subscription = combineLatest([
@@ -168,6 +170,24 @@ export class SwapsComponent implements OnInit, OnDestroy {
     });
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
+    this.route.queryParams
+      .pipe(take(1))
+      // We use a small delay to avoid getting the template error because at the point we are setting this
+      .pipe(delay(100))
+      .subscribe(params => {
+        if (params.fromAssetId) {
+          this.swapForm.get(['fromAsset', 'asset'])
+            ?.patchValue(this.walletsAssetsQuery.getEntity(params.fromAssetId));
+        }
+
+        if (params.toAssetId) {
+          this.swapForm.get(['toAsset', 'asset'])
+            ?.patchValue(this.walletsAssetsQuery.getEntity(params.toAssetId));
+        }
+      });
   }
 
   ngOnDestroy(): void {

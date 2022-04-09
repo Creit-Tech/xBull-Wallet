@@ -19,6 +19,7 @@ import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-asset-details',
