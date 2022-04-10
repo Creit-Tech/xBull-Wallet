@@ -12,6 +12,13 @@ export interface SettingsState {
   advanceMode: boolean;
   defaultFee: string;
 
+  // keep password configurations, these are used to handle the logic
+  // (it should never be used to save the password, password can't be inside the store for security reasons)
+  keepPasswordActive: boolean;
+  lastTimePasswordSaved?: Date;
+  nextTimeToRemovePassword?: Date;
+  timeoutPasswordSaved: number; // Minutes to keep the password saved before asking for it again
+
   // This is a token which is used to decode an encrypted password in mobile devices
   passwordAuthTokenActive: boolean;
   passwordAuthToken?: string;
@@ -45,6 +52,8 @@ export function createInitialState(): SettingsState {
     storeVersion: 2,
     advanceMode: false,
     defaultFee: '10000',
+    keepPasswordActive: false,
+    timeoutPasswordSaved: 15,
     passwordAuthTokenActive: false,
     antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],

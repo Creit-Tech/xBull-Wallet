@@ -13,6 +13,10 @@ export class SettingsQuery extends Query<SettingsState> {
   antiSpamClaimableAssets$ = this.select(state => state.antiSPAMClaimableAssets);
   operationTypesToShow$ = this.select(state => state.operationTypesToShow);
 
+  keepPasswordActive$ = this.select(state => state.keepPasswordActive);
+  lastTimePasswordSaved$ = this.select(state => state.lastTimePasswordSaved);
+  timeoutPasswordSaved$ = this.select(state => state.timeoutPasswordSaved);
+
   passwordAuthTokenActive$ = this.select(state => state.passwordAuthTokenActive);
   passwordAuthToken$ = this.select(state => state.passwordAuthToken);
   passwordAuthKey$ = this.select(state => state.passwordAuthKey);

@@ -23,8 +23,11 @@ export class LockingComponent implements OnInit, OnDestroy {
   mobilePlatform = this.env.platform === 'mobile';
 
   useDeviceAuthControl: FormControl = new FormControl(false);
+  keepPasswordControl: FormControl = new FormControl(false);
+  timeoutMinutesControl: FormControl = new FormControl('');
 
   globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
+  keepPasswordActive$ = this.settingsQuery.keepPasswordActive$;
 
   constructor(
     @Inject(ENV)
@@ -38,14 +41,32 @@ export class LockingComponent implements OnInit, OnDestroy {
     private readonly cryptoService: CryptoService,
   ) { }
 
-
   passwordAuthTokenActiveStatus: Subscription = this.settingsQuery.passwordAuthTokenActive$
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(status => {
       this.useDeviceAuthControl.patchValue(status);
     });
 
+  keepPasswordActiveStatus: Subscription = this.settingsQuery.keepPasswordActive$
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(status => {
+      this.keepPasswordControl.patchValue(status);
+    });
+
+  timeoutControlUpdatesSubscription: Subscription = this.timeoutMinutesControl
+    .valueChanges
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(value => {
+      this.settingsService.setKeptPasswordTimeout(value);
+      this.nzMessageService.success(`Timout updated to ${value} minutes.`);
+    });
+
   ngOnInit(): void {
+    this.settingsQuery.timeoutPasswordSaved$
+      .pipe(take(1))
+      .subscribe(value => {
+        this.timeoutMinutesControl.setValue(value, { emitEvent: false });
+      });
   }
 
   ngOnDestroy(): void {
@@ -112,6 +133,41 @@ export class LockingComponent implements OnInit, OnDestroy {
             error?.message || `We couldn't save your password in your device, try again or contact support`,
           );
         });
+    }
+  }
+
+  async keepPasswordStart(): Promise<void> {
+    if (this.keepPasswordControl.value) {
+      this.settingsService.disableKeepPasswordOption();
+      this.nzMessageService.success(`Option disabled, now when using your password this one won't be kept.`);
+    } else {
+      const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
+      if (!globalPasswordHash) {
+        return;
+      }
+      const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
+        nzPlacement: 'bottom',
+        nzHeight: 'auto',
+        nzContent: PasswordModalComponent,
+        nzContentParams: {
+          handlePasswordEvent: password => {
+
+            const hashedPassword = this.cryptoService.hashPassword(password);
+
+            if (hashedPassword !== globalPasswordHash) {
+              this.nzMessageService.error('Password is not correct');
+              return;
+            }
+
+            this.settingsService.setKeptPassword(password);
+
+            this.settingsService.enableKeepPasswordOption();
+            this.nzMessageService.success(`Option enabled, your password will be kept for a few minutes after using it.`);
+          }
+        }
+      });
+
+      drawerRef.open();
     }
   }
 

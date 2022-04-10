@@ -176,7 +176,7 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.route.queryParams
       .pipe(take(1))
       // We use a small delay to avoid getting the template error because at the point we are setting this
-      .pipe(delay(100))
+      .pipe(delay(10))
       .subscribe(params => {
         if (params.fromAssetId) {
           this.swapForm.get(['fromAsset', 'asset'])

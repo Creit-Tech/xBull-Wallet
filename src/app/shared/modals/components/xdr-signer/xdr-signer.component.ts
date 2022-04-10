@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription} from 'rxjs';
+import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import {WalletsService} from '~root/core/wallets/services/wallets.service';
 import {filter, map, pluck, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
 import { Networks, Operation, Transaction } from 'stellar-base';
@@ -23,6 +23,7 @@ import {NzDrawerRef, NzDrawerService} from 'ng-zorro-antd/drawer';
 import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
 import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
 import { fromUnixTime } from 'date-fns';
+import { SettingsService } from '~root/core/settings/services/settings.service';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -37,6 +38,10 @@ export class XdrSignerComponent implements OnInit {
   @Output() accept: EventEmitter<string> = new EventEmitter<string>();
 
   @Input() from: string | 'wallet' = 'wallet';
+
+  // This variable should be used in places where we really want to make sure user writes its password again
+  // Example will be when getting a request from a website
+  @Input() ignoreKeptPassword = false;
 
   xdr$: ReplaySubject<string> = new ReplaySubject<string>();
   @Input() set xdr(data: string) {
@@ -113,6 +118,7 @@ export class XdrSignerComponent implements OnInit {
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly settingsQuery: SettingsQuery,
     private readonly deviceAuthService: DeviceAuthService,
+    private readonly settingsService: SettingsService,
   ) { }
 
   ngOnInit(): void {
@@ -199,50 +205,66 @@ export class XdrSignerComponent implements OnInit {
   }
 
   async signWithPassword(selectedAccount: IWalletsAccountWithSecretKey): Promise<void> {
-    const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
-      nzContent: PasswordModalComponent,
-      nzPlacement: 'bottom',
-      nzTitle: '',
-      nzHeight: 'auto'
-    });
+    let password: string;
 
-    drawerRef.open();
+    const isKeptPasswordActive = await this.settingsQuery.keepPasswordActive$.pipe(take(1)).toPromise();
+    let savedPassword = this.settingsService.getKeptPassword();
+    if (this.ignoreKeptPassword || !isKeptPasswordActive || !savedPassword) {
+      const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
+        nzContent: PasswordModalComponent,
+        nzPlacement: 'bottom',
+        nzTitle: '',
+        nzHeight: 'auto'
+      });
 
-    await drawerRef.afterOpen.pipe(take(1)).toPromise();
+      drawerRef.open();
 
-    const componentRef = drawerRef.getContentComponent();
+      await drawerRef.afterOpen.pipe(take(1)).toPromise();
 
-    if (!componentRef) {
-      return;
+      const componentRef = drawerRef.getContentComponent();
+
+      if (!componentRef) {
+        return;
+      }
+
+      password = await componentRef.password
+        .pipe(take(1))
+        .toPromise();
+
+      drawerRef.close();
+
+      if (isKeptPasswordActive) {
+        this.settingsService.setKeptPassword(password);
+      }
+    } else {
+      password = savedPassword;
     }
 
-    componentRef.password
-      .pipe(take(1))
-      .pipe(tap(() => {
-        this.signing$.next(true);
-      }))
-      .pipe(map((password) => {
-        return this.cryptoService.decryptText(selectedAccount.secretKey, password);
+    this.signing$.next(true);
+
+    of(password)
+      .pipe(map((value) => {
+        return this.cryptoService.decryptText(selectedAccount.secretKey, value);
       }))
       .pipe(withLatestFrom(this.xdr$))
       .pipe(map(([secret, xdr]) => {
         return this.stellarSdkService.signTransaction({ xdr, secret });
       }))
-      .pipe(takeUntil(merge(
-        this.componentDestroyed$,
-        drawerRef.afterClose
-      )))
       .subscribe(xdr => {
         this.signing$.next(false);
         this.emitData(xdr);
-        drawerRef.close();
       }, error => {
-        drawerRef.close();
         console.log(error);
         this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
 
         this.signing$.next(false);
       });
+
+    // We use ts-ignore here to tell the compiler to skip these lines, we set them as null to clear them before is garbage collected
+    // @ts-ignore
+    password = null;
+    // @ts-ignore
+    savedPassword = null;
   }
 
   async signWithLedger(selectedAccount: IWalletsAccountLedger): Promise<void> {

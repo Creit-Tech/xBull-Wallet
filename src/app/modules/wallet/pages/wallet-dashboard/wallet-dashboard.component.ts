@@ -248,7 +248,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
             this.nzMessageService.success(`Asset added correctly.`);
           } catch (e) {
             console.error(e);
-            this.nzMessageService.success(`The network rejected the transaction, please make sure you follow all the requirements to add an Asset to your account.`, {
+            this.nzMessageService.error(`The network rejected the transaction, please make sure you follow all the requirements to add an Asset to your account.`, {
               nzDuration: 5000,
             });
             return;

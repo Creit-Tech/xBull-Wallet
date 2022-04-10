@@ -31,6 +31,30 @@
                    nzCheckedChildren="ON" nzUnCheckedChildren="OFF"></nz-switch>
       </nz-list-item>
 
+      <nz-list-item class="px-4">
+        <p>
+          Don't request password <i class="fa-solid fa-question-circle" nz-tooltip="If you enable this option, your password will be saved in the device after you use it. It will be kept during a period of time or until the session is ended"></i>
+        </p>
+
+        <nz-switch [nzControl]="true" (click)="keepPasswordStart()"
+                   [formControl]="keepPasswordControl"
+                   nzCheckedChildren="ON" nzUnCheckedChildren="OFF"></nz-switch>
+      </nz-list-item>
+
+      <nz-list-item *ngIf="keepPasswordActive$ | async" class="px-4">
+        <p>
+          Password timeout
+        </p>
+
+        <nz-select [formControl]="timeoutMinutesControl">
+          <nz-option nzLabel="5 Minutes" [nzValue]="5"></nz-option>
+          <nz-option nzLabel="15 Minutes" [nzValue]="15"></nz-option>
+          <nz-option nzLabel="30 Minutes" [nzValue]="30"></nz-option>
+        </nz-select>
+      </nz-list-item>
+
+
+
 <!--      <nz-list-item>-->
 <!--        <p>-->
 <!--          Require authentication at start-->
