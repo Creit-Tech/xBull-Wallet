@@ -22,10 +22,6 @@
 
 <section class="w-full flex justify-center items-center">
   <section class="max-w-lg w-full py-4">
-    <div class="w-full text-center mb-4">
-      <h1 class="text-lg font-semibold">Your created wallets</h1>
-    </div>
-
     <nz-list class="mb-4" nzSize="large">
       <nz-list-item *ngFor="let wallet of allWallets$ | async"
           [routerLink]="['/settings/wallets', wallet._id]"

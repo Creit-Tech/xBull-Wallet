@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ISiteConnection, SitesConnectionsQuery } from '~root/state';
-import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ConnectedSiteDetailsComponent } from '~root/modules/settings/components/connected-site-details/connected-site-details.component';
 import { take, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-sites-connected',
@@ -16,7 +16,7 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly sitesConnectionsQuery: SitesConnectionsQuery,
-    private readonly componentCreatorService: ComponentCreatorService,
+    private nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
@@ -28,19 +28,16 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
   }
 
   async onSiteConnected(siteConnected: ISiteConnection): Promise<void> {
-    const ref = await this.componentCreatorService.createOnBody<ConnectedSiteDetailsComponent>(ConnectedSiteDetailsComponent);
-    ref.component.instance.connectedSite = siteConnected;
+    const drawerRef = await this.nzDrawerService.create<ConnectedSiteDetailsComponent>({
+      nzContent: ConnectedSiteDetailsComponent,
+      nzContentParams: {
+        connectedSite: siteConnected
+      },
+      nzTitle: 'Create pool',
+      nzWrapClassName: 'drawer-full-w-320',
+    });
 
-    ref.component.instance.close
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    drawerRef.open();
   }
 
 }
