@@ -232,10 +232,6 @@ export class XdrSignerComponent implements OnInit {
         .toPromise();
 
       drawerRef.close();
-
-      if (isKeptPasswordActive) {
-        this.settingsService.setKeptPassword(password);
-      }
     } else {
       password = savedPassword;
     }
@@ -252,6 +248,11 @@ export class XdrSignerComponent implements OnInit {
       }))
       .subscribe(xdr => {
         this.signing$.next(false);
+
+        if (isKeptPasswordActive) {
+          this.settingsService.setKeptPassword(password);
+        }
+
         this.emitData(xdr);
       }, error => {
         console.log(error);

@@ -38,7 +38,8 @@
                 "glob": "**/*",
                 "input": "./node_modules/@ant-design/icons-angular/src/inline-svg/",
                 "output": "/assets/"
-              }
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/theme/zorro-theme.less",
@@ -50,7 +51,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -219,7 +222,8 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.png",
-              "src/assets"
+              "src/assets",
+              "src/manifest.webmanifest"
             ],
             "styles": [
               "src/styles.scss"

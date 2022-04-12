@@ -35,6 +35,7 @@ import { LayoutV1HeaderComponent } from './core/layouts/main-layout-v1/component
 import { LayoutV1AccountHorizonSelectorComponent } from './core/layouts/main-layout-v1/components/layout-v1-account-horizon-selector/layout-v1-account-horizon-selector.component';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 registerLocaleData(en);
 
@@ -74,6 +75,12 @@ registerLocaleData(en);
     NzSelectModule,
     ReactiveFormsModule,
     NzDividerModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production && environment.platform === 'website',
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     {
