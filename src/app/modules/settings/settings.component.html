@@ -30,6 +30,30 @@
         </div>
       </nz-list-item>
 
+      <nz-list-item *ngIf="counterAsset$ | async as counterAsset"
+                    class="cursor-pointer px-4 justify-between items-center"
+                    (click)="setCounterAsset()">
+        <div class="w-auto mr-auto">
+          <p class="m-0 text-sm font-bold">
+            Counter asset
+          </p>
+        </div>
+        <div class="w-auto flex items-center">
+          <div class="flex flex-col">
+            <p class="text-sm m-0 font-bold text-right">
+              {{ counterAsset.assetCode }}
+            </p>
+            <small class="w-24 text-xs opacity-50 truncate text-right">
+              {{ counterAsset.domain }}
+            </small>
+          </div>
+
+          <div class="w-8 h-8 bg-white p-1 rounded-full ml-3 overflow-hidden">
+            <img [src]="counterAsset.image" class="w-full h-full rounded-full" alt="">
+          </div>
+        </div>
+      </nz-list-item>
+
       <nz-list-item class="cursor-pointer px-4" routerLink="/settings/wallets">
         <div class="w-auto">
           <p class="m-0 text-sm font-bold">

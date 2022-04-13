@@ -325,16 +325,12 @@ export class WalletsAssetsService {
 
     let horizonResponse;
     try {
-      horizonResponse = await this.stellarSdkService.Server.tradeAggregation(
+      horizonResponse = await this.stellarSdkService.Server.strictSendPaths(
         this.sdkAssetFromAssetId(asset._id),
-        this.sdkAssetFromAssetId(counterAssetId),
-        subYears(new Date(), 1).getTime(),
-        new Date().getTime(),
-        60000,
-        0
+        '1',
+        [this.sdkAssetFromAssetId(counterAssetId)],
       )
-        .order('desc')
-        .limit(5)
+        .limit(1)
         .call();
     } catch (e) {
       return;
@@ -347,7 +343,7 @@ export class WalletsAssetsService {
     }
 
     this.walletsAssetsStore.upsert(asset._id, {
-      counterPrice: latestPrice.avg,
+      counterPrice: latestPrice.destination_amount,
       counterId: counterAssetId,
     });
   }

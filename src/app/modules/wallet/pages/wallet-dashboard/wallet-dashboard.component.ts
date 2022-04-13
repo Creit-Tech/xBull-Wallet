@@ -7,7 +7,16 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import { distinctUntilChanged, map, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import {
+  debounceTime, distinct,
+  distinctUntilChanged,
+  filter,
+  map,
+  switchMap,
+  take,
+  takeUntil,
+  withLatestFrom
+} from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { AccountResponse, AssetType, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
@@ -54,18 +63,31 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   counterAssetCode$ = this.walletsAssetsQuery.counterAsset$
     .pipe(map(asset => asset?.assetCode));
 
-  assetsBalancesWithCounterValues$: Observable<Array<{ asset?: IWalletAssetModel; counterValue: BigNumber }>> = this.accountBalancesRegularAssets$
-    .pipe(map(accountBalanceLines => {
-      return accountBalanceLines.map(b => {
-        const asset = this.walletsAssetsQuery.getEntity(this.walletsAssetsService.formatBalanceLineId(b));
-        return {
-          asset,
-          counterValue: !asset || !asset.counterPrice
-            ? new BigNumber(0)
-            : new BigNumber(asset.counterPrice).multipliedBy(b.balance)
-        };
+  assetsBalancesWithCounterValues$: Observable<Array<{
+    asset?: IWalletAssetModel;
+    counterValue: BigNumber
+  }>> = this.accountBalancesRegularAssets$
+    .pipe(switchMap(accountBalanceLines => {
+      const objectMap = new Map();
+
+      for (const accountBalanceLine of accountBalanceLines) {
+        objectMap.set(this.walletsAssetsService.formatBalanceLineId(accountBalanceLine), accountBalanceLine);
+      }
+
+      return this.walletsAssetsQuery.selectAll({
+        filterBy: entity => !!objectMap.get(entity._id)
       })
-        .filter(data => !!data.asset);
+        .pipe(debounceTime(100))
+        .pipe(map(assets => {
+          return assets.map(asset => ({
+            asset,
+            counterValue: !asset || !asset.counterPrice
+              ? new BigNumber(0)
+              : new BigNumber(asset.counterPrice)
+                .multipliedBy(objectMap.get(asset._id).balance)
+          }))
+            .filter(data => !!data.asset);
+        }));
     }));
 
   lockedXLMs$: Observable<string> = this.accountBalancesRegularAssets$

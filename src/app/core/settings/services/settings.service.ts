@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { SettingsState, SettingsStore } from '~root/state';
+import { IWalletAssetModel, SettingsState, SettingsStore, WalletsAssetsStore } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { from, Observable, Subject, Subscription, throwError, timer } from 'rxjs';
 import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
 import { addMinutes } from 'date-fns';
+import { applyTransaction } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class SettingsService {
   constructor(
     private readonly settingsStore: SettingsStore,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly walletsAssetsStore: WalletsAssetsStore,
   ) {
     let keptPassword: string | undefined;
     this.getKeptPassword = () => {
@@ -169,5 +171,15 @@ export class SettingsService {
 
   updateBackgroundImage(data: Pick<SettingsState, 'backgroundImg' | 'backgroundCover'>): void {
     this.settingsStore.updateState(data);
+  }
+
+  setCounterAsset(assetId: IWalletAssetModel['_id']): void {
+    applyTransaction(() => {
+      this.walletsAssetsStore.update(null, {
+        counterPrice: undefined,
+        counterId: undefined
+      });
+      this.settingsStore.updateState({ counterAssetId: assetId });
+    });
   }
 }
