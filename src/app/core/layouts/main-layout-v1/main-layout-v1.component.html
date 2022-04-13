@@ -62,6 +62,16 @@
         <span *ngIf="!isCollapsed">Airdrops</span>
       </li>
 
+      <li [class.hidden]="!(advanceMode$ | async)"
+          [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/lab"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Lab</span>
+      </li>
+
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           routerLink="/settings"

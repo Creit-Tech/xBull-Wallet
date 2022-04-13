@@ -13,6 +13,7 @@ import { ModalsModule } from '~root/shared/modals/modals.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {NzInputModule} from "ng-zorro-antd/input";
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import {NzInputModule} from "ng-zorro-antd/input";
     LoadingModule,
     NzButtonModule,
     NzInputModule,
+    NzBreadCrumbModule,
   ],
 })
 export class LabModule { }

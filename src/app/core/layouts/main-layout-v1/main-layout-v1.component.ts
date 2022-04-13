@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { SettingsQuery } from '~root/state';
 
 @Component({
   selector: 'app-main-layout-v1',
@@ -8,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class MainLayoutV1Component implements OnInit {
   isCollapsed = true;
 
-  constructor() { }
+  advanceMode$ = this.settingsQuery.advanceMode$;
+
+  constructor(
+    private readonly settingsQuery: SettingsQuery,
+  ) { }
 
   ngOnInit(): void {
   }

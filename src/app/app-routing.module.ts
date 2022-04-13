@@ -33,21 +33,6 @@ const routes: Routes = [
       .then(m => m.TradeModule)
   },
   {
-    path: 'lab',
-    component: MainLayoutComponent,
-    data: {
-      activeIcon: 'lab'
-    },
-    canActivate: [
-      IsThereWalletsGuard
-    ],
-    canActivateChild: [
-      IsThereWalletsGuard
-    ],
-    loadChildren: () => import('./modules/lab/lab.module')
-      .then(m => m.LabModule)
-  },
-  {
     path: 'sign-from-background',
     component: BackgroundComponent,
   },
@@ -95,6 +80,11 @@ const routes: Routes = [
         path: 'airdrops',
         loadChildren: () => import('./modules/claimable-balances/claimable-balances.module')
           .then(m => m.ClaimableBalancesModule)
+      },
+      {
+        path: 'lab',
+        loadChildren: () => import('./modules/lab/lab.module')
+          .then(m => m.LabModule)
       },
       {
         path: 'settings',

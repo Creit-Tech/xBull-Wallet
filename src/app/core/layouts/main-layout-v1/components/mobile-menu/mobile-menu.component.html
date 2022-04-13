@@ -30,6 +30,16 @@
       <span>Airdrops</span>
     </li>
 
+    <li [class.hidden]="!(advanceMode$ | async)"
+        (click)="closeDrawer()"
+        routerLink="/lab"
+        nzMatchRouter
+        nz-menu-item
+        class="flex">
+      <i class="mr-4 fa-solid fa-flask"></i>
+      <span>Lab</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-gear"></i>
       <span>Settings</span>
