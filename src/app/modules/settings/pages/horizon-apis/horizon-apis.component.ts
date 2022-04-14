@@ -5,6 +5,7 @@ import { AddHorizonApiComponent } from '~root/modules/settings/components/add-ho
 import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { HorizonApiDetailsComponent } from '~root/modules/settings/components/horizon-api-details/horizon-api-details.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-horizon-apis',
@@ -18,6 +19,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
   constructor(
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly componentCreatorService: ComponentCreatorService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   ngOnInit(): void {
@@ -29,35 +31,26 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
   }
 
   async onHorizonItemClicked(horizon: IHorizonApi): Promise<void> {
-    const ref = await this.componentCreatorService.createOnBody<HorizonApiDetailsComponent>(HorizonApiDetailsComponent);
+    const drawerRef = this.nzDrawerService.create<HorizonApiDetailsComponent>({
+      nzContent: HorizonApiDetailsComponent,
+      nzContentParams: {
+        horizonApi: horizon,
+      },
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Horizon Details',
+    });
 
-    ref.component.instance.horizonApi = horizon;
-
-    ref.component.instance.close
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    drawerRef.open();
   }
 
   async addNewHorizonApi(): Promise<void> {
-    const ref = await this.componentCreatorService.createOnBody<AddHorizonApiComponent>(AddHorizonApiComponent);
+    const nzRef = this.nzDrawerService.create<AddHorizonApiComponent>({
+      nzContent: AddHorizonApiComponent,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Add new Horizon',
+    });
 
-    ref.component.instance.close
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    nzRef.open();
   }
 
 }

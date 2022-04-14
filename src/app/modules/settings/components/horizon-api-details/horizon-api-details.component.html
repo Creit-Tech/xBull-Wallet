@@ -1,38 +1,36 @@
-<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
-  <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-      {{ (horizonApi$ | async)?.name }}
-    </h2>
-  </div>
+<div class="w-full text-center mb-4">
+  <h2 class="m-0 p-0 font-bold text-xl">
+    {{ (horizonApi$ | async)?.name }}
+  </h2>
+</div>
 
-  <section class="w-full mb-8">
-    <dl>
-      <dt class="text-off-black text-base font-bold mb-1">
-        Record ID:
-      </dt>
-      <dd class="break-all text-label text-sm mb-3">
-        {{ (horizonApi$ | async)?._id }}
-      </dd>
-      <dt class="text-off-black text-base font-bold mb-1">
-        Horizon URL:
-      </dt>
-      <dd class="break-all text-label text-sm mb-3">
-        {{ (horizonApi$ | async)?.url }}
-      </dd>
-      <dt class="text-off-black text-base font-bold mb-1">
-        Network Passphrase
-      </dt>
-      <dd class="break-all text-label text-xs mb-3">
-        {{ (horizonApi$ | async)?.networkPassphrase }}
-      </dd>
-    </dl>
-  </section>
+<section class="w-full mb-8">
+  <dl>
+    <dt class="font-bold mb-1">
+      Record ID:
+    </dt>
+    <dd class="break-all opacity-80 text-sm mb-3">
+      {{ (horizonApi$ | async)?._id }}
+    </dd>
+    <dt class="font-bold mb-1">
+      Horizon URL:
+    </dt>
+    <dd class="break-all opacity-80 text-sm mb-3">
+      {{ (horizonApi$ | async)?.url }}
+    </dd>
+    <dt class="font-bold mb-1">
+      Network Passphrase
+    </dt>
+    <dd class="break-all opacity-80 text-xs mb-3">
+      {{ (horizonApi$ | async)?.networkPassphrase }}
+    </dd>
+  </dl>
+</section>
 
-  <div *ngIf="(horizonApi$ | async)?.canRemove" class="w-full">
-    <button (click)="onRemove()"
-            [disabled]="(selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id"
-            class="w-full btn btn-error-alternative btn--small">
-      {{ (selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id ? "Horizon API being used" : 'Remove' }}
-    </button>
-  </div>
-</app-modal-wrapper>
+<div *ngIf="(horizonApi$ | async)?.canRemove" class="w-full">
+  <button (click)="onRemove()"
+          nz-button nzSize="large" nzBlock nzDanger nzType="primary"
+          [disabled]="(selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id">
+    {{ (selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id ? "Horizon API being used" : 'Remove' }}
+  </button>
+</div>

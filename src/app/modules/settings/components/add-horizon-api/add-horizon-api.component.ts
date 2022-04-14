@@ -3,15 +3,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { Networks } from 'stellar-sdk';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-add-horizon-api',
   templateUrl: './add-horizon-api.component.html',
   styleUrls: ['./add-horizon-api.component.scss']
 })
-export class AddHorizonApiComponent implements OnInit, AfterViewInit {
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  showModal = false;
+export class AddHorizonApiComponent implements OnInit {
 
   passphraseOptions = [{
     name: 'Mainnet',
@@ -30,14 +29,10 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
   constructor(
     private readonly horizonApisService: HorizonApisService,
     private readonly nzMessageService: NzMessageService,
+    private readonly nzDrawerRef: NzDrawerRef,
   ) { }
 
   ngOnInit(): void {
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
   }
 
   onConfirm(): void {
@@ -50,13 +45,11 @@ export class AddHorizonApiComponent implements OnInit, AfterViewInit {
       canRemove: true,
     });
 
-    this.close.emit();
+    this.onClose();
   }
 
   async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.close.emit();
+    this.nzDrawerRef.close();
   }
 
 }

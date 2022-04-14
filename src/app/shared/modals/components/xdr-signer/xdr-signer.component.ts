@@ -1,7 +1,7 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription, throwError } from 'rxjs';
 import {WalletsService} from '~root/core/wallets/services/wallets.service';
-import {filter, map, pluck, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import { catchError, filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Networks, Operation, Transaction } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import {
@@ -30,7 +30,7 @@ import { SettingsService } from '~root/core/settings/services/settings.service';
   templateUrl: './xdr-signer.component.html',
   styleUrls: ['./xdr-signer.component.scss']
 })
-export class XdrSignerComponent implements OnInit {
+export class XdrSignerComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -44,14 +44,17 @@ export class XdrSignerComponent implements OnInit {
   @Input() ignoreKeptPassword = false;
 
   xdr$: ReplaySubject<string> = new ReplaySubject<string>();
+  xdrParsed$: ReplaySubject<Transaction> = new ReplaySubject<Transaction>();
   @Input() set xdr(data: string) {
-    this.xdr$.next(data);
+    try {
+      const parsedXdr = this.walletsService.parseFromXDRToTransactionInterface(data);
+      this.xdr$.next(data);
+      this.xdrParsed$.next(parsedXdr);
+    } catch (e) {
+      this.nzMessageService.error('The transaction you are trying to sign is invalid');
+      this.onClose();
+    }
   }
-
-  xdrParsed$: Observable<Transaction> = this.xdr$.asObservable()
-    .pipe(map(xdr =>
-      this.walletsService.parseFromXDRToTransactionInterface(xdr)
-    ));
 
   unhandledXdrCheckerSubscription: Subscription = this.xdrParsed$
     .pipe(take(1))
@@ -122,6 +125,11 @@ export class XdrSignerComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngOnDestroy(): void {
+    this.componentDestroyed$.next();
+    this.componentDestroyed$.complete();
   }
 
   async onAccepted(): Promise<void> {
@@ -364,6 +372,7 @@ export class XdrSignerComponent implements OnInit {
 
 
   async onClose(): Promise<void> {
+    this.componentDestroyed$.next();
     this.nzDrawerRef.close();
   }
 
