@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
-import { MainLayoutComponent } from '~root/core/layouts/main-layout/main-layout.component';
 import { IsThereWalletsGuard } from '~root/core/wallets/guards/is-there-wallets.guard';
 import { LabComponent } from '~root/modules/lab/lab.component';
 import {BackgroundComponent} from "~root/modules/background/background.component";
