@@ -16,23 +16,6 @@ const routes: Routes = [
       .then(m => m.GenerateAccountModule),
   },
   {
-    path: 'trade',
-    component: MainLayoutComponent,
-    data: {
-      activeIcon: 'trade'
-    },
-    canActivate: [
-      IsThereWalletsGuard,
-      IosViewRestrictionGuard
-    ],
-    canActivateChild: [
-      IsThereWalletsGuard,
-      IosViewRestrictionGuard
-    ],
-    loadChildren: () => import('./modules/trade/trade.module')
-      .then(m => m.TradeModule)
-  },
-  {
     path: 'sign-from-background',
     component: BackgroundComponent,
   },
