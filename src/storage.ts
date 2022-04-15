@@ -57,10 +57,10 @@ if (environment.platform === 'extension') {
   persistStateParams.storage = storageMobileMiddleware;
 } else if (environment.platform === 'website') {
   localForage.config({
-    driver: localForage.INDEXEDDB,
-    name: 'Akita',
+    driver: [localForage.INDEXEDDB, localForage.LOCALSTORAGE],
+    name: 'xBull',
     version: 1.0,
-    storeName: 'akita-storage',
+    storeName: 'xBull-storage',
   });
   persistStateParams.storage = localForage;
   persistStateParams.key = 'xBull';

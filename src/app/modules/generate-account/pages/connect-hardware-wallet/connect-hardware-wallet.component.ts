@@ -8,6 +8,7 @@ import { ConfirmTrezorKeysComponent } from '~root/modules/generate-account/compo
 import {GlobalsService} from '~root/lib/globals/globals.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ENV, environment } from '~env';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -29,6 +30,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
     private readonly nzMessageService: NzMessageService,
     @Inject(ENV)
     private readonly env: typeof environment,
+    private readonly router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -100,11 +102,18 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
   }
 
   async showSuccessMessage(): Promise<void> {
-    this.nzMessageService.success(`Accounts imported correctly, this window will be closed in the next 5 seconds.`);
+    if (this.env.platform === 'website') {
+      this.nzMessageService.success(`Accounts imported correctly, you will be redirected to your wallet in 5 seconds.`, {
+        nzDuration: 5000
+      });
+      await this.router.navigate(['/wallet']);
+    } else if (this.env.platform === 'extension') {
+      this.nzMessageService.success(`Accounts imported correctly, this window will be closed in the next 5 seconds.`);
 
-    await new Promise(resolve => setTimeout(resolve, 5000));
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
-    this.globalsService.window.close();
+      this.globalsService.window.close();
+    }
   }
 
 }

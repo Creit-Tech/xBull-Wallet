@@ -133,14 +133,22 @@
             </h1>
           </div>
 
-          <nz-list class="w-full lg:col-span-12 lg:row-span-1 overflow-y-auto no-scrollbar">
-            <nz-list-item *ngFor="let balance of (accountBalancesRegularAssets$ | async); trackBy: trackByBalanceline" class="w-full cursor-pointer">
-              <app-wallet-asset-item class="block w-full px-4"
-                                     (click)="assetDetails(balance)"
-                                     [balanceLine]="balance">
-              </app-wallet-asset-item>
-            </nz-list-item>
-          </nz-list>
+          <div class="lg:col-span-12 lg:row-span-1">
+            <nz-list *ngIf="!!(accountBalancesRegularAssets$ | async)?.length; else noAssets" class="w-full overflow-y-auto no-scrollbar">
+              <nz-list-item *ngFor="let balance of (accountBalancesRegularAssets$ | async); trackBy: trackByBalanceline" class="w-full cursor-pointer">
+                <app-wallet-asset-item class="block w-full px-4"
+                                       (click)="assetDetails(balance)"
+                                       [balanceLine]="balance">
+                </app-wallet-asset-item>
+              </nz-list-item>
+            </nz-list>
+
+            <ng-template #noAssets>
+              <div class="h-full flex items-center justify-center">
+                <nz-empty nzNotFoundContent=""></nz-empty>
+              </div>
+            </ng-template>
+          </div>
 
           <div class="w-full lg:col-span-12 lg:row-span-auto text-center">
             <button [nzLoading]="addingAsset$ | async" nz-button (click)="addAsset()">
