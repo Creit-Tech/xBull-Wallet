@@ -30,7 +30,7 @@
 }
 
 // iOS specific styles
-.ios .main-wrapper {
+.ios .mobile .main-wrapper {
   border-top: env(safe-area-inset-top) solid;
   border-bottom: env(safe-area-inset-bottom) solid;
   @apply border-ash;
@@ -41,7 +41,7 @@
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-.ios .ant-image-preview-operations {
+.ios .mobile .ant-image-preview-operations {
   top: env(safe-area-inset-top);
 }
 
@@ -53,7 +53,7 @@
   padding-top: env(safe-area-inset-top);
 }
 
-.ios body {
+.ios .mobile body {
   @apply bg-black;
 }
 

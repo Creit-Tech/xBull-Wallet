@@ -1,6 +1,15 @@
-import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, merge, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   IWalletAssetModel,
   IWalletsAccount,
@@ -27,6 +36,9 @@ import { Memo } from 'stellar-sdk';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
+import QrScanner from 'qr-scanner';
+import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+
 @Component({
   selector: 'app-send-payment',
   templateUrl: './send-payment.component.html',
@@ -39,6 +51,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   isMobilePlatform = this.env.platform === 'mobile';
+  hasCamera = from(QrScanner.hasCamera());
 
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
   showModal = false;
@@ -50,7 +63,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       Validators.maxLength(56),
     ]),
     memo: new FormControl(''),
-    assetCode: new FormControl('native', [Validators.required]), // it's called asset code but it's actually the id
+    assetCode: new FormControl('', [Validators.required]), // it's called asset code but it's actually the id
     amount: new FormControl('', [Validators.required])
   });
 
@@ -127,6 +140,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly nzModalService: NzModalService,
     private readonly qrScannerService: QrScannerService,
     private readonly route: ActivatedRoute,
+    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   onSubmitSubscription: Subscription = this.onSubmitClick$
@@ -148,6 +162,8 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe(params => {
         if (params.assetId) {
           this.form.controls.assetCode.setValue(params.assetId);
+        } else {
+          this.form.controls.assetCode.setValue('native');
         }
       });
   }
@@ -249,6 +265,41 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       })
       .catch(console.error);
+  }
+
+  scanPublicKey(): void {
+    const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
+      nzContent: QrScanModalComponent,
+      nzPlacement: 'bottom',
+      nzTitle: 'Scan Public key',
+      nzHeight: '100%',
+      nzContentParams: {
+        handleQrScanned: text => {
+          this.form.controls.publicKey.patchValue(text);
+          drawerRef.close();
+        }
+      }
+    });
+
+    drawerRef.open();
+  }
+
+  scanMemoText(): void {
+    const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
+      nzContent: QrScanModalComponent,
+      nzPlacement: 'bottom',
+      nzTitle: 'Scan Public key',
+      nzHeight: '100%',
+      nzContentParams: {
+        handleQrScanned: text => {
+          this.form.controls.memo.patchValue(text);
+          drawerRef.close();
+          this.cdr.detectChanges();
+        }
+      }
+    });
+
+    drawerRef.open();
   }
 
   async setMax(): Promise<void> {

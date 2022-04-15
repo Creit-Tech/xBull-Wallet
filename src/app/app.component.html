@@ -1,4 +1,4 @@
-<ion-app class="block bg-off-black h-full">
+<ion-app [class.mobile]="platform === 'mobile'" class="block bg-off-black h-full">
   <section class="h-screen w-screen relative bg-center bg-cover"
            [style.background-image]="'url(' + (backgroundImg$ | async) + ')'">
     <div class="top-0 left-0 absolute w-full h-full z-0 animation"

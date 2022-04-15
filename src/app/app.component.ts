@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { GlobalsService } from '~root/lib/globals/globals.service';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,11 @@ export class AppComponent implements OnInit {
   backgroundImg$ = this.settingsQuery.backgroundImg$;
   backgroundCover$ = this.settingsQuery.backgroundCover$;
 
+  platform = this.env.platform;
+
   constructor(
+    @Inject(ENV)
+    private readonly env: typeof environment,
     private readonly settingsService: SettingsService,
     private readonly settingsQuery: SettingsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,

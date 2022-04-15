@@ -32,7 +32,7 @@
 
         <section [formGroup]="form" class="w-full mb-6">
           <div class="w-full mb-4">
-            <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qr">
+            <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qrPublicKey">
               <input type="text" nz-input nzSize="large" placeholder="Public key" formControlName="publicKey">
             </nz-input-group>
 
@@ -40,21 +40,26 @@
               <i class="fa-solid fa-key"></i>
             </ng-template>
 
-            <ng-template #qr>
-              <i (click)="scanQr()"
-                 *ngIf="isMobilePlatform"
-                 nz-icon nzType="qrcode"
-                 nzTheme="outline" class="cursor-pointer"></i>
+            <ng-template #qrPublicKey>
+              <i class="fa-solid fa-camera cursor-pointer"
+                 (click)="scanPublicKey()"
+                 *ngIf="hasCamera | async"></i>
             </ng-template>
           </div>
 
           <div class="w-full mb-4">
-            <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon">
+            <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon" [nzSuffix]="qrMemo">
               <input type="text" nz-input nzSize="large" placeholder="Memo (required by exchanges)" formControlName="memo">
             </nz-input-group>
 
             <ng-template #tagIcon>
               <i class="fa-solid fa-tag"></i>
+            </ng-template>
+
+            <ng-template #qrMemo>
+              <i class="fa-solid fa-camera cursor-pointer"
+                 (click)="scanMemoText()"
+                 *ngIf="hasCamera | async"></i>
             </ng-template>
           </div>
 

@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SettingsQuery } from '~root/state';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-main-layout-v1',

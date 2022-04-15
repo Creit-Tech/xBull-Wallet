@@ -18,6 +18,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import {PasswordModalComponent} from "~root/shared/modals/components/password-modal/password-modal.component";
 import {NzInputModule} from "ng-zorro-antd/input";
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -27,6 +29,7 @@ const COMPONENTS = [
   HardConfirmComponent,
   XdrSignerComponent,
   PasswordModalComponent,
+  QrScanModalComponent,
 ];
 
 @NgModule({
@@ -44,6 +47,7 @@ const COMPONENTS = [
     NzButtonModule,
     NzInputModule,
     NzModalModule,
+    NzSpinModule,
   ],
 })
 export class ModalsModule {
