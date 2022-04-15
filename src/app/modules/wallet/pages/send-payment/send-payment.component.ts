@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
@@ -8,7 +8,7 @@ import {
   WalletsAssetsQuery,
   WalletsOperationsQuery
 } from '~root/state';
-import { map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { delay, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import BigNumber from 'bignumber.js';
 import { ENV, environment } from '~env';
@@ -32,7 +32,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './send-payment.component.html',
   styleUrls: ['./send-payment.component.scss']
 })
-export class SendPaymentComponent implements OnInit, OnDestroy {
+export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   onSubmitClick$: Subject<void> = new Subject<void>();
   loadingSubmitButton$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -139,8 +139,12 @@ export class SendPaymentComponent implements OnInit, OnDestroy {
     });
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit(): void {
     this.route.queryParams
       .pipe(take(1))
+      .pipe(delay(10))
       .subscribe(params => {
         if (params.assetId) {
           this.form.controls.assetCode.setValue(params.assetId);

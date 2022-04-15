@@ -395,6 +395,13 @@
             <b>{{ reserve.amount | number: '0.0-7' }}</b>
           </dd>
         </ng-container>
+
+        <ng-container *ngIf="operation?.operationRecord?.transaction_attr as transaction">
+          <dt class="text-base font-bold mb-1">Memo:</dt>
+          <dd class="opacity-80 text-sm mb-3 truncate">
+            {{ transaction.memo }}
+          </dd>
+        </ng-container>
       </dl>
     </section>
 

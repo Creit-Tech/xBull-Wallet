@@ -5,6 +5,7 @@ import { migrationsHandler } from './migrations/migrations';
 import { environment } from '~env';
 import { PersistStateParams } from '@datorama/akita/lib/persistState';
 import { storageMobileMiddleware } from './storage-mobile.middleware';
+import * as localForage from 'localforage';
 
 const persistStateParams: Partial<PersistStateParams> = {
   include: [
@@ -14,8 +15,6 @@ const persistStateParams: Partial<PersistStateParams> = {
     'UI/wallets-accounts',
     'wallets-assets',
     'UI/wallets-assets',
-    'wallets-operations',
-    'UI/wallets-operations',
     'settings',
     'sites-connections',
     'horizon-apis'
@@ -56,6 +55,15 @@ if (environment.platform === 'extension') {
 } else if (environment.platform === 'mobile') {
   persistStateParams.preStorageUpdateOperator = () => debounceTime(1000);
   persistStateParams.storage = storageMobileMiddleware;
+} else if (environment.platform === 'website') {
+  localForage.config({
+    driver: localForage.INDEXEDDB,
+    name: 'Akita',
+    version: 1.0,
+    storeName: 'akita-storage',
+  });
+  persistStateParams.storage = localForage;
+  persistStateParams.key = 'xBull';
 }
 
 const storage = persistState(persistStateParams);

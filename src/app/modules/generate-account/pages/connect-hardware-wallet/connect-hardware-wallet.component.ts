@@ -1,12 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { ConfirmPublicKeysComponent } from '~root/modules/generate-account/components/confirm-public-keys/confirm-public-keys.component';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ConfirmTrezorKeysComponent } from '~root/modules/generate-account/components/confirm-trezor-keys/confirm-trezor-keys.component';
-import {GlobalsService} from "~root/lib/globals/globals.service";
+import {GlobalsService} from '~root/lib/globals/globals.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -18,11 +19,16 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
 
   trezorInitiated$ = this.hardwareWalletsService.trezorInitiated$;
 
+  showTrezor = this.env.platform === 'extension';
+  showBackButton = this.env.platform === 'website';
+
   constructor(
     private readonly hardwareWalletsService: HardwareWalletsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly globalsService: GlobalsService,
     private readonly nzMessageService: NzMessageService,
+    @Inject(ENV)
+    private readonly env: typeof environment,
   ) { }
 
   ngOnInit(): void {

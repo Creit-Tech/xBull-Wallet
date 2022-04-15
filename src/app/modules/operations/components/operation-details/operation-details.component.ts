@@ -11,10 +11,11 @@ import { GlobalsService } from '~root/lib/globals/globals.service';
   styleUrls: ['./operation-details.component.scss']
 })
 export class OperationDetailsComponent implements OnInit {
-  operation$: ReplaySubject<IWalletsOperation> = new ReplaySubject<IWalletsOperation>();
+  operation$: ReplaySubject<any> = new ReplaySubject<any>();
   @Input() set operation(data: IWalletsOperation) {
     this.operation$.next(data);
   }
+
 
   constructor(
     private readonly globalsService: GlobalsService,

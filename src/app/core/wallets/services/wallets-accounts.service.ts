@@ -139,8 +139,7 @@ export class WalletsAccountsService {
     if (params.account) {
       const streamBuilder = new Server(params.horizonApi.url).operations()
         .forAccount(params.account.publicKey)
-        .limit(100)
-        .includeFailed(false);
+        .join('transactions');
 
       streamBuilder.order(params.order);
 
@@ -199,6 +198,7 @@ export class WalletsAccountsService {
       .forAccount(params.account.publicKey)
       .limit(100)
       .order('desc')
+      .join('transactions')
       .call()
       .then(response => {
         const operations = response.records.map(operationRecord => {
