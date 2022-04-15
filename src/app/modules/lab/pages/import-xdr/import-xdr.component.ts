@@ -41,7 +41,7 @@ export class ImportXdrComponent implements OnInit {
     const nzRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Remove LP Asset',
+      nzTitle: 'Sign XDR',
       nzContentParams: {
         xdr: this.signControl.value,
         acceptHandler: signedXdr => {

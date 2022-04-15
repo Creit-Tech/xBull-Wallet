@@ -33,7 +33,7 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
       nzContentParams: {
         connectedSite: siteConnected
       },
-      nzTitle: 'Create pool',
+      nzTitle: 'Connected site',
       nzWrapClassName: 'drawer-full-w-320',
     });
 

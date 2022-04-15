@@ -189,7 +189,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
     const ref = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Claim Asset',
+      nzTitle: 'Claim Airdrop',
       nzContentParams: {
         xdr: transactionXDR,
         acceptHandler: async signedXdr => {
