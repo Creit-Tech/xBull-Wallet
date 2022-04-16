@@ -1,0 +1,100 @@
+<nz-layout class="h-full bg-transparent">
+  <nz-sider class="hidden lg:block bg-gray"
+            nzCollapsible [(nzCollapsed)]="isCollapsed">
+    <div class="p-4 cursor-pointer" routerLink="/wallet">
+      <img src="/assets/icons/xbull-dark.png"
+           style="max-width: 120px;"
+           alt="" class="w-full h-auto mx-auto">
+    </div>
+    <ul nz-menu nzMode="inline" nzTheme="dark">
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/wallet"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-wallet" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Wallet</span>
+      </li>
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/operations"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-list-ul" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Operations</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/swaps"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-arrows-rotate" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Swaps</span>
+      </li>
+
+<!--      <li [class.justify-center]="isCollapsed"-->
+<!--          [class.items-center]="isCollapsed"-->
+<!--          routerLink="/trade"-->
+<!--          nzMatchRouter-->
+<!--          nz-menu-item class="flex">-->
+<!--        <i class="fa-solid fa-chart-line" [class.mr-4]="!isCollapsed"></i>-->
+<!--        <span *ngIf="!isCollapsed">Trade</span>-->
+<!--      </li>-->
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/liquidity-pools"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-water-ladder" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Liquidity pools</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/airdrops"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-parachute-box" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Airdrops</span>
+      </li>
+
+      <li [class.hidden]="!(advanceMode$ | async)"
+          [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/lab"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Lab</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/settings"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-gear" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Settings</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout class="bg-transparent">
+
+    <nz-header class="bg-gray p-0 w-full px-4">
+      <app-layout-v1-header class="w-full"></app-layout-v1-header>
+    </nz-header>
+
+    <nz-content class="h-full bg-transparent grid grid-cols-1 grid-rows-1">
+      <section class="row-span-1 col-span-1 overflow-y-auto no-scrollbar pb-2 md:pb-0">
+        <router-outlet></router-outlet>
+      </section>
+      <nz-footer class="hidden md:block col-span-1 p-4">
+        xBull Wallet - An Open Source Stellar Wallet <br class="md:hidden"> created by Creit Tech
+      </nz-footer>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

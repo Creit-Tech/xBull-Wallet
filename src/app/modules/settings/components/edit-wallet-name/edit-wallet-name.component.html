@@ -1,26 +1,23 @@
-<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
-  <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-      Edit Wallet name
-    </h2>
-  </div>
-
-  <form (ngSubmit)="onConfirm()" class="mb-2">
-    <div class="w-full">
-      <app-input type="text" mode="light" title="Wallet Name"
-                 [formControl]="nameField"
-                 iconPath="/assets/icons/tag.svg"></app-input>
-    </div>
-  </form>
-
-  <div class="w-full text-center text-label mb-7">
-    The name of the Wallet is not recorded in the Blockchain
-  </div>
-
+<section class="mb-2">
   <div class="w-full">
-    <button (click)="onConfirm()" [disabled]="nameField.invalid"
-            class="w-full btn btn-success-alternative btn--small">
-      Confirm
-    </button>
+    <nz-input-group nzSize="large" [nzPrefix]="tagIcon">
+      <input type="text" nz-input [formControl]="nameField" placeholder="Wallet name">
+    </nz-input-group>
+    <ng-template #tagIcon>
+      <div class="px-2">
+        <i class="fa-solid fa-tag"></i>
+      </div>
+    </ng-template>
   </div>
-</app-modal-wrapper>
+</section>
+
+<div class="w-full text-center mb-7 opacity-80">
+  The name of the Wallet is not recorded on the Blockchain. It's only for information purposes.
+</div>
+
+<div class="w-full">
+  <button (click)="onConfirm()" [disabled]="nameField.invalid"
+          class="w-full btn btn-success-alternative btn--small">
+    Confirm
+  </button>
+</div>

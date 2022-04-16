@@ -1,37 +1,47 @@
-<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
-  <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-      Add new account
-    </h2>
+<div class="w-full text-center mb-4">
+  <h2 class="m-0 p-0 font-bold text-xl">
+    Add new account
+  </h2>
+</div>
+
+<ng-container *ngIf="(parentWallet$ | async) as parentWallet">
+
+  <ng-container *ngIf="parentWallet.type === 'secret_key'">
+    <div class="w-full mb-4">
+      <nz-input-group nzSize="large" [nzPrefix]="keyIcon">
+        <input type="text" nz-input [formControl]="secretKey" placeholder="Secret key">
+      </nz-input-group>
+      <ng-template #keyIcon>
+        <div class="px-2">
+          <i class="fa-solid fa-key"></i>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+
+  <div class="w-full mb-4">
+    <div class="w-full mb-4">
+      <nz-input-group nzSize="large" [nzPrefix]="unlockIcon">
+        <input type="password" nz-input [formControl]="password" placeholder="Password">
+      </nz-input-group>
+      <ng-template #unlockIcon>
+        <div class="px-2">
+          <i class="fa-solid fa-unlock"></i>
+        </div>
+      </ng-template>
+    </div>
   </div>
 
-  <ng-container *ngIf="(parentWallet$ | async) as parentWallet">
+  <div class="w-full text-center opacity-80 mb-7">
+    Write your password to decrypt your wallet and add a new account
+  </div>
 
-    <ng-container *ngIf="parentWallet.type === 'secret_key'">
-      <div class="w-full mb-4">
-        <app-input type="text" mode="light" title="Secret Key"
-                   [formControl]="secretKey"
-                   iconPath="/assets/icons/key.svg"></app-input>
-      </div>
-    </ng-container>
+  <div class="w-full">
+    <button (click)="onConfirm()" [disabled]="password.invalid"
+            nz-button nzType="primary"
+            nzBlock nzSize="large">
+      Confirm
+    </button>
+  </div>
 
-    <div class="w-full mb-4">
-      <app-input type="password" mode="light" title="Password"
-                 [formControl]="password"
-                 iconPath="/assets/icons/lock-unlocked.svg"></app-input>
-    </div>
-
-    <div class="w-full text-center text-label mb-7">
-      Write your password to decrypt your wallet and add a new account
-    </div>
-
-    <div class="w-full">
-      <button (click)="onConfirm()" [disabled]="password.invalid"
-              class="w-full btn btn-success-alternative btn--small">
-        Confirm
-      </button>
-    </div>
-
-
-  </ng-container>
-</app-modal-wrapper>
+</ng-container>

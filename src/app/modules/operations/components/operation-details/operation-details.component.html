@@ -1,0 +1,416 @@
+<ng-container *ngIf="operation$ | async as operation">
+  <section class="h-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+    <div class="col-span-1 text-center">
+      <h2 class="m-0 p-0 font-bold text-xl">
+        <i class="fa-solid fa-copy cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.id"></i> Operation <br> <span class="opacity-80">{{ operation.operationRecord.id }}</span>
+      </h2>
+    </div>
+
+    <section class="col-span-1 overflow-y-auto no-scrollbar">
+      <dl>
+        <dt class="text-base font-bold mb-1">Type:</dt>
+        <dd class="opacity-80 text-sm mb-3">
+          {{ operation.operationRecord.type }}
+        </dd>
+
+        <dt class="text-base font-bold mb-1">Date:</dt>
+        <dd class="opacity-80 text-sm mb-3">
+          Pushed at {{ operation.createdAt | date: 'MMM dd, yyyy hh:mm a' }}
+        </dd>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'create_account'">
+          <dt class="text-base font-bold mb-1">Account:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.account">
+            {{ operation.operationRecord.account | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Initial amount:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.starting_balance | number: '0.0-7' }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'payment'">
+          <dt class="text-base font-bold mb-1">To:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.to" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+            {{ operation.operationRecord.to | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">From:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.from" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+            {{ operation.operationRecord.from | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Amount:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.amount | number: '0.0-7' }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Asset code:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
+          <dt class="text-base font-bold mb-1">To:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.to" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+            {{ operation.operationRecord.to | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">From:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.from" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+            {{ operation.operationRecord.from | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Source amount:</dt>
+          <dd class="opacity-80 text-sm mb-3 break-all">
+            {{ operation.operationRecord.source_amount | number: '0.0-7' }}
+            {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Destination amount:</dt>
+          <dd class="opacity-80 text-sm mb-3 break-all">
+            {{ operation.operationRecord.amount | number: '0.0-7' }}
+            {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+          </dd>
+
+          <!--      TODO: Decide if we should show this later-->
+          <!--      <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send'">-->
+          <!--        <dt class="text-base font-bold mb-1">Min amount to receive:</dt>-->
+          <!--        <dd class="opacity-80 cursor-pointer text-sm mb-3 break-all">-->
+          <!--          {{ operation.operationRecord.destination_min | number: '0.0-7' }}-->
+          <!--          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}-->
+          <!--        </dd>-->
+          <!--      </ng-container>-->
+
+          <!--      <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_receive'">-->
+          <!--        <dt class="text-base font-bold mb-1">Max amount to send:</dt>-->
+          <!--        <dd class="opacity-80 cursor-pointer text-sm mb-3 break-all">-->
+          <!--          {{ operation.operationRecord.source_max | number: '0.0-7' }}-->
+          <!--          {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}-->
+          <!--        </dd>-->
+          <!--      </ng-container>-->
+
+          <dt class="text-base font-bold mb-1">Payment path:</dt>
+          <dd class="opacity-80 text-sm mb-3 break-all">
+            0: {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+          </dd>
+          <ng-container *ngFor="let pathStep of operation.operationRecord.path; let i = index">
+            <dd class="opacity-80 text-sm mb-3 break-all">
+              {{ i + 1 }}: {{ pathStep.asset_type === 'native' ? 'XLM' : pathStep.asset_code }}
+            </dd>
+          </ng-container>
+          <dd class="opacity-80 text-sm mb-3 break-all">
+            {{ operation.operationRecord.path.length + 1}}: {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'create_passive_sell_offer' || operation.operationRecord.type === 'manage_sell_offer' || operation.operationRecord.type === 'manage_buy_offer'">
+          <dt class="text-base font-bold mb-1">Offer ID:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            <ng-container *ngIf="(operation.operationRecord.amount | number: '0.0-0') == '0'; else updateOffer">
+              Close offer: {{ operation.operationRecord.offer_id }}
+            </ng-container>
+            <ng-template #updateOffer>
+              {{ !operation.operationRecord.offer_id || operation.operationRecord.offer_id == '0' ? 'New offer' : 'Update offer: ' + operation.operationRecord.offer_id }}
+            </ng-template>
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Selling:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.amount | number: '0.0-7' }} {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Buying:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Pair rate:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            1 {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
+            =
+            {{ operation.operationRecord.price | number: '0.0-7' }}
+            {{ operation.operationRecord.buying_asset_type === 'native' ? 'XLM' : operation.operationRecord.buying_asset_code }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'set_options'">
+          <ng-container *ngIf="operation.operationRecord.signer_key">
+            <dt class="text-base font-bold mb-1">Signer key:</dt>
+            <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.signer_key">
+              {{ operation.operationRecord.signer_key | publicKey }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.signer_weight">
+            <dt class="text-base font-bold mb-1">Signer weight:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.signer_weight }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.master_key_weight">
+            <dt class="text-base font-bold mb-1">Master key weight:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.master_key_weight }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.low_threshold || operation.operationRecord.low_threshold === 0">
+            <dt class="text-base font-bold mb-1">Low threshold:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.low_threshold }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.med_threshold || operation.operationRecord.med_threshold === 0">
+            <dt class="text-base font-bold mb-1">Medium threshold:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.med_threshold }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.high_threshold || operation.operationRecord.high_threshold === 0">
+            <dt class="text-base font-bold mb-1">High threshold:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.high_threshold }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.home_domain">
+            <dt class="text-base font-bold mb-1">Home domain:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.home_domain }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.set_flags_s">
+            <dt class="text-base font-bold mb-1">Set flags:</dt>
+            <dd *ngFor="let flag of operation.operationRecord.set_flags_s" class="opacity-80 text-sm mb-3">
+              {{ flag }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.clear_flags_s">
+            <dt class="text-base font-bold mb-1">Clear flags:</dt>
+            <dd *ngFor="let flag of operation.operationRecord.clear_flags_s" class="opacity-80 text-sm mb-3">
+              {{ flag }}
+            </dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'change_trust'">
+          <ng-container *ngIf="operation.operationRecord.asset_type === 'liquidity_pool_shares'">
+            <dt class="text-base font-bold mb-1">Liquidity pool id:</dt>
+            <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+              {{ operation.operationRecord.liquidity_pool_id | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Limit:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.limit | number: '0.0-7' }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.asset_type !== 'liquidity_pool_shares'">
+            <dt class="text-base font-bold mb-1">Asset code:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.asset_code }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Asset issuer:</dt>
+            <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+              {{ operation.operationRecord.asset_issuer | publicKey }}
+            </dd>
+          </ng-container>
+
+          <dt class="text-base font-bold mb-1">Trustor:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.trustor" class="opacity-80 text-sm mb-3 cursor-pointer">
+            {{ operation.operationRecord.trustor | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Limit:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.limit | number: '0.0-7' }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'allow_trust'">
+          <dt class="text-base font-bold mb-1">Trustor:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.trustor">
+            {{ operation.operationRecord.trustor | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Asset code:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.asset_code }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Asset issuer:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.asset_issuer">
+            {{ operation.operationRecord.asset_issuer | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Authorize:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.authorize }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Authorize to maintain liabilities:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.authorize_to_maintain_liabilities }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'account_merge'">
+          <dt class="text-base font-bold mb-1">Receiver:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.into">
+            {{ operation.operationRecord.into | publicKey }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
+          <dt class="text-base font-bold mb-1">Data name:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.name }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Data value:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ !operation.operationRecord.value ? 'Value removed' : operation.operationRecord.value | base64Parse }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'bump_sequence'">
+          <dt class="text-base font-bold mb-1">Bump to:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.bump_to }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'begin_sponsoring_future_reserves'">
+          <dt class="text-base font-bold mb-1">Sponsored ID:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.sponsored_id">
+            {{ operation.operationRecord.sponsored_id | publicKey }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'end_sponsoring_future_reserves'">
+          <dt class="text-base font-bold mb-1">Begin sponsor:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.begin_sponsor | publicKey }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'set_trust_line_flags'">
+          <dt class="text-base font-bold mb-1">Asset code:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.asset_code }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Trustor:</dt>
+          <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.trustor">
+            {{ operation.operationRecord.trustor | publicKey }}
+          </dd>
+
+          <ng-container *ngIf="operation.operationRecord.set_flags_s">
+            <dt class="text-base font-bold mb-1">Set flags:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.set_flags_s }}
+            </dd>
+          </ng-container>
+
+          <ng-container *ngIf="operation.operationRecord.clear_flags_s">
+            <dt class="text-base font-bold mb-1">Clear flags:</dt>
+            <dd class="opacity-80 text-sm mb-3">
+              {{ operation.operationRecord.clear_flags_s }}
+            </dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_deposit'">
+          <dt class="text-base font-bold mb-1">Liquidity Pool ID:</dt>
+          <dd class="cursor-pointer opacity-80 text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+            {{ operation.operationRecord.liquidity_pool_id | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Min price:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.min_price | number: '0.0-7' }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Max price:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.max_price | number: '0.0-7' }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Shares received:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.shares_received | number: '0.0-7' }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Reserves max:</dt>
+          <dd *ngFor="let reserve of operation.operationRecord.reserves_max"
+              class="opacity-80 text-sm mb-3 truncate">
+            {{ reserve.asset }}
+            <br>
+            <b>{{ reserve.amount | number: '0.0-7' }}</b>
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Reserves deposited:</dt>
+          <dd *ngFor="let reserve of operation.operationRecord.reserves_deposited"
+              class="opacity-80 text-sm mb-3 truncate">
+            {{ reserve.asset }}
+            <br>
+            <b>{{ reserve.amount | number: '0.0-7' }}</b>
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'liquidity_pool_withdraw'">
+          <dt class="text-base font-bold mb-1">Liquidity Pool ID:</dt>
+          <dd class="cursor-pointer opacity-80 text-sm mb-3" appClipboard [textToCopy]="operation.operationRecord.liquidity_pool_id">
+            {{ operation.operationRecord.liquidity_pool_id | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Shares:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.shares | number: '0.0-7' }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Reserves min:</dt>
+          <dd *ngFor="let reserve of operation.operationRecord.reserves_min"
+              class="opacity-80 text-sm mb-3 truncate">
+            {{ reserve.asset }}
+            <br>
+            <b>{{ reserve.amount | number: '0.0-7' }}</b>
+          </dd>
+
+          <dt class="text-base font-bold mb-1">Reserves received:</dt>
+          <dd *ngFor="let reserve of operation.operationRecord.reserves_received"
+              class="opacity-80 text-sm mb-3 truncate">
+            {{ reserve.asset }}
+            <br>
+            <b>{{ reserve.amount | number: '0.0-7' }}</b>
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation?.operationRecord?.transaction_attr as transaction">
+          <ng-container *ngIf="transaction.memo">
+            <dt class="text-base font-bold mb-1">Memo:</dt>
+            <dd class="opacity-80 text-sm mb-3 truncate">
+              {{ transaction.memo }}
+            </dd>
+          </ng-container>
+        </ng-container>
+      </dl>
+    </section>
+
+    <section class="col-span-1 flex">
+      <button (click)="checkOnBlockchain()" nz-button nzType="primary" nzBlock>
+        Check in the Blockchain
+      </button>
+    </section>
+  </section>
+</ng-container>

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
+import { IWalletAssetModel } from '~root/state/wallets-asset.model';
 
 export interface SettingsState {
   UIState: {
@@ -10,6 +11,13 @@ export interface SettingsState {
 
   advanceMode: boolean;
   defaultFee: string;
+
+  // keep password configurations, these are used to handle the logic
+  // (it should never be used to save the password, password can't be inside the store for security reasons)
+  keepPasswordActive: boolean;
+  lastTimePasswordSaved?: Date;
+  nextTimeToRemovePassword?: Date;
+  timeoutPasswordSaved: number; // Minutes to keep the password saved before asking for it again
 
   // This is a token which is used to decode an encrypted password in mobile devices
   passwordAuthTokenActive: boolean;
@@ -28,6 +36,11 @@ export interface SettingsState {
   // Background settings
   backgroundImg?: string;
   backgroundCover?: string;
+
+  // Counter asset
+  // This is to use an asset as the base price
+  // Default values are USDC on both testnet and pubnet
+  counterAssetId: IWalletAssetModel['_id'];
 }
 
 export function createInitialState(): SettingsState {
@@ -39,6 +52,8 @@ export function createInitialState(): SettingsState {
     storeVersion: 2,
     advanceMode: false,
     defaultFee: '10000',
+    keepPasswordActive: false,
+    timeoutPasswordSaved: 15,
     passwordAuthTokenActive: false,
     antiSPAMPublicKeys: [],
     antiSPAMClaimableAssets: [],
@@ -67,7 +82,8 @@ export function createInitialState(): SettingsState {
       'set_trust_line_flags',
       'liquidity_pool_deposit',
       'liquidity_pool_withdraw',
-    ]
+    ],
+    counterAssetId: 'native',
   };
 }
 

@@ -1,25 +1,46 @@
-<section class="w-full h-full flex flex-col justify-center items-center px-4">
-  <div class="w-full mb-4">
-    <button routerLink="/lab/import-xdr" nz-button class="w-full" nzSize="large" nzType="primary">
-      Import XDR (manually sign)
-    </button>
-  </div>
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Lab
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
 
-  <div class="w-full mb-4">
-    <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
-      Build transaction
-    </button>
-  </div>
+<section class="w-full flex justify-center items-center">
+  <section class="max-w-md w-full h-full flex flex-col justify-center items-center px-4">
+    <div class="w-full mb-4">
+      <button routerLink="/lab/import-xdr" nz-button class="w-full" nzSize="large" nzType="primary">
+        Import XDR (manually sign)
+      </button>
+    </div>
 
-  <div class="w-full mb-4">
-    <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
-      Sign message
-    </button>
-  </div>
+    <div class="w-full mb-4">
+      <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
+        Build transaction
+      </button>
+    </div>
 
-  <div class="w-full mb-4">
-    <button routerLink="/lab/claim-claimable-balance" nz-button class="w-full" nzSize="large" nzType="primary">
-      Claim claimable Balance
-    </button>
-  </div>
+    <div class="w-full mb-4">
+      <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
+        Sign message
+      </button>
+    </div>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+  <section class="max-w-md w-full h-full flex flex-col justify-center items-center px-4">
+    <small class="opacity-80 text-center">
+      This section includes operations that could be dangerous if you don't know what you're doing. Be careful.
+    </small>
+  </section>
 </section>

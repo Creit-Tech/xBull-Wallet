@@ -1,0 +1,57 @@
+<section style="grid-template-rows: repeat(3, auto) 6fr"
+         class="w-full h-full grid grid-cols-1">
+  <section class="col-span-1 px-4 pt-4">
+    <h2 class="mb-4 text-center font-bold">
+      <i class="fa-solid fa-server mr-2"></i> Network Node
+    </h2>
+
+    <nz-select [formControl]="horizonSelectControl" class="w-full">
+      <ng-container *ngFor="let horizonApi of (horizonApis | async); let i = index">
+        <nz-option [nzValue]="horizonApi._id"
+                   [nzLabel]="horizonApi.name">
+        </nz-option>
+      </ng-container>
+    </nz-select>
+  </section>
+
+  <nz-divider></nz-divider>
+
+  <section class="col-span-1 px-4 mb-2">
+    <h2 class="mb-4 text-center font-bold">
+      <i class="fa-solid fa-users mr-2"></i> Wallets
+    </h2>
+
+    <nz-select [formControl]="walletSelectControl" class="w-full">
+      <ng-container *ngFor="let wallet of wallets$ | async">
+        <nz-option nzLabel="Wallet: {{ wallet.name }}"
+                   [nzValue]="wallet._id">
+        </nz-option>
+      </ng-container>
+    </nz-select>
+  </section>
+
+  <section class="col-span-1 px-4 overflow-y-auto no-scrollbar">
+    <nz-list class="w-full cursor-pointer">
+      <ng-container *ngFor="let walletAccount of (walletAccountsPublicKeys$ | async); let i = index">
+        <nz-list-item (click)="onWalletAccountSelected(walletAccount)"
+                      class="flex flex-col transition items-start font-normal hover:text-primary">
+          <div class="w-full text-center">
+            {{ walletAccount.publicKey | publicKey }}
+            <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">
+              <span class="opacity-50">(Active)</span>
+            </ng-container>
+          </div>
+          <div class="w-full text-center opacity-80">
+            {{ walletAccount.name }}
+          </div>
+        </nz-list-item>
+      </ng-container>
+    </nz-list>
+  </section>
+
+  <section class="col-span-1 p-4">
+    <button (click)="closeDrawer()" routerLink="/settings/wallets/{{ (selectedWallet$ | async)?._id }}" nz-button nzBlock>
+      Edit selected wallet
+    </button>
+  </section>
+</section>

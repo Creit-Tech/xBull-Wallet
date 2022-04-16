@@ -1,0 +1,120 @@
+<nz-tabset class="max-w-md mx-auto w-full">
+
+  <nz-tab *ngIf="!disableMyAssets" nzTitle="My Assets">
+    <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+      <section class="col-span-1">
+        <nz-input-group nzSize="large" [nzSuffix]="searchInputControlIcon">
+          <input [formControl]="searchInputControl" type="text" nz-input placeholder="Write the code or issuer key">
+        </nz-input-group>
+        <ng-template #searchInputControlIcon>
+          <i class="fa-solid fa-search"></i>
+        </ng-template>
+      </section>
+
+      <section class="col-span-1 overflow-y-auto no-scrollbar">
+        <nz-list>
+          <nz-list-item *ngFor="let asset of (filteredDefaultAssets$ | async)" class="flex items-center w-full">
+            <ng-container *ngTemplateOutlet="innerListItem; context:{ asset }"></ng-container>
+          </nz-list-item>
+        </nz-list>
+      </section>
+    </section>
+  </nz-tab>
+
+  <nz-tab *ngIf="!disableCuratedAssetByCreitTech && (isPubnet$ | async)" nzTitle="Curated By Creit Tech">
+    <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+      <section class="col-span-1">
+        <nz-input-group nzSize="large" [nzSuffix]="searchCuratedInputControlIcon">
+          <input [formControl]="searchCuratedInputControl" type="text" nz-input placeholder="Ex: Write the code or issuer key">
+        </nz-input-group>
+        <ng-template #searchCuratedInputControlIcon>
+          <i class="fa-solid fa-search"></i>
+        </ng-template>
+      </section>
+
+      <section class="col-span-1 overflow-y-auto no-scrollbar">
+        <nz-list>
+          <nz-list-item *ngFor="let asset of (curatedByCreitTech$ | async)" class="flex items-center w-full">
+            <ng-container *ngTemplateOutlet="innerListItem; context:{ asset }"></ng-container>
+          </nz-list-item>
+        </nz-list>
+      </section>
+    </section>
+  </nz-tab>
+
+  <nz-tab *ngIf="!disableCustomAsset" nzTitle="Custom Asset">
+    <section [formGroup]="customAssetForm">
+      <div class="w-full mb-4">
+        <nz-form-control>
+          <nz-input-group [nzAddOnBefore]="assetCodeIcon" nzSize="large">
+            <input nz-input class="w-full"
+                   formControlName="assetCode"
+                   type="text" placeholder="Asset Code">
+          </nz-input-group>
+          <ng-template #assetCodeIcon>
+            <div style="width: 30px">
+              <i class="fa-solid fa-file"></i>
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </div>
+
+      <div class="w-full mb-4">
+        <nz-form-control>
+          <nz-input-group [nzAddOnBefore]="assetIssuerIcon" nzSize="large">
+            <input nz-input class="w-full"
+                   formControlName="assetIssuer"
+                   type="text" placeholder="Asset Issuer">
+          </nz-input-group>
+          <ng-template #assetIssuerIcon>
+            <div style="width: 30px">
+              <i class="fa-solid fa-key"></i>
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </div>
+
+      <div class="w-full">
+        <button nzBlock nz-button
+                (click)="onCustomAssetConfirmed()"
+                [disabled]="customAssetForm.invalid"
+                nzType="primary" nzSize="large">
+          Confirm
+        </button>
+      </div>
+
+    </section>
+  </nz-tab>
+
+</nz-tabset>
+
+<ng-template #innerListItem let-asset="asset">
+  <div class="flex flex-1 items-center">
+    <div class="rounded-full bg-white p-1 w-8 h-8 mr-4 bg-white">
+      <ng-container *ngIf="!!asset.image">
+        <img [src]="asset.image"
+             class="w-full h-full rounded-full"
+             alt="">
+      </ng-container>
+    </div>
+
+    <div class="flex flex-col">
+      <p class="font-bold text-lg m-0">
+        {{ asset.assetCode }}
+        <ng-container *ngIf="asset.assetIssuer">
+          <small class="text-xs opacity-50">{{ asset.assetIssuer | publicKey }}</small>
+        </ng-container>
+      </p>
+      <small class="text-xs opacity-80">
+        {{ asset.domain }}
+      </small>
+    </div>
+  </div>
+
+  <div class="w-auto">
+    <button (click)="onAssetSelected(asset)"
+            nzSize="large" nz-button nzType="text">
+      +
+    </button>
+  </div>
+</ng-template>

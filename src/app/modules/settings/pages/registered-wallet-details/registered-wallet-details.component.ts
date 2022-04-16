@@ -11,6 +11,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { AddAccountComponent } from '~root/modules/settings/components/add-account/add-account.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 
 @Component({
   selector: 'app-registered-wallet-details',
@@ -66,58 +67,41 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
   }
 
   async onCreateAccount(): Promise<void> {
-    const [
-      ref,
-      wallet
-    ] = await Promise.all([
-      this.componentCreatorService.createOnBody<AddAccountComponent>(AddAccountComponent),
-      this.wallet$.pipe(take(1)).toPromise()
-    ]);
+    const wallet = await this.wallet$.pipe(take(1)).toPromise();
 
     if (!wallet) {
-      return;
+      return ;
     }
 
-    ref.component.instance.parentWallet = wallet;
+    const drawerRef = this.nzDrawerService.create<AddAccountComponent>({
+      nzContent: AddAccountComponent,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Add account',
+      nzContentParams: {
+        parentWallet: wallet
+      }
+    });
 
-    ref.component.instance.close
-      .asObservable()
-      .pipe(pipe(take(1)))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    drawerRef.open();
   }
 
   async onEditName(): Promise<void> {
-    const [
-      ref,
-      wallet
-    ] = await Promise.all([
-      this.componentCreatorService.createOnBody<EditWalletNameComponent>(EditWalletNameComponent),
-      this.wallet$.pipe(take(1)).toPromise()
-    ]);
+    const wallet = await this.wallet$.pipe(take(1)).toPromise();
 
     if (!wallet) {
       // TODO: add error here later
       return;
     }
+    const drawerRef = this.nzDrawerService.create<EditWalletNameComponent>({
+      nzContent: EditWalletNameComponent,
+      nzTitle: `Edit wallet name`,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzContentParams: {
+        wallet
+      }
+    });
 
-    ref.component.instance.wallet = wallet;
-
-    ref.component.instance.close
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
+    drawerRef.open();
   }
 
   async onRemove(): Promise<void> {
@@ -134,9 +118,8 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
 
     const drawerRef = this.nzDrawerService.create<HardConfirmComponent>({
       nzContent: HardConfirmComponent,
-      nzTitle: '',
-      nzPlacement: 'bottom',
-      nzHeight: 'auto',
+      nzTitle: `Remove wallet ${wallet.name}`,
+      nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         title: 'Remove Wallet',
         alertMessage: `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method`

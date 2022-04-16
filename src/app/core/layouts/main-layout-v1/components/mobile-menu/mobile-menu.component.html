@@ -1,0 +1,67 @@
+<section class="w-full h-full grid grid-cols-12 gap-4" style="grid-template-rows: 1fr auto;">
+  <ul class="col-span-12 row-span-1" nz-menu nzMode="inline" nzTheme="dark">
+    <li (click)="closeDrawer()" routerLink="/wallet" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-wallet"></i>
+      <span>Wallet</span>
+    </li>
+
+    <li (click)="closeDrawer()" routerLink="/operations" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-list-ul"></i>
+      <span>Operations</span>
+    </li>
+
+    <li (click)="closeDrawer()" routerLink="/swaps" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-arrows-rotate"></i>
+      <span>Swaps</span>
+    </li>
+
+<!--    <li (click)="closeDrawer()" routerLink="/trade" nzMatchRouter nz-menu-item class="flex">-->
+<!--      <i class="mr-4 fa-solid fa-chart-line"></i>-->
+<!--      <span>Trade</span>-->
+<!--    </li>-->
+
+    <li (click)="closeDrawer()" routerLink="/liquidity-pools" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-water-ladder"></i>
+      <span>Liquidity pools</span>
+    </li>
+
+    <li (click)="closeDrawer()" routerLink="/airdrops" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-parachute-box"></i>
+      <span>Airdrops</span>
+    </li>
+
+    <li [class.hidden]="!(advanceMode$ | async)"
+        (click)="closeDrawer()"
+        routerLink="/lab"
+        nzMatchRouter
+        nz-menu-item
+        class="flex">
+      <i class="mr-4 fa-solid fa-flask"></i>
+      <span>Lab</span>
+    </li>
+
+    <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-gear"></i>
+      <span>Settings</span>
+    </li>
+  </ul>
+
+  <div class="col-span-12 row-span-1 grid grid-cols-2 grid-rows-1 gap-4 px-4 pb-4">
+    <div class="col-span-1 row-span-1">
+      <button (click)="closeDrawer()"
+              routerLink="/wallet/payment"
+              nz-button nzType="primary"
+              nzBlock nzSize="large">
+        Send
+      </button>
+    </div>
+    <div class="col-span-1 row-span-1">
+      <button (click)="closeDrawer()"
+              routerLink="/wallet/receive"
+              nz-button nzBlock
+              nzSize="large">
+        Receive
+      </button>
+    </div>
+  </div>
+</section>

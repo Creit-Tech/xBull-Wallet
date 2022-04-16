@@ -1,0 +1,131 @@
+<section *ngIf="(asset$ | async) as asset" class="relative w-full h-full">
+  <nz-spin [nzSpinning]="claimingBalance$ | async" class="relative w-full h-full">
+    <div class="w-full text-center mb-4">
+      <div class="w-full flex justify-center items-center mb-4 cursor-pointer">
+        <ng-container *ngIf="asset.image as image">
+          <img nz-image
+               class="w-20"
+               [nzSrc]="image"
+               alt="">
+        </ng-container>
+      </div>
+
+      <h2 class="m-0 p-0 font-bold text-xl">
+        {{ asset.name || asset.assetCode }}
+      </h2>
+    </div>
+
+    <section class="w-full mb-8">
+      <dl *ngIf="claimableBalance$ | async as claimableBalance">
+        <dt class="text-base font-bold mb-1">Amount:</dt>
+        <dd class="break-all opacity-80 text-sm mb-3">{{ claimableBalance.amount | number: '0.0-7' }}</dd>
+      </dl>
+      <dl>
+        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">Asset Code:</dt>
+        <dd class="break-all opacity-80 text-sm mb-3">{{ asset.assetCode }}</dd>
+      </dl>
+      <dl>
+        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">Issuer:</dt>
+        <dd class="break-all opacity-80 text-sm mb-3">{{ asset.assetIssuer }}</dd>
+      </dl>
+      <dl>
+        <dt *ngIf="!!asset.domain" class="text-base font-bold mb-1">Domain:</dt>
+        <dd class="break-all opacity-80 text-sm mb-3">{{ asset.domain }}</dd>
+      </dl>
+      <dl *ngIf="claimableBalance$ | async as claimableBalance">
+        <dt class="text-base font-bold mb-1">Airdrop ID:</dt>
+        <dd appClipboard [textToCopy]="claimableBalance._id" class="cursor-pointer break-all opacity-80 text-sm mb-3">
+          <span>{{ claimableBalance._id | publicKey }} <i class="fa-solid fa-copy"></i></span>
+        </dd>
+      </dl>
+      <dl *ngIf="(claimant$ | async) as claimant">
+        <div class="w-full">
+          <p class="text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
+            <span class=" text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
+          </p>
+        </div>
+
+        <ng-template #predicateTemplate let-predicateValue="predicateValue">
+          <section class="pl-4 border-l-2">
+            <div *ngIf="predicateValue.unconditional" class="w-full">
+              <p class="opacity-80">
+                Can claim it without conditions
+              </p>
+            </div>
+
+            <div *ngIf="predicateValue.abs_before" class="w-full">
+              <p class="opacity-80">
+                <b class="">Until:</b> {{ predicateValue.abs_before | date: 'MMM dd, yyyy' }}
+              </p>
+            </div>
+
+            <div *ngIf="predicateValue.rel_before" class="w-full">
+              <p class="opacity-80">
+                <b class="">After:</b> {{ predicateValue.rel_before | date: 'MMM dd, yyyy' }}
+              </p>
+            </div>
+
+            <ng-container *ngIf="predicateValue.and" class="w-full">
+              <div class="w-full">
+                <b class="">And:</b>
+
+                <ng-container *ngFor="let predicate of predicateValue.and">
+                  <ng-template
+                    [ngTemplateOutlet]="predicateTemplate"
+                    [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                  </ng-template>
+                </ng-container>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="predicateValue.or" class="w-full">
+              <div class="w-full">
+                <b class="">Or:</b>
+
+                <ng-container *ngFor="let predicate of predicateValue.or">
+                  <ng-template
+                    [ngTemplateOutlet]="predicateTemplate"
+                    [ngTemplateOutletContext]="{ predicateValue: predicate }">
+                  </ng-template>
+                </ng-container>
+              </div>
+            </ng-container>
+
+            <ng-container *ngIf="predicateValue.not" class="w-full">
+              <div class="w-full">
+                <b class="">Not:</b>
+
+                <ng-template
+                  [ngTemplateOutlet]="predicateTemplate"
+                  [ngTemplateOutletContext]="{ predicateValue: predicateValue.not }">
+                </ng-template>
+              </div>
+            </ng-container>
+          </section>
+
+        </ng-template>
+
+        <ng-template
+          [ngTemplateOutlet]="predicateTemplate"
+          [ngTemplateOutletContext]="{ predicateValue: claimant.predicate }">
+        </ng-template>
+      </dl>
+    </section>
+
+    <section class="w-full grid grid-cols-1 grid-rows-2 gap-4 mb-4">
+      <button [disabled]="disableActionButtons$ | async" (click)="buttonTriggered$.next('trash_it')" nz-button nzSize="large">
+        <span>Trash it <i class="fa-solid fa-trash"></i></span>
+      </button>
+
+      <button [disabled]="disableActionButtons$ | async" (click)="buttonTriggered$.next('claim_it')" nz-button nzSize="large" nzType="primary">
+        Claim  it
+      </button>
+    </section>
+
+    <section class="w-full text-center">
+      <small class="opacity-50 w-10/12 text-xs">
+        If you claim an asset you don't trust yet, the operation will be added to the claim transaction automatically
+      </small>
+    </section>
+  </nz-spin>
+</section>

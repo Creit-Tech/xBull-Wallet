@@ -3,34 +3,28 @@ import { HorizonApisQuery, IHorizonApi } from '~root/state';
 import { Observable, ReplaySubject } from 'rxjs';
 import { pluck, take } from 'rxjs/operators';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-horizon-api-details',
   templateUrl: './horizon-api-details.component.html',
   styleUrls: ['./horizon-api-details.component.scss']
 })
-export class HorizonApiDetailsComponent implements OnInit, AfterViewInit {
+export class HorizonApiDetailsComponent implements OnInit {
   horizonApi$: ReplaySubject<IHorizonApi> = new ReplaySubject<IHorizonApi>();
   @Input() set horizonApi(data: IHorizonApi) {
     this.horizonApi$.next(data);
   }
-
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  showModal = false;
 
   selectedHorizonApi$: Observable<IHorizonApi> = this.horizonApisQuery.getSelectedHorizonApi$;
 
   constructor(
     private readonly horizonApisService: HorizonApisService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly nzDrawerRef: NzDrawerRef,
   ) { }
 
   ngOnInit(): void {
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
   }
 
   async onRemove(): Promise<void> {
@@ -41,13 +35,7 @@ export class HorizonApiDetailsComponent implements OnInit, AfterViewInit {
       .toPromise();
 
     this.horizonApisService.removeHorizonApi(horizonApiId);
-    this.close.emit();
-  }
-
-  async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.close.emit();
+    this.nzDrawerRef.close();
   }
 
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { IWalletAsset } from './wallets-asset.model';
+import { IWalletAssetModel } from './wallets-asset.model';
 
-export interface WalletsAssetsState extends EntityState<IWalletAsset> {
+export interface WalletsAssetsState extends EntityState<IWalletAssetModel> {
   UIState: {
     addingAsset: boolean;
     removingAsset: boolean;

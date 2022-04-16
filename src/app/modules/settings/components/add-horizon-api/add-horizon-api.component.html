@@ -1,37 +1,28 @@
-<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
-  <div class="w-full text-center mb-4">
-    <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-      Add new Horizon API
-    </h2>
+<form [formGroup]="form" class="flex flex-wrap w-full">
+  <div class="w-full mb-4">
+    <input type="text" nz-input nzSize="large" class="w-full" formControlName="name" placeholder="Name">
   </div>
-
-  <form [formGroup]="form" class="flex flex-wrap w-full">
-    <div class="w-full mb-4">
-      <app-input type="text" mode="light" title="Name*"
-                 formControlName="name"
-                 iconPath="/assets/icons/tag.svg"></app-input>
-    </div>
-    <div class="w-full mb-4">
-      <app-select title="Network Passphrase" mode="light"
-                  [options]="passphraseOptions"
-                  formControlName="passphrase"
-                  iconPath="/assets/icons/key.svg"></app-select>
-    </div>
-    <div class="w-full mb-4">
-      <app-input type="text" mode="light" title="Horizon URL"
-                 formControlName="url"
-                 iconPath="/assets/icons/world-net.svg"></app-input>
-    </div>
-  </form>
-
-  <div class="w-full text-center text-label mb-7">
-    *The name of the Horizon API is just a way to identify it in other places of the wallet
+  <div class="w-full mb-4">
+    <nz-select class="w-full" nzSize="large" formControlName="passphrase" nzPlaceHolder="Network Passphrase" [nzDropdownMatchSelectWidth]="false">
+      <nz-option *ngFor="let option of passphraseOptions"
+                 [nzValue]="option.value"
+                 [nzLabel]="option.name">
+      </nz-option>
+    </nz-select>
   </div>
-
-  <div class="w-full">
-    <button (click)="onConfirm()" [disabled]="form.invalid"
-            class="w-full btn btn-success-alternative btn--small">
-      Confirm
-    </button>
+  <div class="w-full mb-4">
+    <input type="text" nz-input nzSize="large" class="w-full" formControlName="url" placeholder="Horizon URL">
   </div>
-</app-modal-wrapper>
+</form>
+
+<div class="w-full text-center opacity-50 mb-7">
+  *The name of the Horizon API is just a way to identify it in other places of the wallet
+</div>
+
+<div class="w-full">
+  <button (click)="onConfirm()" [disabled]="form.invalid"
+          nz-button nzSize="large" nzType="primary" nzBlock>
+    Confirm
+  </button>
+</div>
+

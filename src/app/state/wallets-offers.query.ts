@@ -8,6 +8,7 @@ import OfferRecord = ServerApi.OfferRecord;
 export class WalletsOffersQuery extends QueryEntity<WalletsOffersState> {
   sendingPathPaymentStrictSend$ = this.select(state => state.UIState.sendingPathPaymentStrictSend);
   sendingPathPaymentStrictReceive$ = this.select(state => state.UIState.sendingPathPaymentStrictReceive);
+  sendingPathPayment$ = this.select(state => state.UIState.sendingPathPayment);
   sendingOffer$ = this.select(state => state.UIState.sendingOffer);
 
   constructor(protected store: WalletsOffersStore) {

@@ -50,7 +50,9 @@ export interface IWalletsOperation {
     | ManageBuyOfferOperationResponse
     | SetTrustLineFlagsOperationResponse
     | Horizon.DepositLiquidityOperationResponse
-    | Horizon.WithdrawLiquidityOperationResponse;
+    | Horizon.WithdrawLiquidityOperationResponse
+    | Horizon.ClawbackOperationResponse
+    | Horizon.ClawbackClaimableBalanceOperationResponse;
 }
 
 export function createWalletsOperation(params: {
@@ -65,6 +67,6 @@ export function createWalletsOperation(params: {
     createdAt: new Date(params.operation.created_at).getTime(),
     pagingToken: params.operation.paging_token,
     // We do a stringify and parse to remove all functions in the stellar object
-    operationRecord: params.operation && JSON.parse(JSON.stringify(params.operation)),
+    operationRecord: params.operation,
   };
 }

@@ -1,6 +1,6 @@
 <section class="h-full w-full flex flex-col px-4 py-8 justify-start items-center container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-4">
-    <img src="/assets/icons/xbull-icon.svg" class="h-24" alt="xbull-logo">
+    <img src="/assets/icons/xbull-dark.svg" class="h-24" alt="xbull-logo">
   </div>
 
   <p class="text-label font-semibold text-lg px-4 mb-8">
@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-wrap mb-8 max-w-xs bg-off-white rounded-xl py-6 px-2 mb-8">
+  <div *ngIf="showTrezor" class="w-full flex flex-wrap mb-8 max-w-xs bg-off-white rounded-xl py-6 px-2 mb-8">
     <div class="w-full flex items-center mb-6">
       <div class="px-4 w-5/12">
         <img src="/assets/images/trezor-hw-logo.svg" alt="ledger_logo">
@@ -45,5 +45,11 @@
         {{ (trezorInitiated$ | async) ? 'Connect' : 'Loading Trezor' }}
       </button>
     </div>
+  </div>
+
+  <div *ngIf="showBackButton" class="w-full text-center">
+    <button routerLink="/create-account" nz-button nzSize="large">
+      Go back
+    </button>
   </div>
 </section>

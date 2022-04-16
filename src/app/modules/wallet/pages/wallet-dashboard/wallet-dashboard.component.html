@@ -1,0 +1,200 @@
+<section class="container mx-auto p-4 h-full flex grid grid-cols-12 gap-4 overflow-y-auto no-scrollbar main-container">
+  <section class="col-span-12 row-span-auto">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Wallet
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+
+  <section class="col-span-12 grid gap-4 lg:grid-cols-12 lg:grid-rows-6 lg:overflow-y-auto no-scrollbar">
+    <section class="col-span-12 lg:col-start-1 lg:col-end-7 lg:row-start-1 lg:row-end-7 xl:col-start-1 xl:col-end-5 xl:row-start-1 xl:row-end-7">
+      <nz-card class="w-full lg:h-full ant-card-h-full ant-card-no-padding py-4">
+        <section class="flex flex-col h-full overflow-y-auto no-scrollbar">
+          <div class="w-full px-4 mb-4">
+            <h1 class="opacity-80 text-base font-bold m-0">
+              Account balance
+            </h1>
+
+            <h2 class=" text-xl font-bold m-0">
+              ${{ counterAssetCode$ | async }} {{ totalBalanceOnCounterAsset$ | async | number: '0.0-7' }}
+            </h2>
+          </div>
+
+          <div class="w-full px-4 text-center hidden md:block">
+            <nz-radio-group [formControl]="graphTypeControl" nzButtonStyle="solid" style="z-index: 0">
+              <label nz-radio-button nzValue="value_distribution">Value distribution</label>
+              <label nz-radio-button nzValue="asset_allocation">Asset allocation</label>
+            </nz-radio-group>
+          </div>
+
+          <div class="w-full flex justify-center p-4 hidden md:flex">
+            <ngx-charts-pie-chart
+              *ngIf="graphTypeControl.value === 'value_distribution'"
+              [view]="[250, 250]"
+              [results]="balanceGraphValues$ | async"
+              [gradient]="false"
+              [legend]="false"
+              [legendPosition]="legendPosition"
+              [labels]="false"
+              [doughnut]="true"
+              [scheme]="graphColors"
+              [tooltipText]="graphTooltipFormatter"
+            >
+            </ngx-charts-pie-chart>
+
+            <ngx-charts-pie-chart
+              *ngIf="graphTypeControl.value === 'asset_allocation'"
+              [view]="[250, 250]"
+              [scheme]="graphColors"
+              [results]="sizeOfPortfolioGraphValues$ | async"
+              [gradient]="false"
+              [legend]="false"
+              [legendPosition]="legendPosition"
+              [labels]="false"
+              [doughnut]="true"
+              [tooltipText]="graphTooltipFormatter"
+            >
+            </ngx-charts-pie-chart>
+          </div>
+
+          <nz-list class="w-full mb-4">
+            <nz-list-item class="px-4">
+              <div>
+                <p class="font-semibold">Account name:</p>
+              </div>
+
+              <div>
+                {{ ((selectedAccount$ | async))?.name }}
+              </div>
+            </nz-list-item>
+            <nz-list-item class="px-4">
+              <div>
+                <p class="font-semibold">Account public key:</p>
+              </div>
+
+              <div class="cursor-pointer" appClipboard [textToCopy]="(selectedAccount$ | async)?.publicKey">
+                {{ ((selectedAccount$ | async))?.publicKey | publicKey }}  <i class="fa-solid fa-copy"></i>
+              </div>
+            </nz-list-item>
+            <nz-list-item class="px-4">
+              <div>
+                <p class="font-semibold">Trusting assets:</p>
+              </div>
+
+              <div>
+                {{ ((accountBalancesRegularAssets$ | async) || []).length }}
+              </div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <div>
+                <p class="font-semibold">Pool shares:</p>
+              </div>
+
+              <div>
+                {{ lpAssetsBalancesTotalShares$ | async | number: '0.0-7' }}
+              </div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <div>
+                <p class="font-semibold">Locked XLMs:</p>
+              </div>
+
+              <div>
+                {{ lockedXLMs$ | async | number: '0.0-7' }} XLMs
+              </div>
+            </nz-list-item>
+
+<!--            <nz-list-item class="px-4 justify-center">-->
+<!--              <button nz-button [routerLink]="['/settings', 'wallets', (selectedAccount$ | async)?.walletId, 'accounts', (selectedAccount$ | async)?.publicKey]">-->
+<!--                Edit account-->
+<!--              </button>-->
+<!--            </nz-list-item>-->
+          </nz-list>
+        </section>
+      </nz-card>
+    </section>
+
+    <section class="col-span-12 lg:col-start-7 lg:col-end-13 lg:row-start-1 lg:row-end-4 xl:col-start-5 xl:col-end-9 xl:row-start-1 xl:row-end-7">
+      <nz-card class="w-full lg:h-full ant-card-h-full ant-card-no-padding py-4">
+        <section class="w-full lg:h-full lg:grid lg:grid-cols-12 lg:gap-4 inner-card-grid-container">
+          <div class="w-full lg:col-span-12 lg:row-span-auto text-center">
+            <h1 class="text-xl font-bold m-0">
+              My assets
+            </h1>
+          </div>
+
+          <div class="lg:col-span-12 lg:row-span-1">
+            <nz-list *ngIf="!!(accountBalancesRegularAssets$ | async)?.length; else noAssets" class="w-full overflow-y-auto no-scrollbar">
+              <nz-list-item *ngFor="let balance of (accountBalancesRegularAssets$ | async); trackBy: trackByBalanceline" class="w-full cursor-pointer">
+                <app-wallet-asset-item class="block w-full px-4"
+                                       (click)="assetDetails(balance)"
+                                       [balanceLine]="balance">
+                </app-wallet-asset-item>
+              </nz-list-item>
+            </nz-list>
+
+            <ng-template #noAssets>
+              <div class="h-full flex items-center justify-center">
+                <nz-empty nzNotFoundContent=""></nz-empty>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="w-full lg:col-span-12 lg:row-span-auto text-center">
+            <button [nzLoading]="addingAsset$ | async" nz-button (click)="addAsset()">
+              Add asset
+            </button>
+          </div>
+        </section>
+      </nz-card>
+    </section>
+
+    <section class="col-span-12 lg:col-start-7 lg:col-end-13 lg:row-start-4 lg:row-end-7 xl:col-start-9 xl:col-end-13 xl:row-start-1 xl:row-end-7">
+      <nz-card class="w-full lg:h-full ant-card-h-full ant-card-no-padding py-4">
+        <section class="w-full lg:h-full lg:grid lg:grid-cols-12 lg:gap-4 inner-card-grid-container">
+          <div class="col-span-12 text-center mb-2">
+            <h1 class="text-xl font-bold m-0">
+              Liquidity pool shares
+            </h1>
+          </div>
+
+          <div class="col-span-12">
+            <nz-list *ngIf="!!(lpAssetsBalances$ | async)?.length; else noLP" class="w-full lg:col-span-12 lg:row-span-1 overflow-y-auto no-scrollbar">
+              <nz-list-item *ngFor="let balance of (lpAssetsBalances$ | async); trackBy: trackByBalanceline" class="w-full">
+                <app-lp-asset-item class="w-full px-4 cursor-pointer"
+                                   (click)="lpAssetDetails(balance)"
+                                   [lpAssetId]="balance.liquidity_pool_id"
+                                   [sharesAmount]="balance.balance">
+                </app-lp-asset-item>
+              </nz-list-item>
+            </nz-list>
+
+            <ng-template #noLP>
+              <div class="h-full flex items-center justify-center">
+                <nz-empty nzNotFoundContent=""></nz-empty>
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="col-span-12 px-4 text-center">
+            <button routerLink="/liquidity-pools" nz-button>
+              Provide liquidity
+            </button>
+          </div>
+        </section>
+      </nz-card>
+    </section>
+  </section>
+
+
+</section>

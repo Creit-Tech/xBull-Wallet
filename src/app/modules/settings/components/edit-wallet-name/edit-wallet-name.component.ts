@@ -5,17 +5,15 @@ import { FormControl, Validators } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { take, takeUntil } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-edit-wallet-name',
   templateUrl: './edit-wallet-name.component.html',
   styleUrls: ['./edit-wallet-name.component.scss']
 })
-export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy {
+export class EditWalletNameComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
-
-  @Output() close: EventEmitter<void> = new EventEmitter<void>();
-  showModal = false;
 
   wallet$: ReplaySubject<IWallet> = new ReplaySubject<IWallet>();
   @Input() set wallet(data: IWallet) {
@@ -27,20 +25,10 @@ export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy
   constructor(
     private readonly walletsService: WalletsService,
     private readonly nzMessageService: NzMessageService,
+    private readonly nzDrawerRef: NzDrawerRef,
   ) { }
 
   ngOnInit(): void {
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    this.wallet$
-      .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(wallet => {
-        this.nameField.patchValue(wallet.name);
-      });
-
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
   }
 
   ngOnDestroy(): void {
@@ -59,13 +47,7 @@ export class EditWalletNameComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.nzMessageService.success(`Wallet's name updated to "${this.nameField.value}"`);
 
-    this.onClose();
-  }
-
-  async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.close.emit();
+    this.nzDrawerRef.close();
   }
 
 }

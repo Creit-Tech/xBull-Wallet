@@ -7,6 +7,7 @@ export interface WalletsOffersState extends EntityState<OfferRecord> {
   UIState: {
     sendingPathPaymentStrictSend: boolean;
     sendingPathPaymentStrictReceive: boolean;
+    sendingPathPayment: boolean;
     sendingOffer: boolean;
   };
 }
@@ -16,6 +17,7 @@ export function createInitialState(): WalletsOffersState {
     UIState: {
       sendingPathPaymentStrictSend: false,
       sendingPathPaymentStrictReceive: false,
+      sendingPathPayment: false,
       sendingOffer: false,
     }
   };

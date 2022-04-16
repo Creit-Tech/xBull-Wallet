@@ -1,0 +1,13 @@
+@screen lg {
+  :host {
+    @apply h-full;
+  }
+
+  .main-container {
+    grid-template-rows: auto 1fr;
+  }
+
+  .inner-card-grid-container {
+    grid-template-rows: auto 1fr auto;
+  }
+}

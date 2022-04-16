@@ -23,7 +23,16 @@ module.exports = {
       }
     },
     colors: {
+      // v1
       black: '#141414',
+      gray: '#202020',
+      white: '#FCFCFC',
+
+
+
+
+
+      // Beta
       'off-black': '#141414',
       'ash': '#262338',
       'body': '#4E4B66',
@@ -45,10 +54,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [
-    // We use the strategy class to avoid undesired classes on elements
-    require("@tailwindcss/forms")({
-      strategy: 'class',
-    })
-  ],
+  plugins: [],
 };

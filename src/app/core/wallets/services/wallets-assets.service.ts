@@ -7,19 +7,25 @@ import {
   IWalletNativeAsset,
   IWalletsAccount, ILpAsset, LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore, IWalletIssuedAsset,
+  WalletsAssetsStore, IWalletIssuedAsset, SettingsQuery, IWalletAssetModel,
 } from '~root/state';
-import { from, Observable, of, Subject, Subscription } from 'rxjs';
-import { catchError, concatAll, filter, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { from, merge, Observable, of, Subject, Subscription, throwError } from 'rxjs';
+import { catchError, concatAll, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
+import { add, isAfter, subMinutes, subYears } from 'date-fns';
+import BigNumber from 'bignumber.js';
+import { createCuratedAsset, ICuratedAsset } from '~root/state/curated-assets/curated-asset.model';
+import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.store';
+import { applyTransaction } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WalletsAssetsService {
   // TODO: Make this optional before launching the app IE add a settings store
+  // DEPRECATED
   requestAssetData$: Subject<{
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
@@ -27,21 +33,70 @@ export class WalletsAssetsService {
     horizonApi: IHorizonApi,
   }> = new Subject();
 
+
+  // This is the new version, stop using the one above
+  requestAssetInformation$: Subject<{
+    asset: IWalletAssetModel,
+    horizonApi: IHorizonApi,
+    forceUpdate: boolean,
+  }> = new Subject();
+  shouldRequestAssetInformation$ = this.requestAssetInformation$.asObservable()
+    .pipe(switchMap(params => {
+      return of(true)
+        .pipe(map(_ => {
+          if (params.asset._id === 'native') {
+            return false;
+          }
+          if (params.forceUpdate) {
+            return true;
+          }
+
+          if (!params.asset.lastTimeUpdated) {
+            return true;
+          }
+
+          const lastUpdate = new Date(params.asset.lastTimeUpdated);
+          // TODO: maybe we should make this time dynamic and configurable form the settings
+          const nextUpdate = add(lastUpdate, { minutes: 15 });
+          const now = new Date();
+          return !params.asset.assetFullDataLoaded && isAfter(now, nextUpdate);
+        }))
+        .pipe(filter(Boolean))
+        .pipe(map(_ => ({
+          asset: params.asset as IWalletAssetModel,
+          horizonApi: params.horizonApi,
+        })));
+    }))
+    .pipe(map(({ asset, horizonApi}) => {
+      return {
+        _id: asset._id,
+        assetIssuer: asset.assetIssuer,
+        assetCode: asset.assetCode,
+        horizonApi,
+      };
+    }));
+
   constructor(
     private readonly walletsAssetsStore: WalletsAssetsStore,
     private readonly http: HttpClient,
     private readonly stellarSdkService: StellarSdkService,
     private readonly lpAssetsStore: LpAssetsStore,
+    private readonly settingsQuery: SettingsQuery,
+    private readonly curatedAssetsStore: CuratedAssetsStore,
   ) { }
 
-  requestAssetDataSubscription: Subscription = this.requestAssetData$
-    .asObservable()
+  // DEPRECATED
+  requestAssetDataSubscription: Subscription = merge(this.requestAssetData$, this.shouldRequestAssetInformation$)
     .pipe(mergeMap(params => {
-      this.walletsAssetsStore.upsert(params._id, {
-        lastTimeUpdated: new Date(),
-      });
+      this.walletsAssetsStore.upsert(params._id, { lastTimeUpdated: new Date() });
       return this.getAssetExtraRecord(params)
-        .pipe(switchMap(_ => this.getAssetFullRecord(params)))
+        .pipe(switchMap(_ => {
+          return this.getAssetFullRecord(params)
+            .pipe(catchError(error => {
+              console.error(error);
+              return of(error);
+            }));
+        }))
         .pipe(catchError(error => {
           console.error(error);
           return of(error);
@@ -81,10 +136,11 @@ export class WalletsAssetsService {
           throw new Error(`We couldn't get the record for the asset ${data._id}`);
         }
 
-        const newData: Partial<IWalletAsset<'issued', 'extra'>> = {
+        const newData = {
           amountIssued: assetRecord.amount,
           numAccount: assetRecord.num_accounts,
-          assetExtraDataLoaded: true
+          assetExtraDataLoaded: true,
+          networkPassphrase: data.horizonApi.networkPassphrase,
         };
 
         this.walletsAssetsStore.upsert(data._id, newData);
@@ -147,6 +203,7 @@ export class WalletsAssetsService {
             orgAddress: documentation?.ORG_PHYSICAL_ADDRESS,
             orgOfficialEmail: documentation?.ORG_OFFICIAL_EMAIL,
             assetFullDataLoaded: true,
+            networkPassphrase: data.horizonApi.networkPassphrase,
           }
         );
         return accountRecord;
@@ -178,10 +235,29 @@ export class WalletsAssetsService {
     }
   }
 
+  assetIdFromAssetString(asset: string): string {
+    if (asset === 'native') {
+      return 'native';
+    } else {
+      return `${asset.split(':')[0]}_${asset.split(':')[1]}`;
+    }
+  }
+
+  sdkAssetFromAssetString(asset: string): Asset {
+    if (asset === 'native') {
+      return this.stellarSdkService.SDK.Asset.native();
+    }
+
+    const [code, issuer] = asset.split(':');
+
+    return new this.stellarSdkService.SDK.Asset(code, issuer);
+  }
+
   saveInitialAssetState(data: {
     _id: IWalletIssuedAsset['_id'];
     assetCode: IWalletIssuedAsset['assetCode'];
     assetIssuer: IWalletIssuedAsset['assetIssuer'];
+    networkPassphrase: string;
   }): void {
     this.walletsAssetsStore.upsert(
       data._id,
@@ -190,6 +266,7 @@ export class WalletsAssetsService {
         assetCode: data.assetCode,
         assetExtraDataLoaded: false,
         assetIssuer: data.assetIssuer,
+        networkPassphrase: data.networkPassphrase,
       },
       (id, newEntity: any) => ({ ...newEntity, assetExtraDataLoaded: false }),
       {}
@@ -224,6 +301,77 @@ export class WalletsAssetsService {
   * */
   filterBalancesLines(balances: Horizon.BalanceLine[]): BalanceAssetType[] {
     return balances
-      .filter(balance => balance.asset_type !== 'liquidity_pool_shares') as BalanceAssetType[];
+      .filter(balance =>
+        balance.asset_type === 'native'
+        || balance.asset_type === 'credit_alphanum4'
+        || balance.asset_type === 'credit_alphanum12'
+      ) as BalanceAssetType[];
   }
+
+  async updateAssetPriceAgainstCounter(asset: IWalletAssetModel): Promise<void> {
+    const counterAssetId = await this.settingsQuery.counterAssetId$.pipe(take(1)).toPromise();
+
+    if (!counterAssetId) {
+      return;
+    }
+
+    if (counterAssetId === asset._id) {
+      this.walletsAssetsStore.upsert(asset._id, {
+        counterPrice: '1',
+        counterId: counterAssetId,
+      });
+      return;
+    }
+
+    let horizonResponse;
+    try {
+      horizonResponse = await this.stellarSdkService.Server.strictSendPaths(
+        this.sdkAssetFromAssetId(asset._id),
+        '1',
+        [this.sdkAssetFromAssetId(counterAssetId)],
+      )
+        .limit(1)
+        .call();
+    } catch (e) {
+      return;
+    }
+
+    const latestPrice = horizonResponse.records.shift();
+
+    if (!latestPrice) {
+      return;
+    }
+
+    this.walletsAssetsStore.upsert(asset._id, {
+      counterPrice: latestPrice.destination_amount,
+      counterId: counterAssetId,
+    });
+  }
+
+  getCuratedAssetsByCreitTech(): Observable<ICuratedAsset[]> {
+    this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: true });
+    return this.http.get<{ assets: IStellarCuratedAsset[] }>(`https://raw.githubusercontent.com/Creit-Tech/stellar-assets/main/dist/curated-by-creit-tech.json`)
+      .pipe(map(response => {
+        const parsedAssets = response.assets.map(asset => createCuratedAsset({
+          ...asset,
+          type: 'by_creit_tech',
+        }));
+        applyTransaction(() => {
+          this.curatedAssetsStore.upsertMany(parsedAssets);
+          this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: false });
+        });
+        return parsedAssets;
+      }))
+      .pipe(catchError(e => {
+        this.curatedAssetsStore.updateUIState({ gettingCuratedListByCreitTech: false });
+        return throwError(e);
+      }));
+  }
+}
+
+export interface IStellarCuratedAsset {
+  code: string;
+  publicKey: string;
+  domain: string;
+  image: string;
 }

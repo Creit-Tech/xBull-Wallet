@@ -1,50 +1,88 @@
-<section class="w-full flex flex-col justify-center items-center pt-8 pb-4 h-full">
-  <div class="w-full px-4 mb-4">
-    <textarea nz-input name="xdr"
-              id="xdr" cols="30"
-              class="resize-none"
-              [formControl]="signControl"
-              placeholder="Paste the XDR here..."
-              rows="8"></textarea>
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/lab">
+          Lab
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Import XDR
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center pb-4">
+
+  <div class="max-w-md w-full px-4">
+    <section class="w-full flex flex-col justify-center items-center h-full">
+      <div class="w-full mb-4">
+        <textarea nz-input name="xdr"
+                  id="xdr" cols="30"
+                  class="resize-none"
+                  [formControl]="signControl"
+                  placeholder="Paste the XDR here..."
+                  rows="8"></textarea>
+      </div>
+
+      <div class="w-full grid grid-cols-2 grid-rows-1 gap-4 mb-4">
+        <div class="col-span-1">
+          <button [disabled]="signedControl.invalid"
+                  appClipboard
+                  [textToCopy]="signedControl.value"
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  class="w-full">
+            Copy Signed
+          </button>
+        </div>
+
+        <div class="col-span-1">
+          <button [disabled]="signControl.invalid"
+                  (click)="onSign()"
+                  nz-button
+                  nzType="primary"
+                  nzSize="large"
+                  class="w-full">
+            Sign XDR
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full mb-4">
+        <p class="text-center opacity-50">
+          Use the "Copy Signed XDR" after you have signed an XDR to get the signed version of the XDR. <br> The XDR you pasted won't be modified.
+        </p>
+      </div>
+
+      <div class="w-full mt-auto">
+        <button (click)="onSubmit()"
+                nz-button
+                [nzLoading]="sendingTransaction$ | async"
+                [disabled]="signedControl.invalid"
+                nzSize="large"
+                nzType="primary"
+                nzBlock class="mb-4">
+          Submit signed transaction
+        </button>
+
+        <button (click)="onBack()"
+                nz-button
+                nzSize="large"
+                class="w-full">
+          <span><i class="fa-solid fa-arrow-left"></i> Back</span>
+        </button>
+      </div>
+    </section>
   </div>
 
-  <div class="w-full flex flex-wrap px-4">
-    <div class="w-7/12 px-2 mb-4">
-      <button [disabled]="signedControl.invalid"
-              appClipboard
-              [textToCopy]="signedControl.value"
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              class="w-full">
-        Copy Signed XDR
-      </button>
-    </div>
-
-    <div class="w-5/12 px-2 mb-4">
-      <button [disabled]="signControl.invalid"
-              (click)="onSing()"
-              nz-button
-              nzType="primary"
-              nzSize="large"
-              class="w-full">
-        Sign XDR
-      </button>
-    </div>
-  </div>
-
-  <div class="w-full px-4 mb-4">
-    <p class="text-center text-placeholder">
-      Use the "Copy Signed XDR" after you have signed an XDR to get the signed version of the XDR. The XDR you pasted won't be modified.
-    </p>
-  </div>
-
-  <div class="w-full mt-auto px-2">
-    <button (click)="onBack()"
-            nz-button
-            nzSize="large"
-            class="w-full">
-      Back
-    </button>
-  </div>
 </section>

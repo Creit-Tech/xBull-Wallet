@@ -118,7 +118,7 @@ export class StellarSdkService {
           ? arrSort[mid].plus(arrSort[mid - 1]).dividedBy(2)
           : arrSort[mid - 1];
       }))
-      .pipe(map(value => value.toFixed()));
+      .pipe(map(value => value.toFixed(0)));
   }
 
 

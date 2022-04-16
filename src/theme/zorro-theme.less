@@ -8,27 +8,27 @@
 
 @primary-color: #C19CFC;
 @info-color: @primary-color;
-@success-color: @green-6;
-@processing-color: @blue-6;
-@error-color: @red-5;
-@highlight-color: @red-5;
-@warning-color: @gold-6;
-@normal-color: #d9d9d9;
+//@success-color: @green-6;
+//@processing-color: @blue-6;
+//@error-color: @red-5;
+//@highlight-color: @red-5;
+//@warning-color: @gold-6;
+//@normal-color: #d9d9d9;
 @white: #FCFCFC;
-//@black: #14142B;
+@black: #141414;
 
 // Layout
-@layout-body-background: #EFF0F6;
-@layout-header-background: @black;
-//@layout-header-height: 64px;
-//@layout-header-padding: 0 50px;
-@layout-header-color: @text-color;
-//@layout-footer-padding: 24px 50px;
-@layout-footer-background: @layout-body-background;
-@layout-sider-background: @layout-header-background;
-//@layout-trigger-height: 48px;
-@layout-trigger-background: #262338;
-@layout-trigger-color: @white;
+//@layout-body-background: #EFF0F6;
+//@layout-header-background: @black;
+////@layout-header-height: 64px;
+////@layout-header-padding: 0 50px;
+//@layout-header-color: @text-color;
+////@layout-footer-padding: 24px 50px;
+//@layout-footer-background: @layout-body-background;
+//@layout-sider-background: @layout-header-background;
+////@layout-trigger-height: 48px;
+//@layout-trigger-background: #262338;
+//@layout-trigger-color: @white;
 //@layout-zero-trigger-width: 36px;
 //@layout-zero-trigger-height: 42px;
 @border-radius-base: 8px;
@@ -41,6 +41,24 @@
 }
 
 // Write on top of UI classes
+.drawer-full-w-320 {
+  width: 100% !important;
+  max-width: 320px !important;
+}
+.drawer-full-w-480 {
+  width: 100% !important;
+  max-width: 480px !important;
+}
+
+// Switch
+.ant-switch {
+  color: rgba(252, 252, 252, 0.85) !important;
+  background-color: rgba(252, 252, 252, 0.3) !important;
+}
+.ant-switch-checked {
+  background-color: #C19CFC !important;
+}
+// END Switch
 
 .ant-image-preview-img-wrapper {
   display: flex;
@@ -64,7 +82,14 @@
   }
 }
 
-.ant-drawer.ant-drawer-bottom .ant-drawer-content {
-  border-radius: 1.5rem 1.5rem 0 0;
-}
 // END Drawer
+
+// Nz Card
+.ant-card-no-padding .ant-card-body {
+  padding: 0;
+}
+
+.ant-card-h-full .ant-card-body {
+  height: 100%;
+}
+// END Nz Card

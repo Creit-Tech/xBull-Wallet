@@ -109,8 +109,7 @@ export class WalletsAccountsService {
   }
 
   createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
-    const index = this.activeAccountsStreams.findIndex(record => record.account === account._id);
-    if (account && !account.streamCreated && index === -1) {
+    if (account) {
       const newStream = new Server(horizonApi.url).accounts()
         .accountId(account.publicKey)
         .stream({
@@ -137,12 +136,10 @@ export class WalletsAccountsService {
     cursor?: string,
     horizonApi: IHorizonApi
   }): void {
-    const index = this.activeOperationsStreams.findIndex(record => record.account === params.account._id);
-    if (params.account && !params.account.operationsStreamCreated && index === -1) {
+    if (params.account) {
       const streamBuilder = new Server(params.horizonApi.url).operations()
         .forAccount(params.account.publicKey)
-        .limit(100)
-        .includeFailed(false);
+        .join('transactions');
 
       streamBuilder.order(params.order);
 
@@ -192,14 +189,16 @@ export class WalletsAccountsService {
 
   getLatestAccountOperations(params: {
     account: IWalletsAccount,
-    horizonApi: IHorizonApi
+    horizonApi: IHorizonApi,
+    onlyPayments?: boolean,
   }): Promise<IWalletsOperation[]> {
     this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: true });
-    return new this.stellarSdkService.SDK.Server(params.horizonApi.url)
-      .operations()
+    const server = new this.stellarSdkService.SDK.Server(params.horizonApi.url);
+    return (!!params.onlyPayments ? server.payments() : server.operations())
       .forAccount(params.account.publicKey)
       .limit(100)
       .order('desc')
+      .join('transactions')
       .call()
       .then(response => {
         const operations = response.records.map(operationRecord => {
@@ -216,6 +215,10 @@ export class WalletsAccountsService {
         });
 
         return operations;
+      })
+      .catch(error => {
+        this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
+        return Promise.reject(error);
       });
   }
 

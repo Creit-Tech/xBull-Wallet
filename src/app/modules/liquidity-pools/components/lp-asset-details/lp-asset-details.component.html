@@ -1,4 +1,4 @@
-<nz-spin [nzSpinning]="removingAsset$ | async">
+<section class="flex flex-col h-full">
   <section *ngIf="lpAssetId$ | async as lpAssetId" class="w-full text-center mb-4">
     <h2 class="m-0 mb-2 p-0 text-off-white font-bold text-xl">
       Liquidity Pool Details
@@ -10,7 +10,7 @@
     </h4>
   </section>
 
-  <section *ngIf="reserves$ | async as reserves" class="mb-4">
+  <section *ngIf="reserves$ | async as reserves" class="w-full mb-4">
     <div class="w-full flex">
       <div *ngFor="let reserve of reserves; let i = index"
            [class.items-end]="i === 0"
@@ -48,7 +48,7 @@
     </div>
   </section>
 
-  <section *ngIf="lpAsset$ | async as lpAsset">
+  <section class="w-full" *ngIf="lpAsset$ | async as lpAsset">
     <div class="w-full flex">
       <div *ngFor="let reserve of lpAsset.reserves; let i = index"
            [class.text-right]="i === 0"
@@ -95,7 +95,7 @@
     </div>
   </section>
 
-  <section class="w-full flex flex-col">
+  <section class="w-full mt-auto flex flex-col">
     <!--  <div class="w-full flex mb-4">-->
     <!--    <div class="w-6/12 pr-2">-->
     <!--      <button nz-button nzSize="large" nzType="primary" nzBlock>-->
@@ -110,7 +110,8 @@
     <!--  </div>-->
 
     <div class="w-full">
-      <button (click)="removeAsset()"
+      <button (click)="removeActionButton$.next()"
+              [nzLoading]="removingAsset$ | async"
               [disabled]="disableActionButton$ | async"
               nz-button nzSize="large"
               nzDanger nzType="primary"
@@ -119,4 +120,4 @@
       </button>
     </div>
   </section>
-</nz-spin>
+</section>

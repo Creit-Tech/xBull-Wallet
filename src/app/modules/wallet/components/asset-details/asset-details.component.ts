@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   HorizonApisQuery, IHorizonApi,
-  IWalletAsset,
+  IWalletAsset, IWalletAssetModel,
   IWalletIssuedAsset,
   IWalletNativeAsset,
   WalletsAccountsQuery,
@@ -15,6 +15,11 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-asset-details',
@@ -35,13 +40,13 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     .pipe(switchMap(assetId => this.walletsAssetsQuery.getAssetsById([assetId])))
     .pipe(map(assets => assets.shift()));
 
-  nativeAsset$: Observable<IWalletNativeAsset<'full'>> = this.asset$
+  nativeAsset$: Observable<IWalletAssetModel> = this.asset$
     .pipe(filter(asset => !!asset && asset._id === 'native')) as any;
 
-  issuedAsset$: Observable<IWalletIssuedAsset<'full'>> = this.asset$
+  issuedAsset$: Observable<IWalletAssetModel> = this.asset$
     .pipe(filter(asset => !!asset && asset._id !== 'native')) as any;
 
-  fullDataLoaded$: Observable<boolean> = this.asset$
+  fullDataLoaded$: Observable<boolean | undefined> = this.asset$
     .pipe(map(asset => !!asset && asset.assetFullDataLoaded));
 
   removingAssets$ = this.walletsAssetsQuery.removingAsset$;
@@ -55,6 +60,11 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly horizonApiQuery: HorizonApisQuery,
+    private readonly nzDrawerService: NzDrawerService,
+    private readonly nzMessageService: NzMessageService,
+    private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly nzDrawerRef: NzDrawerRef,
+    private readonly walletsAccountsService: WalletsAccountsService,
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +72,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(filter((asset) => !!asset))
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
-      .subscribe(([asset, horizonApi]: [IWalletAsset<'issued'>, IHorizonApi]) => {
+      .subscribe(([asset, horizonApi]: [IWalletAssetModel, IHorizonApi]) => {
         this.walletsAssetsService.requestAssetData$.next({
           ...asset,
           horizonApi,
@@ -71,8 +81,6 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
   }
 
   ngOnDestroy(): void {
@@ -82,9 +90,13 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async onRemove(): Promise<void> {
     const [
+      horizonApi,
       selectedAccount,
       asset,
     ] = await Promise.all([
+      this.horizonApisQuery.getSelectedHorizonApi$
+        .pipe(take(1))
+        .toPromise(),
       this.walletsAccountsQuery.getSelectedAccount$.pipe(take(1)).toPromise(),
       this.asset$.pipe(take(1)).toPromise() as Promise<IWalletAsset<'issued'>>,
     ]);
@@ -111,39 +123,44 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .build()
       .toXDR();
 
-    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
+    this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzWrapClassName: 'drawer-full-w-320',
+      nzTitle: 'Remove Asset',
+      nzContentParams: {
+        xdr: formattedXDR,
+        acceptHandler: async signedXdr => {
+          if (!signedXdr) {
+            this.nzMessageService.error('Unexpected error, contact support.');
+            return;
+          }
 
-    ref.component.instance.xdr = formattedXDR;
+          try {
+            await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
+            this.nzMessageService.success(`Asset removed correctly.`);
+            this.nzDrawerRef.close();
+          } catch (e) {
+            console.error(e);
+            this.nzMessageService.success(`The network rejected the transaction, please make sure you follow all the requirements to remove an Asset from your account.`, {
+              nzDuration: 5000,
+            });
+            return;
+          }
 
-    ref.component.instance.accept
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(this.componentDestroyed$))
-      .pipe(tap(async () => {
-        await ref.component.instance.onClose();
-        await ref.close();
-      }))
-      .pipe(switchMap(signedXdr => this.walletsAssetsService.removeAssetFromAccount(signedXdr)))
-      .subscribe(() => {
-        this.assetRemoved.emit();
-      });
+          this.walletsAccountsService.getAccountData({
+            account: selectedAccount,
+            horizonApi
+          }).toPromise()
+            .then()
+            .catch(e => console.error(e));
+        }
+      }
+    });
 
-    ref.component.instance.deny
-      .asObservable()
-      .pipe(take(1))
-      .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
-      .subscribe(() => {
-        ref.component.instance.onClose()
-          .then(() => ref.close());
-      });
-
-    ref.open();
   }
 
-  async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.close.emit();
+  closeDrawer(): void {
+    this.nzDrawerRef.close();
   }
 
 }
