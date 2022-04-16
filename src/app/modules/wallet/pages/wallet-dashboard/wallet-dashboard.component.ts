@@ -3,7 +3,7 @@ import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
 import {
   HorizonApisQuery, IWalletAssetModel,
   IWalletsAccount,
-  LpAssetsQuery,
+  LpAssetsQuery, SettingsQuery,
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
@@ -14,7 +14,7 @@ import {
   map,
   switchMap,
   take,
-  takeUntil,
+  takeUntil, tap,
   withLatestFrom
 } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -55,13 +55,14 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
       return JSON.stringify(a) === JSON.stringify(b);
     }));
 
+  counterAssetCode$ = this.settingsQuery.counterAssetId$
+    .pipe(map(assetId => this.walletsAssetsService.sdkAssetFromAssetId(assetId)))
+    .pipe(map(asset => asset?.code));
+
   accountBalancesRegularAssets$ = this.accountBalanceLines$
     .pipe(map(balanceLines => {
       return this.walletsAssetsService.filterBalancesLines(balanceLines);
     }));
-
-  counterAssetCode$ = this.walletsAssetsQuery.counterAsset$
-    .pipe(map(asset => asset?.assetCode));
 
   assetsBalancesWithCounterValues$: Observable<Array<{
     asset?: IWalletAssetModel;
@@ -183,6 +184,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngOnInit(): void {

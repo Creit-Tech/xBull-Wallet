@@ -17,7 +17,17 @@ import {
   WalletsAssetsQuery,
   WalletsOperationsQuery
 } from '~root/state';
-import { delay, map, shareReplay, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import {
+  delay,
+  distinctUntilChanged, distinctUntilKeyChanged,
+  map,
+  shareReplay,
+  switchMap,
+  take,
+  takeUntil,
+  tap,
+  withLatestFrom
+} from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
 import BigNumber from 'bignumber.js';
 import { ENV, environment } from '~env';
@@ -81,7 +91,6 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     }));
 
   selectOptions$: Observable<ISelectOptions[]> = this.heldAssets$
-    .pipe(take(1))
     .pipe(map(assets =>
       assets.map(asset => ({
         name: asset.assetCode,
@@ -142,6 +151,13 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
   ) { }
+
+  resetFormWhenSourceAccountChangesSubscription = this.selectedAccount$
+    .pipe(distinctUntilKeyChanged('_id'))
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(() => {
+      this.form.reset();
+    });
 
   onSubmitSubscription: Subscription = this.onSubmitClick$
     .asObservable()
