@@ -24,5 +24,5 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '0.9.0'
+  version: '1.0.0'
 };
