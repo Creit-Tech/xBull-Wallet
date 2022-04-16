@@ -25,6 +25,7 @@
     "deploy:chrome": "cross-env NODE_ENV=production npm run build:extension:prod && npm run build:extension:platform-files:v3",
     "deploy:android": "cross-env NODE_ENV=production npm run build:mobile:prod && npm run build:mobile:resources:android && npm run build:mobile:plugins",
     "deploy:ios": "cross-env NODE_ENV=production npm run build:mobile:prod && npm run build:mobile:resources:ios && npm run build:mobile:plugins",
+    "deploy:website": "cross-env NODE_ENV=production npm run build:prod",
     "test": "./node_modules/.bin/ng test",
     "lint": "./node_modules/.bin/ng lint",
     "e2e": "./node_modules/.bin/ng e2e"
