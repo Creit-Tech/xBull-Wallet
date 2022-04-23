@@ -1,0 +1,122 @@
+<section class="max-w-md mx-auto w-full h-full grid grid-cols-1 gap-4"
+         style="grid-template-rows: auto auto 1fr auto">
+  <nz-steps nzType="navigation"
+            class="col-span-1"
+            [nzCurrent]="(currentStep$ | async) || 0"
+            nzSize="small">
+    <nz-step nzTitle="Connect"></nz-step>
+    <nz-step nzTitle="Account"></nz-step>
+  </nz-steps>
+
+  <ng-container *ngIf="(currentStep$ | async) === 0">
+    <section class="cols-span-1 text-center px-4">
+      <nz-card class="ant-card-no-padding p-4">
+        <div class="w-full">
+          <img class="w-20 mx-auto" src="/assets/icons/icon-512x512.png" alt="">
+        </div>
+
+        <h1 class="font-bold text-2xl">
+          Site connection
+        </h1>
+        <h2 class="opacity-80">
+          From: {{ origin$ | async }}
+        </h2>
+      </nz-card>
+    </section>
+
+    <section class="cols-span-1 px-4">
+      <nz-card class="ant-card-no-padding p-4">
+        <h3 class="font-semibold">
+          Asking for:
+        </h3>
+
+        <nz-list *ngIf="permissions$ | async as permissions" class="mb-4">
+          <nz-list-item *ngIf="permissions?.canRequestPublicKey" class="opacity-80">
+            - View your account public key
+          </nz-list-item>
+
+          <nz-list-item *ngIf="permissions?.canRequestSign" class="opacity-80">
+            - Request signing a transaction
+          </nz-list-item>
+        </nz-list>
+
+        <h3 class="font-semibold">
+          Request Date:
+        </h3>
+
+        <nz-list>
+          <nz-list-item class="opacity-80">
+            {{ startDate$ | async | date: 'MMM dd, yyyy - HH:mm' }}
+          </nz-list-item>
+        </nz-list>
+      </nz-card>
+    </section>
+
+    <section class="col-span-1 grid grid-cols-2 grid-rows-2 gap-4 pb-4 px-4">
+      <div class="col-span-2 row-span-1 text-center">
+        <small class="opacity-50">
+          You should only connect to sites you trust
+        </small>
+      </div>
+      <button (click)="onReject()" class="col-span-1 row-span-1" nz-button nzSize="large" nzDanger nzType="primary">
+        Reject
+      </button>
+
+      <button (click)="onAcceptConnection()" class="col-span-1 row-span-1" nz-button nzSize="large" nzType="primary">
+        Accept
+      </button>
+    </section>
+  </ng-container>
+
+  <ng-container *ngIf="(currentStep$ | async) === 1">
+    <section class="cols-span-1 text-center px-4">
+      <nz-card class="ant-card-no-padding p-4">
+        <div class="w-full">
+          <img class="w-20 mx-auto" src="/assets/icons/icon-512x512.png" alt="">
+        </div>
+
+        <h1 class="font-bold text-2xl">
+          Share account with
+        </h1>
+        <h2 class="opacity-80">
+          {{ origin$ | async }}
+        </h2>
+      </nz-card>
+    </section>
+
+    <section class="cols-span-1 h-full px-4 overflow-y-hidden">
+      <nz-card class="ant-card-no-padding p-4">
+        <section class="h-full grid grid-cols-1" style="grid-template-rows: auto 1fr">
+          <section class="col-span-1 px-4 mb-2">
+            <h2 class="mb-4 text-center font-bold">
+              <i class="fa-solid fa-users mr-2"></i> Wallets  and Accounts
+            </h2>
+
+            <nz-tree-select class="w-full"
+                            nzPlaceHolder="Select an account"
+                            [formControl]="accountSelectedControl"
+                            nzVirtualHeight="200px"
+                            [nzNodes]="(accountsNodes$ | async) || []">
+            </nz-tree-select>
+
+          </section>
+        </section>
+      </nz-card>
+    </section>
+
+    <section class="col-span-1 grid grid-cols-2 grid-rows-2 gap-4 pb-4 px-4">
+      <div class="col-span-2 row-span-1 text-center">
+        <small class="opacity-50">
+          You should only connect to sites you trust
+        </small>
+      </div>
+      <button (click)="onReject()" class="col-span-1 row-span-1" nz-button nzSize="large" nzDanger nzType="primary">
+        Reject
+      </button>
+
+      <button [disabled]="accountSelectedControl.invalid" (click)="onConfirmShareAccount()" class="col-span-1 row-span-1" nz-button nzSize="large" nzType="primary">
+        Confirm
+      </button>
+    </section>
+  </ng-container>
+</section>
