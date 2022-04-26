@@ -29,7 +29,6 @@ export class ConnectAccountComponent implements OnInit {
 
   openerPublicKey$ = this.connectQuery.openerPublicKey$;
   keypair$ = this.connectQuery.keypair$;
-  openerSession$ = this.connectQuery.openerSession$;
 
   currentStep$: Observable<number> = this.origin$
     .pipe(switchMap(origin => {
@@ -155,21 +154,14 @@ export class ConnectAccountComponent implements OnInit {
 
     const [
       openerPublicKey,
-      openerSession,
       keypair,
     ] = await Promise.all([
       this.openerPublicKey$.pipe(take(1)).toPromise(),
-      this.openerSession$.pipe(take(1)).toPromise(),
       this.keypair$.pipe(take(1)).toPromise(),
     ]);
 
     if (!openerPublicKey) {
       this.nzMessageService.error('Public key from opener was not provided');
-      return;
-    }
-
-    if (!openerSession) {
-      this.nzMessageService.error('Session from opener was not provided');
       return;
     }
 

@@ -7,9 +7,11 @@ import { decodeBase64, decodeUTF8, encodeBase64, encodeUTF8 } from 'tweetnacl-ut
 import { Subject, Subscription } from 'rxjs';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ConnectQuery } from '~root/modules/connect/state/connect.query';
-import { ConnectFlowService } from '~root/modules/connect/services/connect-flow.service';
 import { ConnectStateFlow } from '~root/modules/connect/state/connect.store';
-import { EventType, IEventData } from '~root/modules/connect/services/connect.service';
+import { ConnectService, EventType, IEventData } from '~root/modules/connect/services/connect.service';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { WalletsAccountsQuery } from '~root/state';
+import { selectPersistStateInit } from '@datorama/akita';
 
 @Component({
   selector: 'app-connect-dashboard',
@@ -27,6 +29,9 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
   connectAccountFlow$ = this.connectQuery.stateFlow$
     .pipe(map(stateFlow => stateFlow === ConnectStateFlow.CONNECT));
 
+  signFlow$ = this.connectQuery.stateFlow$
+    .pipe(map(stateFlow => stateFlow === ConnectStateFlow.SIGN));
+
   // These are in base64
   private openerPublicKey$ = this.connectQuery.openerPublicKey$;
   private openerSession$ = this.connectQuery.openerSession$;
@@ -36,7 +41,9 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly connectQuery: ConnectQuery,
-    private readonly connectFlowService: ConnectFlowService,
+    private readonly walletsService: WalletsService,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly connectService: ConnectService,
   ) { }
 
   eventMessagesSubscription: Subscription = this.eventMessage$.asObservable()
@@ -47,7 +54,8 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
           await this.handleConnectRequest(event);
           return;
 
-        case EventType.XBULL_INITIAL_RESPONSE:
+        case EventType.XBULL_SIGN:
+          await this.handleSignRequest(event);
           return;
 
         default:
@@ -60,7 +68,7 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
       .pipe(take(1))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(params => {
-        this.connectFlowService.setInitialState({
+        this.connectService.setInitialState({
           openerSession: decodeURIComponent(params.session),
           openerPublicKey: decodeURIComponent(params.public)
         });
@@ -124,6 +132,46 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   async handleConnectRequest(event: MessageEvent<IEventData>): Promise<void> {
+    const message = await this.decryptEventMessage(event);
+
+    this.connectService.setConnectAccountFlow({
+      origin: event.origin,
+      permissions: message
+    });
+  }
+
+  async handleSignRequest(event: MessageEvent<IEventData>): Promise<void> {
+    const message = await this.decryptEventMessage(event);
+    await selectPersistStateInit().pipe(take(1)).toPromise();
+
+    if (!!message.publicKey && !!message.network) {
+      const accountId = this.walletsService.generateWalletAccountId({
+        publicKey: message.publicKey,
+        network: message.network,
+      });
+
+      const account = this.walletsAccountsQuery.getEntity(accountId);
+
+      if (!account) {
+        this.connectService.rejectRequest(EventType.XBULL_SIGN_RESPONSE);
+        return;
+      }
+
+      this.connectService.setSignTransaction({
+        origin: event.origin,
+        xdr: message.xdr,
+        accountIdToUse: account._id,
+        networkPassphraseToUse: message.network,
+      });
+    } else {
+      this.connectService.setSignTransaction({
+        origin: event.origin,
+        xdr: message.xdr,
+      });
+    }
+  }
+
+  async decryptEventMessage(event: MessageEvent<IEventData>): Promise<any> {
     const pk = await this.openerPublicKey$.pipe(take(1)).toPromise();
     const keypair = await this.keypair$.pipe(take(1)).toPromise();
 
@@ -144,12 +192,7 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
       return;
     }
 
-    const message = JSON.parse(encodeUTF8(decryptedJSON));
-
-    this.connectFlowService.setConnectAccountFlow({
-      origin: event.origin,
-      permissions: message
-    });
+    return JSON.parse(encodeUTF8(decryptedJSON));
   }
 
 }

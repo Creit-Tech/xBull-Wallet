@@ -15,6 +15,10 @@ export class ConnectQuery extends Query<ConnectState> {
 
   permissions$ = this.select(state => state.permissions);
 
+  xdr$ = this.select(state => state.xdr);
+  accountIdToUse$ = this.select(state => state.accountIdToUse);
+  networkPassphraseToUse$ = this.select(state => state.networkPassphraseToUse);
+
   constructor(protected store: ConnectStore) {
     super(store);
   }

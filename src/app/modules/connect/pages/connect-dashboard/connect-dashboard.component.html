@@ -1,3 +1,7 @@
 <ng-container *ngIf="(connectAccountFlow$ | async)">
   <app-connect-account></app-connect-account>
 </ng-container>
+
+<ng-container *ngIf="(signFlow$ | async)">
+  <app-sign-request></app-sign-request>
+</ng-container>

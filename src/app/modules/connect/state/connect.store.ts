@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { BaseStore } from '~root/state/base.store';
-import { ISiteConnection, IWalletsAccount } from '~root/state';
+import { IHorizonApi, ISiteConnection, IWalletsAccount } from '~root/state';
 import keyPair = nacl.boxProps.keyPair;
 import { box, BoxKeyPair } from 'tweetnacl';
 import { encodeBase64 } from 'tweetnacl-util';
@@ -32,7 +32,11 @@ export interface ConnectState {
 
   // Connect flow state
   permissions?: Pick<ISiteConnection, 'canRequestPublicKey' | 'canRequestSign'>;
-  accountToShare?: IWalletsAccount['publicKey'];
+
+  // Sign flow state
+  xdr?: string;
+  accountIdToUse?: IWalletsAccount['_id'];
+  networkPassphraseToUse?: IHorizonApi['networkPassphrase'];
 }
 
 export function createInitialState(): ConnectState {
