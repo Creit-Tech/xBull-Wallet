@@ -18,6 +18,7 @@ import { NzTreeSelectModule } from 'ng-zorro-antd/tree-select';
 import { BackgroundModule } from '~root/modules/background/background.module';
 import { SignRequestComponent } from '~root/modules/connect/components/sign-request/sign-request.component';
 import { ConnectService } from '~root/modules/connect/services/connect.service';
+import { ConnectNoWalletComponent } from './pages/connect-no-wallet/connect-no-wallet.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ConnectService } from '~root/modules/connect/services/connect.service';
     ConnectDashboardComponent,
     ConnectAccountComponent,
     SignRequestComponent,
+    ConnectNoWalletComponent,
   ],
   imports: [
     CommonModule,
