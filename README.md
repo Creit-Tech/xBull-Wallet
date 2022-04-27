@@ -1,15 +1,5 @@
 ![](https://xbull.app/assets/github-wallpaper.png)
 
----
-# ***Still in BETA stage***
-*This version is still in BETA stage and we are updating it constantly, please be aware of this and use it with precaution.*
-
-*Security is a priority but we can't promise it in this early stage, all your private keys are encrypted but please use this wallet with secondary accounts or with test accounts. If you use accounts created by the wallet, please always keep your Mnemonic phrases to be able to restore them later.*
-
-*After every update the documentation will be updated with the correct information, once we hit the version *1.0.0* we will separate each version of the documentation.*
-
----
-
 # xBull Wallet
 
 xBull is a wallet to serve as a bridge between websites/users and the Stellar blockchain.

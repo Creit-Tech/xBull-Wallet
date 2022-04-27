@@ -3,7 +3,7 @@ import { Observable, of, Subject, Subscription } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { CheckboxControlValueAccessor, FormControl } from '@angular/forms';
-import { switchMap, take, takeUntil } from 'rxjs/operators';
+import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 import {
   HorizonApisQuery,

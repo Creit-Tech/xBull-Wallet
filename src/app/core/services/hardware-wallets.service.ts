@@ -49,10 +49,16 @@ export class HardwareWalletsService {
     return result.publicKey;
   }
 
-  async signWithLedger(data: { xdr: string, accountPath: string, publicKey: string, transport: TransportWebUSB }): Promise<string> {
+  async signWithLedger(data: {
+    xdr: string,
+    accountPath: string,
+    publicKey: string,
+    transport: TransportWebUSB,
+    passphrase: string
+  }): Promise<string> {
     const transaction = new this.stellarSdkService.SDK.Transaction(
       data.xdr,
-      this.stellarSdkService.networkPassphrase,
+      data.passphrase,
     );
 
     const str = new Str(data.transport);

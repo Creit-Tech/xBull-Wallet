@@ -1,9 +1,18 @@
-import {AfterViewInit, Component, HostListener, Inject, OnInit, Renderer2} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  Inject,
+  NgZone,
+  OnInit,
+  Renderer2
+} from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { HorizonApisQuery, SettingsQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { combineLatest, forkJoin, of, pipe, Subscription } from 'rxjs';
+import { combineLatest, forkJoin, fromEvent, of, pipe, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilKeyChanged, filter, skip, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { Order, selectPersistStateInit } from '@datorama/akita';
+import { Order, selectPersistStateInit, snapshotManager } from '@datorama/akita';
 import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { SettingsService } from '~root/core/settings/services/settings.service';
@@ -21,6 +30,8 @@ export class AppComponent implements OnInit {
 
   platform = this.env.platform;
 
+  broadcastStorageUpdate = new BroadcastChannel('xBull-storage-update-broadcast');
+
   constructor(
     @Inject(ENV)
     private readonly env: typeof environment,
@@ -35,6 +46,7 @@ export class AppComponent implements OnInit {
     private readonly document: Document,
     private readonly renderer2: Renderer2,
     private readonly globalsService: GlobalsService,
+    private readonly ngZone: NgZone,
   ) { }
 
 
@@ -71,7 +83,18 @@ export class AppComponent implements OnInit {
     });
 
   ngOnInit(): void {
-      this.activateWindowMode();
+    this.activateWindowMode();
+
+    // Keep tabs in sync when not using mobile app
+    if (this.env.platform !== 'mobile') {
+      this.broadcastStorageUpdate.onmessage = ev => {
+        this.ngZone.run(() => {
+          if (ev.data) {
+           snapshotManager.setStoresSnapshot(ev.data, { skipStorageUpdate: true });
+          }
+        });
+      };
+    }
   }
 
   activateWindowMode(): void {
