@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription, throwError } from 'rxjs';
 import {WalletsService} from '~root/core/wallets/services/wallets.service';
-import { catchError, filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Networks, Operation, Transaction } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import {
-  HorizonApisQuery,
+  HorizonApisQuery, IHorizonApi,
   IWalletsAccount, IWalletsAccountLedger, IWalletsAccountTrezor,
   IWalletsAccountWithSecretKey, SettingsQuery,
   WalletsAccountsQuery,
@@ -56,6 +56,39 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
   }
 
+  pickedAccount$: BehaviorSubject<IWalletsAccount | undefined> = new BehaviorSubject<IWalletsAccount | undefined>(undefined);
+  @Input() set pickedAccount(account: IWalletsAccount) {
+    this.pickedAccount$.next(account);
+  }
+
+  selectedAccount$: Observable<IWalletsAccount> = this.pickedAccount$
+    .asObservable()
+    .pipe(switchMap(pickedAccount => {
+      return !!pickedAccount
+        ? of(pickedAccount)
+        : this.walletsAccountQuery.getSelectedAccount$;
+    }));
+
+  pickedNetworkPassphrase$: BehaviorSubject<IHorizonApi['networkPassphrase'] | undefined> = new BehaviorSubject<IHorizonApi['networkPassphrase'] | undefined>(undefined);
+  @Input() set pickedNetworkPassphrase(networkPassphrase: IHorizonApi['networkPassphrase']) {
+    this.pickedNetworkPassphrase$.next(networkPassphrase);
+  }
+
+  selectedNetworkPassphrase$: Observable<IHorizonApi['networkPassphrase']> = this.pickedNetworkPassphrase$
+    .asObservable()
+    .pipe(switchMap(pickedNetworkPassphrase => {
+      return !!pickedNetworkPassphrase
+        ? of(pickedNetworkPassphrase)
+        : this.horizonApisQuery.getSelectedHorizonApi$
+          .pipe(pluck('networkPassphrase'));
+    }));
+
+  networkBeingUsed$: Observable<string> = this.selectedNetworkPassphrase$
+    .pipe(filter(horizon => !!horizon))
+    .pipe(map(networkPassphrase => {
+      return this.horizonApisService.userNetworkName(networkPassphrase);
+    }));
+
   unhandledXdrCheckerSubscription: Subscription = this.xdrParsed$
     .pipe(take(1))
     .pipe(takeUntil(this.componentDestroyed$))
@@ -95,15 +128,6 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   source$: Observable<string> = this.xdrParsed$
     .pipe(filter<Transaction>(Boolean))
     .pipe(pluck('source'));
-
-  selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;
-  networkBeingUsed$: Observable<'Public' | 'Testnet'> = this.horizonApisQuery.getSelectedHorizonApi$
-    .pipe(filter(horizon => !!horizon))
-    .pipe(map(horizon => {
-      return horizon.networkPassphrase === Networks.PUBLIC
-        ? 'Public'
-        : 'Testnet';
-    }));
 
 
   constructor(
@@ -197,9 +221,14 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
 
     this.xdr$
-      .pipe(map((xdr) => {
+      .pipe(withLatestFrom(this.selectedNetworkPassphrase$))
+      .pipe(map(([xdr, selectedNetworkPassphrase]) => {
         const secret = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
-        return this.stellarSdkService.signTransaction({ xdr, secret });
+        return this.stellarSdkService.signTransaction({
+          xdr,
+          secret,
+          passphrase: selectedNetworkPassphrase,
+        });
       }))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(xdr => {
@@ -246,28 +275,31 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
     this.signing$.next(true);
 
-    of(password)
-      .pipe(map((value) => {
-        return this.cryptoService.decryptText(selectedAccount.secretKey, value);
-      }))
-      .pipe(withLatestFrom(this.xdr$))
-      .pipe(map(([secret, xdr]) => {
-        return this.stellarSdkService.signTransaction({ xdr, secret });
-      }))
-      .subscribe(xdr => {
-        this.signing$.next(false);
+    try {
+      const secret = this.cryptoService.decryptText(selectedAccount.secretKey, password);
 
-        if (isKeptPasswordActive) {
-          this.settingsService.setKeptPassword(password);
-        }
+      const xdr = await this.xdr$.pipe(take(1)).toPromise();
+      const selectedNetworkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
-        this.emitData(xdr);
-      }, error => {
-        console.log(error);
-        this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
-
-        this.signing$.next(false);
+      const signedXdr = this.stellarSdkService.signTransaction({
+        xdr,
+        secret,
+        passphrase: selectedNetworkPassphrase,
       });
+
+      this.signing$.next(false);
+
+      if (isKeptPasswordActive) {
+        this.settingsService.setKeptPassword(password);
+      }
+
+      this.emitData(signedXdr);
+    } catch (error) {
+      console.log(error);
+      this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
+
+      this.signing$.next(false);
+    }
 
     // We use ts-ignore here to tell the compiler to skip these lines, we set them as null to clear them before is garbage collected
     // @ts-ignore
@@ -317,6 +349,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         accountPath: selectedAccount.path,
         publicKey: selectedAccount.publicKey,
         transport,
+        passphrase: await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise(),
       });
 
       this.signing$.next(false);
@@ -333,10 +366,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   async signWithTrezor(selectedAccount: IWalletsAccountTrezor): Promise<void> {
     this.signing$.next(true);
     const xdr = await this.xdr$.pipe(take(1)).toPromise();
+    const networkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
     const transaction = new this.stellarSdkService.SDK.Transaction(
       xdr,
-      this.stellarSdkService.networkPassphrase,
+      networkPassphrase,
     );
 
     await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
@@ -345,7 +379,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       const signedXDR = await this.hardwareWalletsService.signWithTrezor({
         path: selectedAccount.path,
         transaction,
-        networkPassphrase: this.stellarSdkService.networkPassphrase,
+        networkPassphrase,
       });
 
       this.emitData(signedXDR);

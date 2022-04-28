@@ -39,4 +39,14 @@ export class HorizonApisService {
         throw new Error('This network does not exists in our records');
     }
   }
+
+  userNetworkName(network: string): string {
+    if (network === Networks.PUBLIC) {
+      return 'Public';
+    } else if (network === Networks.TESTNET) {
+      return 'Testnet';
+    } else {
+      return network;
+    }
+  }
 }

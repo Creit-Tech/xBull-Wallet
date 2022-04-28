@@ -23,6 +23,11 @@ const routes: Routes = [
     component: IosBlockPageComponent
   },
   {
+    path: 'connect',
+    loadChildren: () => import('./modules/connect/connect.module')
+      .then(m => m.ConnectModule)
+  },
+  {
     path: '',
     component: MainLayoutV1Component,
     canActivate: [

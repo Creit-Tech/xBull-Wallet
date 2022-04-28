@@ -193,7 +193,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     this.xdr$
       .pipe(map((xdr) => {
         const secret = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
-        return this.stellarSdkService.signTransaction({ xdr, secret });
+        return this.stellarSdkService.signTransaction({ xdr, secret, passphrase: this.stellarSdkService.networkPassphrase });
       }))
       .pipe(takeUntil(this.componentDestroyed$))
       .subscribe(xdr => {
@@ -220,7 +220,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       }))
       .pipe(withLatestFrom(this.xdr$))
       .pipe(map(([secret, xdr]) => {
-        return this.stellarSdkService.signTransaction({ xdr, secret });
+        return this.stellarSdkService.signTransaction({ xdr, secret, passphrase: this.stellarSdkService.networkPassphrase });
       }))
       .pipe(takeUntil(merge( this.componentDestroyed$, ref.destroyed$.asObservable() )))
       .subscribe(xdr => {
@@ -296,6 +296,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
         accountPath: selectedAccount.path,
         publicKey: selectedAccount.publicKey,
         transport,
+        passphrase: this.stellarSdkService.networkPassphrase,
       });
 
       this.signing$.next(false);

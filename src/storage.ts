@@ -6,6 +6,9 @@ import { environment } from '~env';
 import { PersistStateParams } from '@datorama/akita/lib/persistState';
 import { storageMobileMiddleware } from './storage-mobile.middleware';
 import * as localForage from 'localforage';
+import { snapshotManager } from '@datorama/akita';
+
+const channel = new BroadcastChannel('xBull-storage-update-broadcast');
 
 const persistStateParams: Partial<PersistStateParams> = {
   include: [
@@ -20,6 +23,11 @@ const persistStateParams: Partial<PersistStateParams> = {
     'horizon-apis'
   ],
   preStorageUpdate(storeName: string, state: any): any {
+    if (environment.platform !== 'mobile') {
+      const snapshot = snapshotManager.getStoresSnapshot([storeName]);
+      channel.postMessage(snapshot);
+    }
+
     if (storeName === 'wallets-accounts') {
       const updatedEntities: any = {};
       Object.keys(state.entities).forEach(entityId => {

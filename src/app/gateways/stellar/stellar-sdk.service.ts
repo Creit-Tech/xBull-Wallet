@@ -38,11 +38,11 @@ export class StellarSdkService {
     private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
-  signTransaction(data: { xdr: string, secret: string }): string {
+  signTransaction(data: { xdr: string, secret: string, passphrase: string; }): string {
     const keypair = this.SDK.Keypair.fromSecret(data.secret);
     const transaction = new this.SDK.Transaction(
       data.xdr,
-      this.networkPassphrase
+      data.passphrase
     );
     transaction.sign(keypair);
 
