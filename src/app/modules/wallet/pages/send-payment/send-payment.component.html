@@ -26,14 +26,18 @@
       <nz-card class="w-full ant-card-no-padding p-4 mb-6">
         <section class="flex flex-col">
           <div class="w-full text-center mb-4">
-            <h1 class="text-lg font-semibold">Send payment</h1>
+            <h1 class="text-lg font-semibold">
+              {{ 'WALLET.SEND_PAYMENT.CARD_TITLE' | translate }}
+            </h1>
           </div>
         </section>
 
         <section [formGroup]="form" class="w-full mb-6">
           <div class="w-full mb-4">
             <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qrPublicKey">
-              <input type="text" nz-input nzSize="large" placeholder="Public key" formControlName="publicKey">
+              <input type="text" nz-input nzSize="large"
+                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.PUBLIC_KEY' | translate"
+                     formControlName="publicKey">
             </nz-input-group>
 
             <ng-template #keyIcon>
@@ -49,7 +53,9 @@
 
           <div class="w-full mb-4">
             <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon" [nzSuffix]="qrMemo">
-              <input type="text" nz-input nzSize="large" placeholder="Memo (required by exchanges)" formControlName="memo">
+              <input type="text" nz-input nzSize="large"
+                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.MEMO' | translate"
+                     formControlName="memo">
             </nz-input-group>
 
             <ng-template #tagIcon>
@@ -68,7 +74,7 @@
               <nz-select class="w-full"
                          [nzBorderless]="true"
                          formControlName="assetCode"
-                         nzPlaceHolder="Select an asset">
+                         [nzPlaceHolder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.ASSET' | translate">
                 <nz-option *ngFor="let option of selectOptions" [nzValue]="option.value" [nzLabel]="option.name"></nz-option>
               </nz-select>
             </nz-input-group>
@@ -82,7 +88,9 @@
             <nz-input-group nzSize="large" [nzAddOnBefore]="globeIcon" [nzSuffix]="maxButton">
               <input mask="separator.8"
                      thousandSeparator=""
-                     type="text" nz-input nzSize="large" placeholder="Amount" formControlName="amount">
+                     type="text" nz-input nzSize="large"
+                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.ASSET' | translate"
+                     formControlName="amount">
             </nz-input-group>
 
             <ng-template #globeIcon>
@@ -99,11 +107,11 @@
 
         <div class="w-full text-center opacity-50 mb-7">
           <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
-            Available: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
+            {{ 'WALLET.SEND_PAYMENT.AVAILABLE' | translate }} {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
           </ng-container>
 
           <ng-template #notSelectedAsset>
-            Available: Asset not selected
+            {{ 'WALLET.SEND_PAYMENT.AVAILABLE' | translate }} {{ 'WALLET.SEND_PAYMENT.NOT_SELECTED' | translate }}
           </ng-template>
         </div>
 
@@ -113,7 +121,7 @@
                   [disabled]="form.invalid"
                   nz-button nzType="primary"
                   nzBlock nzSize="large">
-            Send payment
+            {{ 'WALLET.SEND_PAYMENT.SEND_PAYMENT' | translate }}
           </button>
         </div>
       </nz-card>

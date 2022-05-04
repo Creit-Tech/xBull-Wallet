@@ -48,6 +48,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-send-payment',
@@ -150,6 +151,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly qrScannerService: QrScannerService,
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   resetFormWhenSourceAccountChangesSubscription = this.selectedAccount$
@@ -224,7 +226,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     } catch (e: any) {
       if (selectedAsset._id !== 'native') {
-        this.nzMessageService.error(`We ca not send custom assets to an account that has not been created yet.`, {
+        this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
           nzDuration: 3000,
         });
         return;
@@ -252,7 +254,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         acceptHandler: signedXdr => {
           this.walletsService.sendPayment(signedXdr)
             .then(() => {
-              this.nzMessageService.success('Payment sent correctly');
+              this.nzMessageService.success(this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.PAYMENT_SENT_MESSAGE'));
               this.form.reset();
             })
             .catch(err => {
@@ -260,12 +262,12 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
               this.nzModalService.error({
                 nzTitle: 'Oh oh!',
-                nzContent: `The network rejected the transaction, please try again or contact support`
+                nzContent: this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'),
               });
             });
         }
       },
-      nzTitle: 'Payment confirmation',
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.PAYMENT_CONFIRMATION_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
     });
 
@@ -287,7 +289,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'Scan Public key',
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.SCAN_PUBLIC_KEY_TITLE'),
       nzHeight: '100%',
       nzContentParams: {
         handleQrScanned: text => {
@@ -304,7 +306,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'Scan Public key',
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.SCAN_MEMO_TITLE'),
       nzHeight: '100%',
       nzContentParams: {
         handleQrScanned: text => {

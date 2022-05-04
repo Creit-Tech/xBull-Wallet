@@ -1,0 +1,81 @@
+{
+  "COMMON_WORDS": {
+    "ISSUER": "issuer",
+    "NAME": "name",
+    "DESCRIPTION": "description",
+    "CONDITION": "condition",
+    "ORGANIZATION": "organization",
+    "WEBSITE": "website",
+    "ADDRESS": "address",
+    "SEND": "send",
+    "SWAP": "swap",
+    "REMOVE": "remove"
+  },
+  "ERROR_MESSAGES": {
+    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network",
+    "UNEXPECTED_ERROR": "Unexpected error, try again or contact support.",
+    "NETWORK_REJECTED": "The network rejected the transaction"
+  },
+  "WALLET": {
+    "WALLET_DASHBOARD": {
+      "_COMPONENT": {
+        "SELECT_ASSET_TITLE": "Select Asset",
+        "ADD_ASSET_TITLE": "Add Asset",
+        "ADD_ASSET_SUCCESS": "Asset added correctly.",
+        "ASSET_DETAILS_TITLE": "Asset details",
+        "LP_ASSET_DETAILS_TITLE": "Liquidity Pool details"
+      },
+      "ACCOUNT_BALANCE_CARD": {
+        "CARD_TITLE": "Account balance",
+        "VALUE_DISTRIBUTION": "Value distribution",
+        "ASSET_ALLOCATION": "Asset allocation",
+        "NAME": "Account name:",
+        "PUBLIC_KEY": "Account public key:",
+        "TRUSTING_ASSETS": "Trusting assets:",
+        "POOL_SHARES": "Pool shares:",
+        "LOCKED_XLM": "Locked XLMs:"
+      },
+      "MY_ASSETS_CARD": {
+        "CARD_TITLE": "My assets",
+        "ADD_ASSET_BUTTON": "Add asset"
+      },
+      "LP_CARD": {
+        "CARD_TITLE": "Liquidity pool shares",
+        "PROVIDE_LIQUIDITY_BUTTON": "Provide liquidity"
+      }
+    },
+    "SEND_PAYMENT": {
+      "_COMPONENT": {
+        "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
+        "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
+        "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
+        "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
+        "SCAN_MEMO_TITLE": "Scan Public key"
+      },
+      "CARD_TITLE": "Send payment",
+      "FORM_PLACEHOLDERS": {
+        "PUBLIC_KEY": "Public key",
+        "MEMO": "Memo (required by exchanges)",
+        "ASSET": "Select an asset",
+        "AMOUNT": "Amount"
+      },
+      "AVAILABLE": "Available:",
+      "NOT_SELECTED": "Asset not selected",
+      "SEND_PAYMENT": "Send payment"
+    },
+    "RECEIVE_PAYMENT": {
+      "CARD_TITLE": "Receive payment",
+      "COPY_BUTTON": "Copy Address"
+    },
+    "ASSET_DETAILS": {
+      "_COMPONENT": {
+        "ASSET_REMOVE_SUCCESS": "Asset removed correctly."
+      },
+      "TOTAL_TRUSTLINES": "Total of trustlines",
+      "AMOUNT_ISSUED": "Amount issued",
+      "DOING_BUSINESS": "Doing business as",
+      "EMAIL_ADDRESS": "E-mail address",
+      "NATIVE_TOKEN_MESSAGE": "Native token of the Stellar Blockchain"
+    }
+  }
+}

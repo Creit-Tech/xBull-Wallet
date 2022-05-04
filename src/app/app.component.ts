@@ -18,6 +18,7 @@ import { DOCUMENT } from '@angular/common';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { ENV, environment } from '~env';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +48,7 @@ export class AppComponent implements OnInit {
     private readonly renderer2: Renderer2,
     private readonly globalsService: GlobalsService,
     private readonly ngZone: NgZone,
+    private readonly translateService: TranslateService,
   ) { }
 
 
@@ -95,6 +97,8 @@ export class AppComponent implements OnInit {
         });
       };
     }
+
+    this.setTranslation();
   }
 
   activateWindowMode(): void {
@@ -104,6 +108,16 @@ export class AppComponent implements OnInit {
       this.renderer2.addClass(this.document.body, 'window-mode');
       this.settingsService.turnOnWindowsMode();
     }
+  }
+
+  setTranslation(): void {
+    this.translateService.setDefaultLang('en');
+
+    const langToUse = this.translateService
+      .getLangs()
+      .find(language => language === this.translateService.getBrowserLang());
+
+    this.translateService.use(langToUse || 'en');
   }
 
 }

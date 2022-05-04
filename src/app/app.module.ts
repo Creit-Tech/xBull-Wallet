@@ -7,7 +7,7 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { ENV, environment } from '~env';
 import { ModalsModule } from '~root/shared/modals/modals.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundModule } from '~root/modules/background/background.module';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
@@ -16,7 +16,7 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IonicModule } from '@ionic/angular';
 import { MobileModule } from '~root/mobile/mobile.module';
@@ -32,6 +32,7 @@ import { LayoutV1AccountHorizonSelectorComponent } from './core/layouts/main-lay
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { TranslationModule } from '~root/translation.module';
 
 registerLocaleData(en);
 
@@ -73,6 +74,7 @@ registerLocaleData(en);
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    TranslationModule.forRoot(),
   ],
   providers: [
     {

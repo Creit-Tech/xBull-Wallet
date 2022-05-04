@@ -1,0 +1,36 @@
+{
+  "ERROR_MESSAGES": {
+    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde la red",
+    "UNEXPECTED_ERROR": "Error inesperado, intenta nuevamente o contacta soporte",
+    "NETWORK_REJECTED": "La red rechazo tu transaccion"
+  },
+  "WALLET": {
+    "WALLET_DASHBOARD": {
+      "_COMPONENT": {
+        "SELECT_ASSET_TITLE": "Seleccionar Asset",
+        "ADD_ASSET_TITLE": "Agregar Asset",
+        "ADD_ASSET_SUCCESS": "Asset agregado",
+        "ASSET_DETAILS_TITLE": "Detalles del Asset",
+        "LP_ASSET_DETAILS_TITLE": "Detalles del Liquidity Pool"
+      },
+      "ACCOUNT_BALANCE_CARD": {
+        "CARD_TITLE": "Account balance",
+        "VALUE_DISTRIBUTION": "Value distribution",
+        "ASSET_ALLOCATION": "Asset allocation",
+        "NAME": "Nombre de cuenta:",
+        "PUBLIC_KEY": "Llave publica:",
+        "TRUSTING_ASSETS": "Assets agregados:",
+        "POOL_SHARES": "Acciones de Pools:",
+        "LOCKED_XLM": "XLMs bloqueados:"
+      },
+      "MY_ASSETS_CARD": {
+        "CARD_TITLE": "Mis assets",
+        "ADD_ASSET_BUTTON": "Agregar asset"
+      },
+      "LP_CARD": {
+        "CARD_TITLE": "Acciones de Liquidity pools",
+        "PROVIDE_LIQUIDITY_BUTTON": "Agregar liquidez"
+      }
+    }
+  }
+}
