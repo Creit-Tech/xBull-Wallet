@@ -24,16 +24,18 @@
         <section class="flex flex-col">
 
           <div class="w-full text-center mb-4">
-            <h1 class="text-lg font-semibold">Swaps your assets</h1>
+            <h1 class="text-lg font-semibold">
+              {{ 'SWAP.CARD_TITLE' | translate }}
+            </h1>
           </div>
 
           <div class="w-full mb-4">
             <div class="py-0.5 w-full flex justify-between items-center">
-              <span>Send:</span>
+              <span>{{ 'COMMON_WORDS.SEND' | translate | titlecase }}:</span>
 
               <ng-container *ngIf="fundsAvailableToSend$ | async as fundsAvailableToSend">
                 <span (click)="fromAssetAmount.setValue(fundsAvailableToSend)" class="cursor-pointer text-xs pl-2 opacity-50">
-                  Available: {{ fundsAvailableToSend | number: '0.0-7' }}
+                  {{ 'COMMON_WORDS.AVAILABLE' | translate | titlecase }}: {{ fundsAvailableToSend | number: '0.0-7' }}
                 </span>
               </ng-container>
 
@@ -73,7 +75,7 @@
           <!--        </div>-->
 
           <div class="w-full mb-4">
-            <nz-form-label>Receive</nz-form-label>
+            <nz-form-label>{{ 'COMMON_WORDS.RECEIVE' | translate | titlecase }}</nz-form-label>
             <nz-input-group nzSize="large" [nzSuffix]="toAddOn">
               <input type="text" mask="separator.8"
                      thousandSeparator=""
@@ -103,13 +105,17 @@
 
           <div class="w-full flex justify-center mb-6 items-center">
             <nz-radio-group [formControl]="formPathType" class="mr-3" nzButtonStyle="solid">
-              <label nz-radio-button nzValue="send">Strict send</label>
-              <label nz-radio-button nzValue="receive">Strict receive</label>
+              <label nz-radio-button nzValue="send">
+                {{ 'SWAP.STRICT_SEND' | translate }}
+              </label>
+              <label nz-radio-button nzValue="receive">
+                {{ 'SWAP.STRICT_RECEIVE' | translate }}
+              </label>
             </nz-radio-group>
 
             <button nz-button nzSize="small" nzType="text">
               <i class="fa-solid fa-question-circle"
-                 nz-tooltip nzTooltipTitle="You can specify if you prefer to base the swap on the max amount you want to send or minimum amount to receive">
+                 nz-tooltip [nzTooltipTitle]="'SWAP.STRICT_TOOLTIP' | translate">
               </i>
             </button>
           </div>
@@ -124,7 +130,7 @@
 
             <button nz-button nzSize="small" nzType="text">
               <i class="fa-solid fa-question-circle"
-                 nz-tooltip nzTooltipTitle="Swaps have slippages, this is the max percentage you are willing to tolerate">
+                 nz-tooltip [nzTooltipTitle]="'SWAP.SLIPPAGE_TOOLTIP' | translate">
               </i>
             </button>
           </div>
@@ -135,7 +141,7 @@
                     (click)="swapAssets$.next()"
                     nz-button nzType="primary"
                     nzBlock nzSize="large">
-              Swap assets
+              {{ 'SWAP.ACTION_BUTTON' | translate }}
             </button>
           </div>
 
@@ -148,7 +154,7 @@
              *ngIf="pathValue" nzSize="small" class="mb-6">
       <nz-list-item>
         <div>
-          Swap rate:
+          {{ 'SWAP.SWAP_RATE' | translate }}:
         </div>
 
         <div class="opacity-80 flex items-center">
@@ -158,10 +164,10 @@
       <nz-list-item>
         <div>
           <span *ngIf="formPathType.value === 'receive'">
-            Max to send: <i nz-tooltip="Max amount you will send according to your slippage tolerance" class="fa-solid fa-question-circle"></i>
+            {{ 'SWAP.MAX_SEND' | translate }}: <i nz-tooltip [nzTooltipTitle]="'SWAP.MAX_SEND_TOOLTIP' | translate" class="fa-solid fa-question-circle"></i>
           </span>
           <span *ngIf="formPathType.value === 'send'">
-            Min to receive: <i nz-tooltip="Min amount you will receive according to your slippage tolerance" class="fa-solid fa-question-circle"></i>
+            {{ 'SWAP.MIN_RECEIVE' | translate }}: <i nz-tooltip [nzTooltipTitle]="'SWAP.MIN_RECEIVE_TOOLTIP' | translate" class="fa-solid fa-question-circle"></i>
           </span>
 
         </div>
@@ -182,6 +188,6 @@
 
 <ng-template #pickAsset>
   <p class="text-xs m-0">
-    Pick Asset
+    {{ 'SWAP.PICK_ASSET' | translate }}
   </p>
 </ng-template>

@@ -17,6 +17,7 @@ import BigNumber from 'bignumber.js';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-swaps',
@@ -126,6 +127,7 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsOffersService: WalletsOffersService,
     private readonly walletOffersQuery: WalletsOffersQuery,
     private readonly route: ActivatedRoute,
+    private readonly translateService: TranslateService,
   ) { }
 
   updatePathFromHorizonSubscription: Subscription = combineLatest([
@@ -198,10 +200,10 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
   async searchAsset(formValue: 'from' | 'to'): Promise<void> {
     const myAssets = await this.myAssets$.pipe(take(1)).toPromise();
 
-    const drawer = this.nzDrawerService.create<AssetSearcherComponent>({
+    this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'Select Asset',
+      nzTitle: this.translateService.instant('SWAP.SELECT_ASSET_TITLE'),
       nzHeight: '100%',
       nzCloseOnNavigation: true,
       nzContentParams: {
@@ -261,7 +263,7 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
     const cheapestPath = response.records.shift();
 
     if (!cheapestPath) {
-      this.nzMessageService.error('There are no active offers we can use to swap these assets');
+      this.nzMessageService.error(this.translateService.instant('SWAP.NO_VALID_PATH'));
       return;
     }
 
@@ -332,12 +334,12 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
     } catch (e) {
-      this.nzMessageService.error('We were not able to load your account from the blockchain, make sure you are using the correct horizon and you have internet.');
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'));
       return;
     }
 
     if (!updatedPath) {
-      this.nzMessageService.error('There is no valid path to make the swap.');
+      this.nzMessageService.error(this.translateService.instant('SWAP._COMPONENT.NO_VALID_PATH'));
       return;
     }
 
@@ -392,7 +394,7 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
         })
       );
     } else {
-      this.nzMessageService.error('Type of path selected is not Send or Receive, contact support');
+      this.nzMessageService.error(this.translateService.instant('SWAP.INCORRECT_SELECTION'));
       return;
     }
 
@@ -402,15 +404,15 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
       nzCloseOnNavigation: true,
-      nzTitle: 'Swap confirmation',
+      nzTitle: this.translateService.instant('SWAP.SWAP_CONFIRM_TITLE'),
       nzContentParams: {
         xdr: formattedXDR,
         acceptHandler: async signedXdr => {
           try {
             await this.walletsOffersService.sendPathPayment(signedXdr);
-            this.nzMessageService.success('The swap of the assets were successful');
+            this.nzMessageService.success(this.translateService.instant('SWAP.SWAP_SUCCESS'));
           } catch (e: any) {
-            this.nzMessageService.error('The swap was rejected by the network.');
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
           }
         },
       },

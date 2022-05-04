@@ -107,11 +107,11 @@
 
         <div class="w-full text-center opacity-50 mb-7">
           <ng-container *ngIf="selectedAsset$ | async as selectedAsset; else notSelectedAsset">
-            {{ 'WALLET.SEND_PAYMENT.AVAILABLE' | translate }} {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
+            {{ 'COMMON_WORDS.AVAILABLE' | translate | titlecase }}: {{ availableFunds$ | async | number: '0.0-7' }} {{ selectedAsset.assetCode }}
           </ng-container>
 
           <ng-template #notSelectedAsset>
-            {{ 'WALLET.SEND_PAYMENT.AVAILABLE' | translate }} {{ 'WALLET.SEND_PAYMENT.NOT_SELECTED' | translate }}
+            {{ 'COMMON_WORDS.AVAILABLE' | translate | titlecase }}: {{ 'WALLET.SEND_PAYMENT.NOT_SELECTED' | translate }}
           </ng-template>
         </div>
 

@@ -74,7 +74,6 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NgxChartsModule,
     NzRadioModule,
     NzEmptyModule,
-    TranslationModule,
     TranslationModule.forChild(),
     NzDividerModule,
   ],

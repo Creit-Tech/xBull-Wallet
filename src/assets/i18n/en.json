@@ -1,5 +1,6 @@
 {
   "COMMON_WORDS": {
+    "AVAILABLE": "available",
     "ISSUER": "issuer",
     "NAME": "name",
     "DESCRIPTION": "description",
@@ -8,11 +9,12 @@
     "WEBSITE": "website",
     "ADDRESS": "address",
     "SEND": "send",
+    "RECEIVE": "receive",
     "SWAP": "swap",
     "REMOVE": "remove"
   },
   "ERROR_MESSAGES": {
-    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network",
+    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
     "UNEXPECTED_ERROR": "Unexpected error, try again or contact support.",
     "NETWORK_REJECTED": "The network rejected the transaction"
   },
@@ -59,7 +61,6 @@
         "ASSET": "Select an asset",
         "AMOUNT": "Amount"
       },
-      "AVAILABLE": "Available:",
       "NOT_SELECTED": "Asset not selected",
       "SEND_PAYMENT": "Send payment"
     },
@@ -77,5 +78,26 @@
       "EMAIL_ADDRESS": "E-mail address",
       "NATIVE_TOKEN_MESSAGE": "Native token of the Stellar Blockchain"
     }
+  },
+  "SWAP": {
+    "_COMPONENT": {
+      "NO_VALID_PATH": "There is no valid path to make the swap.",
+      "INCORRECT_SELECTION": "Type of path selected is not Send or Receive, contact support",
+      "SELECT_ASSET_TITLE": "Select an Asset",
+      "SWAP_CONFIRM_TITLE": "Swap confirmation",
+      "SWAP_SUCCESS": "The swap of the assets were successful"
+    },
+    "CARD_TITLE": "Swap your assets",
+    "STRICT_SEND": "Strict send",
+    "STRICT_RECEIVE": "Strict receive",
+    "STRICT_TOOLTIP": "You can specify if you prefer to base the swap on the max amount you want to send or minimum amount to receive",
+    "SLIPPAGE_TOOLTIP": "Swaps have slippages, this is the max percentage you are willing to tolerate",
+    "ACTION_BUTTON": "Swap assets",
+    "SWAP_RATE": "Swap rate",
+    "MIN_RECEIVE": "Min to receive",
+    "MIN_RECEIVE_TOOLTIP": "Min amount you will receive according to your slippage tolerance",
+    "MAX_SEND": "Max to send",
+    "MAX_SEND_TOOLTIP": "Max amount you will send according to your slippage tolerance",
+    "PICK_ASSET": "Pick Asset"
   }
 }
