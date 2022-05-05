@@ -3,8 +3,9 @@ import {SettingsQuery} from '~root/state';
 import {map} from 'rxjs/operators';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {SettingsService} from '~root/core/settings/services/settings.service';
-import {NzMessageService} from "ng-zorro-antd/message";
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-anti-spam-claimable-assets',
@@ -40,6 +41,7 @@ export class AntiSpamClaimableAssetsComponent implements OnInit {
     private readonly settingsService: SettingsService,
     private readonly nzMessageService: NzMessageService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -65,7 +67,7 @@ export class AntiSpamClaimableAssetsComponent implements OnInit {
       this.cdr.detectChanges();
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error(`We couldn't save the asset. It's possible that you already saved it.`, {
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.ALREADY_SAVED'), {
         nzDuration: 5000,
       });
     }

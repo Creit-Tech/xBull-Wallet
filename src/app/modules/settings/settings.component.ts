@@ -1,9 +1,9 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
-import { CheckboxControlValueAccessor, FormControl } from '@angular/forms';
-import { switchMap, take, takeUntil, tap } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 import {
   HorizonApisQuery,
@@ -14,7 +14,7 @@ import {
 } from '~root/state';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
-import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings',
@@ -47,6 +47,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly nzDrawerService: NzDrawerService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly translateService: TranslateService,
   ) { }
 
   advanceModeStateSubscription: Subscription = this.advanceMode$
@@ -75,7 +76,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<DefaultFeeFormComponent>({
       nzContent: DefaultFeeFormComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Set default fee'
+      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD._COMPONENT.DEFAULT_FEE_TITLE')
     });
 
     drawerRef.open();
@@ -85,7 +86,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'Select Asset',
+      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD._COMPONENT.SELECT_ASSET_TITLE'),
       nzHeight: '100%',
       nzCloseOnNavigation: true,
       nzContentParams: {

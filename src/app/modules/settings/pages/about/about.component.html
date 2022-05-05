@@ -6,7 +6,7 @@
   <div class="w-full text-center mb-4 px-4">
     <h1 class="font-bold text-lg mb-2">xBull Wallet</h1>
     <p class="opacity-80 text-sm w-11/12 mx-auto">
-      xBull is a powerful but easy to use wallet which is aimed to serve as a bridge between websites/users and the Stellar Blockchain
+      {{ 'SETTINGS.ABOUT.DESCRIPTION' | translate }}
     </p>
   </div>
 
@@ -14,7 +14,7 @@
     <nz-list-item class="flex w-full cursor-placeholder justify-between">
       <div class="w-auto">
         <p class="m-0 text-sm font-bold">
-          Version of the wallet:
+          {{ 'SETTINGS.ABOUT.VERSION' | translate }}:
         </p>
       </div>
       <div class="w-auto">
@@ -28,7 +28,7 @@
       <a href="https://xbull.app?utm_source=Wallet&utm_medium=Extension&utm_campaign=organic" target="_blank" class="flex w-full justify-between">
         <div class="w-auto px-2">
           <p class="m-0 text-sm font-bold">
-            Documentation:
+            {{ 'COMMON_WORDS.DOCUMENTATION' | translate }}:
           </p>
         </div>
         <div class="w-auto px-2">
@@ -41,7 +41,7 @@
       <a href="https://github.com/Creit-Tech/xBull-Wallet" target="_blank" class="flex w-full justify-between">
         <div class="w-auto px-2">
           <p class="m-0 text-sm font-bold">
-            Source code:
+            {{ 'SETTINGS.ABOUT.SOURCE_CODE' | translate }}:
           </p>
         </div>
         <div class="w-auto px-2">
@@ -56,7 +56,7 @@
             nz-button
             nzSize="large"
             nzBlock>
-      Return to settings
+      {{ 'COMMON_WORDS.GO_BACK' | translate }}
     </button>
   </div>
 </section>

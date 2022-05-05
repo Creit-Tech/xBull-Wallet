@@ -1,22 +1,53 @@
 {
   "COMMON_WORDS": {
-    "AVAILABLE": "available",
-    "ISSUER": "issuer",
-    "NAME": "name",
-    "DESCRIPTION": "description",
-    "CONDITION": "condition",
-    "ORGANIZATION": "organization",
-    "WEBSITE": "website",
-    "ADDRESS": "address",
-    "SEND": "send",
-    "RECEIVE": "receive",
-    "SWAP": "swap",
-    "REMOVE": "remove"
+    "AVAILABLE": "Available",
+    "ISSUER": "Issuer",
+    "CODE": "Code",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "CONDITION": "Condition",
+    "ORGANIZATION": "Organization",
+    "WEBSITE": "Website",
+    "ADDRESS": "Address",
+    "SEND": "Send",
+    "RECEIVE": "Receive",
+    "SWAP": "Swap",
+    "REMOVE": "Remove",
+    "PUBLIC_KEY": "Public Key",
+    "PRIVATE_KEY": "Private key",
+    "COPY": "Copy",
+    "GO_BACK": "Go back",
+    "DOMAIN": "Domain",
+    "SPONSOR": "Sponsor",
+    "WALLET": "Wallet",
+    "ADD": "Add",
+    "TYPE": "Type",
+    "DETAILS": "Details",
+    "CANCEL": "Cancel",
+    "DOCUMENTATION": "Documentation",
+    "CONFIRM": "Confirm",
+    "PASSWORD": "Password",
+    "RECOMMENDED": "Recommended"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
     "UNEXPECTED_ERROR": "Unexpected error, try again or contact support.",
-    "NETWORK_REJECTED": "The network rejected the transaction"
+    "NETWORK_REJECTED": "The network rejected the transaction",
+    "CANT_SIGN_TRANSACTION": "We couldn't sign the transaction, please check your password is correct",
+    "PASSWORD_NOT_SET": "Global password has not being defined in this wallet",
+    "PASSWORD_INCORRECT": "Password is not correct",
+    "ALREADY_SAVED": "Error, it's possible that you already saved it."
+  },
+  "SUCCESS_MESSAGE": {
+    "OPERATION_COMPLETED": "Operation completed",
+    "VALUE_UPDATED": "Value updated"
+  },
+  "FORM_PLACEHOLDERS": {
+    "TO_DO": "TO_DO"
+  },
+  "SITES_PERMISSIONS": {
+    "GET_PUBLIC_KEY": "Get public key",
+    "ASK_TO_SIGN": "Ask to sign transactions"
   },
   "WALLET": {
     "WALLET_DASHBOARD": {
@@ -99,5 +130,122 @@
     "MAX_SEND": "Max to send",
     "MAX_SEND_TOOLTIP": "Max amount you will send according to your slippage tolerance",
     "PICK_ASSET": "Pick Asset"
+  },
+  "SETTINGS": {
+    "SETTINGS_DASHBOARD": {
+      "_COMPONENT": {
+        "DEFAULT_FEE_TITLE": "Set default fee",
+        "SELECT_ASSET_TITLE": "Select Asset"
+      },
+      "ADVANCED_MODE": "Advanced mode",
+      "COUNTER_ASSET": "Counter asset",
+      "WALLETS": "Wallets",
+      "HORIZON_APIS": "Horizon APIs",
+      "LANGUAGE_TITLE": "Language",
+      "DEFAULT_FEE_TITLE": "Default fee",
+      "ACTIVE_OPERATIONS_TYPES": "Active operation types",
+      "SITES_CONNECTED": "Sites connected",
+      "ANTI_SPAM": "Anti SPAM",
+      "BACKGROUND_IMAGE": "Background image",
+      "LOCK_SETTINGS": "Lock settings",
+      "ABOUT": "About"
+    },
+    "WALLET_ACCOUNT": {
+      "_COMPONENT": {
+        "COPY_PRIVATE_KEY_TITLE": "Please read carefully",
+        "COPY_PRIVATE_KEY_CONTENT": "You're about to copy your private key to the clipboard. We recommend you that after you have use it, copy something else so is removed from your clipboard and if your device keep clipboard records, delete it from there too.",
+        "COPY_PRIVATE_KEY_CONTENT_SUCCESS": "Copied to the clipboard, do not forget about removing it from your clipboard later",
+        "REMOVE_ACCOUNT_TITLE": "Please read carefully",
+        "REMOVE_ACCOUNT_CONTENT": "You're about to remove your account from this wallet. Make sure you have a backup of it before removing it."
+      },
+      "ACCOUNT_DETAILS": {
+        "TITLE": "Account details",
+        "SEQUENCE": "Sequence",
+        "SUBENTRY_COUNT": "Subentry count",
+        "TOTAL_SPONSORING": "Total sponsoring",
+        "TOTAL_SPONSORED": "Total sponsored"
+      },
+      "ACCOUNT_THRESHOLDS": {
+        "TITLE": "Account thresholds",
+        "LOW": "Low",
+        "MEDIUM": "Medium",
+        "HIGH": "High"
+      },
+      "ACCOUNT_FLAGS": {
+        "TITLE": "Account flags",
+        "AUTH_REQUIRED": "Auth required",
+        "AUTH_REVOCABLE": "Auth revocable",
+        "AUTH_IMMUTABLE": "Auth immutable",
+        "AUTH_CLAWBACK_ENABLED": "Auth clawback enabled"
+      }
+    },
+    "SITES_CONNECTED": {
+      "_COMPONENT": {
+        "SELECT_SITE_TITLE": "Connected site"
+      }
+    },
+    "REGISTERED_WALLET_DETAILS": {
+      "_COMPONENT": {
+        "ADD_ACCOUNT_TITLE": "Add account",
+        "REMOVE_WALLET_TITLE": "Remove Wallet",
+        "REMOVE_WALLET_ALERT": "You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method"
+      },
+      "WALLET_DETAILS_TITLE": "Wallet details",
+      "CREATE_ACCOUNT_BUTTON": "Create wallet account",
+      "WALLET_ACCOUNTS": "Wallet Accounts",
+      "EDIT_NAME": "Edit Name"
+    },
+    "LOCKING": {
+      "_COMPONENT": {
+        "TIMEOUT_UPDATED": "Timeout updated to {{value}} minutes.",
+        "DEVICE_AUTH_DISABLED": "Device Auth is now disabled for password protected features.",
+        "DEVICE_AUTH_ENABLED": "Device Auth is now active for password protected features.",
+        "KEEP_PASSWORD_DISABLED": "Option disabled, now when using your password this one won't be kept.",
+        "KEEP_PASSWORD_ENABLED": "Option enabled, your password will be kept for a few minutes after using it."
+      },
+      "DEVICE_AUTH_OPTION": "Use device authentication",
+      "DONT_REQUEST_PASSWORD_OPTION": "Don't request password",
+      "DONT_REQUEST_PASSWORD_TOOLTIP": "If you enable this option, your password will be saved in the device after you use it. It will be kept during a period of time or until the session is ended",
+      "PASSWORD_TIMEOUT_OPTION": "Password timeout",
+      "PASSWORD_TIMEOUT_TOOLTIP": "Total of minutes before you will need to write your password again if the session hasn't been closed",
+      "FOOTER_MESSAGE": "Locking settings change depending on the platform being used"
+    },
+    "BACKGROUND": {
+      "SET_BACKGROUND_TITLE": "Set a background for your wallet",
+      "BACKGROUND_SUGGESTION": "A dark background is recommended so you can read everything easier."
+    },
+    "ANTI_SPAM": {
+      "OPTIONS_COMPONENT": {
+        "BY_PUBLIC_KEY": "Filter by Public Keys",
+        "FILTER_CB": "Filter Claimable Assets"
+      },
+      "SPAM_KEYS": {
+        "EXPLANATION": "Transactions where these keys are the \"source\", will be ignored in this Wallet"
+      }
+    },
+    "ABOUT": {
+      "DESCRIPTION": "xBull is a powerful but easy to use wallet which is aimed to serve as a bridge between websites/users and the Stellar Blockchain",
+      "VERSION": "Version of the wallet",
+      "SOURCE_CODE": "Source code"
+    },
+    "ADD_ACCOUNT": {
+      "_COMPONENT": {
+        "UNABLE_TO_SAVE_ACCOUNT": "We were not able to add the new account",
+        "ACCOUNT_ADDED_SUCCESS": "New account was added to the wallet: {{name}}"
+      },
+      "TITLE": "Add new account",
+      "DESCRIPTION": "Write your password to decrypt your wallet and add a new account"
+    },
+    "ADD_HORIZON_API": {
+      "NAME_EXPLANATION": "The name of the Horizon API is just a way to identify it in other places of the wallet"
+    },
+    "SET_DEFAULT_FEE": {
+      "TITLE": "Set default fee",
+      "SET": "Set fee",
+      "GET_RECOMMENDED": "Get recommended fee"
+    },
+    "EDIT_WALLET_NAME": {
+      "EXPLANATION": "The name of the Wallet is not recorded on the Blockchain. It's only for information purposes."
+    }
   }
 }

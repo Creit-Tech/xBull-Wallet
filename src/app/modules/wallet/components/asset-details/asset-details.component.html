@@ -20,16 +20,16 @@
 
       <ng-container *ngIf="issuedAsset$ | async as issuedAsset; else nativeAssetTemplate">
         <ng-container *ngIf="fullDataLoaded$ | async; else loadingFullData">
-          <dt *ngIf="!!issuedAsset.assetIssuer" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ISSUER' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.assetIssuer" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ISSUER' | translate }}:</dt>
           <dd class="break-all opacity-80 text-sm mb-3">{{ issuedAsset.assetIssuer }}</dd>
 
-          <dt *ngIf="!!issuedAsset.name" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.name" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.name }}</dd>
 
-          <dt *ngIf="!!issuedAsset.description" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.description" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.description }}</dd>
 
-          <dt *ngIf="!!issuedAsset.conditions" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.CONDITION' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.conditions" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.CONDITION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.conditions }}</dd>
 
           <dt *ngIf="!!issuedAsset.numAccount" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.TOTAL_TRUSTLINES' | translate }}:</dt>
@@ -40,19 +40,19 @@
 
           <nz-divider></nz-divider>
 
-          <dt *ngIf="!!issuedAsset.orgName" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ORGANIZATION' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.orgName" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ORGANIZATION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgName }}</dd>
 
           <dt *ngIf="!!issuedAsset.orgDba" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.DOING_BUSINESS' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgDba }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgDescription" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.orgDescription" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgDescription }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgWebsite" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.WEBSITE' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.orgWebsite" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.WEBSITE' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgWebsite }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgAddress" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ADDRESS' | translate | titlecase }}:</dt>
+          <dt *ngIf="!!issuedAsset.orgAddress" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ADDRESS' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgAddress }}</dd>
 
           <dt *ngIf="!!issuedAsset.orgOfficialEmail" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.EMAIL_ADDRESS' | translate }}:</dt>
@@ -85,10 +85,10 @@
 
       <ng-template #nativeAssetTemplate>
         <ng-container *ngIf="nativeAsset$ | async as nativeAsset">
-          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate | titlecase }}:</dt>
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">Lumens</dd>
 
-          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate | titlecase }}:</dt>
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ 'WALLET.ASSET_DETAILS.NATIVE_TOKEN_MESSAGE' }}</dd>
         </ng-container>
       </ng-template>

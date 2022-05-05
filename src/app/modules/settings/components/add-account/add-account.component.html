@@ -1,6 +1,6 @@
 <div class="w-full text-center mb-4">
   <h2 class="m-0 p-0 font-bold text-xl">
-    Add new account
+    {{ 'SETTINGS.ADD_ACCOUNT.TITLE' | translate }}
   </h2>
 </div>
 
@@ -9,7 +9,7 @@
   <ng-container *ngIf="parentWallet.type === 'secret_key'">
     <div class="w-full mb-4">
       <nz-input-group nzSize="large" [nzPrefix]="keyIcon">
-        <input type="text" nz-input [formControl]="secretKey" placeholder="Secret key">
+        <input type="text" nz-input [formControl]="secretKey" [placeholder]="'COMMON_WORDS.PRIVATE_KEY' | translate">
       </nz-input-group>
       <ng-template #keyIcon>
         <div class="px-2">
@@ -22,7 +22,7 @@
   <div class="w-full mb-4">
     <div class="w-full mb-4">
       <nz-input-group nzSize="large" [nzPrefix]="unlockIcon">
-        <input type="password" nz-input [formControl]="password" placeholder="Password">
+        <input type="password" nz-input [formControl]="password" [placeholder]="'COMMON_WORDS.PASSWORD' | translate">
       </nz-input-group>
       <ng-template #unlockIcon>
         <div class="px-2">
@@ -33,14 +33,14 @@
   </div>
 
   <div class="w-full text-center opacity-80 mb-7">
-    Write your password to decrypt your wallet and add a new account
+    {{ 'SETTINGS.ADD_ACCOUNT.DESCRIPTION' | translate }}
   </div>
 
   <div class="w-full">
     <button (click)="onConfirm()" [disabled]="password.invalid"
             nz-button nzType="primary"
             nzBlock nzSize="large">
-      Confirm
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
     </button>
   </div>
 

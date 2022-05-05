@@ -1,7 +1,7 @@
 <section class="h-full w-full relative">
   <div class="w-full text-center mb-4">
     <h2 class="m-0 p-0 font-bold text-xl">
-      Set default fee
+      {{ 'SETTINGS.SET_DEFAULT_FEE.TITLE' | translate }}
     </h2>
   </div>
 
@@ -15,7 +15,7 @@
 
   <div class="w-full text-center opacity-80 mb-7">
     <ng-container *ngIf="(recommendedFee$ | async) as recommendedFee; else recommendedFeNotLoaded">
-      Recommended fee is: {{ recommendedFee }}
+      {{ 'COMMON_WORDS.RECOMMENDED' | translate }}: {{ recommendedFee }}
     </ng-container>
     <ng-template #recommendedFeNotLoaded>
       1 Stroop = 0.0000001 XLM
@@ -27,7 +27,7 @@
       <button nz-button nzBlock nzSize="large"
               (click)="onGetRecommendedFee()"
               [disabled]="gettingRecommendedFee$ | async">
-        Get recommended fee
+        {{ 'SETTINGS.SET_DEFAULT_FEE.GET_RECOMMENDED' | translate }}
       </button>
     </nz-spin>
   </div>
@@ -36,7 +36,7 @@
     <button nz-button nzType="primary" nzBlock nzSize="large"
             [disabled]="defaultFeeControl.invalid"
             (click)="onSubmit()">
-      Set fee
+      {{ 'SETTINGS.SET_DEFAULT_FEE.SET' | translate }}
     </button>
   </div>
 </section>

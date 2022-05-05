@@ -31,11 +31,11 @@
 
           <div class="w-full mb-4">
             <div class="py-0.5 w-full flex justify-between items-center">
-              <span>{{ 'COMMON_WORDS.SEND' | translate | titlecase }}:</span>
+              <span>{{ 'COMMON_WORDS.SEND' | translate }}:</span>
 
               <ng-container *ngIf="fundsAvailableToSend$ | async as fundsAvailableToSend">
                 <span (click)="fromAssetAmount.setValue(fundsAvailableToSend)" class="cursor-pointer text-xs pl-2 opacity-50">
-                  {{ 'COMMON_WORDS.AVAILABLE' | translate | titlecase }}: {{ fundsAvailableToSend | number: '0.0-7' }}
+                  {{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ fundsAvailableToSend | number: '0.0-7' }}
                 </span>
               </ng-container>
 
@@ -75,7 +75,7 @@
           <!--        </div>-->
 
           <div class="w-full mb-4">
-            <nz-form-label>{{ 'COMMON_WORDS.RECEIVE' | translate | titlecase }}</nz-form-label>
+            <nz-form-label>{{ 'COMMON_WORDS.RECEIVE' | translate }}</nz-form-label>
             <nz-input-group nzSize="large" [nzSuffix]="toAddOn">
               <input type="text" mask="separator.8"
                      thousandSeparator=""

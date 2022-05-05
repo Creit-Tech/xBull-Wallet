@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, merge, Observable, Subject } from 'rxjs';
-import { distinctUntilKeyChanged, map, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import {
   HorizonApisQuery,
   IWallet,
@@ -20,6 +20,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { Networks } from 'stellar-base';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wallet-account',
@@ -63,6 +64,7 @@ export class WalletAccountComponent implements OnInit {
     private readonly cryptoService: CryptoService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly walletsService: WalletsService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -86,7 +88,7 @@ export class WalletAccountComponent implements OnInit {
         publicKey: account.publicKey,
       });
     } catch (e: any) {
-      this.nzMessageService.error(e.message || 'Unexpected error, please contact support');
+      this.nzMessageService.error(e.message || this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
       return;
     }
 
@@ -95,8 +97,8 @@ export class WalletAccountComponent implements OnInit {
 
   async copyPrivateKey(): Promise<any> {
     await this.nzModalService.confirm({
-      nzTitle: 'Please read carefully',
-      nzContent: `You're about to copy your private key to the clipboard. We recommend you that after you have use it, copy something else so is removed from your clipboard and if your device keep clipboard records, delete it from there too.`,
+      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_TITLE'),
+      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_CONTENT'),
       nzOnOk: async () => {
         const account = await this.account$.pipe(take(1))
           .toPromise() as IWalletsAccountWithSecretKey;
@@ -129,14 +131,14 @@ export class WalletAccountComponent implements OnInit {
           )))
           .subscribe(secretKey => {
             this.clipboardService.copyToClipboard(secretKey);
-            this.nzMessageService.success('Copied to the clipboard, do not forget about removing it from your clipboard later', {
+            this.nzMessageService.success(this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_CONTENT_SUCCESS'), {
               nzDuration: 5000
             });
             drawerRef.close();
           }, error => {
             drawerRef.close();
             console.log(error);
-            this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_SIGN_TRANSACTION'));
           });
 
       }
@@ -145,8 +147,8 @@ export class WalletAccountComponent implements OnInit {
 
   async removeAccount(): Promise<any> {
     await this.nzModalService.confirm({
-      nzTitle: 'Please read carefully',
-      nzContent: `You're about to remove your account from this wallet. Make sure you have a backup of it before removing it.`,
+      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.REMOVE_ACCOUNT_TITLE'),
+      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.REMOVE_ACCOUNT_CONTENT'),
       nzOnOk: async () => {
         const walletId = await this.walletId$.pipe(take(1)).toPromise();
         const publicKey = await this.publicKey.pipe(take(1)).toPromise();

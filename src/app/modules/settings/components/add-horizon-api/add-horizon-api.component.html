@@ -16,13 +16,13 @@
 </form>
 
 <div class="w-full text-center opacity-50 mb-7">
-  *The name of the Horizon API is just a way to identify it in other places of the wallet
+  *{{ 'SETTINGS.ADD_HORIZON_API.NAME_EXPLANATION' | translate }}
 </div>
 
 <div class="w-full">
   <button (click)="onConfirm()" [disabled]="form.invalid"
           nz-button nzSize="large" nzType="primary" nzBlock>
-    Confirm
+    {{ 'COMMON_WORDS.CONFIRM' | translate }}
   </button>
 </div>
 
