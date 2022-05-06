@@ -40,7 +40,7 @@
         </nz-radio-group>
 
         <small>
-          Price movement tolerance
+          {{ 'LIQUIDITY_POOLS.SLIPPAGE_TOLERANCE' | translate }}
         </small>
       </div>
     </section>
@@ -60,13 +60,13 @@
               [disabled]="withDrawForm.invalid || (disableActionButtons$ | async)"
               (click)="actionButton$.next()"
               nzBlock>
-        Withdraw liquidity
+        {{ 'COMMON_WORDS.WITHDRAW' | translate }}
       </button>
     </div>
 
     <div class="w-full text-center">
       <small class="mb-4" *ngIf="selectedLiquidityPool$ | async as selectedLiquidityPool">
-        Current spot price: {{ calculateSpotPrice(selectedLiquidityPool) }}
+        {{ 'LIQUIDITY_POOLS.SPOT_PRICE' | translate }}: {{ calculateSpotPrice(selectedLiquidityPool) }}
       </small>
     </div>
   </section>

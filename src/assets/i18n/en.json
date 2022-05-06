@@ -1,6 +1,9 @@
 {
   "COMMON_WORDS": {
     "AVAILABLE": "Available",
+    "CREATE": "Create",
+    "DEPOSIT": "Deposit",
+    "WITHDRAW": "Withdraw",
     "ISSUER": "Issuer",
     "CODE": "Code",
     "NAME": "Name",
@@ -25,6 +28,7 @@
     "ADD": "Add",
     "TYPE": "Type",
     "DETAILS": "Details",
+    "TOTAL": "Total",
     "CANCEL": "Cancel",
     "DOCUMENTATION": "Documentation",
     "CONFIRM": "Confirm",
@@ -34,6 +38,8 @@
     "SELL": "Sell",
     "LIQUIDITY_POOL": "Liquidity Pool",
     "TRUSTOR": "Trustor",
+    "TRUSTLINE": "Trusline",
+    "TRUSTLINES": "Truslines",
     "INTO": "Into",
     "SET": "Set",
     "TO": "To",
@@ -49,10 +55,12 @@
     "AUTHORIZE": "Authorize",
     "SPONSORED": "Sponsored",
     "MEMO": "Memo",
-    "OPERATION": "Operation"
+    "OPERATION": "Operation",
+    "POOLED": "Pooled"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
+    "CANT_CONTACT_HORIZON": "There was an unexpected error when requesting Horizon, make sure you have internet.",
     "UNEXPECTED_ERROR": "Unexpected error, try again or contact support.",
     "NETWORK_REJECTED": "The network rejected the transaction",
     "CANT_SIGN_TRANSACTION": "We couldn't sign the transaction, please check your password is correct",
@@ -321,5 +329,13 @@
     "RESERVES_MAX": "Max Reserves",
     "RESERVES_MIN": "Min Reserves",
     "RESERVES_DEPOSITED": "Reserves deposited"
+  },
+  "LIQUIDITY_POOLS": {
+    "DETAILS_TITLE": "Liquidity Pool Details",
+    "SPOT_PRICE": "Spot price",
+    "SLIPPAGE_TOLERANCE": "Slippage tolerance",
+    "TOTAL_SHARES": "Total of shares",
+    "TOTAL_TRUSTLINES": "Total of trustlines",
+    "POOL_FEE": "Pool fee"
   }
 }
