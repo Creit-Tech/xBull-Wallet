@@ -42,6 +42,7 @@
     "TRUSTLINES": "Truslines",
     "INTO": "Into",
     "SET": "Set",
+    "SIGN": "Sign",
     "TO": "To",
     "FROM": "From",
     "CLAIMANT": "Claimant",
@@ -66,7 +67,8 @@
     "CANT_SIGN_TRANSACTION": "We couldn't sign the transaction, please check your password is correct",
     "PASSWORD_NOT_SET": "Global password has not being defined in this wallet",
     "PASSWORD_INCORRECT": "Password is not correct",
-    "ALREADY_SAVED": "Error, it's possible that you already saved it."
+    "ALREADY_SAVED": "Error, it's possible that you already saved it.",
+    "INVALID_XDR": "`We can't continue, XDR value is invalid`"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
@@ -337,5 +339,15 @@
     "TOTAL_SHARES": "Total of shares",
     "TOTAL_TRUSTLINES": "Total of trustlines",
     "POOL_FEE": "Pool fee"
+  },
+  "LAB": {
+    "BUILD_TRANSACTION": "Build transaction",
+    "SIGN_MESSAGE": "Sign message",
+    "IMPORT_XDR": "Import XDR (manually sign)",
+    "NOTICE": "This section includes operations that could be dangerous if you don't know what you're doing. Be careful.",
+    "COPY_SIGNED": "Copy Signed",
+    "SIGN_SIGNED": "Sign XDR",
+    "SUBMIT_SIGNED": "Submit signed transaction",
+    "SIGN_XDR_MESSAGE": "Use the \"Copy Signed XDR\" after you have signed an XDR to get the signed version of the XDR. <br> The XDR you pasted won't be modified."
   }
 }

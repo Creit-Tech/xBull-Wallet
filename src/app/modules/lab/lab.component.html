@@ -19,19 +19,19 @@
   <section class="max-w-md w-full h-full flex flex-col justify-center items-center px-4">
     <div class="w-full mb-4">
       <button routerLink="/lab/import-xdr" nz-button class="w-full" nzSize="large" nzType="primary">
-        Import XDR (manually sign)
+        {{ 'LAB.IMPORT_XDR' | translate }}
       </button>
     </div>
 
     <div class="w-full mb-4">
       <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
-        Build transaction
+        {{ 'LAB.BUILD_TRANSACTION' | translate }}
       </button>
     </div>
 
     <div class="w-full mb-4">
       <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
-        Sign message
+        {{ 'LAB.SIGN_MESSAGE' | translate }}
       </button>
     </div>
   </section>
@@ -40,7 +40,7 @@
 <section class="w-full flex justify-center items-center">
   <section class="max-w-md w-full h-full flex flex-col justify-center items-center px-4">
     <small class="opacity-80 text-center">
-      This section includes operations that could be dangerous if you don't know what you're doing. Be careful.
+      {{ 'LAB.SIGN_MESSAGE' | translate }}
     </small>
   </section>
 </section>

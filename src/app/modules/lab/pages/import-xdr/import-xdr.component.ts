@@ -9,6 +9,7 @@ import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-import-xdr',
@@ -28,6 +29,7 @@ export class ImportXdrComponent implements OnInit {
     private readonly nzDrawerService: NzDrawerService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly nzMessageService: NzMessageService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -35,13 +37,13 @@ export class ImportXdrComponent implements OnInit {
 
   async onSign(): Promise<void> {
     if (this.signControl.invalid) {
-      throw new Error(`We can't continue, XDR value is invalid`);
+      throw new Error(this.translateService.instant('ERROR_MESSAGES.INVALID_XDR'));
     }
 
     const nzRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Sign XDR',
+      nzTitle: this.translateService.instant('COMMON_WORDS.SIGN'),
       nzContentParams: {
         xdr: this.signControl.value,
         acceptHandler: signedXdr => {
@@ -67,10 +69,10 @@ export class ImportXdrComponent implements OnInit {
       this.sendingTransaction$.next(true);
       await this.stellarSdkService.submitTransaction(this.signedControl.value);
       this.sendingTransaction$.next(false);
-      this.nzMessageService.success('Transaction accepted by the network!');
+      this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
     } catch (e) {
       this.sendingTransaction$.next(false);
-      this.nzMessageService.error('Transaction was rejected by the network');
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
     }
 
     this.signedControl.reset();
