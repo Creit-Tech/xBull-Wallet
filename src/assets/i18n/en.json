@@ -1,6 +1,8 @@
 {
   "COMMON_WORDS": {
     "DATE": "Date",
+    "ORIGIN": "Origin",
+    "HOST": "Host",
     "AVAILABLE": "Available",
     "CREATE": "Create",
     "DEPOSIT": "Deposit",
