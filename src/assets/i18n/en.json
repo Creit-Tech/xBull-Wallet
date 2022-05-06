@@ -28,6 +28,8 @@
     "ADD": "Add",
     "TYPE": "Type",
     "DETAILS": "Details",
+    "CONTINUE": "Continue",
+    "CONNECT": "connect",
     "TOTAL": "Total",
     "CANCEL": "Cancel",
     "DOCUMENTATION": "Documentation",
@@ -68,7 +70,9 @@
     "PASSWORD_NOT_SET": "Global password has not being defined in this wallet",
     "PASSWORD_INCORRECT": "Password is not correct",
     "ALREADY_SAVED": "Error, it's possible that you already saved it.",
-    "INVALID_XDR": "`We can't continue, XDR value is invalid`"
+    "INVALID_XDR": "We can't continue, XDR value is invalid",
+    "INVALID_PHRASE": "Mnemonic phrases is invalid, please make sure you write/add word by word correctly",
+    "CANT_CONNECT_LEDGER_1": "We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
@@ -348,6 +352,28 @@
     "COPY_SIGNED": "Copy Signed",
     "SIGN_SIGNED": "Sign XDR",
     "SUBMIT_SIGNED": "Submit signed transaction",
-    "SIGN_XDR_MESSAGE": "Use the \"Copy Signed XDR\" after you have signed an XDR to get the signed version of the XDR. <br> The XDR you pasted won't be modified."
+    "SIGN_XDR_MESSAGE": "Use the \"Copy Signed\" after you have signed an XDR to get the signed version of the XDR. <br> The XDR you pasted won't be modified."
+  },
+  "CREATE_ACCOUNT": {
+    "GENERATE_WALLET": "Generate Wallet",
+    "IMPORT_PHRASE": "Import Mnemonic phrase",
+    "CONFIRM_PHRASE": "Confirm Mnemonic phrase",
+    "IMPORT_SECRET": "Import Secret Key",
+    "CONNECT_HARDWARE_WALLET": "Connect Hardware Wallet",
+    "CONNECT_OPEN_APP": "Connect your wallet to your computer and open the Stellar App before continuing",
+    "CONNECT_BEFORE_CONTINUE": "Connect your wallet to your computer before continuing",
+    "THIS_YOUR_PHRASE": "This is your Mnemonic phrase",
+    "SAFE_PLACE": "Write these words in a safe place, this is the only time we will show it to you and is not possible to recover it",
+    "START_AGAIN": "Start again",
+    "SET_PASSWORD": "Set a password for your Wallet, this password will be used to encrypt, lock and transact with your wallet.",
+    "DONT_FORGET": "DO NOT FORGET IT",
+    "CANT_UPDATE": "It can’t be updated if the Wallet is locked.",
+    "BACK_TO_WALLETS": "Go back to wallets",
+    "SECRET_KEY_TYPE": "You're creating a <b>secret keys wallet</b>, this kind of wallet don't have words you could use to restore it. Please keep a copy of your private keys before you import them.",
+    "WRITE_AND_CONFIRM": "Write and confirm your words in the input below",
+    "LOAD_MORE": "Load more accounts",
+    "ACCOUNTS_TO_IMPORT": "Accounts to import",
+    "IMPORT_MORE_LATER": "If you want to import more public keys later, go to settings and add the wallet again. Select all the public keys to include and they will be included in the same wallet record.",
+    "ADD_LATER_TREZOR": "If you add again a Trezor wallet with the same ID, the wallets will be merged. Updating the wallet name later does not affect the wallet ID."
   }
 }

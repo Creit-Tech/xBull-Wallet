@@ -2,7 +2,7 @@
   <section class="h-full w-full relative">
     <div class="w-full text-center mb-8">
       <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-        Accounts to import
+        {{ 'CREATE_ACCOUNT.ACCOUNTS_TO_IMPORT' | translate }}
       </h2>
     </div>
 
@@ -25,19 +25,19 @@
     </ul>
 
     <div *ngIf="advanceMode$ | async" class="w-full text-center text-label mb-7">
-      If you want to import more public keys later, go to settings and add the wallet again. Select all the public keys to include and they will be included in the same wallet record.
+      {{ 'CREATE_ACCOUNT.IMPORT_MORE_LATER' | translate }}
     </div>
 
     <div class="w-full mb-4">
       <button (click)="getAccounts()" class="w-full btn btn-off-black btn--small">
-        Load more accounts
+        {{ 'CREATE_ACCOUNT.LOAD_MORE' | translate }}
       </button>
     </div>
 
     <div class="w-full">
       <button (click)="onConfirm()"
               class="w-full btn btn-success-alternative btn--small">
-        Confirm
+        {{ 'COMMON_WORDS.CONFIRM' | translate }}
       </button>
     </div>
   </section>

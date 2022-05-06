@@ -9,6 +9,7 @@ import {GlobalsService} from '~root/lib/globals/globals.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ENV, environment } from '~env';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-connect-hardware-wallet',
@@ -31,6 +32,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
     @Inject(ENV)
     private readonly env: typeof environment,
     private readonly router: Router,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -47,7 +49,7 @@ export class ConnectHardwareWalletComponent implements OnInit, OnDestroy {
       transport = await this.hardwareWalletsService.connectLedgerWallet();
     } catch (e: any) {
       console.error(e);
-      await this.nzMessageService.error(`We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it`);
+      await this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_CONNECT_LEDGER_1'));
       return;
     }
 

@@ -5,7 +5,7 @@
 
   <div class="w-full flex flex-wrap mb-4">
     <p class="w-full font-semibold mb-4 text-center">
-      This is your Mnemonic phrase
+      {{ 'CREATE_ACCOUNT.THIS_YOUR_PHRASE' | translate }}
     </p>
 
     <textarea class="w-full resize-none pointer-events-none"
@@ -15,7 +15,7 @@
 
   <div class="w-full text-center mb-4">
     <p class="opacity-80 text-sm m-0">
-      Write these words in a safe place, this is the only time we will show it to you and is not possible to recover it
+      {{ 'CREATE_ACCOUNT.SAFE_PLACE' | translate }}
     </p>
   </div>
 
@@ -23,12 +23,12 @@
     <button nz-button nzType="primary" nzSize="large"
             (click)="onContinue()"
             class="w-full mb-4">
-      Continue
+      {{ 'COMMON_WORDS.CONTINUE' | translate }}
     </button>
     <button nz-button nzSize="large"
             routerLink="/create-account"
             class="w-full">
-      Start again
+      {{ 'CREATE_ACCOUNT.START_AGAIN' | translate }}
     </button>
   </div>
 
