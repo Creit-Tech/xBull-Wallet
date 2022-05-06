@@ -390,5 +390,12 @@
     "SHARE_ACCOUNTS": "Share account with",
     "SIGN_WITH": "You will sign with",
     "SIGNING_REQUEST": "Signing request"
+  },
+  "CLAIMABLE_BALANCES": {
+    "NO_AIRDROPS": "There are no airdrops waiting to be claimed",
+    "CLAIM_IT": "Claim  it",
+    "TRASH_IT": "Trash it",
+    "AUTO_TRUST_ASSET": "If you claim an asset you don't trust yet, the operation will be added to the claim transaction automatically",
+    "NO_CONDITIONS": "Can claim it without conditions"
   }
 }

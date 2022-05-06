@@ -49,7 +49,7 @@
       </ng-container>
 
       <ng-template #emptyList>
-        <nz-empty nzNotFoundContent="There are no airdrops waiting to be claimed"></nz-empty>
+        <nz-empty [nzNotFoundContent]="'CLAIMABLE_BALANCES.NO_AIRDROPS' | translate"></nz-empty>
       </ng-template>
     </nz-list>
   </div>

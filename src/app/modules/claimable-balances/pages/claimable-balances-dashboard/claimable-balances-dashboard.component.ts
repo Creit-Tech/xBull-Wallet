@@ -26,6 +26,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   ClaimableBalanceDetailsComponent
 } from '~root/modules/claimable-balances/components/claimable-balance-details/claimable-balance-details.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-claimable-balances-dashboard',
@@ -103,6 +104,7 @@ export class ClaimableBalancesDashboardComponent implements OnInit, OnDestroy {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly settingsQuery: SettingsQuery,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -131,7 +133,7 @@ export class ClaimableBalancesDashboardComponent implements OnInit, OnDestroy {
     try {
       balances = await this.claimableBalancesService.getClaimableBalancesForClaimant(selectedAccount);
     } catch (e) {
-      this.nzMessageService.error(`Request to the network to retrieve the airdrops failed`);
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_CONTACT_HORIZON'));
       return;
     }
 
@@ -158,7 +160,7 @@ export class ClaimableBalancesDashboardComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<ClaimableBalanceDetailsComponent>({
       nzContent: ClaimableBalanceDetailsComponent,
       nzContentParams: { claimableBalanceId },
-      nzTitle: `Airdrop details`,
+      nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
       nzWrapClassName: 'drawer-full-w-320',
     });
   }

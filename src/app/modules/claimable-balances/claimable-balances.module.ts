@@ -12,6 +12,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
     NzButtonModule,
     ClipboardModule,
     NzSpinModule,
-    NzEmptyModule
+    NzEmptyModule,
+    TranslationModule.forChild(),
   ]
 })
 export class ClaimableBalancesModule { }
