@@ -16,10 +16,10 @@
         </div>
 
         <h1 class="font-bold text-2xl">
-          Site connection
+          {{ 'SITES_PERMISSIONS.SITE_CONNECTION' | translate }}
         </h1>
         <h2 class="opacity-80">
-          From: {{ origin$ | async }}
+          {{ 'COMMON_WORDS.FROM' | translate }}: {{ origin$ | async }}
         </h2>
       </nz-card>
     </section>
@@ -27,21 +27,21 @@
     <section class="cols-span-1 px-4">
       <nz-card class="ant-card-no-padding p-4">
         <h3 class="font-semibold">
-          Asking for:
+          {{ 'COMMON_WORDS.ASKING_FOR' | translate }}:
         </h3>
 
         <nz-list *ngIf="permissions$ | async as permissions" class="mb-4">
           <nz-list-item *ngIf="permissions?.canRequestPublicKey" class="opacity-80">
-            - View your account public key
+            - {{ 'SITES_PERMISSIONS.GET_PUBLIC_KEY' | translate }}
           </nz-list-item>
 
           <nz-list-item *ngIf="permissions?.canRequestSign" class="opacity-80">
-            - Request signing a transaction
+            - {{ 'SITES_PERMISSIONS.ASK_TO_SIGN' | translate }}
           </nz-list-item>
         </nz-list>
 
         <h3 class="font-semibold">
-          Request Date:
+          {{ 'COMMON_WORDS.DATE' | translate }}:
         </h3>
 
         <nz-list>
@@ -55,15 +55,15 @@
     <section class="col-span-1 grid grid-cols-2 grid-rows-2 gap-4 pb-4 px-4">
       <div class="col-span-2 row-span-1 text-center">
         <small class="opacity-50">
-          You should only connect to sites you trust
+          {{ 'CONNECT.ONLY_CONNECT_TRUST' | translate }}
         </small>
       </div>
       <button (click)="onReject()" class="col-span-1 row-span-1" nz-button nzSize="large" nzDanger nzType="primary">
-        Reject
+        {{ 'COMMON_WORDS.REJECT' | translate }}
       </button>
 
       <button (click)="onAcceptConnection()" class="col-span-1 row-span-1" nz-button nzSize="large" nzType="primary">
-        Accept
+        {{ 'COMMON_WORDS.ACCEPT' | translate }}
       </button>
     </section>
   </ng-container>
@@ -76,7 +76,7 @@
         </div>
 
         <h1 class="font-bold text-2xl">
-          Share account with
+          {{ 'CONNECT.SHARE_ACCOUNTS' | translate }}
         </h1>
         <h2 class="opacity-80">
           {{ origin$ | async }}
@@ -89,7 +89,7 @@
         <section class="h-full grid grid-cols-1" style="grid-template-rows: auto 1fr">
           <section class="col-span-1 px-4 mb-2">
             <h2 class="mb-4 text-center font-bold">
-              <i class="fa-solid fa-users mr-2"></i> Wallets  and Accounts
+              <i class="fa-solid fa-users mr-2"></i> {{ 'CONNECT.WALLET_ACCOUNTS' | translate }}
             </h2>
 
             <nz-tree-select class="w-full"
@@ -107,15 +107,15 @@
     <section class="col-span-1 grid grid-cols-2 grid-rows-2 gap-4 pb-4 px-4">
       <div class="col-span-2 row-span-1 text-center">
         <small class="opacity-50">
-          You should only connect to sites you trust
+          {{ 'CONNECT.ONLY_CONNECT_TRUST' | translate }}
         </small>
       </div>
       <button (click)="onReject()" class="col-span-1 row-span-1" nz-button nzSize="large" nzDanger nzType="primary">
-        Reject
+        {{ 'COMMON_WORDS.REJECT' | translate }}
       </button>
 
       <button [disabled]="accountSelectedControl.invalid" (click)="onConfirmShareAccount()" class="col-span-1 row-span-1" nz-button nzSize="large" nzType="primary">
-        Confirm
+        {{ 'COMMON_WORDS.ACCEPT' | translate }}
       </button>
     </section>
   </ng-container>

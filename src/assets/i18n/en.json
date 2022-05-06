@@ -1,5 +1,6 @@
 {
   "COMMON_WORDS": {
+    "DATE": "Date",
     "AVAILABLE": "Available",
     "CREATE": "Create",
     "DEPOSIT": "Deposit",
@@ -32,6 +33,7 @@
     "CONNECT": "connect",
     "TOTAL": "Total",
     "CANCEL": "Cancel",
+    "NETWORK": "Network",
     "DOCUMENTATION": "Documentation",
     "CONFIRM": "Confirm",
     "PASSWORD": "Password",
@@ -59,7 +61,9 @@
     "SPONSORED": "Sponsored",
     "MEMO": "Memo",
     "OPERATION": "Operation",
-    "POOLED": "Pooled"
+    "POOLED": "Pooled",
+    "ACCEPT": "Accept",
+    "REJECT": "Reject"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
@@ -82,6 +86,8 @@
     "TO_DO": "TO_DO"
   },
   "SITES_PERMISSIONS": {
+    "SITE_CONNECTION": "Site connection",
+    "ASKING_FOR": "Asking for",
     "GET_PUBLIC_KEY": "Get public key",
     "ASK_TO_SIGN": "Ask to sign transactions"
   },
@@ -375,5 +381,14 @@
     "ACCOUNTS_TO_IMPORT": "Accounts to import",
     "IMPORT_MORE_LATER": "If you want to import more public keys later, go to settings and add the wallet again. Select all the public keys to include and they will be included in the same wallet record.",
     "ADD_LATER_TREZOR": "If you add again a Trezor wallet with the same ID, the wallets will be merged. Updating the wallet name later does not affect the wallet ID."
+  },
+  "CONNECT": {
+    "HAVENT_USED_BEFORE": "Looks like you haven't used xBull Wallet before, please go to <a class=\"text-primary\" target=\"_blank\" href=\"https://wallet.xbull.app\">https://wallet.xbull.app</a>, set up your wallet and then retry.",
+    "ONLY_CONNECT_TRUST": "You should only connect to sites you trust",
+    "ONLY_SIGN_TRUST": "You should only sign transactions from sites you trust",
+    "WALLET_ACCOUNTS": "Wallets and Accounts",
+    "SHARE_ACCOUNTS": "Share account with",
+    "SIGN_WITH": "You will sign with",
+    "SIGNING_REQUEST": "Signing request"
   }
 }

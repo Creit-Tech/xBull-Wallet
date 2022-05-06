@@ -8,10 +8,10 @@
       </div>
 
       <h1 class="font-bold text-2xl">
-        Signing request
+        {{ 'CONNECT.SIGNING_REQUEST' | translate }}
       </h1>
       <h2 class="opacity-80">
-        From: {{ origin$ | async }}
+        {{ 'COMMON_WORDS.FROM' | translate }}: {{ origin$ | async }}
       </h2>
     </nz-card>
   </section>
@@ -19,21 +19,21 @@
   <section class="cols-span-1 px-4">
     <nz-card class="ant-card-no-padding p-4">
       <h3 class="font-semibold">
-        You will sign with:
+        {{ 'CONNECT.SIGN_WITH' | translate }}:
       </h3>
 
       <nz-list class="mb-4">
         <nz-list-item class="opacity-80">
-          <b>- Account:</b> {{ (account$ | async)?.publicKey | publicKey }}
+          <b>- {{ 'COMMON_WORDS.ACCOUNT' | translate }}:</b> {{ (account$ | async)?.publicKey | publicKey }}
         </nz-list-item>
 
         <nz-list-item class="opacity-80">
-          <b>- Network:</b> {{ networkName$ | async }}
+          <b>- {{ 'COMMON_WORDS.NETWORK' | translate }}:</b> {{ networkName$ | async }}
         </nz-list-item>
       </nz-list>
 
       <h3 class="font-semibold">
-        Request Date:
+        {{ 'COMMON_WORDS.DATE' | translate }}:
       </h3>
 
       <nz-list>
@@ -47,15 +47,15 @@
   <section class="col-span-1 grid grid-cols-2 grid-rows-2 gap-4 pb-4 px-4">
     <div class="col-span-2 row-span-1 text-center">
       <small class="opacity-50">
-        You should only sign transactions from sites you trust
+        {{ 'CONNECT.ONLY_SIGN_TRUST' | translate }}
       </small>
     </div>
     <button (click)="onReject()" class="col-span-1 row-span-1" nz-button nzSize="large" nzDanger nzType="primary">
-      Reject
+      {{ 'COMMON_WORDS.REJECT' | translate }}
     </button>
 
     <button (click)="onAccept()" class="col-span-1 row-span-1" nz-button nzSize="large" nzType="primary">
-      Continue
+      {{ 'COMMON_WORDS.CONTINUE' | translate }}
     </button>
   </section>
 
