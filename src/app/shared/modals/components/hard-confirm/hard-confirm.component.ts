@@ -2,6 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/
 import { ReplaySubject } from 'rxjs';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-hard-confirm',
@@ -16,23 +17,24 @@ export class HardConfirmComponent {
   @Output() close: EventEmitter<void> = new EventEmitter<void>();
   @Output() confirmed: EventEmitter<void> = new EventEmitter<void>();
 
-  @Input() title = 'Confirm Process';
-  @Input() alertMessage = 'Please confirm you want to processed';
+  @Input() title = this.translateService.instant('HARD_CONFIRM.TITLE');
+  @Input() alertMessage = this.translateService.instant('HARD_CONFIRM.ALERT_MESSAGE');
 
   constructor(
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly nzModalService: NzModalService,
+    private readonly translateService: TranslateService,
   ) { }
 
   onConfirm(): void {
     this.nzModalService.confirm({
-      nzTitle: '<b>Are you sure about this?</b>',
-      nzContent: `Double check before confirming this action, if you're sure about this click the confirm button`,
+      nzTitle: `<b>${this.translateService.instant('HARD_CONFIRM.YOU_SURE')}</b>`,
+      nzContent: this.translateService.instant('HARD_CONFIRM.DOUBLE_THINK'),
       nzOnOk: () => {
         this.confirmed.emit();
         this.nzDrawerRef.close();
       },
-      nzOkText: 'Confirm'
+      nzOkText: this.translateService.instant('COMMON_WORDS.CONFIRM'),
     });
   }
 

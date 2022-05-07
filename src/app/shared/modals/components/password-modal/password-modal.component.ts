@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-password-modal',
@@ -10,12 +11,13 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 export class PasswordModalComponent {
   passwordField: FormControl = new FormControl('', [Validators.required]);
 
-  @Input() description = 'Your password is used to decrypt your private key';
+  @Input() description = this.translateService.instant('PASSWORD_MODAL.REASON');
   @Input() handlePasswordEvent!: (password: string) => any;
   @Output() password: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(
     private readonly nzDrawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   onConfirm(): void {

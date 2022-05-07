@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { TranslationModule } from '~root/translation.module';
 
 
 
@@ -25,7 +26,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     ReactiveFormsModule,
     SharedPipesModule,
     NzTabsModule,
-    NzFormModule
+    NzFormModule,
+    TranslationModule.forChild(),
   ],
   exports: [
     AssetSearcherComponent
