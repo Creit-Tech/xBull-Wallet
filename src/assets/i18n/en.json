@@ -136,7 +136,11 @@
     "COPIED_TO_CLIPBOARD": "Text copied to the clipboard"
   },
   "FORM_PLACEHOLDERS": {
-    "TO_DO": "TO_DO"
+    "TO_DO": "TO_DO",
+    "PUBLIC_KEY": "Public key",
+    "MEMO": "Memo (required by exchanges)",
+    "ASSET": "Select an asset",
+    "AMOUNT": "Amount"
   },
   "SITES_PERMISSIONS": {
     "SITE_CONNECTION": "Site connection",
@@ -146,13 +150,11 @@
   },
   "WALLET": {
     "WALLET_DASHBOARD": {
-      "_COMPONENT": {
-        "SELECT_ASSET_TITLE": "Select Asset",
-        "ADD_ASSET_TITLE": "Add Asset",
-        "ADD_ASSET_SUCCESS": "Asset added correctly.",
-        "ASSET_DETAILS_TITLE": "Asset details",
-        "LP_ASSET_DETAILS_TITLE": "Liquidity Pool details"
-      },
+      "SELECT_ASSET_TITLE": "Select Asset",
+      "ADD_ASSET_TITLE": "Add Asset",
+      "ADD_ASSET_SUCCESS": "Asset added correctly.",
+      "ASSET_DETAILS_TITLE": "Asset details",
+      "LP_ASSET_DETAILS_TITLE": "Liquidity Pool details",
       "ACCOUNT_BALANCE_CARD": {
         "CARD_TITLE": "Account balance",
         "VALUE_DISTRIBUTION": "Value distribution",
@@ -173,20 +175,12 @@
       }
     },
     "SEND_PAYMENT": {
-      "_COMPONENT": {
-        "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
-        "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
-        "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
-        "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
-        "SCAN_MEMO_TITLE": "Scan Public key"
-      },
+      "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
+      "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
+      "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
+      "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
+      "SCAN_MEMO_TITLE": "Scan memo",
       "CARD_TITLE": "Send payment",
-      "FORM_PLACEHOLDERS": {
-        "PUBLIC_KEY": "Public key",
-        "MEMO": "Memo (required by exchanges)",
-        "ASSET": "Select an asset",
-        "AMOUNT": "Amount"
-      },
       "NOT_SELECTED": "Asset not selected",
       "SEND_PAYMENT": "Send payment"
     },
@@ -195,9 +189,7 @@
       "COPY_BUTTON": "Copy Address"
     },
     "ASSET_DETAILS": {
-      "_COMPONENT": {
-        "ASSET_REMOVE_SUCCESS": "Asset removed correctly."
-      },
+      "ASSET_REMOVE_SUCCESS": "Asset removed correctly.",
       "TOTAL_TRUSTLINES": "Total of trustlines",
       "AMOUNT_ISSUED": "Amount issued",
       "DOING_BUSINESS": "Doing business as",
@@ -206,13 +198,11 @@
     }
   },
   "SWAP": {
-    "_COMPONENT": {
-      "NO_VALID_PATH": "There is no valid path to make the swap.",
-      "INCORRECT_SELECTION": "Type of path selected is not Send or Receive, contact support",
-      "SELECT_ASSET_TITLE": "Select an Asset",
-      "SWAP_CONFIRM_TITLE": "Swap confirmation",
-      "SWAP_SUCCESS": "The swap of the assets were successful"
-    },
+    "NO_VALID_PATH": "There is no valid path to make the swap.",
+    "INCORRECT_SELECTION": "Type of path selected is not Send or Receive, contact support",
+    "SELECT_ASSET_TITLE": "Select an Asset",
+    "SWAP_CONFIRM_TITLE": "Swap confirmation",
+    "SWAP_SUCCESS": "The swap of the assets were successful",
     "CARD_TITLE": "Swap your assets",
     "STRICT_SEND": "Strict send",
     "STRICT_RECEIVE": "Strict receive",
@@ -228,10 +218,8 @@
   },
   "SETTINGS": {
     "SETTINGS_DASHBOARD": {
-      "_COMPONENT": {
-        "DEFAULT_FEE_TITLE": "Set default fee",
-        "SELECT_ASSET_TITLE": "Select Asset"
-      },
+      "SET_DEFAULT_FEE_TITLE": "Set default fee",
+      "SELECT_ASSET_TITLE": "Select Asset",
       "ADVANCED_MODE": "Advanced mode",
       "COUNTER_ASSET": "Counter asset",
       "WALLETS": "Wallets",
@@ -246,13 +234,11 @@
       "ABOUT": "About"
     },
     "WALLET_ACCOUNT": {
-      "_COMPONENT": {
-        "COPY_PRIVATE_KEY_TITLE": "Please read carefully",
-        "COPY_PRIVATE_KEY_CONTENT": "You're about to copy your private key to the clipboard. We recommend you that after you have use it, copy something else so is removed from your clipboard and if your device keep clipboard records, delete it from there too.",
-        "COPY_PRIVATE_KEY_CONTENT_SUCCESS": "Copied to the clipboard, do not forget about removing it from your clipboard later",
-        "REMOVE_ACCOUNT_TITLE": "Please read carefully",
-        "REMOVE_ACCOUNT_CONTENT": "You're about to remove your account from this wallet. Make sure you have a backup of it before removing it."
-      },
+      "COPY_PRIVATE_KEY_TITLE": "Please read carefully",
+      "COPY_PRIVATE_KEY_CONTENT": "You're about to copy your private key to the clipboard. We recommend you that after you have use it, copy something else so is removed from your clipboard and if your device keep clipboard records, delete it from there too.",
+      "COPY_PRIVATE_KEY_CONTENT_SUCCESS": "Copied to the clipboard, do not forget about removing it from your clipboard later",
+      "REMOVE_ACCOUNT_TITLE": "Please read carefully",
+      "REMOVE_ACCOUNT_CONTENT": "You're about to remove your account from this wallet. Make sure you have a backup of it before removing it.",
       "ACCOUNT_DETAILS": {
         "TITLE": "Account details",
         "SEQUENCE": "Sequence",
@@ -275,29 +261,23 @@
       }
     },
     "SITES_CONNECTED": {
-      "_COMPONENT": {
-        "SELECT_SITE_TITLE": "Connected site"
-      }
+      "SELECT_SITE_TITLE": "Connected site"
     },
     "REGISTERED_WALLET_DETAILS": {
-      "_COMPONENT": {
-        "ADD_ACCOUNT_TITLE": "Add account",
-        "REMOVE_WALLET_TITLE": "Remove Wallet",
-        "REMOVE_WALLET_ALERT": "You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method"
-      },
+      "ADD_ACCOUNT_TITLE": "Add account",
+      "REMOVE_WALLET_TITLE": "Remove Wallet",
+      "REMOVE_WALLET_ALERT": "You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method",
       "WALLET_DETAILS_TITLE": "Wallet details",
       "CREATE_ACCOUNT_BUTTON": "Create wallet account",
       "WALLET_ACCOUNTS": "Wallet Accounts",
       "EDIT_NAME": "Edit Name"
     },
     "LOCKING": {
-      "_COMPONENT": {
-        "TIMEOUT_UPDATED": "Timeout updated to {{value}} minutes.",
-        "DEVICE_AUTH_DISABLED": "Device Auth is now disabled for password protected features.",
-        "DEVICE_AUTH_ENABLED": "Device Auth is now active for password protected features.",
-        "KEEP_PASSWORD_DISABLED": "Option disabled, now when using your password this one won't be kept.",
-        "KEEP_PASSWORD_ENABLED": "Option enabled, your password will be kept for a few minutes after using it."
-      },
+      "TIMEOUT_UPDATED": "Timeout updated to {{value}} minutes.",
+      "DEVICE_AUTH_DISABLED": "Device Auth is now disabled for password protected features.",
+      "DEVICE_AUTH_ENABLED": "Device Auth is now active for password protected features.",
+      "KEEP_PASSWORD_DISABLED": "Option disabled, now when using your password this one won't be kept.",
+      "KEEP_PASSWORD_ENABLED": "Option enabled, your password will be kept for a few minutes after using it.",
       "DEVICE_AUTH_OPTION": "Use device authentication",
       "DONT_REQUEST_PASSWORD_OPTION": "Don't request password",
       "DONT_REQUEST_PASSWORD_TOOLTIP": "If you enable this option, your password will be saved in the device after you use it. It will be kept during a period of time or until the session is ended",
@@ -312,7 +292,7 @@
     "ANTI_SPAM": {
       "OPTIONS_COMPONENT": {
         "BY_PUBLIC_KEY": "Filter by Public Keys",
-        "FILTER_CB": "Filter Claimable Assets"
+        "FILTER_CB": "Filter Claimable Balances"
       },
       "SPAM_KEYS": {
         "EXPLANATION": "Transactions where these keys are the \"source\", will be ignored in this Wallet"
@@ -324,10 +304,8 @@
       "SOURCE_CODE": "Source code"
     },
     "ADD_ACCOUNT": {
-      "_COMPONENT": {
-        "UNABLE_TO_SAVE_ACCOUNT": "We were not able to add the new account",
-        "ACCOUNT_ADDED_SUCCESS": "New account was added to the wallet: {{name}}"
-      },
+      "UNABLE_TO_SAVE_ACCOUNT": "We were not able to add the new account",
+      "ACCOUNT_ADDED_SUCCESS": "New account was added to the wallet: {{name}}",
       "TITLE": "Add new account",
       "DESCRIPTION": "Write your password to decrypt your wallet and add a new account"
     },

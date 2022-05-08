@@ -80,16 +80,20 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item class="opacity-50 pointer-events-none px-4">
-        <div class="w-8/12">
+      <nz-list-item class="px-4">
+        <div class="w-auto">
           <p class="m-0 text-sm font-bold">
             {{ 'SETTINGS.SETTINGS_DASHBOARD.LANGUAGE_TITLE' | translate }}
           </p>
         </div>
         <div class="w-auto">
-          <p class="opacity-80 text-sm text-bold">
-            English
-          </p>
+          <nz-select class="w-28" nzSize="small" [formControl]="languageSelectControl">
+            <nz-option nzValue="en" nzLabel="English"></nz-option>
+            <nz-option nzValue="es" nzLabel="Español"></nz-option>
+          </nz-select>
+<!--          <p class="opacity-80 text-sm text-bold">-->
+<!--            English-->
+<!--          </p>-->
         </div>
       </nz-list-item>
 

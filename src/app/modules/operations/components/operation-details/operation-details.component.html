@@ -398,7 +398,7 @@
 
         <ng-container *ngIf="operation?.operationRecord?.transaction_attr as transaction">
           <ng-container *ngIf="transaction.memo">
-            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.MEMO' }}:</dt>
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.MEMO' | translate }}:</dt>
             <dd class="opacity-80 text-sm mb-3 truncate">
               {{ transaction.memo }}
             </dd>

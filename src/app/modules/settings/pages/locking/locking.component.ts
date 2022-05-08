@@ -59,7 +59,7 @@ export class LockingComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(value => {
       this.settingsService.setKeptPasswordTimeout(value);
-      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING._COMPONENT.TIMEOUT_UPDATED', { value }));
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.TIMEOUT_UPDATED', { value }));
     });
 
   ngOnInit(): void {
@@ -78,7 +78,7 @@ export class LockingComponent implements OnInit, OnDestroy {
   async requireAuthStart(): Promise<void> {
     if (this.useDeviceAuthControl.value) {
       this.settingsService.removeDeviceAuthToken();
-      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING._COMPONENT.DEVICE_AUTH_DISABLED'));
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.DEVICE_AUTH_DISABLED'));
     } else {
       const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
         nzPlacement: 'bottom',
@@ -125,7 +125,7 @@ export class LockingComponent implements OnInit, OnDestroy {
             passwordAuthTokenIdentifier: encryptResult.identifier,
             passwordAuthKey: encryptResult.key,
           });
-          this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING._COMPONENT.DEVICE_AUTH_ENABLED'));
+          this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.DEVICE_AUTH_ENABLED'));
           drawerRef.close();
         }, error => {
           drawerRef.close();
@@ -140,7 +140,7 @@ export class LockingComponent implements OnInit, OnDestroy {
   async keepPasswordStart(): Promise<void> {
     if (this.keepPasswordControl.value) {
       this.settingsService.disableKeepPasswordOption();
-      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING._COMPONENT.KEEP_PASSWORD_DISABLED'));
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.KEEP_PASSWORD_DISABLED'));
     } else {
       const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
       if (!globalPasswordHash) {
@@ -163,7 +163,7 @@ export class LockingComponent implements OnInit, OnDestroy {
             this.settingsService.setKeptPassword(password);
 
             this.settingsService.enableKeepPasswordOption();
-            this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING._COMPONENT.KEEP_PASSWORD_ENABLED'));
+            this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.KEEP_PASSWORD_ENABLED'));
           }
         }
       });

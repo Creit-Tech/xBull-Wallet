@@ -78,7 +78,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<AddAccountComponent>({
       nzContent: AddAccountComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS._COMPONENT.ADD_ACCOUNT_TITLE'),
+      nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.ADD_ACCOUNT_TITLE'),
       nzContentParams: {
         parentWallet: wallet
       }

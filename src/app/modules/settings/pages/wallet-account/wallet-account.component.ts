@@ -97,8 +97,8 @@ export class WalletAccountComponent implements OnInit {
 
   async copyPrivateKey(): Promise<any> {
     await this.nzModalService.confirm({
-      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_TITLE'),
-      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_CONTENT'),
+      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.COPY_PRIVATE_KEY_TITLE'),
+      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.COPY_PRIVATE_KEY_CONTENT'),
       nzOnOk: async () => {
         const account = await this.account$.pipe(take(1))
           .toPromise() as IWalletsAccountWithSecretKey;
@@ -131,7 +131,7 @@ export class WalletAccountComponent implements OnInit {
           )))
           .subscribe(secretKey => {
             this.clipboardService.copyToClipboard(secretKey);
-            this.nzMessageService.success(this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.COPY_PRIVATE_KEY_CONTENT_SUCCESS'), {
+            this.nzMessageService.success(this.translateService.instant('SETTINGS.WALLET_ACCOUNT.COPY_PRIVATE_KEY_CONTENT_SUCCESS'), {
               nzDuration: 5000
             });
             drawerRef.close();
@@ -147,8 +147,8 @@ export class WalletAccountComponent implements OnInit {
 
   async removeAccount(): Promise<any> {
     await this.nzModalService.confirm({
-      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.REMOVE_ACCOUNT_TITLE'),
-      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT._COMPONENT.REMOVE_ACCOUNT_CONTENT'),
+      nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.REMOVE_ACCOUNT_TITLE'),
+      nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.REMOVE_ACCOUNT_CONTENT'),
       nzOnOk: async () => {
         const walletId = await this.walletId$.pipe(take(1)).toPromise();
         const publicKey = await this.publicKey.pipe(take(1)).toPromise();

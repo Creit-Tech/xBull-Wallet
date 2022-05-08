@@ -339,7 +339,7 @@ export class SwapsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (!updatedPath) {
-      this.nzMessageService.error(this.translateService.instant('SWAP._COMPONENT.NO_VALID_PATH'));
+      this.nzMessageService.error(this.translateService.instant('SWAP.NO_VALID_PATH'));
       return;
     }
 

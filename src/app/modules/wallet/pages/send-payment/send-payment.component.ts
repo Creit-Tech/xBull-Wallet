@@ -226,7 +226,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       );
     } catch (e: any) {
       if (selectedAsset._id !== 'native') {
-        this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
+        this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
           nzDuration: 3000,
         });
         return;
@@ -254,7 +254,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         acceptHandler: signedXdr => {
           this.walletsService.sendPayment(signedXdr)
             .then(() => {
-              this.nzMessageService.success(this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.PAYMENT_SENT_MESSAGE'));
+              this.nzMessageService.success(this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_SENT_MESSAGE'));
               this.form.reset();
             })
             .catch(err => {
@@ -267,7 +267,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }
       },
-      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.PAYMENT_CONFIRMATION_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_CONFIRMATION_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
     });
 
@@ -289,7 +289,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.SCAN_PUBLIC_KEY_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_PUBLIC_KEY_TITLE'),
       nzHeight: '100%',
       nzContentParams: {
         handleQrScanned: text => {
@@ -306,7 +306,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT._COMPONENT.SCAN_MEMO_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_MEMO_TITLE'),
       nzHeight: '100%',
       nzContentParams: {
         handleQrScanned: text => {

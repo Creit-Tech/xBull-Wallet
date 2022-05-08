@@ -76,7 +76,7 @@ export class AddAccountComponent implements OnInit {
     }
 
     this.nzMessageService.success(
-      this.translateService.instant('SETTINGS.ADD_ACCOUNT._COMPONENT.ACCOUNT_ADDED_SUCCESS', {
+      this.translateService.instant('SETTINGS.ADD_ACCOUNT.ACCOUNT_ADDED_SUCCESS', {
         name: parentWallet.name
       })
     );
@@ -94,7 +94,7 @@ export class AddAccountComponent implements OnInit {
       });
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT._COMPONENT.UNABLE_TO_SAVE_ACCOUNT'));
+      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT.UNABLE_TO_SAVE_ACCOUNT'));
       throw e;
     }
   }
@@ -122,7 +122,7 @@ export class AddAccountComponent implements OnInit {
       });
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT._COMPONENT.UNABLE_TO_SAVE_ACCOUNT'));
+      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT.UNABLE_TO_SAVE_ACCOUNT'));
       throw e;
     }
   }

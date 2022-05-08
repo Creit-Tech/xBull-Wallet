@@ -139,7 +139,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
           try {
             await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
-            this.nzMessageService.success(this.translateService.instant('WALLET.ASSET_DETAILS._COMPONENT.ASSET_REMOVE_SUCCESS'));
+            this.nzMessageService.success(this.translateService.instant('WALLET.ASSET_DETAILS.ASSET_REMOVE_SUCCESS'));
             this.nzDrawerRef.close();
           } catch (e) {
             console.error(e);

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 import {
@@ -39,6 +39,8 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   myAssets$: Observable<IWalletAssetModel[]> = this.walletsAssetsQuery.selectedAccountAssets$;
 
+  languageSelectControl: FormControl = new FormControl('', [Validators.required]);
+
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
@@ -64,7 +66,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.settingsService.setAdvanceModeStatus(value);
     });
 
+  setLanguageSubscription: Subscription = this.languageSelectControl.valueChanges
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(value => {
+      this.settingsService.setSelectedLanguage(value);
+    });
+
   ngOnInit(): void {
+    this.settingsQuery.selectedLanguage$
+      .pipe(take(1))
+      .subscribe(language => {
+        this.languageSelectControl.setValue(language, {
+          emitEvent: false
+        });
+      });
   }
 
   ngOnDestroy(): void {
@@ -76,7 +91,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<DefaultFeeFormComponent>({
       nzContent: DefaultFeeFormComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD._COMPONENT.DEFAULT_FEE_TITLE')
+      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD.SET_DEFAULT_FEE_TITLE')
     });
 
     drawerRef.open();
@@ -86,7 +101,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
       nzPlacement: 'bottom',
-      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD._COMPONENT.SELECT_ASSET_TITLE'),
+      nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD.SELECT_ASSET_TITLE'),
       nzHeight: '100%',
       nzCloseOnNavigation: true,
       nzContentParams: {

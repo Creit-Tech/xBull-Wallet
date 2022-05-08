@@ -34,7 +34,7 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
       nzContentParams: {
         connectedSite: siteConnected
       },
-      nzTitle: this.translateService.instant('SETTINGS.SITES_CONNECTED._COMPONENT.SELECT_SITE_TITLE'),
+      nzTitle: this.translateService.instant('SETTINGS.SITES_CONNECTED.SELECT_SITE_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
     });
 

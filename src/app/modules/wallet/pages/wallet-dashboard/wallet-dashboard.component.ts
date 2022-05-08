@@ -200,7 +200,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   }
 
   async addAsset(): Promise<void> {
-    const drawerTitle = await this.translateService.instant('WALLET.WALLET_DASHBOARD._COMPONENT.SELECT_ASSET_TITLE');
+    const drawerTitle = await this.translateService.instant('WALLET.WALLET_DASHBOARD.SELECT_ASSET_TITLE');
 
     this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
@@ -262,7 +262,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD._COMPONENT.ADD_ASSET_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ADD_ASSET_TITLE'),
       nzContentParams: {
         xdr: transaction.toXDR(),
         acceptHandler: async signedXdr => {
@@ -273,7 +273,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
 
           try {
             await this.walletsAssetsService.addAssetToAccount(signedXdr);
-            this.nzMessageService.success(this.translateService.instant('WALLET.WALLET_DASHBOARD._COMPONENT.ADD_ASSET_SUCCESS'));
+            this.nzMessageService.success(this.translateService.instant('WALLET.WALLET_DASHBOARD.ADD_ASSET_SUCCESS'));
           } catch (e) {
             console.error(e);
             this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
@@ -303,7 +303,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
     const drawerRef = this.nzDrawerService.create<AssetDetailsComponent>({
       nzContent: AssetDetailsComponent,
-      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD._COMPONENT.ASSET_DETAILS_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ASSET_DETAILS_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         assetId: this.walletsAssetsService.formatBalanceLineId(balanceLine)
@@ -316,7 +316,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
     const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
       nzContent: LpAssetDetailsComponent,
-      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD._COMPONENT.LP_ASSET_DETAILS_TITLE'),
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.LP_ASSET_DETAILS_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         lpAssetId: balanceLine.liquidity_pool_id,
