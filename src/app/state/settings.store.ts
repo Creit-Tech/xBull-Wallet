@@ -7,6 +7,9 @@ export interface SettingsState {
     windowsMode: boolean;
     gettingRecommendedFee: boolean;
   };
+
+  selectedLanguage?: string;
+
   storeVersion: number;
 
   advanceMode: boolean;

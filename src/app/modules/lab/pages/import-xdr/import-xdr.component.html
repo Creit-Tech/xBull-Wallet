@@ -29,7 +29,7 @@
                   id="xdr" cols="30"
                   class="resize-none"
                   [formControl]="signControl"
-                  placeholder="Paste the XDR here..."
+                  [placeholder]="'FORM_PLACEHOLDERS.PASTE_XDR' | translate"
                   rows="8"></textarea>
       </div>
 
@@ -42,7 +42,7 @@
                   nzType="primary"
                   nzSize="large"
                   class="w-full">
-            Copy Signed
+            {{ 'LAB.COPY_SIGNED' | translate }}
           </button>
         </div>
 
@@ -53,15 +53,13 @@
                   nzType="primary"
                   nzSize="large"
                   class="w-full">
-            Sign XDR
+            {{ 'LAB.SIGN_SIGNED' | translate }}
           </button>
         </div>
       </div>
 
       <div class="w-full mb-4">
-        <p class="text-center opacity-50">
-          Use the "Copy Signed XDR" after you have signed an XDR to get the signed version of the XDR. <br> The XDR you pasted won't be modified.
-        </p>
+        <p class="text-center opacity-50" [innerHTML]="'LAB.SIGN_XDR_MESSAGE' | translate"></p>
       </div>
 
       <div class="w-full mt-auto">
@@ -72,14 +70,14 @@
                 nzSize="large"
                 nzType="primary"
                 nzBlock class="mb-4">
-          Submit signed transaction
+          {{ 'LAB.SUBMIT_SIGNED' | translate }}
         </button>
 
         <button (click)="onBack()"
                 nz-button
                 nzSize="large"
                 class="w-full">
-          <span><i class="fa-solid fa-arrow-left"></i> Back</span>
+          <span><i class="fa-solid fa-arrow-left"></i> {{ 'COMMON_WORDS.GO_BACK' | translate }}</span>
         </button>
       </div>
     </section>

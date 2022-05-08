@@ -31,14 +31,16 @@
       <section class="flex flex-col">
 
         <div class="w-full text-center mb-4">
-          <h1 class="text-lg font-semibold">Wallet details</h1>
+          <h1 class="text-lg font-semibold">
+            {{ 'SETTINGS.REGISTERED_WALLET_DETAILS.WALLET_DETAILS_TITLE' | translate }}
+          </h1>
         </div>
 
         <nz-list class="mb-4" nzSize="large">
           <nz-list-item>
             <div class="w-auto">
               <p class="m-0 text-sm font-bold">
-                Wallet Name:
+                {{ 'COMMON_WORDS.NAME' | translate }}:
               </p>
             </div>
             <div class="w-auto">
@@ -51,7 +53,7 @@
           <nz-list-item>
             <div class="w-auto">
               <p class="m-0 text-sm font-bold">
-                Wallet Type:
+                {{ 'COMMON_WORDS.TYPE' | translate }}:
               </p>
             </div>
             <div class="w-auto">
@@ -69,7 +71,7 @@
                     nz-button
                     nzSize="large"
                     class="w-full">
-              Create wallet account
+              {{ 'SETTINGS.REGISTERED_WALLET_DETAILS.CREATE_ACCOUNT_BUTTON' | translate }}
             </button>
           </div>
         </ng-container>
@@ -84,7 +86,7 @@
 
     <div class="w-full px-4 mb-4">
       <p class="opacity-80 text-sm">
-        Wallet Accounts
+        {{ 'SETTINGS.REGISTERED_WALLET_DETAILS.WALLET_ACCOUNTS' | translate }}
       </p>
     </div>
 
@@ -105,7 +107,7 @@
       </nz-list-item>
     </nz-list>
 
-    <div class="w-full flex flex-col">
+    <div class="w-full flex flex-col mb-4">
       <section class="w-full px-2 flex flex-wrap">
         <div class="w-6/12 px-2 mb-4">
           <button (click)="onRemove()"
@@ -114,7 +116,7 @@
                   nzType="primary"
                   nzDanger
                   class="w-full">
-            Remove
+            {{ 'COMMON_WORDS.REMOVE' | translate }}
           </button>
         </div>
         <div class="w-6/12 px-2 mb-4">
@@ -123,7 +125,7 @@
                   nzSize="large"
                   nzType="primary"
                   class="w-full">
-            Edit name
+            {{ 'SETTINGS.REGISTERED_WALLET_DETAILS.EDIT_NAME' | translate }}
           </button>
         </div>
         <div class="w-full px-2">
@@ -132,7 +134,7 @@
                   nzSize="large"
                   class="w-full flex items-center justify-center">
             <i class="fa-solid fa-arrow-left mr-2"></i>
-            Go back
+            {{ 'COMMON_WORDS.GO_BACK' | translate }}
           </button>
         </div>
       </section>

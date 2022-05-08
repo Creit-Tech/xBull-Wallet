@@ -33,6 +33,8 @@ import { SendPaymentComponent } from './pages/send-payment/send-payment.componen
 import { ReceivePaymentComponent } from './pages/receive-payment/receive-payment.component';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { TranslationModule } from '~root/translation.module';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 
 @NgModule({
@@ -72,6 +74,8 @@ import { NzEmptyModule } from 'ng-zorro-antd/empty';
     NgxChartsModule,
     NzRadioModule,
     NzEmptyModule,
+    TranslationModule.forChild(),
+    NzDividerModule,
   ],
 })
 export class WalletModule { }

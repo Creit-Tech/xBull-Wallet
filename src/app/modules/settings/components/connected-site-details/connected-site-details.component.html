@@ -19,11 +19,11 @@
       <dt class="text-base font-bold mb-1 w-full">Permissions:</dt>
       <dd *ngIf="(connectedSite$ | async)?.canRequestPublicKey"
           class="opacity-80 break-all text-sm mb-3 w-full">
-        Get public key
+        {{ 'SITES_PERMISSIONS.GET_PUBLIC_KEY' | translate }}
       </dd>
       <dd *ngIf="(connectedSite$ | async)?.canRequestSign"
           class="opacity-80 break-all text-sm mb-3 w-full">
-        Ask to sign transactions
+        {{ 'SITES_PERMISSIONS.ASK_TO_SIGN' | translate }}
       </dd>
     </dl>
   </section>
@@ -31,7 +31,7 @@
   <section class="w-full flex">
     <div class="flex-1">
       <button (click)="removeSiteRecords()" nz-button nzBlock nzSize="large" nzType="primary" nzDanger>
-        Remove
+        {{ 'COMMON_WORDS.REMOVE' | translate }}
       </button>
     </div>
   </section>

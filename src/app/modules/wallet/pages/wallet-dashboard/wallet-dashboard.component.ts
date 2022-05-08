@@ -34,6 +34,7 @@ import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-det
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-wallet-dashboard',
@@ -185,6 +186,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     private readonly nzMessageService: NzMessageService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly settingsQuery: SettingsQuery,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -198,10 +200,12 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   }
 
   async addAsset(): Promise<void> {
+    const drawerTitle = await this.translateService.instant('WALLET.WALLET_DASHBOARD.SELECT_ASSET_TITLE');
+
     this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'Select Asset',
+      nzTitle: drawerTitle,
       nzHeight: '100%',
       nzCloseOnNavigation: true,
       nzContentParams: {
@@ -234,7 +238,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     try {
       loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
     } catch (e) {
-      this.nzMessageService.error('There was an error when fetching your account from the network');
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'));
       return;
     }
 
@@ -258,21 +262,21 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Add asset',
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ADD_ASSET_TITLE'),
       nzContentParams: {
         xdr: transaction.toXDR(),
         acceptHandler: async signedXdr => {
           if (!signedXdr) {
-            this.nzMessageService.error('Unexpected error, contact support.');
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
             return;
           }
 
           try {
             await this.walletsAssetsService.addAssetToAccount(signedXdr);
-            this.nzMessageService.success(`Asset added correctly.`);
+            this.nzMessageService.success(this.translateService.instant('WALLET.WALLET_DASHBOARD.ADD_ASSET_SUCCESS'));
           } catch (e) {
             console.error(e);
-            this.nzMessageService.error(`The network rejected the transaction, please make sure you follow all the requirements to add an Asset to your account.`, {
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
               nzDuration: 5000,
             });
             return;
@@ -299,7 +303,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
     const drawerRef = this.nzDrawerService.create<AssetDetailsComponent>({
       nzContent: AssetDetailsComponent,
-      nzTitle: 'Asset details',
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ASSET_DETAILS_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         assetId: this.walletsAssetsService.formatBalanceLineId(balanceLine)
@@ -312,7 +316,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
     const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
       nzContent: LpAssetDetailsComponent,
-      nzTitle: 'Liquidity Pool details',
+      nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.LP_ASSET_DETAILS_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         lpAssetId: balanceLine.liquidity_pool_id,

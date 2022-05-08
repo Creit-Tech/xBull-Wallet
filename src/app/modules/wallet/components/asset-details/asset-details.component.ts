@@ -20,6 +20,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-asset-details',
@@ -65,6 +66,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -131,17 +133,17 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
         xdr: formattedXDR,
         acceptHandler: async signedXdr => {
           if (!signedXdr) {
-            this.nzMessageService.error('Unexpected error, contact support.');
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
             return;
           }
 
           try {
             await this.walletsAssetsService.removeAssetFromAccount(signedXdr);
-            this.nzMessageService.success(`Asset removed correctly.`);
+            this.nzMessageService.success(this.translateService.instant('WALLET.ASSET_DETAILS.ASSET_REMOVE_SUCCESS'));
             this.nzDrawerRef.close();
           } catch (e) {
             console.error(e);
-            this.nzMessageService.success(`The network rejected the transaction, please make sure you follow all the requirements to remove an Asset from your account.`, {
+            this.nzMessageService.success(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
               nzDuration: 5000,
             });
             return;

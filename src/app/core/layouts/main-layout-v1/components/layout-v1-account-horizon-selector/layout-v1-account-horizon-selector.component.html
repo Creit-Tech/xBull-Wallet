@@ -2,7 +2,7 @@
          class="w-full h-full grid grid-cols-1">
   <section class="col-span-1 px-4 pt-4">
     <h2 class="mb-4 text-center font-bold">
-      <i class="fa-solid fa-server mr-2"></i> Network Node
+      <i class="fa-solid fa-server mr-2"></i> {{ 'MAIN_LAYOUT.NETWORK_NODE' | translate }}
     </h2>
 
     <nz-select [formControl]="horizonSelectControl" class="w-full">
@@ -18,7 +18,7 @@
 
   <section class="col-span-1 px-4 mb-2">
     <h2 class="mb-4 text-center font-bold">
-      <i class="fa-solid fa-users mr-2"></i> Wallets
+      <i class="fa-solid fa-users mr-2"></i> {{ 'COMMON_WORDS.WALLETS' | translate }}
     </h2>
 
     <nz-select [formControl]="walletSelectControl" class="w-full">
@@ -38,7 +38,7 @@
           <div class="w-full text-center">
             {{ walletAccount.publicKey | publicKey }}
             <ng-container *ngIf="(selectedWalletAccount$ | async)?.publicKey === walletAccount.publicKey">
-              <span class="opacity-50">(Active)</span>
+              <span class="opacity-50">({{ 'COMMON_WORDS.ACTIVE' | translate }})</span>
             </ng-container>
           </div>
           <div class="w-full text-center opacity-80">
@@ -51,7 +51,7 @@
 
   <section class="col-span-1 p-4">
     <button (click)="closeDrawer()" routerLink="/settings/wallets/{{ (selectedWallet$ | async)?._id }}" nz-button nzBlock>
-      Edit selected wallet
+      {{ 'MAIN_LAYOUT.EDIT_SELECTED_WALLET' | translate }}
     </button>
   </section>
 </section>

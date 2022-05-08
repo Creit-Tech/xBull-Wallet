@@ -1,7 +1,7 @@
 <nz-spin [nzSpinning]="withdrawingLiquidity$ | async">
   <section [formGroup]="withDrawForm" class="w-full flex flex-wrap">
     <div class="w-full mb-4">
-      <nz-select formControlName="selectedPoolId" nzSize="large" class="w-full" nzPlaceHolder="Pick a liquidity pool">
+      <nz-select formControlName="selectedPoolId" nzSize="large" class="w-full" [nzPlaceHolder]="'FORM_PLACEHOLDERS.PICK_LP' | translate">
         <nz-option *ngFor="let option of selectOptions$ | async"
                    [nzValue]="option.value"
                    [nzLabel]="option.label"></nz-option>
@@ -10,7 +10,7 @@
 
     <section [class.hidden]="!withDrawForm.value.selectedPoolId" class="w-full flex flex-wrap mb-4">
       <div class="w-full text-center mb-2">
-        <nz-form-control nzExtra="Available shares: {{ (selectedBalance$ | async) || 0 }}">
+        <nz-form-control nzExtra="{{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ (selectedBalance$ | async) || 0 }}">
           <input formControlName="amountToWithdraw"
                  nz-input
                  mask="separator.7"
@@ -40,7 +40,7 @@
         </nz-radio-group>
 
         <small>
-          Price movement tolerance
+          {{ 'LIQUIDITY_POOLS.SLIPPAGE_TOLERANCE' | translate }}
         </small>
       </div>
     </section>
@@ -60,13 +60,13 @@
               [disabled]="withDrawForm.invalid || (disableActionButtons$ | async)"
               (click)="actionButton$.next()"
               nzBlock>
-        Withdraw liquidity
+        {{ 'COMMON_WORDS.WITHDRAW' | translate }}
       </button>
     </div>
 
     <div class="w-full text-center">
       <small class="mb-4" *ngIf="selectedLiquidityPool$ | async as selectedLiquidityPool">
-        Current spot price: {{ calculateSpotPrice(selectedLiquidityPool) }}
+        {{ 'LIQUIDITY_POOLS.SPOT_PRICE' | translate }}: {{ calculateSpotPrice(selectedLiquidityPool) }}
       </small>
     </div>
   </section>

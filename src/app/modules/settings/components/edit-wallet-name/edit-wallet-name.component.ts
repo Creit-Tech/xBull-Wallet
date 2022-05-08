@@ -6,6 +6,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { take, takeUntil } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-wallet-name',
@@ -26,6 +27,7 @@ export class EditWalletNameComponent implements OnInit, OnDestroy {
     private readonly walletsService: WalletsService,
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class EditWalletNameComponent implements OnInit, OnDestroy {
 
     this.walletsService.updateWalletName(wallet._id, this.nameField.value);
 
-    this.nzMessageService.success(`Wallet's name updated to "${this.nameField.value}"`);
+    this.nzMessageService.success(`${this.translateService.instant('SUCCESS_MESSAGE.VALUE_UPDATED')}: "${this.nameField.value}"`);
 
     this.nzDrawerRef.close();
   }

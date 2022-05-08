@@ -1,8 +1,5 @@
 import {
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
-  HostListener,
   Inject,
   NgZone,
   OnInit,
@@ -10,14 +7,15 @@ import {
 } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { HorizonApisQuery, SettingsQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { combineLatest, forkJoin, fromEvent, of, pipe, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilKeyChanged, filter, skip, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
-import { Order, selectPersistStateInit, snapshotManager } from '@datorama/akita';
+import { combineLatest, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilKeyChanged, filter, switchMap, take } from 'rxjs/operators';
+import { selectPersistStateInit, snapshotManager } from '@datorama/akita';
 import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { ENV, environment } from '~env';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -47,6 +45,7 @@ export class AppComponent implements OnInit {
     private readonly renderer2: Renderer2,
     private readonly globalsService: GlobalsService,
     private readonly ngZone: NgZone,
+    private readonly translateService: TranslateService,
   ) { }
 
 
@@ -95,6 +94,8 @@ export class AppComponent implements OnInit {
         });
       };
     }
+
+    this.setTranslation();
   }
 
   activateWindowMode(): void {
@@ -103,6 +104,25 @@ export class AppComponent implements OnInit {
       this.renderer2.removeClass(this.document.body, 'popup-mode');
       this.renderer2.addClass(this.document.body, 'window-mode');
       this.settingsService.turnOnWindowsMode();
+    }
+  }
+
+  async setTranslation(): Promise<void> {
+    this.translateService.setDefaultLang('en');
+
+    const selectedLanguage = await selectPersistStateInit()
+      .pipe(switchMap(_ => this.settingsQuery.selectedLanguage$))
+      .pipe(take(1))
+      .toPromise();
+
+    if (!selectedLanguage) {
+      const langToUse = this.translateService
+        .getLangs()
+        .find(language => language === this.translateService.getBrowserLang());
+
+      this.settingsService.setSelectedLanguage(langToUse || 'en');
+    } else {
+      this.settingsService.setSelectedLanguage(selectedLanguage);
     }
   }
 

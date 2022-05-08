@@ -14,6 +14,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import { ClaimableBalancesService } from '~root/core/services/claimable-balances.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-claimable-balance-details',
@@ -67,6 +68,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
     private readonly claimableBalancesService: ClaimableBalancesService,
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   buttonTriggeredSubscription: Subscription = this.buttonTriggered$
@@ -197,9 +199,9 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
             await this.claimableBalancesService.claimBalance(signedXdr);
             this.claimableBalancesService.removeClaimableBalance(record._id);
             this.nzDrawerRef.close();
-            this.nzMessageService.success('Transaction has been approved by the network!');
+            this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
           } catch (e: any) {
-            this.nzMessageService.error('We were not able to complete the operation.');
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
           }
         }
       }

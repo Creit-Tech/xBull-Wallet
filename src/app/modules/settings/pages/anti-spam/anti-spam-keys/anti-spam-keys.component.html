@@ -55,24 +55,24 @@
 
       <section class="w-full flex flex-col justify-center items-center mb-4 px-4">
         <nz-input-group nzPrefixIcon="key" [nzSuffix]="addButton" class="mb-4">
-          <input [formControl]="publicKeyControl" nz-input placeholder="Public key" />
+          <input [formControl]="publicKeyControl" nz-input [placeholder]="'FORM_PLACEHOLDERS.PUBLIC_KEY' | translate" />
         </nz-input-group>
         <ng-template #addButton>
           <button [disabled]="publicKeyControl.invalid"
                   (click)="onAdd()"
                   nz-button nzType="primary">
-            Add
+            {{ 'COMMON_WORDS.ADD' | translate }}
           </button>
         </ng-template>
 
         <small class="text-center opacity-80">
-          Transactions where these keys are the "source", will be ignored in this Wallet
+          {{ 'SETTINGS.ANTI_SPAM.SPAM_KEYS.EXPLANATION' | translate }}
         </small>
       </section>
 
       <section class="w-full px-4" [routerLink]="['../']">
         <button nz-button nzSize="large" class="w-full">
-          <i class="fa-solid fa-arrow-left mr-2"></i> Go back
+          <i class="fa-solid fa-arrow-left mr-2"></i> {{ 'COMMON_WORDS.GO_BACK' | translate }}
         </button>
       </section>
     </section>

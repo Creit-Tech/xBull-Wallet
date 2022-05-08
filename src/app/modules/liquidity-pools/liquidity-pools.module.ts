@@ -28,6 +28,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { WithdrawLiquidityComponent } from './components/withdraw-liquidity/withdraw-liquidity.component';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { SearchLiquidityPoolsComponent } from './components/search-liquidity-pools/search-liquidity-pools.component';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { SearchLiquidityPoolsComponent } from './components/search-liquidity-poo
     NzFormModule,
     NzSpinModule,
     NzSliderModule,
+    TranslationModule.forChild(),
   ],
 })
 export class LiquidityPoolsModule { }

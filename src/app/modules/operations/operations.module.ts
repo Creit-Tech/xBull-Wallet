@@ -13,6 +13,7 @@ import { OperationItemComponent } from './components/operation-item/operation-it
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { OperationDetailsComponent } from './components/operation-details/operation-details.component';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
     ReactiveFormsModule,
     SharedPipesModule,
     ClipboardModule,
+    TranslationModule.forChild(),
   ]
 })
 export class OperationsModule { }

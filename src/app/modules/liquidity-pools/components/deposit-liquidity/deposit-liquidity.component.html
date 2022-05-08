@@ -1,7 +1,7 @@
 <nz-spin [nzSpinning]="(depositingLiquidity$ | async) || (creatingPool$ | async)">
   <section class="w-full flex flex-col mb-4" [formGroup]="depositForm">
     <div class="w-full mb-4">
-      <nz-form-control nzExtra="Available balance: {{ ((availableAssetAFunds$ | async) || 0) | number: '0.0-7' }}">
+      <nz-form-control nzExtra="{{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ ((availableAssetAFunds$ | async) || 0) | number: '0.0-7' }}">
         <nz-input-group class="mb-1" nzSize="large" [nzSuffix]="assetASelect">
           <input mask="separator.7"
                  formControlName="amountAssetA"
@@ -12,7 +12,7 @@
         </nz-input-group>
       </nz-form-control>
       <ng-template #assetASelect>
-        <nz-select formControlName="assetABalanceLine" nzPlaceHolder="Asset">
+        <nz-select formControlName="assetABalanceLine" [nzPlaceHolder]="'COMMON_WORDS.ASSET' | translate">
           <nz-option *ngFor="let balance of accountBalances$ | async;"
                      [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
                      [nzValue]="balance">
@@ -22,7 +22,7 @@
     </div>
 
     <div class="w-full mb-4">
-      <nz-form-control nzExtra="Available balance: {{ ((availableAssetBFunds$ | async) || 0) | number: '0.0-7' }}">
+      <nz-form-control nzExtra="{{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ ((availableAssetBFunds$ | async) || 0) | number: '0.0-7' }}">
         <nz-input-group class="mb-1" nzSize="large" [nzSuffix]="assetBSelect">
           <input mask="separator.7"
                  formControlName="amountAssetB"
@@ -33,7 +33,7 @@
         </nz-input-group>
       </nz-form-control>
       <ng-template #assetBSelect>
-        <nz-select formControlName="assetBBalanceLine" nzPlaceHolder="Asset">
+        <nz-select formControlName="assetBBalanceLine" [nzPlaceHolder]="'COMMON_WORDS.ASSET' | translate">
           <nz-option *ngFor="let balance of accountBalances$ | async;"
                      [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
                      [nzValue]="balance">
@@ -51,7 +51,7 @@
       </nz-radio-group>
 
       <small>
-        Price movement tolerance
+        {{ 'LIQUIDITY_POOLS.SLIPPAGE_TOLERANCE' | translate }}
       </small>
     </div>
   </section>
@@ -65,7 +65,7 @@
             (click)="actionButton$.next('create')"
             [nzLoading]="depositingLiquidity$ | async"
             [disabled]="depositForm.invalid || (depositingLiquidity$ | async) || (disableActionButtons$ | async)">
-      Create Liquidity Pool
+      {{ 'COMMON_WORDS.CREATE' | translate }}
     </button>
 
     <ng-template #depositButton>
@@ -76,7 +76,7 @@
               (click)="actionButton$.next('deposit')"
               [nzLoading]="depositingLiquidity$ | async"
               [disabled]="depositForm.invalid || (depositingLiquidity$ | async) || (disableActionButtons$ | async)">
-        Deposit liquidity
+        {{ 'COMMON_WORDS.DEPOSIT' | translate }}
       </button>
     </ng-template>
   </section>
@@ -84,13 +84,13 @@
   <section class="text-center"
            *ngIf="selectedLiquidityPool$ | async as selectedLiquidityPool">
     <p class="text-xs">
-      Spot price: {{ calculateSpotPrice(selectedLiquidityPool) | number: '0.0-7' }}
+      {{ 'LIQUIDITY_POOLS.SPOT_PRICE' | translate }}: {{ calculateSpotPrice(selectedLiquidityPool) | number: '0.0-7' }}
     </p>
     <p class="text-xs">
-      Shares in the pool: {{ selectedLiquidityPool.total_shares | number: '0.0-7' }}
+      {{ 'COMMON_WORDS.SHARES' | translate }}: {{ selectedLiquidityPool.total_shares | number: '0.0-7' }}
     </p>
     <p class="text-xs">
-      Total of providers: {{ selectedLiquidityPool.total_trustlines }}
+      {{ 'COMMON_WORDS.TRUSTLINES' | translate }}: {{ selectedLiquidityPool.total_trustlines }}
     </p>
   </section>
 </nz-spin>

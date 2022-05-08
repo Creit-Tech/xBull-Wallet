@@ -30,6 +30,7 @@ import { AccountResponse, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBu
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-deposit-liquidity',
@@ -117,6 +118,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly nzDrawerService: NzDrawerService,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly translateService: TranslateService,
   ) { }
 
   getLiquidityPoolSubscription: Subscription = this.depositForm.valueChanges
@@ -134,7 +136,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         .then()
         .catch(error => {
           console.error(error);
-          this.nzMessageService.error('There was an unexpected error when requesting Horizon, make sure you have internet');
+          this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_CONTACT_HORIZON'));
         });
     });
 
@@ -260,7 +262,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
           .loadAccount(selectedAccount.publicKey);
       } catch (e: any) {
-        this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+        this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {
           nzDuration: 5000,
         });
         return;
@@ -293,7 +295,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         })
         .catch(error => {
           console.error(error);
-          this.nzMessageService.error(`An unexpected error happened, please contact support.`);
+          this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
           return error;
         });
     }))
@@ -470,7 +472,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         xdr: params.transactionBuilder.build().toXDR(),
       },
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Deposit liquidity'
+      nzTitle: this.translateService.instant('COMMON_WORDS.DEPOSIT')
     });
 
     drawerRef.open();
@@ -499,7 +501,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       try {
         drawerRef.close();
         await this.liquidityPoolsService.depositLiquidity(signedXdr);
-        this.nzMessageService.success('Deposit completed');
+        this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
 
         this.depositForm.patchValue({
           amountAssetA: '0',
@@ -512,7 +514,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         });
       } catch (e: any) {
         console.error(e);
-        this.nzMessageService.error('Submission failed, please try again or contact support');
+        this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
       }
     }
 
@@ -558,7 +560,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.transactionBuilder.build().toXDR(),
       },
-      nzTitle: 'Create pool',
+      nzTitle: this.translateService.instant('COMMON_WORDS.CREATE'),
       nzWrapClassName: 'drawer-full-w-320',
     });
 
@@ -588,10 +590,10 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       try {
         drawerRef.close();
         await this.walletsAssetsService.addAssetToAccount(signedXdr);
-        this.nzMessageService.success('Pool created, you can deposit liquidity now');
+        this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
       } catch (e: any) {
         console.error(e);
-        this.nzMessageService.error('Submission failed, please try again or contact support');
+        this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
       }
     }
 

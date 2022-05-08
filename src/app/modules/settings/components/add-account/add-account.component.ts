@@ -7,6 +7,7 @@ import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-add-account',
@@ -46,7 +47,8 @@ export class AddAccountComponent implements OnInit {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsQuery: WalletsQuery,
     private readonly nzMessageService: NzMessageService,
-    private readonly nzDrawerRef: NzDrawerRef
+    private readonly nzDrawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -57,7 +59,7 @@ export class AddAccountComponent implements OnInit {
     const hash = this.cryptoService.hashPassword(this.password.value);
 
     if (hash !== globalPasswordHash) {
-      this.nzMessageService.error('The password you just used is not your saved password');
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
       return;
     }
 
@@ -73,7 +75,11 @@ export class AddAccountComponent implements OnInit {
         break;
     }
 
-    this.nzMessageService.success(`New account was added to the wallet: ${parentWallet.name}`);
+    this.nzMessageService.success(
+      this.translateService.instant('SETTINGS.ADD_ACCOUNT.ACCOUNT_ADDED_SUCCESS', {
+        name: parentWallet.name
+      })
+    );
 
     this.nzDrawerRef.close();
   }
@@ -88,7 +94,7 @@ export class AddAccountComponent implements OnInit {
       });
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error('We were not able to save your new account');
+      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT.UNABLE_TO_SAVE_ACCOUNT'));
       throw e;
     }
   }
@@ -116,7 +122,7 @@ export class AddAccountComponent implements OnInit {
       });
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error('We were not able to add the new account');
+      this.nzMessageService.error(this.translateService.instant('SETTINGS.ADD_ACCOUNT.UNABLE_TO_SAVE_ACCOUNT'));
       throw e;
     }
   }

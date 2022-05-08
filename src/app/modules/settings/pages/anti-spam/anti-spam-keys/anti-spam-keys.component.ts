@@ -5,6 +5,7 @@ import {SettingsQuery} from '~root/state';
 import {map, pluck} from 'rxjs/operators';
 import {NzMessageService} from "ng-zorro-antd/message";
 import { Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-anti-spam-keys',
@@ -27,7 +28,8 @@ export class AntiSpamKeysComponent implements OnInit {
     private readonly settingsService: SettingsService,
     private readonly settingsQuery: SettingsQuery,
     private readonly nzMessageService: NzMessageService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -45,7 +47,7 @@ export class AntiSpamKeysComponent implements OnInit {
       this.cdr.detectChanges();
     } catch (e: any) {
       console.error(e);
-      this.nzMessageService.error(`We couldn't add the key, it's possible that you already saved it.`, {
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.ALREADY_SAVED'), {
         nzDuration: 5000,
       });
     }

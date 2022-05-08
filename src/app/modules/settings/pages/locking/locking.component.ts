@@ -1,16 +1,16 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
-import { SettingsService} from '~root/core/settings/services/settings.service';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { DeviceAuthService } from '~root/mobile/services/device-auth.service';
+import { SettingsService } from '~root/core/settings/services/settings.service';
 import { ENV, environment } from '~env';
 import { FormControl } from '@angular/forms';
-import {SettingsQuery, WalletsQuery} from '~root/state';
-import {map, switchMap, take, takeUntil, tap, withLatestFrom} from 'rxjs/operators';
+import { SettingsQuery, WalletsQuery } from '~root/state';
+import { map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {merge, Subject, Subscription} from 'rxjs';
-import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {result} from "lodash";
-import {CryptoService} from '~root/core/crypto/services/crypto.service';
+import { PasswordModalComponent } from '~root/shared/modals/components/password-modal/password-modal.component';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { CryptoService } from '~root/core/crypto/services/crypto.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-locking',
@@ -39,6 +39,7 @@ export class LockingComponent implements OnInit, OnDestroy {
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
     private readonly cryptoService: CryptoService,
+    private readonly translateService: TranslateService,
   ) { }
 
   passwordAuthTokenActiveStatus: Subscription = this.settingsQuery.passwordAuthTokenActive$
@@ -58,7 +59,7 @@ export class LockingComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(value => {
       this.settingsService.setKeptPasswordTimeout(value);
-      this.nzMessageService.success(`Timout updated to ${value} minutes.`);
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.TIMEOUT_UPDATED', { value }));
     });
 
   ngOnInit(): void {
@@ -77,7 +78,7 @@ export class LockingComponent implements OnInit, OnDestroy {
   async requireAuthStart(): Promise<void> {
     if (this.useDeviceAuthControl.value) {
       this.settingsService.removeDeviceAuthToken();
-      this.nzMessageService.success(`Device Auth is now disabled for password protected features.`);
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.DEVICE_AUTH_DISABLED'));
     } else {
       const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
         nzPlacement: 'bottom',
@@ -100,13 +101,13 @@ export class LockingComponent implements OnInit, OnDestroy {
         .pipe(withLatestFrom(this.globalPasswordHash$))
         .pipe(map(([password, globalPasswordHash]) => {
           if (!globalPasswordHash) {
-            throw new Error('Global password has not being defined in this wallet');
+            throw new Error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_NOT_SET'));
           }
 
           const hashedPassword = this.cryptoService.hashPassword(password);
 
           if (hashedPassword !== globalPasswordHash) {
-            throw new Error('Password is not correct');
+            throw new Error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
           }
 
           return password;
@@ -124,13 +125,13 @@ export class LockingComponent implements OnInit, OnDestroy {
             passwordAuthTokenIdentifier: encryptResult.identifier,
             passwordAuthKey: encryptResult.key,
           });
-          this.nzMessageService.success(`Device Auth is now active for password protected features.`);
+          this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.DEVICE_AUTH_ENABLED'));
           drawerRef.close();
         }, error => {
           drawerRef.close();
           console.log(error);
           this.nzMessageService.error(
-            error?.message || `We couldn't save your password in your device, try again or contact support`,
+            error?.message || this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'),
           );
         });
     }
@@ -139,7 +140,7 @@ export class LockingComponent implements OnInit, OnDestroy {
   async keepPasswordStart(): Promise<void> {
     if (this.keepPasswordControl.value) {
       this.settingsService.disableKeepPasswordOption();
-      this.nzMessageService.success(`Option disabled, now when using your password this one won't be kept.`);
+      this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.KEEP_PASSWORD_DISABLED'));
     } else {
       const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
       if (!globalPasswordHash) {
@@ -155,14 +156,14 @@ export class LockingComponent implements OnInit, OnDestroy {
             const hashedPassword = this.cryptoService.hashPassword(password);
 
             if (hashedPassword !== globalPasswordHash) {
-              this.nzMessageService.error('Password is not correct');
+              this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
               return;
             }
 
             this.settingsService.setKeptPassword(password);
 
             this.settingsService.enableKeepPasswordOption();
-            this.nzMessageService.success(`Option enabled, your password will be kept for a few minutes after using it.`);
+            this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.KEEP_PASSWORD_ENABLED'));
           }
         }
       });

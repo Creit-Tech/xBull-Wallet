@@ -19,6 +19,7 @@ import { BackgroundModule } from '~root/modules/background/background.module';
 import { SignRequestComponent } from '~root/modules/connect/components/sign-request/sign-request.component';
 import { ConnectService } from '~root/modules/connect/services/connect.service';
 import { ConnectNoWalletComponent } from './pages/connect-no-wallet/connect-no-wallet.component';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { ConnectNoWalletComponent } from './pages/connect-no-wallet/connect-no-w
     SharedPipesModule,
     NzTreeSelectModule,
     BackgroundModule,
+    TranslationModule.forChild(),
   ],
   providers: [
     ConnectQuery,

@@ -21,12 +21,14 @@
 <section class="w-full flex justify-center items-center">
   <div class="max-w-lg w-full">
     <div class="w-full text-center mb-4">
-      <h1 class="text-lg font-semibold">Set a background for your wallet</h1>
+      <h1 class="text-lg font-semibold">
+        {{ 'SETTINGS.BACKGROUND.SET_BACKGROUND_TITLE' | translate }}
+      </h1>
     </div>
 
     <section class="w-full px-2 flex flex-wrap">
       <div class="w-full px-2">
-        <nz-select nzPlaceHolder="Select an image" nzSize="large"
+        <nz-select [nzPlaceHolder]="'FORM_PLACEHOLDERS.SELECT_IMG' | translate" nzSize="large"
                    class="w-full mb-4" [formControl]="backgroundImageControl">
           <nz-option *ngFor="let assetValue of (assetsWithFundsInTheWallet$ | async)"
                      [nzLabel]="assetValue.code"
@@ -46,7 +48,7 @@
 
       <div class="w-full px-2 mb-4">
         <button (click)="removeBackground()" class="w-full" nz-button nzSize="large" nzType="primary" nzDanger>
-          Remove background
+          {{ 'COMMON_WORDS.REMOVE' | translate }}
         </button>
       </div>
     </section>
@@ -54,12 +56,12 @@
     <section class="w-full mt-auto px-4">
       <div class="w-full">
         <p class="mx-auto w-9/12 m-4 text-xs text-center">
-          A dark background is recommended so you can read everything easier.
+          {{ 'SETTINGS.BACKGROUND.BACKGROUND_SUGGESTION' | translate }}
         </p>
       </div>
 
       <button [routerLink]="['../']" nzSize="large" nz-button class="w-full">
-        Go back
+        {{ 'COMMON_WORDS.GO_BACK' | translate }}
       </button>
     </section>
   </div>
