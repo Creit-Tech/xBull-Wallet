@@ -4,7 +4,7 @@
     <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
       <section class="col-span-1">
         <nz-input-group nzSize="large" [nzSuffix]="searchInputControlIcon">
-          <input [formControl]="searchInputControl" type="text" nz-input placeholder="Write the code or issuer key">
+          <input [formControl]="searchInputControl" type="text" nz-input [placeholder]="'FORM_PLACEHOLDERS.CODE_OR_ISSUER' | translate">
         </nz-input-group>
         <ng-template #searchInputControlIcon>
           <i class="fa-solid fa-search"></i>
@@ -25,7 +25,7 @@
     <section class="w-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
       <section class="col-span-1">
         <nz-input-group nzSize="large" [nzSuffix]="searchCuratedInputControlIcon">
-          <input [formControl]="searchCuratedInputControl" type="text" nz-input placeholder="Ex: Write the code or issuer key">
+          <input [formControl]="searchCuratedInputControl" type="text" nz-input [placeholder]="'FORM_PLACEHOLDERS.CODE_OR_ISSUER' | translate">
         </nz-input-group>
         <ng-template #searchCuratedInputControlIcon>
           <i class="fa-solid fa-search"></i>
@@ -49,7 +49,7 @@
           <nz-input-group [nzAddOnBefore]="assetCodeIcon" nzSize="large">
             <input nz-input class="w-full"
                    formControlName="assetCode"
-                   type="text" placeholder="Asset Code">
+                   type="text" [placeholder]="'COMMON_WORDS.CODE' | translate">
           </nz-input-group>
           <ng-template #assetCodeIcon>
             <div style="width: 30px">
@@ -64,7 +64,7 @@
           <nz-input-group [nzAddOnBefore]="assetIssuerIcon" nzSize="large">
             <input nz-input class="w-full"
                    formControlName="assetIssuer"
-                   type="text" placeholder="Asset Issuer">
+                   type="text" [placeholder]="'COMMON_WORDS.ISSUER' | translate">
           </nz-input-group>
           <ng-template #assetIssuerIcon>
             <div style="width: 30px">

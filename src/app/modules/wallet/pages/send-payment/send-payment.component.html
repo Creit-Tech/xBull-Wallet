@@ -36,7 +36,7 @@
           <div class="w-full mb-4">
             <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qrPublicKey">
               <input type="text" nz-input nzSize="large"
-                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.PUBLIC_KEY' | translate"
+                     [placeholder]="'FORM_PLACEHOLDERS.PUBLIC_KEY' | translate"
                      formControlName="publicKey">
             </nz-input-group>
 
@@ -54,7 +54,7 @@
           <div class="w-full mb-4">
             <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon" [nzSuffix]="qrMemo">
               <input type="text" nz-input nzSize="large"
-                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.MEMO' | translate"
+                     [placeholder]="'FORM_PLACEHOLDERS.MEMO' | translate"
                      formControlName="memo">
             </nz-input-group>
 
@@ -74,7 +74,7 @@
               <nz-select class="w-full"
                          [nzBorderless]="true"
                          formControlName="assetCode"
-                         [nzPlaceHolder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.ASSET' | translate">
+                         [nzPlaceHolder]="'COMMON_WORDS.ASSET' | translate">
                 <nz-option *ngFor="let option of selectOptions" [nzValue]="option.value" [nzLabel]="option.name"></nz-option>
               </nz-select>
             </nz-input-group>
@@ -89,7 +89,7 @@
               <input mask="separator.8"
                      thousandSeparator=""
                      type="text" nz-input nzSize="large"
-                     [placeholder]="'WALLET.SEND_PAYMENT.FORM_PLACEHOLDERS.ASSET' | translate"
+                     [placeholder]="'COMMON_WORDS.AMOUNT' | translate"
                      formControlName="amount">
             </nz-input-group>
 

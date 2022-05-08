@@ -1,7 +1,7 @@
 {
   "MAIN_LAYOUT": {
     "EDIT_SELECTED_WALLET": "Edit selected wallet",
-    "NETWORK_NODE": "Network Node",
+    "NETWORK_NODE": "Nodo de red",
     "ACCOUNT_AND_HORIZON_TITLE": "Account & Horizon",
     "NAVIGATION_TITLE": "Navigation menu",
     "FOOTER": "xBull Wallet - An Open Source Stellar Wallet <br class=\"md:hidden\"> created by Creit Tech"
@@ -130,7 +130,8 @@
     "SOURCE": "Origen",
     "SIGNER": "Firmante",
     "REVOKE": "Remover",
-    "WALLETS": "Wallets"
+    "WALLETS": "Wallets",
+    "ASSET": "Asset"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegurate de que estas usando el Horizon correcto y de que tienes internet.",
@@ -151,10 +152,21 @@
     "COPIED_TO_CLIPBOARD": "Texto copiado al portapapeles"
   },
   "FORM_PLACEHOLDERS": {
-    "TO_DO": "TO_DO",
+    "WALLET_NAME": "Nombre del Wallet",
+    "CODE_OR_ISSUER": "Escribe el codigo o la llave del emisor",
+    "HORIZON_URL": "Horizon URL",
+    "NETWORK_PASS": "Passphrase de la red",
+    "WORD_BY_WORD": "Escribe y agrega palabra por palabra",
+    "SELECT_ACCOUNT": "Selecciona una cuenta",
+    "AGAIN_PASSWORD": "Escribe nuevamente tu contraseña",
+    "WRITE_HERE": "Escribe aqui...",
+    "WRITE_SECRET": "Escribe tu llave secreta",
+    "PASSWORD": "Contraseña (Minimo: 8 caracteres)",
+    "PASTE_XDR": "Pega el XDR aqui...",
+    "SELECT_IMG": "Selecciona una imagen",
+    "PICK_LP": "Selecciona un pool de liquidez",
     "PUBLIC_KEY": "Llave publica",
     "MEMO": "Memo (requerido por exchanges)",
-    "ASSET": "Selecciona un asset",
     "AMOUNT": "Monto"
   },
   "SITES_PERMISSIONS": {

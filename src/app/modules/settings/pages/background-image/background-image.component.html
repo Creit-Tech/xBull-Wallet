@@ -28,7 +28,7 @@
 
     <section class="w-full px-2 flex flex-wrap">
       <div class="w-full px-2">
-        <nz-select nzPlaceHolder="Select an image" nzSize="large"
+        <nz-select [nzPlaceHolder]="'FORM_PLACEHOLDERS.SELECT_IMG' | translate" nzSize="large"
                    class="w-full mb-4" [formControl]="backgroundImageControl">
           <nz-option *ngFor="let assetValue of (assetsWithFundsInTheWallet$ | async)"
                      [nzLabel]="assetValue.code"

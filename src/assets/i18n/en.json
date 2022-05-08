@@ -130,7 +130,8 @@
     "SOURCE": "Source",
     "SIGNER": "Signer",
     "REVOKE": "Revoke",
-    "WALLETS": "Wallets"
+    "WALLETS": "Wallets",
+    "ASSET": "Asset"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
@@ -151,10 +152,21 @@
     "COPIED_TO_CLIPBOARD": "Text copied to the clipboard"
   },
   "FORM_PLACEHOLDERS": {
-    "TO_DO": "TO_DO",
+    "WALLET_NAME": "Wallet name",
+    "CODE_OR_ISSUER": "Write the code or issuer key",
+    "HORIZON_URL": "Horizon URL",
+    "NETWORK_PASS": "Network Passphrase",
+    "WORD_BY_WORD": "Write and add word by word",
+    "SELECT_ACCOUNT": "Select an account",
+    "AGAIN_PASSWORD": "Type again your password",
+    "WRITE_HERE": "Write here...",
+    "WRITE_SECRET": "Write your secret key",
+    "PASSWORD": "Password (min 8 characters)",
+    "PASTE_XDR": "Paste the XDR here...",
+    "SELECT_IMG": "Select an image",
+    "PICK_LP": "Pick a liquidity pool",
     "PUBLIC_KEY": "Public key",
     "MEMO": "Memo (required by exchanges)",
-    "ASSET": "Select an asset",
     "AMOUNT": "Amount"
   },
   "SITES_PERMISSIONS": {

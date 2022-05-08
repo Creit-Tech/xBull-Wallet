@@ -55,7 +55,7 @@
 
       <section class="w-full flex flex-col justify-center items-center mb-4 px-4">
         <nz-input-group nzPrefixIcon="key" [nzSuffix]="addButton" class="mb-4">
-          <input [formControl]="publicKeyControl" nz-input placeholder="Public key" />
+          <input [formControl]="publicKeyControl" nz-input [placeholder]="'FORM_PLACEHOLDERS.PUBLIC_KEY' | translate" />
         </nz-input-group>
         <ng-template #addButton>
           <button [disabled]="publicKeyControl.invalid"

@@ -1,7 +1,7 @@
 <section class="mb-2">
   <div class="w-full">
     <nz-input-group nzSize="large" [nzPrefix]="tagIcon">
-      <input type="text" nz-input [formControl]="nameField" placeholder="Wallet name">
+      <input type="text" nz-input [formControl]="nameField" [placeholder]="'FORM_PLACEHOLDERS.WALLET_NAME' | translate">
     </nz-input-group>
     <ng-template #tagIcon>
       <div class="px-2">

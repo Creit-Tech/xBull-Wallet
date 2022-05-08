@@ -12,7 +12,7 @@
         </nz-input-group>
       </nz-form-control>
       <ng-template #assetASelect>
-        <nz-select formControlName="assetABalanceLine" nzPlaceHolder="Asset">
+        <nz-select formControlName="assetABalanceLine" [nzPlaceHolder]="'COMMON_WORDS.ASSET' | translate">
           <nz-option *ngFor="let balance of accountBalances$ | async;"
                      [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
                      [nzValue]="balance">
@@ -22,7 +22,7 @@
     </div>
 
     <div class="w-full mb-4">
-      <nz-form-control nzExtra="Available balance: {{ ((availableAssetBFunds$ | async) || 0) | number: '0.0-7' }}">
+      <nz-form-control nzExtra="{{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ ((availableAssetBFunds$ | async) || 0) | number: '0.0-7' }}">
         <nz-input-group class="mb-1" nzSize="large" [nzSuffix]="assetBSelect">
           <input mask="separator.7"
                  formControlName="amountAssetB"
@@ -33,7 +33,7 @@
         </nz-input-group>
       </nz-form-control>
       <ng-template #assetBSelect>
-        <nz-select formControlName="assetBBalanceLine" nzPlaceHolder="Asset">
+        <nz-select formControlName="assetBBalanceLine" [nzPlaceHolder]="'COMMON_WORDS.ASSET' | translate">
           <nz-option *ngFor="let balance of accountBalances$ | async;"
                      [nzLabel]="balance.asset_type === 'native' ? 'XLM' : balance.asset_code"
                      [nzValue]="balance">

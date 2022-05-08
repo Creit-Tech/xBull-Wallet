@@ -93,7 +93,7 @@
             </h2>
 
             <nz-tree-select class="w-full"
-                            nzPlaceHolder="Select an account"
+                            [nzPlaceHolder]="'FORM_PLACEHOLDERS.SELECT_ACCOUNT' | translate"
                             [formControl]="accountSelectedControl"
                             nzVirtualHeight="200px"
                             [nzNodes]="(accountsNodes$ | async) || []">

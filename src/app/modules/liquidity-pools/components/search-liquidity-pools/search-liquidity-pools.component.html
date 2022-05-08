@@ -15,7 +15,7 @@
            type="text"
            nzSize="large"
            (keydown.enter)="addTag()"
-           placeholder="Code">
+           [placeholder]="'COMMON_WORDS.CODE' | translate">
   </div>
   <div class="w-6/12 pr-2 mb-2">
     <input formControlName="issuer"
@@ -25,7 +25,7 @@
            mask="A{56}"
            [validation]="false"
            (keydown.enter)="addTag()"
-           placeholder="Issuer">
+           [placeholder]="'COMMON_WORDS.ISSUER' | translate">
   </div>
 
   <div class="w-2/12">

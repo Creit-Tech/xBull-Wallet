@@ -1,9 +1,9 @@
 <form [formGroup]="form" class="flex flex-wrap w-full">
   <div class="w-full mb-4">
-    <input type="text" nz-input nzSize="large" class="w-full" formControlName="name" placeholder="Name">
+    <input type="text" nz-input nzSize="large" class="w-full" formControlName="name" [placeholder]="'COMMON_WORDS.NAME' | translate">
   </div>
   <div class="w-full mb-4">
-    <nz-select class="w-full" nzSize="large" formControlName="passphrase" nzPlaceHolder="Network Passphrase" [nzDropdownMatchSelectWidth]="false">
+    <nz-select class="w-full" nzSize="large" formControlName="passphrase" [nzPlaceHolder]="'FORM_PLACEHOLDERS.NETWORK_PASS' | translate" [nzDropdownMatchSelectWidth]="false">
       <nz-option *ngFor="let option of passphraseOptions"
                  [nzValue]="option.value"
                  [nzLabel]="option.name">
@@ -11,7 +11,7 @@
     </nz-select>
   </div>
   <div class="w-full mb-4">
-    <input type="text" nz-input nzSize="large" class="w-full" formControlName="url" placeholder="Horizon URL">
+    <input type="text" nz-input nzSize="large" class="w-full" formControlName="url" [placeholder]="'FORM_PLACEHOLDERS.HORIZON_URL' | translate">
   </div>
 </form>
 
