@@ -1,4 +1,11 @@
 {
+  "MAIN_LAYOUT": {
+    "EDIT_SELECTED_WALLET": "Edit selected wallet",
+    "NETWORK_NODE": "Network Node",
+    "ACCOUNT_AND_HORIZON_TITLE": "Account & Horizon",
+    "NAVIGATION_TITLE": "Navigation menu",
+    "FOOTER": "xBull Wallet - An Open Source Stellar Wallet <br class=\"md:hidden\"> created by Creit Tech"
+  },
   "XDR_SIGNER": {
     "REVOKE_TRUST_SPONSORSHIP": "Revoke Trustline Sponsorship",
     "REVOKE_OFFER_SPONSORSHIP": "Revoke Offer Sponsorship",
@@ -34,8 +41,15 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "OPERATIONS": "Operations",
+    "SWAPS": "Swaps",
+    "LP": "Liquidity pools",
+    "AIRDROPS": "Airdrops",
+    "LAB": "Lab",
+    "SETTINGS": "Settings",
     "DATE": "Date",
     "AFTER": "After",
+    "ACTIVE": "Active",
     "NOT": "Not",
     "UNTIL": "Until",
     "AND": "And",
@@ -115,7 +129,8 @@
     "FEE": "Fee",
     "SOURCE": "Source",
     "SIGNER": "Signer",
-    "REVOKE": "Revoke"
+    "REVOKE": "Revoke",
+    "WALLETS": "Wallets"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",

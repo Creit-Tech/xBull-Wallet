@@ -1,4 +1,11 @@
 {
+  "MAIN_LAYOUT": {
+    "EDIT_SELECTED_WALLET": "Edit selected wallet",
+    "NETWORK_NODE": "Network Node",
+    "ACCOUNT_AND_HORIZON_TITLE": "Account & Horizon",
+    "NAVIGATION_TITLE": "Navigation menu",
+    "FOOTER": "xBull Wallet - An Open Source Stellar Wallet <br class=\"md:hidden\"> created by Creit Tech"
+  },
   "XDR_SIGNER": {
     "REVOKE_TRUST_SPONSORSHIP": "Remover patrocinio de Trustline",
     "REVOKE_OFFER_SPONSORSHIP": "Remover patrocinio de Oferta",
@@ -34,8 +41,15 @@
     "ASSET_BUYING": "Asset en compra"
   },
   "COMMON_WORDS": {
+    "OPERATIONS": "Operaciones",
+    "SWAPS": "Intercambios",
+    "LP": "Pools de liquidez",
+    "AIRDROPS": "Airdrops",
+    "LAB": "Lab",
+    "SETTINGS": "Configuraciones",
     "DATE": "Fecha",
     "AFTER": "Despues",
+    "ACTIVE": "Activo",
     "NOT": "No",
     "UNTIL": "Hasta",
     "AND": "Y",
@@ -115,7 +129,8 @@
     "FEE": "Fee",
     "SOURCE": "Origen",
     "SIGNER": "Firmante",
-    "REVOKE": "Remover"
+    "REVOKE": "Remover",
+    "WALLETS": "Wallets"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegurate de que estas usando el Horizon correcto y de que tienes internet.",
