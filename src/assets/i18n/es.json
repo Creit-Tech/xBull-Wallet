@@ -1,43 +1,43 @@
 {
   "MAIN_LAYOUT": {
-    "EDIT_SELECTED_WALLET": "Edit selected wallet",
+    "EDIT_SELECTED_WALLET": "Editar wallet seleccionada",
     "NETWORK_NODE": "Nodo de red",
-    "ACCOUNT_AND_HORIZON_TITLE": "Account & Horizon",
-    "NAVIGATION_TITLE": "Navigation menu",
+    "ACCOUNT_AND_HORIZON_TITLE": "Cuenta & Horizon",
+    "NAVIGATION_TITLE": "Menú de navegación",
     "FOOTER": "xBull Wallet - An Open Source Stellar Wallet <br class=\"md:hidden\"> created by Creit Tech"
   },
   "XDR_SIGNER": {
     "REVOKE_TRUST_SPONSORSHIP": "Remover patrocinio de Trustline",
     "REVOKE_OFFER_SPONSORSHIP": "Remover patrocinio de Oferta",
-    "REVOKE_DATA_SPONSORSHIP": "Remover patrocinio de Informacion",
+    "REVOKE_DATA_SPONSORSHIP": "Remover patrocinio de Información",
     "REVOKE_CB_SPONSORSHIP": "Remover patrocinio de balance reclamable",
     "REVOKE_LP_SPONSORSHIP": "Remover patrocinio de pool de liquidez",
     "REVOKE_SIGNER_SPONSORSHIP": "Remover patrocinio de firmante",
     "CAN_CLAIM_NO_CONDITIONS": "Puede reclamar sin condiciones",
-    "AUTH_TX": "Transaccion de autorizacion",
-    "CLAWBACK_ENABLED": "Clawback activado",
+    "AUTH_TX": "Transacción de autorización",
+    "CLAWBACK_ENABLED": "Recuperar activado",
     "TITLE": "Solicitud de firma",
     "SIGN_WITH": "Firmar con",
-    "SEQUENCE_NUMBER": "Numero de secuencia",
-    "TRANSACTION_SOURCE": "Origen de la transaccion",
+    "SEQUENCE_NUMBER": "Número de secuencia",
+    "TRANSACTION_SOURCE": "Origen de la transacción",
     "STARTING_BALANCE": "Balance de inicio",
     "SENDING_AMOUNT": "Monto a enviar",
-    "MAX_TO_SEND": "Monto maximo a enviar",
-    "MAX_AMOUNT": "Monto maximo",
+    "MAX_TO_SEND": "Monto máximo a enviar",
+    "MAX_AMOUNT": "Monto máximo",
     "SENDING_ASSET": "Asset a enviar",
     "STRICT_SEND": "Path payment estricto a enviar",
     "STRICT_RECEIVE": "Path payment estricto a recibir",
-    "DEST_MIN": "Minimo en destino",
+    "DEST_MIN": "Mínimo en destino",
     "DEST_AMOUNT": "Monto a destino",
     "DEST_ASSET": "Asset destino",
-    "INFLATION_DESTINATION": "Destino de inflacion",
+    "INFLATION_DESTINATION": "Destino de inflación",
     "AMOUNT_TO_BUY": "Monto a comprar",
     "AMOUNT_TO_SELL": "Monto a vender",
     "PRICE_PER_UNIT_BUY": "Precio por unidad a comprar",
     "ASSET_SELLING": "Asset vendiendo",
     "SELLING_ISSUER": "Emisor del Asset en venta",
     "BUYING_ISSUER": "Emisor del Asset en compra",
-    "MIN_AMOUNT": "Monto minimo",
+    "MIN_AMOUNT": "Monto mínimo",
     "ASSET_BUYING": "Asset en compra"
   },
   "COMMON_WORDS": {
@@ -48,7 +48,7 @@
     "LAB": "Lab",
     "SETTINGS": "Configuraciones",
     "DATE": "Fecha",
-    "AFTER": "Despues",
+    "AFTER": "Después",
     "ACTIVE": "Activo",
     "NOT": "No",
     "UNTIL": "Hasta",
@@ -63,28 +63,28 @@
     "DEPOSIT": "Depositar",
     "WITHDRAW": "Retirar",
     "ISSUER": "Emisor",
-    "CODE": "Codigo",
+    "CODE": "Código",
     "NAME": "Nombre",
     "VALUE": "Valor",
-    "DESCRIPTION": "Descripcion",
-    "CONDITION": "Condicion",
-    "ORGANIZATION": "Organizacion",
+    "DESCRIPTION": "Descripción",
+    "CONDITION": "Condición",
+    "ORGANIZATION": "Organización",
     "WEBSITE": "Website",
-    "ADDRESS": "Direccion",
+    "ADDRESS": "Dirección",
     "SEND": "Enviar",
     "RECEIVE": "Recibir",
     "RECEIVER": "Receptor",
     "RECIPIENT": "Destinatario",
     "SWAP": "Intercambio",
     "REMOVE": "Remover",
-    "PUBLIC_KEY": "Llave publica",
+    "PUBLIC_KEY": "Llave pública",
     "PRIVATE_KEY": "Llave privada",
     "COPY": "Copiar",
-    "GO_BACK": "Ir atras",
+    "GO_BACK": "Ir atrás",
     "DOMAIN": "Dominio",
     "SPONSOR": "Patrocinador",
     "WALLET": "Wallet",
-    "SHARES": "Shares",
+    "SHARES": "Acciones",
     "ADD": "Agregar",
     "TYPE": "Tipo",
     "DETAILS": "Detalles",
@@ -93,7 +93,7 @@
     "TOTAL": "Total",
     "CANCEL": "Cancelar",
     "NETWORK": "Red",
-    "DOCUMENTATION": "Documentacion",
+    "DOCUMENTATION": "Documentación",
     "CONFIRM": "Confirmar",
     "PASSWORD": "Contraseña",
     "RECOMMENDED": "Recomendado",
@@ -115,14 +115,14 @@
     "CLAIMANTS": "Demandantes",
     "ACCOUNT": "Cuenta",
     "OFFER": "Oferta",
-    "CLAWBACK": "Recuperacion",
+    "CLAWBACK": "Recuperación",
     "AMOUNT": "Monto",
     "BUYING": "Comprando",
-    "LIMIT": "Limite",
+    "LIMIT": "Límite",
     "AUTHORIZE": "Autorizar",
     "SPONSORED": "Patrocinado",
     "MEMO": "Memo",
-    "OPERATION": "Operacion",
+    "OPERATION": "Operación",
     "POOLED": "Pooled",
     "ACCEPT": "Aceptar",
     "REJECT": "Rechazar",
@@ -134,46 +134,46 @@
     "ASSET": "Asset"
   },
   "ERROR_MESSAGES": {
-    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegurate de que estas usando el Horizon correcto y de que tienes internet.",
-    "CANT_CONTACT_HORIZON": "Hubo un error inexperado al intentar contactar con Horizon, asegurate de que tienes internet.",
+    "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegúrate que estas usando el Horizon correcto y que tienes internet.",
+    "CANT_CONTACT_HORIZON": "Hubo un error inesperado al intentar contactar con Horizon, asegúrate que tienes internet.",
     "UNEXPECTED_ERROR": "Error inesperado, intenta nuevamente o contacta soporte",
-    "NETWORK_REJECTED": "La red rechazo la transaccion",
-    "CANT_SIGN_TRANSACTION": "No pudimos firmar la transaccion, asegurate de que tu contraseña es correcta",
+    "NETWORK_REJECTED": "La red rechazo la transacción",
+    "CANT_SIGN_TRANSACTION": "No pudimos firmar la transacción, asegúrate que tu contraseña sea correcta",
     "PASSWORD_NOT_SET": "Contraseña global no ha sido definida en este wallet",
     "PASSWORD_INCORRECT": "Contraseña no es correcta",
     "ALREADY_SAVED": "Error, es posible de que ya lo guardaste",
-    "INVALID_XDR": "No podemos continuar, el XDR es invalido",
-    "INVALID_PHRASE": "Frase mnemotecnica no es valida, asegurate de que escribiste/agregaste palabra por palabra correctamente",
-    "CANT_CONNECT_LEDGER_1": "No pudimos conectar con el wallet Ledger, asegurate de que esta conectado a tu dispositivo y fue seleccionado"
+    "INVALID_XDR": "No podemos continuar, el XDR es inválido",
+    "INVALID_PHRASE": "Frase mnemotécnica no es válida, asegúrate que escribiste/agregaste palabra por palabra correctamente",
+    "CANT_CONNECT_LEDGER_1": "No pudimos conectar con el wallet Ledger, asegúrate que está conectado a tu dispositivo y fue seleccionado"
   },
   "SUCCESS_MESSAGE": {
-    "OPERATION_COMPLETED": "Operacion completada",
+    "OPERATION_COMPLETED": "Operación completada",
     "VALUE_UPDATED": "Valor actualizado",
     "COPIED_TO_CLIPBOARD": "Texto copiado al portapapeles"
   },
   "FORM_PLACEHOLDERS": {
     "WALLET_NAME": "Nombre del Wallet",
-    "CODE_OR_ISSUER": "Escribe el codigo o la llave del emisor",
+    "CODE_OR_ISSUER": "Escribe el código o la llave del emisor",
     "HORIZON_URL": "Horizon URL",
     "NETWORK_PASS": "Passphrase de la red",
     "WORD_BY_WORD": "Escribe y agrega palabra por palabra",
     "SELECT_ACCOUNT": "Selecciona una cuenta",
     "AGAIN_PASSWORD": "Escribe nuevamente tu contraseña",
-    "WRITE_HERE": "Escribe aqui...",
+    "WRITE_HERE": "Escribe aquí...",
     "WRITE_SECRET": "Escribe tu llave secreta",
-    "PASSWORD": "Contraseña (Minimo: 8 caracteres)",
-    "PASTE_XDR": "Pega el XDR aqui...",
+    "PASSWORD": "Contraseña (Mínimo: 8 caracteres)",
+    "PASTE_XDR": "Pega el XDR aquí...",
     "SELECT_IMG": "Selecciona una imagen",
     "PICK_LP": "Selecciona un pool de liquidez",
-    "PUBLIC_KEY": "Llave publica",
+    "PUBLIC_KEY": "Llave pública",
     "MEMO": "Memo (requerido por exchanges)",
     "AMOUNT": "Monto"
   },
   "SITES_PERMISSIONS": {
-    "SITE_CONNECTION": "Coneccion del sitio",
+    "SITE_CONNECTION": "Conexión del sitio",
     "ASKING_FOR": "Pregunta por",
-    "GET_PUBLIC_KEY": "Obtener llave publica",
-    "ASK_TO_SIGN": "Solicitar firma de transaccion"
+    "GET_PUBLIC_KEY": "Obtener llave pública",
+    "ASK_TO_SIGN": "Solicitar firma de transacción"
   },
   "WALLET": {
     "WALLET_DASHBOARD": {
@@ -184,11 +184,11 @@
       "LP_ASSET_DETAILS_TITLE": "Detalles del Pool de liquidez",
       "ACCOUNT_BALANCE_CARD": {
         "CARD_TITLE": "Balance de la cuenta",
-        "VALUE_DISTRIBUTION": "Distribucion de valor",
-        "ASSET_ALLOCATION": "Asignacion de Assets",
+        "VALUE_DISTRIBUTION": "Distribución de valor",
+        "ASSET_ALLOCATION": "Asignación de Assets",
         "NAME": "Nombre de cuenta:",
-        "PUBLIC_KEY": "Llave publica:",
-        "TRUSTING_ASSETS": "Assets en los que se confia:",
+        "PUBLIC_KEY": "Llave pública:",
+        "TRUSTING_ASSETS": "Assets en los que confía:",
         "POOL_SHARES": "Pool shares:",
         "LOCKED_XLM": "XLMs bloqueados:"
       },
@@ -202,10 +202,10 @@
       }
     },
     "SEND_PAYMENT": {
-      "CUSTOM_ASSET_TO_NON_TRUSTED": "No podemos enviar assets perzonalizados a una cuenta que aun no se ha creado.",
-      "PAYMENT_CONFIRMATION_TITLE": "confirmacion de pago",
+      "CUSTOM_ASSET_TO_NON_TRUSTED": "No podemos enviar assets personalizados a una cuenta que aún no se ha creado.",
+      "PAYMENT_CONFIRMATION_TITLE": "confirmación de pago",
       "PAYMENT_SENT_MESSAGE": "Pago enviado correctamente",
-      "SCAN_PUBLIC_KEY_TITLE": "Escanear llave publica",
+      "SCAN_PUBLIC_KEY_TITLE": "Escanear llave pública",
       "SCAN_MEMO_TITLE": "Scan memo",
       "CARD_TITLE": "Enviar pago",
       "NOT_SELECTED": "Asset no seleccionado",
@@ -213,7 +213,7 @@
     },
     "RECEIVE_PAYMENT": {
       "CARD_TITLE": "Recibir pago",
-      "COPY_BUTTON": "Copiar direccion"
+      "COPY_BUTTON": "Copiar dirección"
     },
     "ASSET_DETAILS": {
       "ASSET_REMOVE_SUCCESS": "Asset removido correctamente",
@@ -225,22 +225,22 @@
     }
   },
   "SWAP": {
-    "NO_VALID_PATH": "No hay un path valido para hacer el intercambio",
-    "INCORRECT_SELECTION": "Tipo de path no es de Envio o Recibo, contacta soporte",
+    "NO_VALID_PATH": "No hay una ruta válida para hacer el intercambio",
+    "INCORRECT_SELECTION": "Tipo de ruta no es de Envío o Recibo, contacta a soporte",
     "SELECT_ASSET_TITLESELECT_ASSET_TITLE": "Seleccionar Asset",
-    "SWAP_CONFIRM_TITLE": "Confirmacion del intercambio",
+    "SWAP_CONFIRM_TITLE": "Confirmación del intercambio",
     "SWAP_SUCCESS": "El intercambio de los assets fue completado",
     "CARD_TITLE": "Intercambiar tus Activos",
-    "STRICT_SEND": "Envio fijo",
-    "STRICT_RECEIVE": "Recepcion fija",
-    "STRICT_TOOLTIP": "Puedes especificar si deseas basar tu intercambio en la cantidad maxima a enviar o la cantidad minima a recibir",
-    "SLIPPAGE_TOOLTIP": "Intercambios tienes deslizamientos (movimiento en el precio), este es el porcentaje maximo el que estas dispuesto a tolerar",
+    "STRICT_SEND": "Envío fijo",
+    "STRICT_RECEIVE": "Recepción fija",
+    "STRICT_TOOLTIP": "Puedes especificar si deseas basar tu intercambio en la cantidad máxima a enviar o la cantidad mínima a recibir",
+    "SLIPPAGE_TOOLTIP": "Los intercambios tienen deslizamientos (movimiento en el precio), este es el porcentaje máximo que estas dispuesto a tolerar",
     "ACTION_BUTTON": "Intercambiar Activos",
     "SWAP_RATE": "Tarifa del intercambio",
-    "MIN_RECEIVE": "Minimo a recibir",
-    "MIN_RECEIVE_TOOLTIP": "Monto minimo recibiras de acuerdo a tu tolerancia de deslizamiento",
-    "MAX_SEND": "Maximo a enviar",
-    "MAX_SEND_TOOLTIP": "Monto maximo que enviaras de acuerdo a tu tolerancia de deslizamiento",
+    "MIN_RECEIVE": "Mínimo a recibir",
+    "MIN_RECEIVE_TOOLTIP": "Monto mínimo a recibir de acuerdo a tu tolerancia de deslizamiento",
+    "MAX_SEND": "Máximo a enviar",
+    "MAX_SEND_TOOLTIP": "Monto máximo que enviarás de acuerdo a tu tolerancia de deslizamiento",
     "PICK_ASSET": "Seleccionar Activos"
   },
   "SETTINGS": {
@@ -257,15 +257,15 @@
       "SITES_CONNECTED": "Sitios conectados",
       "ANTI_SPAM": "Anti SPAM",
       "BACKGROUND_IMAGE": "Imagen de fondo",
-      "LOCK_SETTINGS": "Configuracion de bloqueo",
+      "LOCK_SETTINGS": "Configuración de bloqueo",
       "ABOUT": "Acerca de"
     },
     "WALLET_ACCOUNT": {
       "COPY_PRIVATE_KEY_TITLE": "Por favor lee con cuidado",
-      "COPY_PRIVATE_KEY_CONTENT": "Estas a punto de copiar tu llave privada. Te recomendamos que luego de usarla copies algo de tal modo que esta sea removida de tu portapeles. Si utilizas un sistema que guarda lo que copias, borralo de ahi tambien.",
+      "COPY_PRIVATE_KEY_CONTENT": "Estas a punto de copiar tu llave privada. Te recomendamos que luego de usarla copies algo random, de tal modo que esta sea removida de tu portapapeles. Si utilizas un sistema que guarda lo que copias, bórralo de allí también.",
       "COPY_PRIVATE_KEY_CONTENT_SUCCESS": "Copiado al portapapeles, no olvides removerla luego de usarla",
       "REMOVE_ACCOUNT_TITLE": "Por favor lee con cuidado",
-      "REMOVE_ACCOUNT_CONTENT": "Estas a punto de remover tu cuenta de este Wallet. Asegurate de que tienes un respaldo antes de borrarla.",
+      "REMOVE_ACCOUNT_CONTENT": "Estás a punto de remover tu cuenta de este Wallet. Asegúrate de tener un respaldo antes de borrarla.",
       "ACCOUNT_DETAILS": {
         "TITLE": "Detalles de la Cuenta",
         "SEQUENCE": "Secuencia",
@@ -274,7 +274,7 @@
         "TOTAL_SPONSORED": "Total patrocinados"
       },
       "ACCOUNT_THRESHOLDS": {
-        "TITLE": "Thresholds de la cuenta",
+        "TITLE": "Límites de la cuenta",
         "LOW": "Bajo",
         "MEDIUM": "Medio",
         "HIGH": "Alto"
@@ -283,7 +283,7 @@
         "TITLE": "Flags de la cuenta",
         "AUTH_REQUIRED": "Autorización requerida",
         "AUTH_REVOCABLE": "Autorización revocable",
-        "AUTH_IMMUTABLE": "Autorización immutable",
+        "AUTH_IMMUTABLE": "Autorización inmutable",
         "AUTH_CLAWBACK_ENABLED": "Auth clawback activado"
       }
     },
@@ -293,7 +293,7 @@
     "REGISTERED_WALLET_DETAILS": {
       "ADD_ACCOUNT_TITLE": "Agregar cuenta",
       "REMOVE_WALLET_TITLE": "Eliminar Wallet",
-      "REMOVE_WALLET_ALERT": "Estas por remover este wallet en xBull, tus assets estan a salvo en el Blockchain pero asegurate de que tienes como recuperar tus llaves luego. Una vez es removida no podemos recuperarla a menos de que la vuelvas a crear con tu metodo de recuperacion",
+      "REMOVE_WALLET_ALERT": "Estás por remover este wallet en xBull. Tus assets están a salvo en el Blockchain, pero asegúrate tener como recuperar tus llaves luego. Una vez es removida no podemos recuperarla, solo podrías volver a crearla con tu método de recuperación",
       "WALLET_DETAILS_TITLE": "Detalles del Wallet",
       "CREATE_ACCOUNT_BUTTON": "Crear cuenta en el Wallet",
       "WALLET_ACCOUNTS": "Cuentas en la Wallet",
@@ -301,37 +301,37 @@
     },
     "LOCKING": {
       "TIMEOUT_UPDATED": "Temporizador actualizado a {{value}} minutos.",
-      "DEVICE_AUTH_DISABLED": "Autenticacion de dispositivo desactivado para opciones protegidas por contraseña.",
-      "DEVICE_AUTH_ENABLED": "Autenticacion de dispositivo activo para opciones protegidas por contraseña.",
-      "KEEP_PASSWORD_DISABLED": "Opcion desactivada, ahora al usar tu contraseña esta no se guardara localmente.",
-      "KEEP_PASSWORD_ENABLED": "Opcion activada, tu contraseña sera guardada localmente durante unos minutos.",
-      "DEVICE_AUTH_OPTION": "Usar autenticacion de dispositivo",
+      "DEVICE_AUTH_DISABLED": "Autenticación de dispositivo desactivado para opciones protegidas por contraseña.",
+      "DEVICE_AUTH_ENABLED": "Autenticación de dispositivo activo para opciones protegidas por contraseña.",
+      "KEEP_PASSWORD_DISABLED": "Opción desactivada, ahora al usar tu contraseña esta no se guardará localmente.",
+      "KEEP_PASSWORD_ENABLED": "Opción activada, tu contraseña será guardada localmente durante unos minutos.",
+      "DEVICE_AUTH_OPTION": "Usar autenticación de dispositivo",
       "DONT_REQUEST_PASSWORD_OPTION": "No solicitar contraseña",
-      "DONT_REQUEST_PASSWORD_TOOLTIP": "Si activas esta opcion, tu contraseña se guardara localmente luego de usarla. Esta sera mantenida por un periodo de tiempo o hasta que la sesion se termine",
+      "DONT_REQUEST_PASSWORD_TOOLTIP": "Si activas esta opción, tu contraseña será guardada localmente luego de usarla. Será mantenida por un periodo de tiempo o hasta que la sesión termine",
       "PASSWORD_TIMEOUT_OPTION": "Temporizador de contraseña",
-      "PASSWORD_TIMEOUT_TOOLTIP": "Total de minutos antes de que tengas que volver a escribir tu contraseña si la sesion aun no se ha cerrado",
+      "PASSWORD_TIMEOUT_TOOLTIP": "Total de minutos antes de tener que volver a escribir tu contraseña si la sesión aún no ha finalizado",
       "FOOTER_MESSAGE": "Configuraciones de bloqueos cambian dependiendo de la plataforma utilizada"
     },
     "BACKGROUND": {
       "SET_BACKGROUND_TITLE": "Selecciona un fondo de pantalla",
-      "BACKGROUND_SUGGESTION": "Un fondo oscuro es recomendado para que puedas leer facilmente"
+      "BACKGROUND_SUGGESTION": "Un fondo oscuro es recomendado para que puedas leer fácilmente"
     },
     "ANTI_SPAM": {
       "OPTIONS_COMPONENT": {
-        "BY_PUBLIC_KEY": "Filtrar por llaves publicas",
+        "BY_PUBLIC_KEY": "Filtrar por llaves públicas",
         "FILTER_CB": "Filtrar Claimable Balances"
       },
       "SPAM_KEYS": {
-        "EXPLANATION": "Transacciones donde estas llaves son el \"origen\", seran ignoradas en este xBull Wallet"
+        "EXPLANATION": "Transacciones donde estas llaves son el \"origen\", serán ignoradas en este xBull Wallet"
       }
     },
     "ABOUT": {
-      "DESCRIPTION": "xBull es una poderosa pero facil de usar Wallet que apunta a ser un puente entre webs/usuarios y el Blockchain de Stellar",
-      "VERSION": "Version de la Wallet",
-      "SOURCE_CODE": "Codigo fuente"
+      "DESCRIPTION": "xBull es una poderosa pero fácil de usar Wallet que apunta a ser un puente entre webs/usuarios y el Blockchain de Stellar",
+      "VERSION": "Versión de la Wallet",
+      "SOURCE_CODE": "Código fuente"
     },
     "ADD_ACCOUNT": {
-      "UNABLE_TO_SAVE_ACCOUNT": "No se pudo agregar una nueva cuenta",
+      "UNABLE_TO_SAVE_ACCOUNT": "No pudo agregarse una nueva cuenta",
       "ACCOUNT_ADDED_SUCCESS": "Nueva cuenta agregada al Wallet: {{name}}",
       "TITLE": "Agregar nueva cuenta",
       "DESCRIPTION": "Escribe tu contraseña para desencriptar tu wallet y agregar una cuenta nueva"
@@ -345,14 +345,14 @@
       "GET_RECOMMENDED": "Obtener fee recomendado"
     },
     "EDIT_WALLET_NAME": {
-      "EXPLANATION": "El nombre de la Wallet no se guarda en el Blockchain. Es solo por temas informativos dentro de xBull."
+      "EXPLANATION": "El nombre de la Wallet no queda guardado en el Blockchain. Es solo por temas informativos dentro de xBull."
     }
   },
   "OPERATIONS": {
     "PASSIVE_SELL_OFFER": "Oferta de venta pasiva",
     "BUY_OFFER": "Oferta de compra",
     "SELL_OFFER": "Oferta de venta",
-    "MORE_BUTTON": "Mas en el blockchain",
+    "MORE_BUTTON": "Más en el blockchain",
     "CREATE_CB": "Crear balance reclamable",
     "CLAIM_CB": "Reclamar balance reclamable",
     "ONLY_PAYMENT": "Solo pagos",
@@ -391,24 +391,24 @@
     "SIGNER_KEY": "Llave firmante",
     "SIGNER_WEIGHT": "Peso del firmante",
     "MASTER_KEY_WEIGHT": "Peso de llave maestra",
-    "LOW_THRESHOLD": "Limite bajo",
-    "MED_THRESHOLD": "Limite medio",
-    "HIGH_THRESHOLD": "Limite alto",
+    "LOW_THRESHOLD": "Límite bajo",
+    "MED_THRESHOLD": "Límite medio",
+    "HIGH_THRESHOLD": "Límite alto",
     "HOME_DOMAIN": "Dominio",
-    "SET_FLAGS": "Establacer flags",
+    "SET_FLAGS": "Establecer flags",
     "CLEAR_FLAGS": "Limpiar flags",
-    "AUTHORIZED_MAINTAIN": "Authorizado para mantener pasivos",
+    "AUTHORIZED_MAINTAIN": "Autorizado para mantener pasivos",
     "DATA_NAME": "Nombre de dato",
     "DATA_VALUE": "Valor de dato",
     "BUMP_TO": "Subir hacia",
-    "MIN_PRICE": "Precio minimo",
-    "MAX_PRICE": "Precio maximo",
+    "MIN_PRICE": "Precio mínimo",
+    "MAX_PRICE": "Precio máximo",
     "CHANGE_TRUST": "Cambiar confianza",
     "CHECK_BUTTON": "Revisar en el Blockchain",
     "SHARES_RECEIVED": "Acciones recibidas",
     "RESERVES_RECEIVED": "Reservas recibidas",
-    "RESERVES_MAX": "Reservas maximas",
-    "RESERVES_MIN": "Reservas minimas",
+    "RESERVES_MAX": "Reservas máximas",
+    "RESERVES_MIN": "Reservas mínimas",
     "CLAWBACK": "Recuperar",
     "CLAWBACK_CLAIMABLE_BALANCE": "Recuperar balance reclamable",
     "RESERVES_DEPOSITED": "Reservas depositadas"
@@ -418,45 +418,45 @@
     "SPOT_PRICE": "Precio del Spot",
     "SLIPPAGE_TOLERANCE": "Tolerancia de deslizamiento",
     "TOTAL_SHARES": "Total de acciones",
-    "TOTAL_TRUSTLINES": "Total de lineas de confianza",
+    "TOTAL_TRUSTLINES": "Total de líneas de confianza",
     "POOL_FEE": "Fee del pool"
   },
   "LAB": {
-    "BUILD_TRANSACTION": "Construir transaccion",
+    "BUILD_TRANSACTION": "Construir transacción",
     "SIGN_MESSAGE": "Firmar mensaje",
     "IMPORT_XDR": "Importar XDR (firma manual)",
-    "NOTICE": "Esta seccion incluye operaciones que pueden ser peligrosas si no sabes lo que haces. Ten cuidado.",
+    "NOTICE": "Esta sección incluye operaciones que pueden ser peligrosas si no sabes lo que haces. Ten cuidado.",
     "COPY_SIGNED": "Copiar firmada",
     "SIGN_SIGNED": "Firmar XDR",
-    "SUBMIT_SIGNED": "Enviar transaccion firmada",
-    "SIGN_XDR_MESSAGE": "Usa el boton \"Copiar\" luego de haber firmado un XDR para obtener la version ya firmada. <br> El XDR que pegaste no se modificara."
+    "SUBMIT_SIGNED": "Enviar transacción firmada",
+    "SIGN_XDR_MESSAGE": "Usa el botón \"Copiar\" luego de haber firmado un XDR para obtener la versión ya firmada. <br> El XDR que pegaste no será modificado."
   },
   "CREATE_ACCOUNT": {
     "GENERATE_WALLET": "Generar Wallet",
-    "IMPORT_PHRASE": "Importar frase Mnemotecnica",
-    "CONFIRM_PHRASE": "Confirmar frase Mnemotecnica",
+    "IMPORT_PHRASE": "Importar frase Mnemotécnica",
+    "CONFIRM_PHRASE": "Confirmar frase Mnemotécnica",
     "IMPORT_SECRET": "Importar llave secreta",
     "CONNECT_HARDWARE_WALLET": "Conectar Hardware Wallet",
     "CONNECT_OPEN_APP": "Conecta tu wallet a la computadora y abre la app de Stellar antes de continuar",
     "CONNECT_BEFORE_CONTINUE": "Conecta la wallet a tu computadora antes de continuar",
-    "THIS_YOUR_PHRASE": "Esta es tu frase Mnemotecnica",
-    "SAFE_PLACE": "Guarda estas palabras en un lugar seguro, esta es la unica vez que te las mostraremos y no existe manera de recuperarlas",
+    "THIS_YOUR_PHRASE": "Esta es tu frase Mnemotécnica",
+    "SAFE_PLACE": "Guarda estas palabras en un lugar seguro, esta es la única vez que serán mostradas y no existe manera de recuperarlas",
     "START_AGAIN": "Comenzar nuevamente",
-    "SET_PASSWORD": "Establece una contraseña para tu wallet, esta contraseña sera usada para encriptar, bloquear y trabajar con tu wallet",
+    "SET_PASSWORD": "Establece una contraseña para tu wallet, esta contraseña será usada para encriptar, bloquear y trabajar con tu wallet",
     "DONT_FORGET": "NO LA OLVIDES",
     "CANT_UPDATE": "No puede ser actualizada si tu wallet esta bloqueada",
     "BACK_TO_WALLETS": "Volver a las Wallets",
-    "SECRET_KEY_TYPE": "Estas creando una wallet de <b>llaves secretas</b>, este tipo de wallet no tiene una frase mnemotecnica para recuperacion. Asegurate de tener un respaldo de tus llaves privadas antes de importarlas.",
+    "SECRET_KEY_TYPE": "Estas creando una wallet de <b>llaves secretas</b>, este tipo de wallet no tiene una frase mnemotécnica para recuperación. Asegúrate de tener un respaldo de tus llaves privadas antes de importarlas.",
     "WRITE_AND_CONFIRM": "Escribe y confirma las palabras en el campo debajo",
-    "LOAD_MORE": "Cargar mas cuentas",
+    "LOAD_MORE": "Cargar más cuentas",
     "ACCOUNTS_TO_IMPORT": "Cuentas a importar",
-    "IMPORT_MORE_LATER": "Si deseas agregar mas llavels publicas luego, ve a las configuraciones y agrega tu wallet nuevamente. Selecciona todas las llaves publicas que deseas y estas se incluiran en la misma wallet anteriormente generada.",
-    "ADD_LATER_TREZOR": "Si agregas nuevamente un Wallet Trezor con el mismo ID, los wallets se uniran. Actualizar el nombre del Wallet luego no afectara el ID de la Wallet."
+    "IMPORT_MORE_LATER": "Si deseas agregar más llaves públicas luego, ve a las configuraciones y agrega tu wallet nuevamente. Selecciona todas las llaves públicas que deseas y estas serán incluidas en la misma wallet anteriormente generada.",
+    "ADD_LATER_TREZOR": "Si agregas nuevamente un Wallet Trezor con el mismo ID, los wallets serán unidos. Actualizar el nombre del Wallet luego no afectará el ID de la Wallet."
   },
   "CONNECT": {
     "HAVENT_USED_BEFORE": "Parece que no has usado xBull Wallet anteriormente, ve a <a class=\"text-primary\" target=\"_blank\" href=\"https://wallet.xbull.app\">https://wallet.xbull.app</a>, configura tu wallet e intenta nuevamente.",
-    "ONLY_CONNECT_TRUST": "Deberias conectar solo con sitios en los que confias",
-    "ONLY_SIGN_TRUST": "Deberias solo firmar transacciones de sitios en los que confias",
+    "ONLY_CONNECT_TRUST": "Deberías conectarte solo con sitios en los que confías",
+    "ONLY_SIGN_TRUST": "Deberías solo firmar transacciones de sitios en los que confías",
     "WALLET_ACCOUNTS": "Wallets y Cuentas",
     "SHARE_ACCOUNTS": "Compartir Cuenta con",
     "SIGN_WITH": "Vas a firmar con",
@@ -466,17 +466,17 @@
     "NO_AIRDROPS": "No hay airdrops esperando para ser reclamados",
     "CLAIM_IT": "Reclamar",
     "TRASH_IT": "A la basura",
-    "AUTO_TRUST_ASSET": "Si reclamas un asset el cual aun no agregaste a tu wallet, la operacion sera agregada automaticamente en la transaccion",
+    "AUTO_TRUST_ASSET": "Si reclamas un asset el cual aún no agregaste a tu wallet, la operación será agregada automáticamente en la transacción",
     "NO_CONDITIONS": "Puede ser reclamado sin condiciones"
   },
   "HARD_CONFIRM": {
     "TITLE": "Confirmar solicitud",
     "ALERT_MESSAGE": "Por favor confirma que quieres continuar",
-    "YOU_SURE": "Estas seguro de esto?",
-    "DOUBLE_THINK": "Revisa nuevamente si quieres continuar, si estas seguro presiona el boton de confirmar"
+    "YOU_SURE": "Estás seguro de esto?",
+    "DOUBLE_THINK": "Revisa nuevamente si quieres continuar, si estas seguro presiona el botón de confirmar"
   },
   "PASSWORD_MODAL": {
     "SIGN_WITH_PASSWORD": "Firmar con contraseña",
-    "REASON": "Tu contraseña se usa para desencriptar la llave privada a usar"
+    "REASON": "Tu contraseña es utilizada para desencriptar la llave privada a usar"
   }
 }
