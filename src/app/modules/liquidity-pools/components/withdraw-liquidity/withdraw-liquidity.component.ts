@@ -27,6 +27,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ENV, environment } from '~env';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-withdraw-liquidity',
@@ -118,6 +119,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     private readonly nzMessageService: NzMessageService,
     @Inject(ENV)
     private readonly env: typeof environment,
+    private readonly translateService: TranslateService,
   ) { }
 
   fetchLiquidityPoolsDataSubscription: Subscription = this.accountBalances$
@@ -185,7 +187,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     .pipe(switchMap(() => {
       return this.onWithdraw()
         .catch(error => {
-          this.nzMessageService.error(`There was an unexpected error, please try again or contact support`);
+          this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
           return error;
         });
     }))
@@ -232,7 +234,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
         .loadAccount(selectedAccount.publicKey);
     } catch (e: any) {
-      this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {
         nzDuration: 5000,
       });
       return;
@@ -269,7 +271,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
         xdr: transactionBuilder.build().toXDR()
       },
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Withdraw liquidity',
+      nzTitle: this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'),
     });
 
     drawerRef.open();
@@ -296,11 +298,11 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     drawerRef.close();
     await this.liquidityPoolsService.withdrawLiquidity(signedXdr)
       .then(() => {
-        this.nzMessageService.success('Withdraw completed.');
+        this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
       })
       .catch(error => {
         console.error(error);
-        this.nzMessageService.error('Submission failed, please try again or contact support');
+        this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'));
       });
 
     this.reloadAccountBalances$.next();

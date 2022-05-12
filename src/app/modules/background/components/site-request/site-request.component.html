@@ -2,34 +2,34 @@
   <section class="relative w-full h-full">
     <div class="w-full text-center mb-4">
       <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-        Connection request
+        {{ 'SITES_PERMISSIONS.SITE_CONNECTION' | translate }}
       </h2>
     </div>
 
     <section class="w-full mb-16">
       <dl>
-        <dt class="text-off-black text-base font-bold mb-1">Origin:</dt>
+        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.ORIGIN' | translate }}:</dt>
         <dd class="text-label text-sm mb-3">{{ origin }}</dd>
 
-        <dt class="text-off-black text-base font-bold mb-1">Host:</dt>
+        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.HOST' | translate }}:</dt>
         <dd class="text-label text-sm mb-3">{{ host }}</dd>
 
-        <dt class="text-off-black text-base font-bold mb-1">Request date:</dt>
+        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.DATE' | translate }}:</dt>
         <dd class="text-label text-sm mb-3">{{ now | date: 'short' }}</dd>
 
-        <dt class="text-off-black text-base font-bold mb-1">Permissions requested:</dt>
+        <dt class="text-off-black text-base font-bold mb-1">{{ 'SITES_PERMISSIONS.ASKING_FOR' | translate }}:</dt>
         <dd *ngIf="permissions?.canRequestSign" class="text-label text-sm mb-3">
-          Request signing transaction
+          {{ 'SITES_PERMISSIONS.ASK_TO_SIGN' | translate }}
         </dd>
         <dd *ngIf="permissions?.canRequestPublicKey" class="text-label text-sm mb-3">
-          Request public key
+          {{ 'SITES_PERMISSIONS.GET_PUBLIC_KEY' | translate }}
         </dd>
       </dl>
     </section>
 
     <section class="w-full flex">
       <div class="flex-1 pl-2">
-        <button (click)="onAccept()" class="w-full btn btn--small btn-off-black">Accept</button>
+        <button (click)="onAccept()" class="w-full btn btn--small btn-off-black">{{ 'COMMON_WORDS.ACCEPT' | translate }}</button>
       </div>
     </section>
   </section>

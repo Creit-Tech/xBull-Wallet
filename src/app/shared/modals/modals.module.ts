@@ -21,6 +21,7 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { TranslationModule } from '~root/translation.module';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -50,6 +51,7 @@ const COMPONENTS = [
     NzModalModule,
     NzSpinModule,
     NzCardModule,
+    TranslationModule.forChild(),
   ],
 })
 export class ModalsModule {

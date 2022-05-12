@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import {NzMessageService} from "ng-zorro-antd/message";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-confirm-phrase-password',
@@ -45,6 +46,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     @Inject(ENV) private readonly env: typeof environment,
     private mnemonicPhraseService: MnemonicPhraseService,
     private readonly nzMessageService: NzMessageService,
+    private readonly translateService: TranslateService,
   ) { }
 
   wordsUpdatedSubscription: Subscription = this.phraseArray.valueChanges
@@ -109,7 +111,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     }
 
     if (!this.mnemonicPhraseService.validateMnemonicPhrase(this.form.value.confirmPhrase)) {
-      this.nzMessageService.error(`Mnemonic phrases is invalid, please make sure you write/add word by word correctly`, {
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.INVALID_PHRASE'), {
         nzDuration: 5000
       });
       return;

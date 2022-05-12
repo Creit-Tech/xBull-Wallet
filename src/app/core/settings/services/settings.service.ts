@@ -6,6 +6,7 @@ import { from, Observable, Subject, Subscription, throwError, timer } from 'rxjs
 import { catchError, delay, filter, map, switchMap, tap } from 'rxjs/operators';
 import { addMinutes } from 'date-fns';
 import { applyTransaction } from '@datorama/akita';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class SettingsService {
     private readonly settingsStore: SettingsStore,
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsAssetsStore: WalletsAssetsStore,
+    private readonly translateService: TranslateService,
   ) {
     let keptPassword: string | undefined;
     this.getKeptPassword = () => {
@@ -181,5 +183,10 @@ export class SettingsService {
       });
       this.settingsStore.updateState({ counterAssetId: assetId });
     });
+  }
+
+  setSelectedLanguage(data: string): void {
+    this.settingsStore.updateState({ selectedLanguage: data });
+    this.translateService.use(data);
   }
 }

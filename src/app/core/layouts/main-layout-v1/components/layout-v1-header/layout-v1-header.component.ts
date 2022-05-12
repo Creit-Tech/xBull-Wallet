@@ -7,6 +7,7 @@ import {
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-layout-v1-header',
@@ -24,6 +25,7 @@ export class LayoutV1HeaderComponent implements OnInit {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +34,7 @@ export class LayoutV1HeaderComponent implements OnInit {
   openAccountHorizonSelector(): void {
     this.nzDrawerService.create<LayoutV1AccountHorizonSelectorComponent>({
       nzContent: LayoutV1AccountHorizonSelectorComponent,
-      nzTitle: 'Account & Horizon',
+      nzTitle: this.translateService.instant('MAIN_LAYOUT.ACCOUNT_AND_HORIZON_TITLE'),
       nzPlacement: 'right',
       nzCloseOnNavigation: true,
       nzWrapClassName: 'ios-safe-y',
@@ -45,7 +47,7 @@ export class LayoutV1HeaderComponent implements OnInit {
   openMenu(): void {
     this.nzDrawerService.create<MobileMenuComponent>({
       nzContent: MobileMenuComponent,
-      nzTitle: 'Navigation menu',
+      nzTitle: this.translateService.instant('MAIN_LAYOUT.NAVIGATION_TITLE'),
       nzPlacement: 'right',
       nzCloseOnNavigation: true,
       nzWrapClassName: 'ios-safe-y',

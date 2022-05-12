@@ -54,7 +54,7 @@ export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
     const generateAccountStorageSnapshot = this.generateAccountQuery.getValue();
     const accountsStoreSnapshot = this.walletsQuery.getValue();
 
-    // DO NOT USE THIS IN CASE YOU REALLY KNOW WHAT YOU ARE DOING
+    // DO NOT USE THIS UNLESS YOU REALLY KNOW WHAT YOU ARE DOING
     const testPassword = 'thisisatestpasswordandyoushouldnotuseit';
 
     if (generateAccountStorageSnapshot.password !== testPassword) {

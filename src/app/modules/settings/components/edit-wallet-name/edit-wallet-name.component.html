@@ -1,7 +1,7 @@
 <section class="mb-2">
   <div class="w-full">
     <nz-input-group nzSize="large" [nzPrefix]="tagIcon">
-      <input type="text" nz-input [formControl]="nameField" placeholder="Wallet name">
+      <input type="text" nz-input [formControl]="nameField" [placeholder]="'FORM_PLACEHOLDERS.WALLET_NAME' | translate">
     </nz-input-group>
     <ng-template #tagIcon>
       <div class="px-2">
@@ -12,12 +12,12 @@
 </section>
 
 <div class="w-full text-center mb-7 opacity-80">
-  The name of the Wallet is not recorded on the Blockchain. It's only for information purposes.
+  {{ 'SETTINGS.EDIT_WALLET_NAME.EXPLANATION' | translate }}
 </div>
 
 <div class="w-full">
   <button (click)="onConfirm()" [disabled]="nameField.invalid"
           class="w-full btn btn-success-alternative btn--small">
-    Confirm
+    {{ 'COMMON_WORDS.CONFIRM' | translate }}
   </button>
 </div>

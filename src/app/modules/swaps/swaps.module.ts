@@ -17,6 +17,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -40,6 +41,7 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
     NzListModule,
     NzSpinModule,
     NzBreadCrumbModule,
+    TranslationModule.forChild(),
   ]
 })
 export class SwapsModule { }

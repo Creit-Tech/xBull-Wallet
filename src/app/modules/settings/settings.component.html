@@ -22,7 +22,7 @@
       <nz-list-item class="px-4">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">
-            Advanced mode
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.ADVANCED_MODE' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -35,7 +35,7 @@
                     (click)="setCounterAsset()">
         <div class="w-auto mr-auto">
           <p class="m-0 text-sm font-bold">
-            Counter asset
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.COUNTER_ASSET' | translate }}
           </p>
         </div>
         <div class="w-auto flex items-center">
@@ -57,7 +57,7 @@
       <nz-list-item class="cursor-pointer px-4" routerLink="/settings/wallets">
         <div class="w-auto">
           <p class="m-0 text-sm font-bold">
-            Wallets
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.WALLETS' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -70,7 +70,7 @@
       <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/horizon-apis">
         <div class="w-auto">
           <p class="m-0 text-sm font-bold">
-            Horizon APIs
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.HORIZON_APIS' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -80,16 +80,21 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item class="opacity-50 pointer-events-none px-4">
-        <div class="w-8/12">
+      <nz-list-item class="px-4">
+        <div class="w-auto">
           <p class="m-0 text-sm font-bold">
-            Language
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.LANGUAGE_TITLE' | translate }}
           </p>
         </div>
         <div class="w-auto">
-          <p class="opacity-80 text-sm text-bold">
-            English
-          </p>
+          <nz-select class="w-28" nzSize="small" [formControl]="languageSelectControl">
+            <nz-option nzValue="en" nzLabel="English"></nz-option>
+            <nz-option nzValue="es" nzLabel="Español"></nz-option>
+            <nz-option nzValue="de" nzLabel="Deutsch"></nz-option>
+          </nz-select>
+<!--          <p class="opacity-80 text-sm text-bold">-->
+<!--            English-->
+<!--          </p>-->
         </div>
       </nz-list-item>
 
@@ -97,7 +102,7 @@
           (click)="conDefaultFeeClicked()">
         <div class="w-8/12 mr-auto">
           <p class="m-0 text-sm font-bold">
-            Default Fee
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.DEFAULT_FEE_TITLE' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -110,7 +115,7 @@
       <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/active-operations-types">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">
-            Active operation types
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.ACTIVE_OPERATIONS_TYPES' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -123,7 +128,7 @@
       <nz-list-item class="cursor-pointer px-4" routerLink="/settings/sites-connected">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">
-            Sites connected
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.SITES_CONNECTED' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -137,7 +142,7 @@
           routerLink="/settings/anti-spam">
         <div class="w-8/12 mr-auto">
           <p class="m-0 text-sm font-bold">
-            Anti SPAM
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.ANTI_SPAM' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -151,7 +156,7 @@
           routerLink="/settings/background-image">
         <div class="w-8/12 mr-auto">
           <p class="m-0 text-sm font-bold">
-            Background image
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.BACKGROUND_IMAGE' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -165,7 +170,7 @@
           routerLink="/settings/locking">
         <div class="w-8/12 mr-auto">
           <p class="m-0 text-sm font-bold">
-            Lock settings
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.LOCK_SETTINGS' | translate }}
           </p>
         </div>
         <div class="w-auto">
@@ -179,7 +184,7 @@
           routerLink="/settings/about">
         <div class="w-8/12 mr-auto">
           <p class="m-0 text-sm font-bold">
-            About
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.ABOUT' | translate }}
           </p>
         </div>
         <div class="w-auto">

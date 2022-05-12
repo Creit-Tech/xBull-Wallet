@@ -14,7 +14,7 @@
           nzMatchRouterExact
           nz-menu-item class="flex">
         <i class="fa-solid fa-wallet" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Wallet</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.WALLET' | translate }}</span>
       </li>
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
@@ -23,7 +23,7 @@
           nzMatchRouterExact
           nz-menu-item class="flex">
         <i class="fa-solid fa-list-ul" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Operations</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.OPERATIONS' | translate }}</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"
@@ -32,17 +32,8 @@
           nzMatchRouter
           nz-menu-item class="flex">
         <i class="fa-solid fa-arrows-rotate" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Swaps</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.SWAPS' | translate }}</span>
       </li>
-
-<!--      <li [class.justify-center]="isCollapsed"-->
-<!--          [class.items-center]="isCollapsed"-->
-<!--          routerLink="/trade"-->
-<!--          nzMatchRouter-->
-<!--          nz-menu-item class="flex">-->
-<!--        <i class="fa-solid fa-chart-line" [class.mr-4]="!isCollapsed"></i>-->
-<!--        <span *ngIf="!isCollapsed">Trade</span>-->
-<!--      </li>-->
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
@@ -50,7 +41,7 @@
           nzMatchRouter
           nz-menu-item class="flex">
         <i class="fa-solid fa-water-ladder" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Liquidity pools</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.LP' | translate }}</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"
@@ -59,7 +50,7 @@
           nzMatchRouter
           nz-menu-item class="flex">
         <i class="fa-solid fa-parachute-box" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Airdrops</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.AIRDROPS' | translate }}</span>
       </li>
 
       <li [class.hidden]="!(advanceMode$ | async)"
@@ -69,7 +60,7 @@
           nzMatchRouter
           nz-menu-item class="flex">
         <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Lab</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.LAB' | translate }}</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"
@@ -78,7 +69,7 @@
           nzMatchRouter
           nz-menu-item class="flex">
         <i class="fa-solid fa-gear" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Settings</span>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.SETTINGS' | translate }}</span>
       </li>
     </ul>
   </nz-sider>
@@ -93,7 +84,7 @@
         <router-outlet></router-outlet>
       </section>
       <nz-footer class="hidden md:block col-span-1 p-4">
-        xBull Wallet - An Open Source Stellar Wallet <br class="md:hidden"> created by Creit Tech
+        <span [innerHTML]="'MAIN_LAYOUT.FOOTER' | translate"></span>
       </nz-footer>
     </nz-content>
   </nz-layout>

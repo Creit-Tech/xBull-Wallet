@@ -21,19 +21,19 @@
         <dd class="break-all opacity-80 text-sm mb-3">{{ claimableBalance.amount | number: '0.0-7' }}</dd>
       </dl>
       <dl>
-        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">Asset Code:</dt>
+        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.CODE' | translate }}:</dt>
         <dd class="break-all opacity-80 text-sm mb-3">{{ asset.assetCode }}</dd>
       </dl>
       <dl>
-        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">Issuer:</dt>
+        <dt *ngIf="!!asset.assetIssuer" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ISSUER' | translate }}:</dt>
         <dd class="break-all opacity-80 text-sm mb-3">{{ asset.assetIssuer }}</dd>
       </dl>
       <dl>
-        <dt *ngIf="!!asset.domain" class="text-base font-bold mb-1">Domain:</dt>
+        <dt *ngIf="!!asset.domain" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DOMAIN' | translate }}:</dt>
         <dd class="break-all opacity-80 text-sm mb-3">{{ asset.domain }}</dd>
       </dl>
       <dl *ngIf="claimableBalance$ | async as claimableBalance">
-        <dt class="text-base font-bold mb-1">Airdrop ID:</dt>
+        <dt class="text-base font-bold mb-1">ID:</dt>
         <dd appClipboard [textToCopy]="claimableBalance._id" class="cursor-pointer break-all opacity-80 text-sm mb-3">
           <span>{{ claimableBalance._id | publicKey }} <i class="fa-solid fa-copy"></i></span>
         </dd>
@@ -41,7 +41,7 @@
       <dl *ngIf="(claimant$ | async) as claimant">
         <div class="w-full">
           <p class="text-sm cursor-pointer" appClipboard [textToCopy]="claimant.destination">
-            <span class=" text-base font-bold mr-1">Recipient:</span> {{ claimant.destination | publicKey }}
+            <span class=" text-base font-bold mr-1">{{ 'COMMON_WORDS.RECEIVER' | translate }}:</span> {{ claimant.destination | publicKey }}
           </p>
         </div>
 
@@ -49,7 +49,7 @@
           <section class="pl-4 border-l-2">
             <div *ngIf="predicateValue.unconditional" class="w-full">
               <p class="opacity-80">
-                Can claim it without conditions
+                {{ 'CLAIMABLE_BALANCES.NO_CONDITIONS' | translate }}
               </p>
             </div>
 
@@ -114,17 +114,17 @@
 
     <section class="w-full grid grid-cols-1 grid-rows-2 gap-4 mb-4">
       <button [disabled]="disableActionButtons$ | async" (click)="buttonTriggered$.next('trash_it')" nz-button nzSize="large">
-        <span>Trash it <i class="fa-solid fa-trash"></i></span>
+        <span>{{ 'CLAIMABLE_BALANCES.TRASH_IT' | translate }} <i class="fa-solid fa-trash"></i></span>
       </button>
 
       <button [disabled]="disableActionButtons$ | async" (click)="buttonTriggered$.next('claim_it')" nz-button nzSize="large" nzType="primary">
-        Claim  it
+        {{ 'CLAIMABLE_BALANCES.CLAIM_IT' | translate }}
       </button>
     </section>
 
     <section class="w-full text-center">
       <small class="opacity-50 w-10/12 text-xs">
-        If you claim an asset you don't trust yet, the operation will be added to the claim transaction automatically
+        {{ 'CLAIMABLE_BALANCES.AUTO_TRUST_ASSET' | translate }}
       </small>
     </section>
   </nz-spin>

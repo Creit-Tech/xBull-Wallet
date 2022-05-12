@@ -7,7 +7,7 @@
          [appLoading]="loading"
          [class.translate-y-full]="!(showModal$ | async)">
   <button (click)="onClose()" class="text-error-alternative font-semibold text-sm p-2 mb-2">
-    Close
+    {{ 'COMMON_WORDS.CLOSE' | translate }}
   </button>
 
   <div class="w-full h-full overflow-y-auto no-scrollbar scroll-shadow">

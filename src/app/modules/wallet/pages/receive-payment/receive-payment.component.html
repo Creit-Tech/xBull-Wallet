@@ -25,7 +25,9 @@
     <nz-card class="w-full ant-card-no-padding p-4 mb-6">
       <section class="flex flex-col">
         <div class="w-full text-center mb-4">
-          <h1 class="text-lg font-semibold">Receive payment</h1>
+          <h1 class="text-lg font-semibold">
+            {{ 'WALLET.RECEIVE_PAYMENT.CARD_TITLE' | translate }}
+          </h1>
         </div>
       </section>
 
@@ -44,7 +46,7 @@
 
         <section class="w-full text-center">
           <button nz-button nzSize="large" appClipboard [textToCopy]="publicKey">
-            <i class="fa-solid fa-copy mr-2"></i> Copy Address
+            <i class="fa-solid fa-copy mr-2"></i> {{ 'WALLET.RECEIVE_PAYMENT.COPY_BUTTON' | translate }}
           </button>
         </section>
       </ng-container>

@@ -5,6 +5,7 @@ import { take } from 'rxjs/operators';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { Subject } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-default-fee-form',
@@ -21,6 +22,7 @@ export class DefaultFeeFormComponent implements OnInit {
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
     private readonly nzMessageService: NzMessageService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -35,7 +37,7 @@ export class DefaultFeeFormComponent implements OnInit {
 
   onSubmit(): void {
     this.settingsService.setDefaultFee(this.defaultFeeControl.value);
-    this.nzMessageService.success(`Default fee updated to: ${this.defaultFeeControl.value}`)
+    this.nzMessageService.success(`${this.translateService.instant('SUCCESS_MESSAGE.VALUE_UPDATED')}: ${this.defaultFeeControl.value}`)
   }
 
   onGetRecommendedFee(): void {

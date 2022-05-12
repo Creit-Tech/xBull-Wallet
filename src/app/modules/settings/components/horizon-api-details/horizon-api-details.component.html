@@ -7,19 +7,19 @@
 <section class="w-full mb-8">
   <dl>
     <dt class="font-bold mb-1">
-      Record ID:
+      ID:
     </dt>
     <dd class="break-all opacity-80 text-sm mb-3">
       {{ (horizonApi$ | async)?._id }}
     </dd>
     <dt class="font-bold mb-1">
-      Horizon URL:
+      URL:
     </dt>
     <dd class="break-all opacity-80 text-sm mb-3">
       {{ (horizonApi$ | async)?.url }}
     </dd>
     <dt class="font-bold mb-1">
-      Network Passphrase
+      Passphrase
     </dt>
     <dd class="break-all opacity-80 text-xs mb-3">
       {{ (horizonApi$ | async)?.networkPassphrase }}
@@ -31,6 +31,6 @@
   <button (click)="onRemove()"
           nz-button nzSize="large" nzBlock nzDanger nzType="primary"
           [disabled]="(selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id">
-    {{ (selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id ? "Horizon API being used" : 'Remove' }}
+    {{ 'COMMON_WORDS.REMOVE' | translate }}
   </button>
 </div>

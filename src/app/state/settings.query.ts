@@ -6,6 +6,8 @@ import { SettingsStore, SettingsState } from './settings.store';
 export class SettingsQuery extends Query<SettingsState> {
   gettingRecommendedFee$ = this.select(state => state.UIState.gettingRecommendedFee);
 
+  selectedLanguage$ = this.select(state => state.selectedLanguage);
+
   advanceMode$ = this.select(state => state.advanceMode);
   defaultFee$ = this.select(state => state.defaultFee);
 

@@ -25,6 +25,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   OperationDetailsComponent
 } from '~root/modules/operations/components/operation-details/operation-details.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-operations-dashboard',
@@ -68,6 +69,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     private readonly settingsQuery: SettingsQuery,
     private readonly globalsService: GlobalsService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   getLatestOperationsSubscription: Subscription = this.typeOfOperationsControl.valueChanges
@@ -103,7 +105,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
   async onSelected(operation: IWalletsOperation): Promise<void> {
     this.nzDrawerService.create<OperationDetailsComponent>({
       nzContent: OperationDetailsComponent,
-      nzTitle: 'Operation Details',
+      nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
       nzCloseOnNavigation: true,
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: { operation }

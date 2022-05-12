@@ -14,11 +14,11 @@
 
     <div class="hidden lg:flex w-3/12 grid grid-rows-1 grid-cols-2 gap-4 justify-end">
       <button nz-button nzType="primary" class="cols-span-1 row-span-1" routerLink="/wallet/payment">
-        Send <i class="fa-solid fa-paper-plane ml-2"></i>
+        {{ 'COMMON_WORDS.SEND' | translate }} <i class="fa-solid fa-paper-plane ml-2"></i>
       </button>
 
       <button nz-button class="col-span-1 row-span-1" routerLink="/wallet/receive">
-        Receive <i class="fa-solid fa-circle-arrow-down ml-2"></i>
+        {{ 'COMMON_WORDS.RECEIVE' | translate }} <i class="fa-solid fa-circle-arrow-down ml-2"></i>
       </button>
     </div>
 

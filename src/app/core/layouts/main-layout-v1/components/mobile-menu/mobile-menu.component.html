@@ -2,32 +2,27 @@
   <ul class="col-span-12 row-span-1" nz-menu nzMode="inline" nzTheme="dark">
     <li (click)="closeDrawer()" routerLink="/wallet" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-wallet"></i>
-      <span>Wallet</span>
+      <span>{{ 'COMMON_WORDS.WALLET' | translate }}</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/operations" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-list-ul"></i>
-      <span>Operations</span>
+      <span>{{ 'COMMON_WORDS.OPERATIONS' | translate }}</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/swaps" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-arrows-rotate"></i>
-      <span>Swaps</span>
+      <span>{{ 'COMMON_WORDS.SWAPS' | translate }}</span>
     </li>
-
-<!--    <li (click)="closeDrawer()" routerLink="/trade" nzMatchRouter nz-menu-item class="flex">-->
-<!--      <i class="mr-4 fa-solid fa-chart-line"></i>-->
-<!--      <span>Trade</span>-->
-<!--    </li>-->
 
     <li (click)="closeDrawer()" routerLink="/liquidity-pools" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-water-ladder"></i>
-      <span>Liquidity pools</span>
+      <span>{{ 'COMMON_WORDS.LP' | translate }}</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/airdrops" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-parachute-box"></i>
-      <span>Airdrops</span>
+      <span>{{ 'COMMON_WORDS.AIRDROPS' | translate }}</span>
     </li>
 
     <li [class.hidden]="!(advanceMode$ | async)"
@@ -37,12 +32,12 @@
         nz-menu-item
         class="flex">
       <i class="mr-4 fa-solid fa-flask"></i>
-      <span>Lab</span>
+      <span>{{ 'COMMON_WORDS.LAB' | translate }}</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-gear"></i>
-      <span>Settings</span>
+      <span>{{ 'COMMON_WORDS.SETTINGS' | translate }}</span>
     </li>
   </ul>
 
@@ -52,7 +47,7 @@
               routerLink="/wallet/payment"
               nz-button nzType="primary"
               nzBlock nzSize="large">
-        Send
+        {{ 'COMMON_WORDS.SEND' | translate }}
       </button>
     </div>
     <div class="col-span-1 row-span-1">
@@ -60,7 +55,7 @@
               routerLink="/wallet/receive"
               nz-button nzBlock
               nzSize="large">
-        Receive
+        {{ 'COMMON_WORDS.RECEIVE' | translate }}
       </button>
     </div>
   </div>

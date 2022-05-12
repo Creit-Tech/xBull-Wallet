@@ -78,7 +78,7 @@ export class SignRequestComponent implements OnInit {
 
     const xdr = await this.xdr$.pipe(take(1)).toPromise();
     if (!xdr) {
-      this.nzMessageService.error('There was no XDr provided.');
+      this.nzMessageService.error('There was no XDR provided.');
       return;
     }
 

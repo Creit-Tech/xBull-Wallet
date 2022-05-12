@@ -12,6 +12,7 @@ import { WalletsAccountsService } from '~root/core/wallets/services/wallets-acco
 import { AddAccountComponent } from '~root/modules/settings/components/add-account/add-account.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-registered-wallet-details',
@@ -56,6 +57,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     private readonly walletsService: WalletsService,
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -76,7 +78,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<AddAccountComponent>({
       nzContent: AddAccountComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Add account',
+      nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.ADD_ACCOUNT_TITLE'),
       nzContentParams: {
         parentWallet: wallet
       }
@@ -94,7 +96,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     }
     const drawerRef = this.nzDrawerService.create<EditWalletNameComponent>({
       nzContent: EditWalletNameComponent,
-      nzTitle: `Edit wallet name`,
+      nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.EDIT_NAME'),
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
         wallet
@@ -118,11 +120,11 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
 
     const drawerRef = this.nzDrawerService.create<HardConfirmComponent>({
       nzContent: HardConfirmComponent,
-      nzTitle: `Remove wallet ${wallet.name}`,
+      nzTitle: `${this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_TITLE')} ${wallet.name}`,
       nzWrapClassName: 'drawer-full-w-320',
       nzContentParams: {
-        title: 'Remove Wallet',
-        alertMessage: `You're going to remove this wallet from this extension, your assets are safe in the blockchain but make sure you have a way to recover your private keys. Once it's removed we can't get it back until you create it again with your recover method`
+        title: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_TITLE'),
+        alertMessage: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_ALERT')
       }
     });
 

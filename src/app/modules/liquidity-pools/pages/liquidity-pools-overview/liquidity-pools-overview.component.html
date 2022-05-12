@@ -22,7 +22,7 @@
         <nz-tabset nzCentered>
           <ng-template #depositTitle>
             <div class="flex items-center">
-              Deposit
+              {{ 'COMMON_WORDS.DEPOSIT' | translate }}
             </div>
           </ng-template>
           <nz-tab [nzTitle]="depositTitle">
@@ -31,7 +31,7 @@
 
           <ng-template #withdrawTitle>
             <div class="flex items-center">
-              Withdraw
+              {{ 'COMMON_WORDS.WITHDRAW' | translate }}
             </div>
           </ng-template>
           <nz-tab [nzTitle]="withdrawTitle">

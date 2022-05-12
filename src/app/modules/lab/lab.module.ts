@@ -12,6 +12,7 @@ import { LoadingModule } from '~root/shared/loading/loading.module';
 import {NzButtonModule} from "ng-zorro-antd/button";
 import {NzInputModule} from "ng-zorro-antd/input";
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
     NzButtonModule,
     NzInputModule,
     NzBreadCrumbModule,
+    TranslationModule.forChild(),
   ],
 })
 export class LabModule { }

@@ -16,6 +16,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-lp-asset-details',
@@ -64,6 +65,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAccountsService: WalletsAccountsService,
+    private readonly translateService: TranslateService,
   ) { }
 
   onRemoveSubscription: Subscription = this.removeActionButton$
@@ -74,7 +76,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
       return this.removeAsset()
         .catch(e => {
           console.error(e);
-          this.nzMessageService.error(`There was an unexpected error, try again or contact support`);
+          this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
           return;
         });
     }))
@@ -123,7 +125,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
       loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
         .loadAccount(selectedAccount.publicKey);
     } catch (e: any) {
-      this.nzMessageService.error(`We couldn't load your account from Horizon, please make sure you are using the correct network and you have internet.`, {
+      this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {
         nzDuration: 5000,
       });
       return;
@@ -162,17 +164,17 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
         xdr: transactionBuilder.build().toXDR(),
         acceptHandler: async signedXdr1 => {
           if (!signedXdr1) {
-            this.nzMessageService.error('Unexpected error, contact support.');
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.UNEXPECTED_ERROR'));
             return;
           }
 
           try {
             await this.walletsAssetsService.removeAssetFromAccount(signedXdr1);
-            this.nzMessageService.success(`LP Asset removed correctly.`);
+            this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
             this.nzDrawerRef.close();
           } catch (e: any) {
             console.error(e);
-            this.nzMessageService.success(`We were not able to remove the LP asset, please make sure you follow all the requirements to remove an Asset from your account.`, {
+            this.nzMessageService.success(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
               nzDuration: 5000,
             });
             return;
@@ -187,7 +189,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
         }
       },
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Remove LP Asset',
+      nzTitle: this.translateService.instant('COMMON_WORDS.REMOVE'),
     });
   }
 

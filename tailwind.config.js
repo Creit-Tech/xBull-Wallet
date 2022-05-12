@@ -5,6 +5,7 @@ module.exports = {
     enabled: process.env.NODE_ENV === 'production',
     content: [
       './src/**/*.{html,ts}',
+      './src/assets/i18n/*.json'
     ]
   },
   darkMode: 'class', // or 'media' or 'class'

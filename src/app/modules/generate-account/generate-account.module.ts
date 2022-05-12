@@ -21,6 +21,7 @@ import {ClipboardModule} from "~root/shared/clipboard/clipboard.module";
 import {NzCardModule} from "ng-zorro-antd/card";
 import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzTagModule} from "ng-zorro-antd/tag";
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -35,18 +36,19 @@ import {NzTagModule} from "ng-zorro-antd/tag";
     ConfirmTrezorKeysComponent
   ],
     imports: [
-        CommonModule,
-        GenerateAccountRoutingModule,
-        FormsComponentsModule,
-        ModalsModule,
-        SharedPipesModule,
-        NzSelectModule,
-        NzInputModule,
-        NzButtonModule,
-        ClipboardModule,
-        NzCardModule,
-        NzAutocompleteModule,
-        NzTagModule,
+      CommonModule,
+      GenerateAccountRoutingModule,
+      FormsComponentsModule,
+      ModalsModule,
+      SharedPipesModule,
+      NzSelectModule,
+      NzInputModule,
+      NzButtonModule,
+      ClipboardModule,
+      NzCardModule,
+      NzAutocompleteModule,
+      NzTagModule,
+      TranslationModule.forChild(),
     ],
   providers: [
     GenerateAccountStore,

@@ -26,7 +26,7 @@
         <nz-list>
           <nz-list-item class="px-4">
             <p class="m-0 font-semibold">
-              Filter by Public Keys
+              {{ 'SETTINGS.ANTI_SPAM.OPTIONS_COMPONENT.BY_PUBLIC_KEY' | translate }}
             </p>
             <button [routerLink]="['public-keys']" nz-button class="flex items-center justify-center">
               <i nz-icon nzType="right" nzTheme="outline"></i>
@@ -34,7 +34,7 @@
           </nz-list-item>
           <nz-list-item [routerLink]="['claimable-assets']" class="px-4">
             <p class="m-0 font-semibold">
-              Filter Claimable Assets
+              {{ 'SETTINGS.ANTI_SPAM.OPTIONS_COMPONENT.FILTER_CB' | translate }}
             </p>
             <button nz-button class="flex items-center justify-center">
               <i nz-icon nzType="right" nzTheme="outline"></i>
@@ -43,15 +43,9 @@
         </nz-list>
       </section>
 
-      <section class="w-full px-4 mb-4">
-        <p class="text-center opacity-50">
-          We can't block SPAM in the Stellar network (yet) but at least we can ignore those mfkrs!
-        </p>
-      </section>
-
       <section class="w-full px-4" routerLink="/settings">
         <button nzSize="large" nz-button class="w-full">
-          Go back
+          {{ 'COMMON_WORDS.GO_BACK' | translate }}
         </button>
       </section>
     </section>

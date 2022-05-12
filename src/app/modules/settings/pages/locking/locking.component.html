@@ -23,7 +23,7 @@
     <nz-list nzSize="large">
       <nz-list-item *ngIf="!!mobilePlatform" class="px-4">
         <p>
-          Use device authentication
+          {{ 'SETTINGS.LOCKING.DEVICE_AUTH_OPTION' | translate }}
         </p>
 
         <nz-switch [nzControl]="true" (click)="requireAuthStart()"
@@ -33,7 +33,7 @@
 
       <nz-list-item class="px-4">
         <p>
-          Don't request password <i class="fa-solid fa-question-circle" nz-tooltip="If you enable this option, your password will be saved in the device after you use it. It will be kept during a period of time or until the session is ended"></i>
+          {{ 'SETTINGS.LOCKING.DONT_REQUEST_PASSWORD_OPTION' | translate }} <i class="fa-solid fa-question-circle" nz-tooltip [nzTooltipTitle]="'SETTINGS.LOCKING.DONT_REQUEST_PASSWORD_TOOLTIP' | translate"></i>
         </p>
 
         <nz-switch [nzControl]="true" (click)="keepPasswordStart()"
@@ -43,7 +43,7 @@
 
       <nz-list-item *ngIf="keepPasswordActive$ | async" class="px-4">
         <p>
-          Password timeout
+          {{ 'SETTINGS.LOCKING.PASSWORD_TIMEOUT_OPTION' | translate }} <i class="fa-solid fa-question-circle" nz-tooltip [nzTooltipTitle]="'SETTINGS.LOCKING.PASSWORD_TIMEOUT_TOOLTIP' | translate"></i>
         </p>
 
         <nz-select [formControl]="timeoutMinutesControl">
@@ -89,12 +89,12 @@
     <section class="w-full mt-auto px-4" [routerLink]="['../']">
       <div class="w-full">
         <p class="mx-auto w-9/12 m-4 text-xs text-center">
-          Locking settings change depending on the platform being used
+          {{ 'SETTINGS.LOCKING.FOOTER_MESSAGE' | translate }}
         </p>
       </div>
 
       <button nzSize="large" nz-button class="w-full">
-        Go back
+        {{ 'COMMON_WORDS.GO_BACK' | translate }}
       </button>
     </section>
   </div>

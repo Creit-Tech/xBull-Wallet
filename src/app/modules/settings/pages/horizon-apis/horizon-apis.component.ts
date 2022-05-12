@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HorizonApisQuery, IHorizonApi } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { AddHorizonApiComponent } from '~root/modules/settings/components/add-horizon-api/add-horizon-api.component';
-import { take, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { HorizonApiDetailsComponent } from '~root/modules/settings/components/horizon-api-details/horizon-api-details.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-horizon-apis',
@@ -20,6 +20,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -37,7 +38,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
         horizonApi: horizon,
       },
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Horizon Details',
+      nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
     });
 
     drawerRef.open();
@@ -47,7 +48,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
     const nzRef = this.nzDrawerService.create<AddHorizonApiComponent>({
       nzContent: AddHorizonApiComponent,
       nzWrapClassName: 'drawer-full-w-320',
-      nzTitle: 'Add new Horizon',
+      nzTitle: this.translateService.instant('COMMON_WORDS.ADD'),
     });
 
     nzRef.open();

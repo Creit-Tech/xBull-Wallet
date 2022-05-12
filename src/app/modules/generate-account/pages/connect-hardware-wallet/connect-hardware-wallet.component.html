@@ -4,7 +4,7 @@
   </div>
 
   <p class="text-label font-semibold text-lg px-4 mb-8">
-    Connect your hardware wallet
+    {{ 'CREATE_ACCOUNT.CONNECT_HARDWARE_WALLET' | translate }}
   </p>
 
   <div class="w-full flex flex-wrap mb-8 max-w-xs bg-off-white rounded-xl py-6 px-2 mb-8">
@@ -15,14 +15,14 @@
 
       <div class="px-4 w-7/12">
         <p class="text-xs text-off-black">
-          Connect your wallet to your computer and open the Stellar App before continuing
+          {{ 'CREATE_ACCOUNT.CONNECT_OPEN_APP' | translate }}
         </p>
       </div>
     </div>
 
     <div class="w-full px-4">
       <button (click)="importLedgerWallet()" class="w-full btn btn-success-alternative btn--small">
-        Connect
+        {{ 'COMMON_WORDS.CONNECT' | translate }}
       </button>
     </div>
   </div>
@@ -35,7 +35,7 @@
 
       <div class="px-4 w-7/12">
         <p class="text-xs text-off-black">
-          Connect your wallet to your computer before continuing
+          {{ 'CREATE_ACCOUNT.CONNECT_BEFORE_CONTINUE' | translate }}
         </p>
       </div>
     </div>

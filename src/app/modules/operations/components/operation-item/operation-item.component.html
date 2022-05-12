@@ -3,7 +3,7 @@
     <section class="w-full flex px-4 cursor-pointer">
       <div class="w-7/12">
         <p class="text-base m-0">
-          <i class="fa-solid fa-square-plus"></i> Create Account
+          <i class="fa-solid fa-square-plus"></i> {{ 'OPERATIONS.CREATE_ACCOUNT' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           {{ operation.operationRecord.account | publicKey }}
@@ -28,10 +28,10 @@
     <section class="w-full transition flex px-4 cursor-pointer">
       <div class="w-7/12">
         <p class="text-base m-0">
-          <i class="fa-solid fa-paper-plane"></i> Payment
+          <i class="fa-solid fa-paper-plane"></i> {{ 'OPERATIONS.PAYMENT' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          To: {{ operation.operationRecord.to | publicKey }}
+          {{ 'COMMON_WORDS.TO' | translate }}: {{ operation.operationRecord.to | publicKey }}
         </p>
       </div>
 
@@ -54,7 +54,7 @@
       <section class="w-full px-4 transition flex justify-between cursor-pointer">
         <div class="w-auto">
           <p class="text-base m-0">
-            <i class="fa-solid fa-arrows-rotate"></i> Swap
+            <i class="fa-solid fa-arrows-rotate"></i> {{ 'OPERATIONS.SWAP' | translate }}
           </p>
           <p class="text-xs m-0 opacity-80">
             {{ operation.createdAt | date: 'MMM dd, yyyy' }}
@@ -78,7 +78,7 @@
       <section class="w-full px-4 transition flex justify-between cursor-pointer">
         <div class="w-auto">
           <p class="text-base m-0">
-            <i class="fa-solid fa-arrow-trend-up"></i> Path Payment
+            <i class="fa-solid fa-arrow-trend-up"></i> {{ 'OPERATIONS.PATH_PAYMENT' | translate }}
           </p>
           <p class="text-xs m-0 opacity-80">
             {{ operation.operationRecord.source_account | publicKey }}
@@ -106,14 +106,18 @@
         <p class="text-base m-0 truncate">
           <i class="fa-solid fa-shop"></i>
           <ng-container *ngIf="(operation.operationRecord.amount | number: '0.0-0') == '0'; else updateOffer">
-            Close: {{ operation.operationRecord.offer_id }}
+            {{ 'COMMON_WORDS.CLOSE' | translate }}: {{ operation.operationRecord.offer_id }}
           </ng-container>
           <ng-template #updateOffer>
-            {{ !operation.operationRecord.offer_id || operation.operationRecord.offer_id == '0' ? 'Place offer' : 'Update offer: ' + operation.operationRecord.offer_id }}
+            {{
+              !operation.operationRecord.offer_id || operation.operationRecord.offer_id == '0'
+                ? ('OPERATIONS.PLACE_OFFER' | translate)
+                : ('OPERATIONS.UPDATE_OFFER' | translate) + ': ' + operation.operationRecord.offer_id
+            }}
           </ng-template>
         </p>
         <p class="text-xs opacity-80 m-0">
-          Sell: {{ operation.operationRecord.amount | number: '0.0-7' }}
+          {{ 'COMMON_WORDS.SELL' | translate }}: {{ operation.operationRecord.amount | number: '0.0-7' }}
           {{ operation.operationRecord.selling_asset_type === 'native' ? 'XLM' : operation.operationRecord.selling_asset_code }}
         </p>
       </div>
@@ -136,10 +140,10 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-gear"></i> Set options
+          <i class="fa-solid fa-gear"></i> {{ 'OPERATIONS.SET_OPTIONS' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Account updated
+          {{ 'OPERATIONS.ACCOUNT_UPDATED' | translate }}
         </p>
       </div>
 
@@ -163,10 +167,10 @@
           {{ (operation.operationRecord.limit | number: '0.0-0') === '0' ? 'Remove' : 'Trust' }} Asset
         </p>
         <p *ngIf="operation.operationRecord.asset_issuer" class="text-xs opacity-80 m-0">
-          Issuer: {{ operation.operationRecord.asset_issuer | publicKey }}
+          {{ 'COMMON_WORDS.ISSUER' | translate }}: {{ operation.operationRecord.asset_issuer | publicKey }}
         </p>
         <p *ngIf="!operation.operationRecord.asset_issuer" class="text-xs opacity-80 m-0">
-          Liquidity Pool
+          {{ 'COMMON_WORDS.LIQUIDITY_POOL' | translate }}
         </p>
       </div>
 
@@ -185,10 +189,10 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-user-shield"></i> Allow trust
+          <i class="fa-solid fa-user-shield"></i> {{ 'OPERATIONS.ALLOW_TRUST' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Trustor: {{ operation.operationRecord.trustor | publicKey }}
+          {{ 'COMMON_WORDS.TRUSTOR' | translate }}: {{ operation.operationRecord.trustor | publicKey }}
         </p>
       </div>
 
@@ -207,10 +211,10 @@
     <section class="w-full px-4 transition flex justify-between cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-code-merge"></i> Merge account
+          <i class="fa-solid fa-code-merge"></i> {{ 'OPERATIONS.MERGE_ACCOUNT' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Into: {{ operation.operationRecord.into | publicKey }}
+          {{ 'COMMON_WORDS.INTO' | translate }}: {{ operation.operationRecord.into | publicKey }}
         </p>
       </div>
 
@@ -229,11 +233,10 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-floppy-disk"></i> {{ !operation.operationRecord.value ? 'Remove' : 'Set' }}
-          data
+          <i class="fa-solid fa-floppy-disk"></i> {{ !operation.operationRecord.value ? ('COMMON_WORDS.REMOVE' | translate) : ('COMMON_WORDS.SET' | translate) }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Manage Data
+          {{ 'OPERATIONS.MANAGE_DATA' | translate }}
         </p>
       </div>
 
@@ -252,10 +255,10 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-gas-pump"></i> Bump sequence
+          <i class="fa-solid fa-gas-pump"></i> {{ 'OPERATIONS.BUMP_SEQUENCE' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          To: {{ operation.operationRecord.bump_to }}
+          {{ 'OPERATIONS.TO' | translate }}: {{ operation.operationRecord.bump_to }}
         </p>
       </div>
 
@@ -274,7 +277,7 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-user-plus"></i> Begin Sponsoring
+          <i class="fa-solid fa-user-plus"></i> {{ 'OPERATIONS.BEGIN_SPONSORING' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           {{ operation.operationRecord.sponsored_id | publicKey }}
@@ -296,7 +299,7 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-user-minus"></i> End Sponsoring
+          <i class="fa-solid fa-user-minus"></i> {{ 'OPERATIONS.END_SPONSORING' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           {{ operation.operationRecord.begin_sponsor | publicKey }}
@@ -318,10 +321,10 @@
     <section class="w-full transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-user-shield"></i> Set trustline flags
+          <i class="fa-solid fa-user-shield"></i> {{ 'OPERATIONS.SET_TRUSTLINE_FLAGS' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Trustor: {{ operation.operationRecord.trustor | publicKey }}
+          {{ 'COMMON_WORDS.TRUSTOR' | translate }}: {{ operation.operationRecord.trustor | publicKey }}
         </p>
       </div>
 
@@ -340,7 +343,7 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-fill-drip"></i> Deposit LP
+          <i class="fa-solid fa-fill-drip"></i> {{ 'OPERATIONS.LP_DEPOSIT' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           ID: {{ operation.operationRecord.liquidity_pool_id | publicKey }}
@@ -362,7 +365,7 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-arrow-up-from-bracket"></i> Withdraw LP
+          <i class="fa-solid fa-arrow-up-from-bracket"></i> {{ 'OPERATIONS.WITHDRAW_LP' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           ID: {{ operation.operationRecord.liquidity_pool_id | publicKey }}
@@ -384,10 +387,10 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-hammer"></i> Create Claimable
+          <i class="fa-solid fa-hammer"></i> {{ 'OPERATIONS.CLAIMABLE_BALANCE' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Sponsor: {{ operation.operationRecord.sponsor | publicKey }}
+          {{ 'COMMON_WORDS.SPONSOR' | translate }}: {{ operation.operationRecord.sponsor | publicKey }}
         </p>
       </div>
 
@@ -406,10 +409,10 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-hand-holding-dollar"></i> Claim Claimable
+          <i class="fa-solid fa-hand-holding-dollar"></i> {{ 'OPERATIONS.CLAIMABLE_BALANCE' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          Claimant: {{ operation.operationRecord.claimant | publicKey }}
+          {{ 'COMMON_WORDS.CLAIMANT' | translate }}: {{ operation.operationRecord.claimant | publicKey }}
         </p>
       </div>
 
@@ -428,23 +431,23 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-eraser"></i> Revoke Sponsorship
+          <i class="fa-solid fa-eraser"></i> {{ 'OPERATIONS.REVOKE' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
           <ng-container *ngIf="!!operation.operationRecord.account_id">
-            Account: {{ operation.operationRecord.account_id | publicKey }}
+            {{ 'COMMON_WORDS.ACCOUNT' | translate }}: {{ operation.operationRecord.account_id | publicKey }}
           </ng-container>
           <ng-container *ngIf="!!operation.operationRecord.trustline_account_id">
-            Account: {{ operation.operationRecord.trustline_account_id | publicKey }}
+            {{ 'COMMON_WORDS.ACCOUNT' | translate }}: {{ operation.operationRecord.trustline_account_id | publicKey }}
           </ng-container>
           <ng-container *ngIf="!!operation.operationRecord.data_account_id">
-            Account: {{ operation.operationRecord.data_account_id | publicKey }}
+            {{ 'COMMON_WORDS.ACCOUNT' | translate }}: {{ operation.operationRecord.data_account_id | publicKey }}
           </ng-container>
           <ng-container *ngIf="!!operation.operationRecord.signer_account_id">
-            Account: {{ operation.operationRecord.signer_account_id | publicKey }}
+            {{ 'COMMON_WORDS.ACCOUNT' | translate }}: {{ operation.operationRecord.signer_account_id | publicKey }}
           </ng-container>
           <ng-container *ngIf="!!operation.operationRecord.offer_id">
-            Offer: {{ operation.operationRecord.offer_id }}
+            {{ 'COMMON_WORDS.OFFER' | translate }}: {{ operation.operationRecord.offer_id }}
           </ng-container>
           <ng-container *ngIf="!!operation.operationRecord.claimable_balance_id">
             ID: {{ operation.operationRecord.claimable_balance_id |publicKey }}
@@ -475,10 +478,10 @@
     <section class="w-full border-label transition flex justify-between px-4 cursor-pointer">
       <div class="w-auto">
         <p class="text-base m-0">
-          <i class="fa-solid fa-arrow-rotate-left"></i> Clawback
+          <i class="fa-solid fa-arrow-rotate-left"></i> {{ 'COMMON_WORDS.CLAWBACK' | translate }}
         </p>
         <p class="text-xs opacity-80 m-0">
-          From: {{ operation.operationRecord.from | publicKey }}
+          {{ 'COMMON_WORDS.FROM' | translate }}: {{ operation.operationRecord.from | publicKey }}
         </p>
       </div>
 

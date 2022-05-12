@@ -176,7 +176,7 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
     const keypair = await this.keypair$.pipe(take(1)).toPromise();
 
     if (!pk) {
-      this.nzMessageService.error(`Data send from the website is not valid`);
+      this.nzMessageService.error(`Data sent from the website is not valid`);
       return;
     }
 

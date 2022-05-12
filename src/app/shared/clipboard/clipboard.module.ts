@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClipboardDirective } from './clipboard.directive';
+import { TranslationModule } from '~root/translation.module';
 
 
 
@@ -9,7 +10,8 @@ import { ClipboardDirective } from './clipboard.directive';
     ClipboardDirective
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    TranslationModule.forChild(),
   ],
   exports: [
     ClipboardDirective,

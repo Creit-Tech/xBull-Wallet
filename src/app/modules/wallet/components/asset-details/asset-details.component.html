@@ -20,42 +20,42 @@
 
       <ng-container *ngIf="issuedAsset$ | async as issuedAsset; else nativeAssetTemplate">
         <ng-container *ngIf="fullDataLoaded$ | async; else loadingFullData">
-          <dt *ngIf="!!issuedAsset.assetIssuer" class="text-base font-bold mb-1">Issuer:</dt>
+          <dt *ngIf="!!issuedAsset.assetIssuer" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ISSUER' | translate }}:</dt>
           <dd class="break-all opacity-80 text-sm mb-3">{{ issuedAsset.assetIssuer }}</dd>
 
-          <dt *ngIf="!!issuedAsset.name" class="text-base font-bold mb-1">Name:</dt>
+          <dt *ngIf="!!issuedAsset.name" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.name }}</dd>
 
-          <dt *ngIf="!!issuedAsset.description" class="text-base font-bold mb-1">Description:</dt>
+          <dt *ngIf="!!issuedAsset.description" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.description }}</dd>
 
-          <dt *ngIf="!!issuedAsset.conditions" class="text-base font-bold mb-1">Condition:</dt>
+          <dt *ngIf="!!issuedAsset.conditions" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.CONDITION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.conditions }}</dd>
 
-          <dt *ngIf="!!issuedAsset.numAccount" class="text-base font-bold mb-1">Total of trustlines:</dt>
+          <dt *ngIf="!!issuedAsset.numAccount" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.TOTAL_TRUSTLINES' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.numAccount }}</dd>
 
-          <dt *ngIf="!!issuedAsset.amountIssued" class="text-base font-bold mb-1">Amount issued:</dt>
+          <dt *ngIf="!!issuedAsset.amountIssued" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.AMOUNT_ISSUED' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.amountIssued | number: '0.0-7' }}</dd>
 
-          <div class="w-full py-2"></div>
+          <nz-divider></nz-divider>
 
-          <dt *ngIf="!!issuedAsset.orgName" class="text-base font-bold mb-1">Organization:</dt>
+          <dt *ngIf="!!issuedAsset.orgName" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ORGANIZATION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgName }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgDba" class="text-base font-bold mb-1">Doing business as:</dt>
+          <dt *ngIf="!!issuedAsset.orgDba" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.DOING_BUSINESS' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgDba }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgDescription" class="text-base font-bold mb-1">Description:</dt>
+          <dt *ngIf="!!issuedAsset.orgDescription" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgDescription }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgWebsite" class="text-base font-bold mb-1">Website:</dt>
+          <dt *ngIf="!!issuedAsset.orgWebsite" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.WEBSITE' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgWebsite }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgAddress" class="text-base font-bold mb-1">Address:</dt>
+          <dt *ngIf="!!issuedAsset.orgAddress" class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ADDRESS' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgAddress }}</dd>
 
-          <dt *ngIf="!!issuedAsset.orgOfficialEmail" class="text-base font-bold mb-1">E-mail address:</dt>
+          <dt *ngIf="!!issuedAsset.orgOfficialEmail" class="text-base font-bold mb-1">{{ 'WALLET.ASSET_DETAILS.EMAIL_ADDRESS' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">{{ issuedAsset.orgOfficialEmail }}</dd>
         </ng-container>
 
@@ -85,11 +85,11 @@
 
       <ng-template #nativeAssetTemplate>
         <ng-container *ngIf="nativeAsset$ | async as nativeAsset">
-          <dt class="text-base font-bold mb-1">Name:</dt>
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.NAME' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">Lumens</dd>
 
-          <dt class="text-base font-bold mb-1">Description:</dt>
-          <dd class="opacity-80 text-sm mb-3">Native token of the Stellar Blockchain</dd>
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
+          <dd class="opacity-80 text-sm mb-3">{{ 'WALLET.ASSET_DETAILS.NATIVE_TOKEN_MESSAGE' }}</dd>
         </ng-container>
       </ng-template>
 
@@ -103,7 +103,7 @@
               (click)="closeDrawer()"
               [queryParams]="{ assetId: assetId$ | async }"
               nzSize="large" nzType="primary">
-        <span>Send <i class="fa-solid fa-paper-plane"></i></span>
+        <span>{{ 'COMMON_WORDS.SEND' | translate | uppercase }} <i class="fa-solid fa-paper-plane"></i></span>
       </button>
     </div>
     <div class="w-full pb-4">
@@ -112,14 +112,14 @@
               (click)="closeDrawer()"
               [queryParams]="{ fromAssetId: assetId$ | async }"
               nzSize="large">
-        <span>Swap <i class="fa-solid fa-arrows-rotate"></i></span>
+        <span>{{ 'COMMON_WORDS.SWAP' | translate | uppercase }} <i class="fa-solid fa-arrows-rotate"></i></span>
       </button>
     </div>
     <div *ngIf="issuedAsset$ | async" class="w-full">
       <button (click)="onRemove()" nz-button nzBlock
               [nzLoading]="!!(removingAssets$ | async)"
               nzSize="large" nzType="primary" nzDanger>
-        <span>Remove <i class="fa-solid fa-times"></i></span>
+        <span>{{ 'COMMON_WORDS.REMOVE' | translate | uppercase }} <i class="fa-solid fa-times"></i></span>
       </button>
     </div>
   </section>

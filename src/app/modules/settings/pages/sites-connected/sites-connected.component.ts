@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ISiteConnection, SitesConnectionsQuery } from '~root/state';
 import { ConnectedSiteDetailsComponent } from '~root/modules/settings/components/connected-site-details/connected-site-details.component';
-import { take, takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sites-connected',
@@ -17,6 +17,7 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
   constructor(
     private readonly sitesConnectionsQuery: SitesConnectionsQuery,
     private nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -33,7 +34,7 @@ export class SitesConnectedComponent implements OnInit, OnDestroy {
       nzContentParams: {
         connectedSite: siteConnected
       },
-      nzTitle: 'Connected site',
+      nzTitle: this.translateService.instant('SETTINGS.SITES_CONNECTED.SELECT_SITE_TITLE'),
       nzWrapClassName: 'drawer-full-w-320',
     });
 
