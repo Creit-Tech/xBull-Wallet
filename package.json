@@ -81,7 +81,7 @@
     "qr-scanner": "^1.4.1",
     "qrcode": "^1.5.0",
     "rxjs": "~6.6.0",
-    "stellar-sdk": "^10.0.1",
+    "stellar-sdk": "^10.1.0",
     "trezor-connect": "8.2.6-extended",
     "tslib": "^2.0.0",
     "tweetnacl": "^1.0.3",
