@@ -50,7 +50,7 @@
   </ng-container>
 
   <ng-container *ngIf="operation.operationRecord.type === 'path_payment_strict_send' || operation.operationRecord.type === 'path_payment_strict_receive'">
-    <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else nonSwap">
+    <ng-container *ngIf="operation.operationRecord.from === operation.operationRecord.to; else nonSwap">
       <section class="w-full px-4 transition flex justify-between cursor-pointer">
         <div class="w-auto">
           <p class="text-base m-0">
@@ -86,12 +86,18 @@
         </div>
 
         <div class="w-auto flex flex-col justify-center items-end">
-          <p [class.text-success]="operation.ownerPublicKey === operation.operationRecord.to"
-             [class.text-off-white]="operation.ownerPublicKey !== operation.operationRecord.to"
-             class="text-base m-0">
-            {{ operation.operationRecord.amount | number: '0.0-7' }}
-            {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
-          </p>
+          <ng-container *ngIf="operation.ownerPublicKey === operation.operationRecord.to; else sentMode">
+            <p class="text-success m-0">
+              {{ operation.operationRecord.amount | number: '0.0-7' }}
+              {{ operation.operationRecord.asset_type === 'native' ? 'XLM' : operation.operationRecord.asset_code }}
+            </p>
+          </ng-container>
+          <ng-template #sentMode>
+            <p class="text-base text-error m-0">
+              {{ operation.operationRecord.source_amount | number: '0.0-7' }}
+              {{ operation.operationRecord.source_asset_type === 'native' ? 'XLM' : operation.operationRecord.source_asset_code }}
+            </p>
+          </ng-template>
           <p class="text-xs opacity-80 m-0">
             {{ operation.createdAt | date: 'MMM dd, yyyy' }}
           </p>

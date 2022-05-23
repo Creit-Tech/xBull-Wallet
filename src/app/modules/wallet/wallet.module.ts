@@ -35,6 +35,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { TranslationModule } from '~root/translation.module';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
 
 
 @NgModule({
@@ -76,6 +78,8 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
     NzEmptyModule,
     TranslationModule.forChild(),
     NzDividerModule,
+    NzTabsModule,
+    SharedComponentsModule,
   ],
 })
 export class WalletModule { }
