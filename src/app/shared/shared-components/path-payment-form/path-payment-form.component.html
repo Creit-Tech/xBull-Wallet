@@ -1,0 +1,207 @@
+<section class="w-full">
+  <nz-spin [nzSpinning]="sendingPathPayment$ | async">
+    <nz-card class="w-full ant-card-no-padding p-4 mb-6">
+
+      <section class="flex flex-col">
+
+        <div class="w-full text-center mb-4">
+          <h1 class="text-lg font-semibold">
+            {{ cardTitle }}
+          </h1>
+        </div>
+
+        <div [class.hidden]="mode !== 'payment'" class="w-full mb-4">
+          <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qrPublicKey">
+            <input type="text" nz-input nzSize="large"
+                   [placeholder]="'FORM_PLACEHOLDERS.PUBLIC_KEY' | translate"
+                   [formControl]="destination">
+          </nz-input-group>
+
+          <ng-template #keyIcon>
+            <i class="fa-solid fa-key"></i>
+          </ng-template>
+
+          <ng-template #qrPublicKey>
+            <i class="fa-solid fa-camera cursor-pointer"></i>
+          </ng-template>
+        </div>
+
+        <div [class.hidden]="mode !== 'payment'" class="w-full mb-4">
+          <nz-input-group nzSize="large" [nzAddOnBefore]="tagIcon" [nzSuffix]="qrMemo">
+            <input type="text" nz-input nzSize="large"
+                   [placeholder]="'FORM_PLACEHOLDERS.MEMO' | translate"
+                   [formControl]="memo">
+          </nz-input-group>
+
+          <ng-template #tagIcon>
+            <i class="fa-solid fa-tag"></i>
+          </ng-template>
+
+          <ng-template #qrMemo>
+            <i class="fa-solid fa-camera cursor-pointer"
+               (click)="scanMemoText()"
+               *ngIf="hasCamera | async"></i>
+          </ng-template>
+        </div>
+
+        <div class="w-full mb-4">
+          <div class="py-0.5 w-full flex justify-between items-center">
+            <span>{{ sendLabelText }}:</span>
+
+            <ng-container *ngIf="fundsAvailableToSend$ | async as fundsAvailableToSend">
+                <span (click)="fromAssetAmount.setValue(fundsAvailableToSend)" class="cursor-pointer text-xs pl-2 opacity-50">
+                  {{ 'COMMON_WORDS.AVAILABLE' | translate }}: {{ fundsAvailableToSend | number: '0.0-7' }}
+                </span>
+            </ng-container>
+
+          </div>
+
+          <nz-input-group nzSize="large" [nzSuffix]="fromAddOn">
+            <input type="text" mask="separator.8"
+                   thousandSeparator=""
+                   [formControl]="fromAssetAmount"
+                   nz-input nzSize="large">
+          </nz-input-group>
+          <ng-template #fromAddOn>
+            <button class="w-full flex items-center h-auto py-2 justify-center"
+                    (click)="searchAsset('from')"
+                    nz-button>
+              <ng-container *ngIf="swapForm.value.fromAsset.asset as fromAsset; else pickAsset">
+                <div *ngIf="fromAsset.image as image" class="w-5 h-5 bg-white p-1 rounded-full mr-2">
+                  <img [src]="image" class="w-full h-full rounded-full" alt="">
+                </div>
+
+                <p class="text-xs m-0">
+                  {{ fromAsset.assetCode }}
+                  <br>
+                  <small class="opacity-50">
+                    {{ (fromAsset.assetIssuer | publicKey) || 'native' }}
+                  </small>
+                </p>
+              </ng-container>
+            </button>
+          </ng-template>
+        </div>
+
+        <!--        <div class="w-full text-center">-->
+        <!--          <button nz-button nzType="text">-->
+        <!--            <i class="fa-solid fa-arrows-up-down"></i>-->
+        <!--          </button>-->
+        <!--        </div>-->
+
+        <div class="w-full mb-4">
+          <nz-form-label>{{ receiveLabelText }}</nz-form-label>
+          <nz-input-group nzSize="large" [nzSuffix]="toAddOn">
+            <input type="text" mask="separator.8"
+                   thousandSeparator=""
+                   [formControl]="toAssetAmount"
+                   nz-input nzSize="large">
+          </nz-input-group>
+          <ng-template #toAddOn>
+            <button class="w-full flex items-center h-auto py-2 justify-center"
+                    (click)="searchAsset('to')"
+                    nz-button>
+              <ng-container *ngIf="swapForm.value.toAsset.asset as toAsset; else pickAsset">
+                <div *ngIf="toAsset.image as image" class="w-5 h-5 bg-white p-1 rounded-full mr-2">
+                  <img class="w-full h-full" [src]="image" alt="">
+                </div>
+
+                <p class="text-xs m-0">
+                  {{ toAsset.assetCode }}
+                  <br>
+                  <small class="opacity-50">
+                    {{ (toAsset.assetIssuer | publicKey) || 'native' }}
+                  </small>
+                </p>
+              </ng-container>
+            </button>
+          </ng-template>
+        </div>
+
+        <div class="w-full flex justify-center mb-6 items-center">
+          <nz-radio-group [formControl]="formPathType" class="mr-3" nzButtonStyle="solid">
+            <label nz-radio-button nzValue="send">
+              {{ 'SWAP.STRICT_SEND' | translate }}
+            </label>
+            <label nz-radio-button nzValue="receive">
+              {{ 'SWAP.STRICT_RECEIVE' | translate }}
+            </label>
+          </nz-radio-group>
+
+          <button nz-button nzSize="small" nzType="text">
+            <i class="fa-solid fa-question-circle"
+               nz-tooltip [nzTooltipTitle]="'SWAP.STRICT_TOOLTIP' | translate">
+            </i>
+          </button>
+        </div>
+
+        <div class="w-full flex justify-center mb-6 items-center">
+          <nz-radio-group [formControl]="slippageTolerance" class="mr-3" nzButtonStyle="solid" style="z-index: 0">
+            <label nz-radio-button [nzValue]="0.005">0.5%</label>
+            <label nz-radio-button [nzValue]="0.01">1.0%</label>
+            <label nz-radio-button [nzValue]="0.025">2.5%</label>
+            <label nz-radio-button [nzValue]="0.05">5.0%</label>
+          </nz-radio-group>
+
+          <button nz-button nzSize="small" nzType="text">
+            <i class="fa-solid fa-question-circle"
+               nz-tooltip [nzTooltipTitle]="'SWAP.SLIPPAGE_TOOLTIP' | translate">
+            </i>
+          </button>
+        </div>
+
+        <div class="w-full">
+          <button [nzLoading]="confirmingSwapAssets$ | async"
+                  [disabled]="swapForm.invalid"
+                  (click)="swapAssets$.next()"
+                  nz-button nzType="primary"
+                  nzBlock nzSize="large">
+            {{ confirmButtonText }}
+          </button>
+        </div>
+
+      </section>
+
+    </nz-card>
+  </nz-spin>
+
+  <nz-list [nzLoading]="gettingPathPaymentRecord$ | async"
+           *ngIf="pathValue" nzSize="small" class="mb-6">
+    <nz-list-item>
+      <div>
+        {{ 'SWAP.SWAP_RATE' | translate }}:
+      </div>
+
+      <div class="opacity-80 flex items-center">
+        <span>{{ exchangeRate.amount }} {{ exchangeRate.numerator }}/{{ exchangeRate.denominator }}</span>
+      </div>
+    </nz-list-item>
+    <nz-list-item>
+      <div>
+          <span *ngIf="formPathType.value === 'receive'">
+            {{ 'SWAP.MAX_SEND' | translate }}: <i nz-tooltip [nzTooltipTitle]="'SWAP.MAX_SEND_TOOLTIP' | translate" class="fa-solid fa-question-circle"></i>
+          </span>
+        <span *ngIf="formPathType.value === 'send'">
+            {{ 'SWAP.MIN_RECEIVE' | translate }}: <i nz-tooltip [nzTooltipTitle]="'SWAP.MIN_RECEIVE_TOOLTIP' | translate" class="fa-solid fa-question-circle"></i>
+          </span>
+
+      </div>
+
+      <div class="opacity-80">
+          <span *ngIf="formPathType.value === 'receive'">
+            {{ maxToSend(fromAssetAmount.value) }}
+          </span>
+        <span *ngIf="formPathType.value === 'send'">
+            {{ minToReceive(toAssetAmount.value) }}
+          </span>
+      </div>
+    </nz-list-item>
+  </nz-list>
+</section>
+
+
+<ng-template #pickAsset>
+  <p class="text-xs m-0">
+    {{ 'SWAP.PICK_ASSET' | translate }}
+  </p>
+</ng-template>

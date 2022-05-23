@@ -41,6 +41,8 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "SIMPLE": "Simple",
+    "ADVANCED": "Advanced",
     "OPERATIONS": "Operations",
     "SWAPS": "Swaps",
     "LP": "Liquidity pools",
@@ -209,7 +211,9 @@
       "SCAN_MEMO_TITLE": "Scan memo",
       "CARD_TITLE": "Send payment",
       "NOT_SELECTED": "Asset not selected",
-      "SEND_PAYMENT": "Send payment"
+      "SEND_PAYMENT": "Send payment",
+      "THEY_RECEIVE": "They receive",
+      "YOU_SEND": "You send"
     },
     "RECEIVE_PAYMENT": {
       "CARD_TITLE": "Receive payment",
@@ -229,7 +233,6 @@
     "INCORRECT_SELECTION": "Type of path selected is not Send or Receive, contact support",
     "SELECT_ASSET_TITLE": "Select an Asset",
     "SWAP_CONFIRM_TITLE": "Swap confirmation",
-    "SWAP_SUCCESS": "The swap of the assets were successful",
     "CARD_TITLE": "Swap your assets",
     "STRICT_SEND": "Strict send",
     "STRICT_RECEIVE": "Strict receive",

@@ -18,6 +18,7 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { TranslationModule } from '~root/translation.module';
+import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
 
 
 @NgModule({
@@ -42,6 +43,7 @@ import { TranslationModule } from '~root/translation.module';
     NzSpinModule,
     NzBreadCrumbModule,
     TranslationModule.forChild(),
+    SharedComponentsModule,
   ]
 })
 export class SwapsModule { }
