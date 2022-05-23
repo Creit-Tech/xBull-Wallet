@@ -41,6 +41,8 @@
     "ASSET_BUYING": "Asset en compra"
   },
   "COMMON_WORDS": {
+    "SIMPLE": "Simple",
+    "ADVANCED": "Avanzado",
     "OPERATIONS": "Operaciones",
     "SWAPS": "Intercambios",
     "LP": "Pools de liquidez",
@@ -209,7 +211,9 @@
       "SCAN_MEMO_TITLE": "Scan memo",
       "CARD_TITLE": "Enviar pago",
       "NOT_SELECTED": "Asset no seleccionado",
-      "SEND_PAYMENT": "Enviar pago"
+      "SEND_PAYMENT": "Enviar pago",
+      "THEY_RECEIVE": "Recibirán",
+      "YOU_SEND": "Enviarás"
     },
     "RECEIVE_PAYMENT": {
       "CARD_TITLE": "Recibir pago",
@@ -229,7 +233,6 @@
     "INCORRECT_SELECTION": "Tipo de ruta no es de Envío o Recibo, contacta a soporte",
     "SELECT_ASSET_TITLESELECT_ASSET_TITLE": "Seleccionar Asset",
     "SWAP_CONFIRM_TITLE": "Confirmación del intercambio",
-    "SWAP_SUCCESS": "El intercambio de los assets fue completado",
     "CARD_TITLE": "Intercambiar tus Activos",
     "STRICT_SEND": "Envío fijo",
     "STRICT_RECEIVE": "Recepción fija",

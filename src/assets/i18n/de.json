@@ -41,6 +41,8 @@
     "ASSET_BUYING": "Assetkauf"
   },
   "COMMON_WORDS": {
+    "SIMPLE": "Einfach",
+    "ADVANCED": "fortgeschritten",
     "OPERATIONS": "Operationen",
     "SWAPS": "Tauschgeschäfte",
     "LP": "Liquidity-Pools",
@@ -209,7 +211,9 @@
       "SCAN_MEMO_TITLE": "Memo scannen",
       "CARD_TITLE": "Zahlung senden",
       "NOT_SELECTED": "Kein Asset ausgewählt",
-      "SEND_PAYMENT": "Zahlung senden"
+      "SEND_PAYMENT": "Zahlung senden",
+      "THEY_RECEIVE": "Sie kriegen",
+      "YOU_SEND": "Du sendest"
     },
     "RECEIVE_PAYMENT": {
       "CARD_TITLE": "Zahlung empfangen",
@@ -229,7 +233,6 @@
     "INCORRECT_SELECTION": "Die gewählte Pfadart ist nicht Senden oder Empfangen, kontaktiere den Support",
     "SELECT_ASSET_TITLE": "Wähle ein Asset",
     "SWAP_CONFIRM_TITLE": "Tauschbestätigung",
-    "SWAP_SUCCESS": "Der Assettausch war erfolgreich",
     "CARD_TITLE": "Tausche deine Assets",
     "STRICT_SEND": "strikt senden",
     "STRICT_RECEIVE": "strikt empfangen",
