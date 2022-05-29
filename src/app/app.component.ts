@@ -6,9 +6,23 @@ import {
   Renderer2
 } from '@angular/core';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
-import { HorizonApisQuery, SettingsQuery, WalletsAccountsQuery, WalletsOperationsQuery } from '~root/state';
-import { combineLatest, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilKeyChanged, filter, switchMap, take } from 'rxjs/operators';
+import {
+  HorizonApisQuery,
+  SettingsQuery,
+  WalletsAccountsQuery,
+  WalletsAssetsQuery,
+  WalletsOperationsQuery
+} from '~root/state';
+import { combineLatest, Subscription, timer } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  filter,
+  switchMap,
+  take,
+  takeUntil
+} from 'rxjs/operators';
 import { selectPersistStateInit, snapshotManager } from '@datorama/akita';
 import { ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/common';
@@ -16,6 +30,7 @@ import { SettingsService } from '~root/core/settings/services/settings.service';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { ENV, environment } from '~env';
 import { TranslateService } from '@ngx-translate/core';
+import { AlertsLabelsService } from '~root/core/services/alerts-labels/alerts-labels.service';
 
 @Component({
   selector: 'app-root',
@@ -38,6 +53,7 @@ export class AppComponent implements OnInit {
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
+    private readonly alertsLabelsService: AlertsLabelsService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly route: ActivatedRoute,
     @Inject(DOCUMENT)
@@ -48,6 +64,9 @@ export class AppComponent implements OnInit {
     private readonly translateService: TranslateService,
   ) { }
 
+  updateAlertsLabelsSuscription: Subscription = timer(0, 15000)
+    .pipe(switchMap(_ => this.alertsLabelsService.getAlertsLabelsByCreitTech()))
+    .subscribe();
 
   accountWithHorizonQuery$ = selectPersistStateInit()
     .pipe(switchMap(() => {

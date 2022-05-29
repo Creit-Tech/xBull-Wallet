@@ -1,0 +1,29 @@
+<ng-container *ngIf="asset$ | async as asset">
+  <ng-container *ngIf="asset.notInToml; else alertMessage">
+    <ng-container *ngIf="type === 'icon'">
+      <i class="fa-solid fa-circle-exclamation text-warning"></i>
+    </ng-container>
+
+    <ng-container *ngIf="type === 'message'">
+      <nz-card class="w-full text-center ant-card-no-padding p-4 border-2">
+        This asset is not listed in the issuer's toml file, this could be an error in the file but it could also means it's  a fake asset trying to impersonate another one. Be careful.
+      </nz-card>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #alertMessage>
+    <ng-container *ngIf="alert$ | async as alert">
+      <ng-container *ngIf="type === 'icon'">
+        <i [class.text-danger]="alert.level === 'danger'"
+           [class.text-warning]="alert.level === 'warning'"
+           class="fa-solid fa-circle-exclamation"></i>
+      </ng-container>
+
+      <ng-container *ngIf="type === 'message'">
+        <nz-card class="w-full text-center ant-card-no-padding p-4 border-2">
+          {{ alert.message }}
+        </nz-card>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</ng-container>
