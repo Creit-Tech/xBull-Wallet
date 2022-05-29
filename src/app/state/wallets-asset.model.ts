@@ -95,6 +95,9 @@ export interface IWalletAssetModel {
   _id: 'native' | string; // This must be `${asset_code}_${asset_issuer}`
   assetCode: 'XLM' | string;
   assetIssuer: string;
+
+  notInToml?: boolean;
+
   lastTimeUpdated?: Date;
 
   counterPrice?: string;
@@ -129,7 +132,7 @@ export type IWalletNativeAsset<T extends AssetStatus = AssetStatus> = T extends 
     : T extends 'full'
       ? INativeAssetFull
       : INativeAsset | INativeAssetExtra | INativeAssetFull;
-
+// DEPRECATED
 export type IWalletIssuedAsset<T extends AssetStatus = AssetStatus> = T extends 'unloaded'
   ? IIssuedAsset
   : T extends 'extra'
@@ -138,7 +141,7 @@ export type IWalletIssuedAsset<T extends AssetStatus = AssetStatus> = T extends 
       ? IIssuedAssetFull
       : IIssuedAsset | IIssuedAssetExtra | IIssuedAssetFull;
 
-
+// DEPRECATED
 export type IWalletAsset<T extends AssetType = AssetType, R extends AssetStatus = AssetStatus> = T extends 'native'
   ? IWalletNativeAsset<R>
   : T extends 'issued'

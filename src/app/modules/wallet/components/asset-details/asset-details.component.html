@@ -15,8 +15,14 @@
     </h2>
   </div>
 
+  <section *ngIf="asset$ | async as asset" class="w-full mb-8">
+    <app-scam-alert-icon [asset]="asset" type="message"></app-scam-alert-icon>
+  </section>
+
   <section class="w-full mb-8">
     <dl>
+      <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DOMAIN' | translate }}:</dt>
+      <dd class="opacity-80 text-sm mb-3">{{ (asset$ | async)?.domain || 'N/A' }}</dd>
 
       <ng-container *ngIf="issuedAsset$ | async as issuedAsset; else nativeAssetTemplate">
         <ng-container *ngIf="fullDataLoaded$ | async; else loadingFullData">
@@ -89,7 +95,7 @@
           <dd class="opacity-80 text-sm mb-3">Lumens</dd>
 
           <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.DESCRIPTION' | translate }}:</dt>
-          <dd class="opacity-80 text-sm mb-3">{{ 'WALLET.ASSET_DETAILS.NATIVE_TOKEN_MESSAGE' }}</dd>
+          <dd class="opacity-80 text-sm mb-3">{{ 'WALLET.ASSET_DETAILS.NATIVE_TOKEN_MESSAGE' | translate }}</dd>
         </ng-container>
       </ng-template>
 

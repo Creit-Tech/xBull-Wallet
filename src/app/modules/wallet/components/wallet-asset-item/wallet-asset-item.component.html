@@ -7,7 +7,7 @@
 
       <div class="flex flex-col">
         <p class="text-sm m-0 font-bold">
-          {{ asset.assetCode }}
+          {{ asset.assetCode }} <app-scam-alert-icon [asset]="asset"></app-scam-alert-icon>
         </p>
         <small class="w-24 text-xs opacity-50 truncate">
           {{ asset.domain }}
