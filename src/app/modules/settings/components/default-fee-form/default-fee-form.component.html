@@ -5,13 +5,13 @@
     </h2>
   </div>
 
-  <form class="mb-2">
+  <section class="mb-2">
     <div class="w-full">
       <input nz-input nzSize="large" type="text"
              pattern="[0-9]*"
              [formControl]="defaultFeeControl">
     </div>
-  </form>
+  </section>
 
   <div class="w-full text-center opacity-80 mb-7">
     <ng-container *ngIf="(recommendedFee$ | async) as recommendedFee; else recommendedFeNotLoaded">
