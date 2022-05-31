@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="flex flex-wrap w-full">
+<section [formGroup]="form" class="flex flex-wrap w-full">
   <div class="w-full mb-4">
     <input type="text" nz-input nzSize="large" class="w-full" formControlName="name" [placeholder]="'COMMON_WORDS.NAME' | translate">
   </div>
@@ -13,7 +13,7 @@
   <div class="w-full mb-4">
     <input type="text" nz-input nzSize="large" class="w-full" formControlName="url" [placeholder]="'FORM_PLACEHOLDERS.HORIZON_URL' | translate">
   </div>
-</form>
+</section>
 
 <div class="w-full text-center opacity-50 mb-7">
   *{{ 'SETTINGS.ADD_HORIZON_API.NAME_EXPLANATION' | translate }}
