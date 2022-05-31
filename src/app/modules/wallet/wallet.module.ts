@@ -37,6 +37,7 @@ import { TranslationModule } from '~root/translation.module';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 
 @NgModule({
@@ -80,6 +81,7 @@ import { SharedComponentsModule } from '~root/shared/shared-components/shared-co
     NzDividerModule,
     NzTabsModule,
     SharedComponentsModule,
+    NzToolTipModule,
   ],
 })
 export class WalletModule { }

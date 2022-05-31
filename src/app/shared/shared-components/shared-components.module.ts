@@ -13,16 +13,16 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { ScamAlertIconComponent } from '~root/shared/shared-components/scam-alert-icon/scam-alert-icon.component';
 
 const COMPONENTS = [
-  PathPaymentFormComponent
+  PathPaymentFormComponent,
+  ScamAlertIconComponent,
 ];
 
 @NgModule({
   declarations: COMPONENTS,
-  exports: [
-    PathPaymentFormComponent
-  ],
+  exports: COMPONENTS,
   imports: [
     CommonModule,
     TranslationModule.forChild(),

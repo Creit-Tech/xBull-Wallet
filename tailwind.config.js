@@ -28,6 +28,8 @@ module.exports = {
       black: '#141414',
       gray: '#202020',
       white: '#FCFCFC',
+      warning: '#be750c',
+      danger: '#a61d24',
 
 
 

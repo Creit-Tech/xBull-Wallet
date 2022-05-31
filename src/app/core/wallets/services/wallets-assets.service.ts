@@ -192,6 +192,7 @@ export class WalletsAssetsService {
           data._id,
           {
             domain: accountRecord.home_domain,
+            notInToml: !currency,
             image: currency?.image,
             name: currency?.name,
             description: currency?.desc,
