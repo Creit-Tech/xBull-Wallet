@@ -186,6 +186,7 @@
       "LP_ASSET_DETAILS_TITLE": "Liquidity Pool details",
       "ACCOUNT_BALANCE_CARD": {
         "CARD_TITLE": "Account balance",
+        "BALANCE_EXPLANATION": "This is the value of the total balance in your wallet based on the counter asset you have selected (XLM is the default)",
         "VALUE_DISTRIBUTION": "Value distribution",
         "ASSET_ALLOCATION": "Asset allocation",
         "NAME": "Account name:",

@@ -186,6 +186,7 @@
       "LP_ASSET_DETAILS_TITLE": "Liquidity-Pool Details",
       "ACCOUNT_BALANCE_CARD": {
         "CARD_TITLE": "Guthaben des Accounts",
+        "BALANCE_EXPLANATION": "Dies ist der Wert des Gesamtguthabens in Ihrer Brieftasche, basierend auf dem von Ihnen ausgewählten Gegenguthaben (XLM ist die Standardeinstellung).",
         "VALUE_DISTRIBUTION": "Wertverteilung",
         "ASSET_ALLOCATION": "Asset-Aufteilung",
         "NAME": "Account-Name:",

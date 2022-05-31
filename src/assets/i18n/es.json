@@ -186,6 +186,7 @@
       "LP_ASSET_DETAILS_TITLE": "Detalles del Pool de liquidez",
       "ACCOUNT_BALANCE_CARD": {
         "CARD_TITLE": "Balance de la cuenta",
+        "BALANCE_EXPLANATION": "Este es le valor del total de tus Assets basados en el Asset seleccionado (XLM es el Asset por defecto)",
         "VALUE_DISTRIBUTION": "Distribución de valor",
         "ASSET_ALLOCATION": "Asignación de Assets",
         "NAME": "Nombre de cuenta:",
