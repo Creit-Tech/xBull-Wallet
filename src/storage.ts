@@ -8,7 +8,7 @@ import { storageMobileMiddleware } from './storage-mobile.middleware';
 import * as localForage from 'localforage';
 import { snapshotManager } from '@datorama/akita';
 
-const channel = new BroadcastChannel('xBull-storage-update-broadcast');
+let channel: BroadcastChannel;
 
 const persistStateParams: Partial<PersistStateParams> = {
   include: [
@@ -23,9 +23,18 @@ const persistStateParams: Partial<PersistStateParams> = {
     'horizon-apis'
   ],
   preStorageUpdate(storeName: string, state: any): any {
-    if (environment.platform !== 'mobile') {
-      const snapshot = snapshotManager.getStoresSnapshot([storeName]);
-      channel.postMessage(snapshot);
+    try {
+      if (environment.platform !== 'mobile') {
+        if (!channel) {
+          channel = new BroadcastChannel('xBull-storage-update-broadcast')
+        }
+
+        const snapshot = snapshotManager.getStoresSnapshot([storeName]);
+        channel.postMessage(snapshot);
+      }
+    } catch (e) {
+      console.warn('Broadcast of current storage state was not possible');
+      console.error(e);
     }
 
     if (storeName === 'wallets-accounts') {
