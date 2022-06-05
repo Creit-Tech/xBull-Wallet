@@ -146,12 +146,18 @@
     "ALREADY_SAVED": "Error, es posible de que ya lo guardaste",
     "INVALID_XDR": "No podemos continuar, el XDR es inválido",
     "INVALID_PHRASE": "Frase mnemotécnica no es válida, asegúrate que escribiste/agregaste palabra por palabra correctamente",
-    "CANT_CONNECT_LEDGER_1": "No pudimos conectar con el wallet Ledger, asegúrate que está conectado a tu dispositivo y fue seleccionado"
+    "CANT_CONNECT_LEDGER_1": "No pudimos conectar con el wallet Ledger, asegúrate que está conectado a tu dispositivo y fue seleccionado",
+    "ONLY_FILES": "Solo archivos son aceptados",
+    "ERROR_LOADING_FILES": "Error al cargar el archivo",
+    "CANT_PARSE_INCORRECT_FILE": "No pudimos leer la informacion en el archivo, esto puede significar que no es el archivo correcto",
+    "MAKE_SURE_FILE_TYPE": "El tipo de archivo es incorrecto, asegurese que es un archivo: {{type}}",
+    "CANT_DECRYPT_BACKUP_FILE": "No pudimos desencriptar el archivo de respaldo, esto significa que la llave o el archivo de respaldo son incorrectos"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operación completada",
     "VALUE_UPDATED": "Valor actualizado",
-    "COPIED_TO_CLIPBOARD": "Texto copiado al portapapeles"
+    "COPIED_TO_CLIPBOARD": "Texto copiado al portapapeles",
+    "BACKUP_IMPORTED": "Respaldo importado correctamente, seras redirigido automaticamente"
   },
   "FORM_PLACEHOLDERS": {
     "WALLET_NAME": "Nombre del Wallet",
@@ -262,6 +268,7 @@
       "ANTI_SPAM": "Anti SPAM",
       "BACKGROUND_IMAGE": "Imagen de fondo",
       "LOCK_SETTINGS": "Configuración de bloqueo",
+      "IMPORT_AND_BACKUP": "Importar/Exportar",
       "ABOUT": "Acerca de"
     },
     "WALLET_ACCOUNT": {
@@ -455,7 +462,8 @@
     "LOAD_MORE": "Cargar más cuentas",
     "ACCOUNTS_TO_IMPORT": "Cuentas a importar",
     "IMPORT_MORE_LATER": "Si deseas agregar más llaves públicas luego, ve a las configuraciones y agrega tu wallet nuevamente. Selecciona todas las llaves públicas que deseas y estas serán incluidas en la misma wallet anteriormente generada.",
-    "ADD_LATER_TREZOR": "Si agregas nuevamente un Wallet Trezor con el mismo ID, los wallets serán unidos. Actualizar el nombre del Wallet luego no afectará el ID de la Wallet."
+    "ADD_LATER_TREZOR": "Si agregas nuevamente un Wallet Trezor con el mismo ID, los wallets serán unidos. Actualizar el nombre del Wallet luego no afectará el ID de la Wallet.",
+    "IMPORT_FROM_FILE": "Importar desde archivo de respaldo"
   },
   "CONNECT": {
     "HAVENT_USED_BEFORE": "Parece que no has usado xBull Wallet anteriormente, ve a <a class=\"text-primary\" target=\"_blank\" href=\"https://wallet.xbull.app\">https://wallet.xbull.app</a>, configura tu wallet e intenta nuevamente.",
@@ -482,5 +490,19 @@
   "PASSWORD_MODAL": {
     "SIGN_WITH_PASSWORD": "Firmar con contraseña",
     "REASON": "Tu contraseña es utilizada para desencriptar la llave privada a usar"
+  },
+  "IMPORT_BACKUP": {
+    "TITLE": "Importar/Exportar",
+    "IMPORT": "Importar",
+    "EXPORT": "Exportar",
+    "IMPORT_FILE": "Importar Archivo",
+    "EXPORT_FILE": "Exportar Archivo",
+    "KEY_LOADED": "Archivo de llave agregado",
+    "DROP_KEY_FILE": "Arrastra o busca el archivo de llave",
+    "BACKUP_LOADED": "Archivo de respaldo agregado",
+    "DROP_BACKUP_FILE": "Arrastra o busca el archivo de respaldo",
+    "IMPORTING_MESSAGE": "Importar un nuevo archivo de respaldo removerá todo en tu Wallet y lo reemplazará con la información en el archivo de respaldo",
+    "EXPORT_DESCRIPTION": "Exportar la información en tu Wallet generará dos archivos, uno con la informacion de tu Wallet encriptada y otro con la llave para desencriptarla",
+    "EXPORT_RECOMMENDATION": "Te recomendamos guardar cada archivo en lugares distintos"
   }
 }

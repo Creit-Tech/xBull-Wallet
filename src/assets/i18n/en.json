@@ -146,12 +146,18 @@
     "ALREADY_SAVED": "Error, it's possible that you already saved it.",
     "INVALID_XDR": "We can't continue, XDR value is invalid",
     "INVALID_PHRASE": "Mnemonic phrases is invalid, please make sure you write/add word by word correctly",
-    "CANT_CONNECT_LEDGER_1": "We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it"
+    "CANT_CONNECT_LEDGER_1": "We were not able to connect with a Ledger wallet, make sure is connected to your computer and select it",
+    "ONLY_FILES": "Only files are accepted",
+    "ERROR_LOADING_FILES": "Error when loading the file",
+    "CANT_PARSE_INCORRECT_FILE": "We were not able to parse the file's data, this probably means is not a correct file",
+    "MAKE_SURE_FILE_TYPE": "File type is not correct, make sure is a {{type}} file",
+    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
     "VALUE_UPDATED": "Value updated",
-    "COPIED_TO_CLIPBOARD": "Text copied to the clipboard"
+    "COPIED_TO_CLIPBOARD": "Text copied to the clipboard",
+    "BACKUP_IMPORTED": "Backup imported correctly, you will be redirected automatically"
   },
   "FORM_PLACEHOLDERS": {
     "WALLET_NAME": "Wallet name",
@@ -262,6 +268,7 @@
       "ANTI_SPAM": "Anti SPAM",
       "BACKGROUND_IMAGE": "Background image",
       "LOCK_SETTINGS": "Lock settings",
+      "IMPORT_AND_BACKUP": "Import & Backup",
       "ABOUT": "About"
     },
     "WALLET_ACCOUNT": {
@@ -455,7 +462,8 @@
     "LOAD_MORE": "Load more accounts",
     "ACCOUNTS_TO_IMPORT": "Accounts to import",
     "IMPORT_MORE_LATER": "If you want to import more public keys later, go to settings and add the wallet again. Select all the public keys to include and they will be included in the same wallet record.",
-    "ADD_LATER_TREZOR": "If you add again a Trezor wallet with the same ID, the wallets will be merged. Updating the wallet name later does not affect the wallet ID."
+    "ADD_LATER_TREZOR": "If you add again a Trezor wallet with the same ID, the wallets will be merged. Updating the wallet name later does not affect the wallet ID.",
+    "IMPORT_FROM_FILE": "Import from backup file"
   },
   "CONNECT": {
     "HAVENT_USED_BEFORE": "Looks like you haven't used xBull Wallet before, please go to <a class=\"text-primary\" target=\"_blank\" href=\"https://wallet.xbull.app\">https://wallet.xbull.app</a>, set up your wallet and then retry.",
@@ -482,5 +490,19 @@
   "PASSWORD_MODAL": {
     "SIGN_WITH_PASSWORD": "Sign with password",
     "REASON": "Your password is used to decrypt your private key"
+  },
+  "IMPORT_BACKUP": {
+    "TITLE": "Import & Backup",
+    "IMPORT": "Import",
+    "EXPORT": "Export",
+    "IMPORT_FILE": "Import File",
+    "EXPORT_FILE": "Export File",
+    "KEY_LOADED": "Key file loaded",
+    "DROP_KEY_FILE": "Drop the key file or click to search",
+    "BACKUP_LOADED": "Backup file loaded",
+    "DROP_BACKUP_FILE": "Drop the backup file or click to search",
+    "IMPORTING_MESSAGE": "Importing a new snapshot will remove everything in your wallet and add the data from the backup file",
+    "EXPORT_DESCRIPTION": "Exporting the data from your wallet will generate two files, one file will include an encrypted state of your wallet and the other file will include the key to decrypt it",
+    "EXPORT_RECOMMENDATION": "We recommend you saving each file on different places"
   }
 }

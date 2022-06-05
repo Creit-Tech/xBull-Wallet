@@ -1,0 +1,17 @@
+<section class="w-full">
+  <div class="w-full text-center">
+    <p class="mb-4">
+      {{ 'IMPORT_BACKUP.EXPORT_DESCRIPTION' | translate }}
+    </p>
+
+    <p class="mb-4">
+      {{ 'IMPORT_BACKUP.EXPORT_RECOMMENDATION' | translate }}
+    </p>
+  </div>
+
+  <div>
+    <button (click)="exportData()" nz-button nzType="primary" nzBlock class="col-span-1 row-span-1">
+      {{ 'IMPORT_BACKUP.EXPORT' | translate }} <i class="fa-solid fa-file-export ml-2"></i>
+    </button>
+  </div>
+</section>

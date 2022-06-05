@@ -3,6 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Observable, of } from 'rxjs';
 import { WalletsQuery } from '~root/state';
 import { switchMap } from 'rxjs/operators';
+import { selectPersistStateInit } from '@datorama/akita';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class IsThereWalletsGuard implements CanActivate, CanActivateChild {
   ) { }
 
   guardLogic(): Observable<boolean | UrlTree> {
-    return this.walletsQuery.isThereWallet$
+    return selectPersistStateInit()
+      .pipe(switchMap(_ => this.walletsQuery.isThereWallet$))
       .pipe(switchMap(status => {
         if (!!status) {
           return of(true);
