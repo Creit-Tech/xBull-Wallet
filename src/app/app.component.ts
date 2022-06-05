@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
 
   platform = this.env.platform;
 
-  broadcastStorageUpdate = new BroadcastChannel('xBull-storage-update-broadcast');
+  broadcastStorageUpdate?: BroadcastChannel;
 
   constructor(
     @Inject(ENV)
@@ -104,14 +104,23 @@ export class AppComponent implements OnInit {
     this.activateWindowMode();
 
     // Keep tabs in sync when not using mobile app
-    if (this.env.platform !== 'mobile') {
-      this.broadcastStorageUpdate.onmessage = ev => {
-        this.ngZone.run(() => {
-          if (ev.data) {
-           snapshotManager.setStoresSnapshot(ev.data, { skipStorageUpdate: true });
-          }
-        });
-      };
+    try {
+      if (this.env.platform !== 'mobile') {
+        if (!this.broadcastStorageUpdate) {
+          this.broadcastStorageUpdate = new BroadcastChannel('xBull-storage-update-broadcast');
+        }
+
+        this.broadcastStorageUpdate.onmessage = ev => {
+          this.ngZone.run(() => {
+            if (ev.data) {
+              snapshotManager.setStoresSnapshot(ev.data, { skipStorageUpdate: true });
+            }
+          });
+        };
+      }
+    } catch (e) {
+      console.warn('Broadcast of current storage state was not possible');
+      console.error(e);
     }
 
     this.setTranslation();
