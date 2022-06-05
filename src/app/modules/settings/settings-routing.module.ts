@@ -65,6 +65,11 @@ const routes: Routes = [
     component: AntiSpamClaimableAssetsComponent,
   },
   {
+    path: 'import-and-backup',
+    loadChildren: () => import('../import-and-backup/import-and-backup.module')
+      .then(m => m.ImportAndBackupModule)
+  },
+  {
     path: 'about',
     component: AboutComponent,
   }

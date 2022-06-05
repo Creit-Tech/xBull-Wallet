@@ -1,0 +1,60 @@
+<section class="w-full">
+  <section class="mb-4 grid grid-cols-2 gap-4 grid-rows-2">
+
+
+    <section class="col-span-2 row-span-1">
+      <nz-card class="ant-card-no-padding">
+        <ngx-file-drop [directory]="false"
+                       [showBrowseBtn]="true"
+                       accept=".json"
+                       dropZoneClassName="border-primary h-auto"
+                       contentClassName="border-primary"
+                       (onFileDrop)="fileLoaded('key', $event)">
+          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+            <button nz-button nzType="text" (click)="openFileSelector()"
+                    class="w-full h-full flex flex-col items-center p-4">
+              <ng-container *ngIf="!!keyFileData; else keyButtonText">
+                {{ 'IMPORT_BACKUP.KEY_LOADED' | translate }}
+              </ng-container>
+              <ng-template #keyButtonText>
+                {{ 'IMPORT_BACKUP.DROP_KEY_FILE' | translate }}
+              </ng-template>
+            </button>
+          </ng-template>
+        </ngx-file-drop>
+      </nz-card>
+    </section>
+
+    <section class="col-span-2 row-span-1">
+      <nz-card class="ant-card-no-padding">
+        <ngx-file-drop [directory]="false"
+                       [showBrowseBtn]="true"
+                       accept=".json"
+                       dropZoneClassName="border-primary h-auto"
+                       contentClassName="border-primary"
+                       (onFileDrop)="fileLoaded('backup', $event)">
+          <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+            <button nz-button nzType="text" (click)="openFileSelector()"
+                    class="w-full h-full flex flex-col items-center p-4">
+              <ng-container *ngIf="!!backupFileData; else backupButtonText">
+                {{ 'IMPORT_BACKUP.BACKUP_LOADED' | translate }}
+              </ng-container>
+              <ng-template #backupButtonText>
+                {{ 'IMPORT_BACKUP.DROP_BACKUP_FILE' | translate }}
+              </ng-template>
+            </button>
+          </ng-template>
+        </ngx-file-drop>
+      </nz-card>
+    </section>
+
+
+  </section>
+
+  <button nz-button nzType="primary"
+          (click)="askImportConfirm()"
+          [disabled]="!keyFileData || !backupFileData"
+          nzBlock class="col-span-1 row-span-1">
+    {{ 'IMPORT_BACKUP.IMPORT' | translate }} <i class="fa-solid fa-file-import ml-2"></i>
+  </button>
+</section>
