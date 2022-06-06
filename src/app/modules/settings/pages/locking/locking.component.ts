@@ -84,6 +84,7 @@ export class LockingComponent implements OnInit, OnDestroy {
         nzPlacement: 'bottom',
         nzHeight: 'auto',
         nzContent: PasswordModalComponent,
+        nzWrapClassName: 'ios-safe-y'
       });
 
       drawerRef.open();
@@ -150,6 +151,7 @@ export class LockingComponent implements OnInit, OnDestroy {
         nzPlacement: 'bottom',
         nzHeight: 'auto',
         nzContent: PasswordModalComponent,
+        nzWrapClassName: 'ios-safe-y',
         nzContentParams: {
           handlePasswordEvent: password => {
 

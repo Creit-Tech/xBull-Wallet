@@ -208,6 +208,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
       nzTitle: drawerTitle,
       nzHeight: '100%',
       nzCloseOnNavigation: true,
+      nzWrapClassName: 'ios-safe-y',
       nzContentParams: {
         assetSelectedFunc: async asset => {
           this.disableAddAssetButton$.next(true);
@@ -261,7 +262,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ADD_ASSET_TITLE'),
       nzContentParams: {
         xdr: transaction.toXDR(),
@@ -304,7 +305,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<AssetDetailsComponent>({
       nzContent: AssetDetailsComponent,
       nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ASSET_DETAILS_TITLE'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: {
         assetId: this.walletsAssetsService.formatBalanceLineId(balanceLine)
       }
@@ -317,7 +318,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
       nzContent: LpAssetDetailsComponent,
       nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.LP_ASSET_DETAILS_TITLE'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: {
         lpAssetId: balanceLine.liquidity_pool_id,
       }

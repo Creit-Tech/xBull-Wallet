@@ -66,6 +66,7 @@ export class QrScannerService {
       nzHeight: 90,
       nzContent: CloseScanComponent,
       nzContentParams: {},
+      nzWrapClassName: 'ios-safe-y'
     });
 
     drawerRef.open();

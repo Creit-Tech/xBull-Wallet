@@ -188,7 +188,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
             .catch(e => console.error(e));
         }
       },
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.REMOVE'),
     });
   }

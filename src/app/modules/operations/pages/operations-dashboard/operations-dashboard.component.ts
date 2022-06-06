@@ -107,7 +107,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
       nzContent: OperationDetailsComponent,
       nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
       nzCloseOnNavigation: true,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: { operation }
     });
   }

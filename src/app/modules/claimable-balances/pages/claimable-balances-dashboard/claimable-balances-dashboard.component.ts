@@ -161,7 +161,7 @@ export class ClaimableBalancesDashboardComponent implements OnInit, OnDestroy {
       nzContent: ClaimableBalanceDetailsComponent,
       nzContentParams: { claimableBalanceId },
       nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
     });
   }
 

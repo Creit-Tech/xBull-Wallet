@@ -86,7 +86,7 @@ export class SignRequestComponent implements OnInit {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: 'Sign transaction',
       nzContentParams: {
         xdr,
