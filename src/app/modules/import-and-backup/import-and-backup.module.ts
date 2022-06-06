@@ -12,11 +12,17 @@ import { NgxFileDropModule } from 'ngx-file-drop';
 import { TranslationModule } from '~root/translation.module';
 
 
+import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
+
+
 @NgModule({
   declarations: [
     ImportAndBackupSelectionComponent,
     ExportWalletComponent,
     ImportWalletComponent
+  ],
+  providers: [
+    SocialSharing
   ],
   imports: [
     CommonModule,

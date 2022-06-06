@@ -14,5 +14,10 @@
     <param name="ios-package" value="TouchID"/>
   </feature>
 
+  <feature name="SocialSharing">
+    <param name="ios-package" value="SocialSharing"/>
+    <param name="onload" value="true"/>
+  </feature>
+
   
 </widget>
