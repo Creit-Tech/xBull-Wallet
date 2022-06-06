@@ -251,7 +251,8 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         nzContent: PasswordModalComponent,
         nzPlacement: 'bottom',
         nzTitle: '',
-        nzHeight: 'auto'
+        nzHeight: 'auto',
+        nzWrapClassName: 'ios-safe-y'
       });
 
       drawerRef.open();

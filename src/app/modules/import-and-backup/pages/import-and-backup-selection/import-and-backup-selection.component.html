@@ -1,0 +1,32 @@
+<section class="w-full h-full flex justify-center items-center p-4">
+
+  <div class="w-full mx-auto max-w-md">
+
+    <section class="w-full text-center mb-4">
+      <h1 class="text-xl">{{ 'IMPORT_BACKUP.TITLE' | translate }}</h1>
+    </section>
+
+    <nz-card class="w-full ant-card-no-padding mb-4">
+      <nz-tabset nzCentered>
+        <nz-tab [nzTitle]="'IMPORT_BACKUP.IMPORT_FILE' | translate">
+          <section class="w-full h-full px-4 pb-4">
+            <app-import-wallet></app-import-wallet>
+          </section>
+        </nz-tab>
+        <nz-tab [nzTitle]="'IMPORT_BACKUP.EXPORT_FILE' | translate">
+          <section class="w-full h-full px-4 pb-4">
+            <app-export-wallet></app-export-wallet>
+          </section>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+
+    <section class="text-center">
+      <button nz-button nzType="link" routerLink="/">
+        {{ 'COMMON_WORDS.GO_BACK' | translate }}
+      </button>
+    </section>
+
+  </div>
+
+</section>

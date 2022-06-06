@@ -32,6 +32,11 @@ const routes: Routes = [
   {
     path: 'connect-hardware-wallet',
     component: ConnectHardwareWalletComponent,
+  },
+  {
+    path: 'import-and-export',
+    loadChildren: () => import('../import-and-backup/import-and-backup.module')
+      .then(m => m.ImportAndBackupModule),
   }
 ];
 

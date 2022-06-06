@@ -127,7 +127,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'ios-safe-y drawer-full-w-320',
       nzTitle: 'Remove Asset',
       nzContentParams: {
         xdr: formattedXDR,

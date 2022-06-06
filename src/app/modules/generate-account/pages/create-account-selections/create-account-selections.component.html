@@ -33,6 +33,13 @@
       {{ 'CREATE_ACCOUNT.CONNECT_HARDWARE_WALLET' | translate }}
     </button>
 
+    <button nz-button
+            nzSize="large"
+            routerLink="./import-and-export"
+            class="w-full mb-4">
+      {{ 'CREATE_ACCOUNT.IMPORT_FROM_FILE' | translate }}
+    </button>
+
     <button nz-button nzType="link"
             nzSize="large"
             *ngIf="isThereWallet$ | async"

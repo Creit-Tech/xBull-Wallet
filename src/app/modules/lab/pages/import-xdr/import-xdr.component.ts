@@ -42,7 +42,7 @@ export class ImportXdrComponent implements OnInit {
 
     const nzRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.SIGN'),
       nzContentParams: {
         xdr: this.signControl.value,

@@ -146,12 +146,18 @@
     "ALREADY_SAVED": "Fehler. Möglicherweise hast du es bereits gesichert.",
     "INVALID_XDR": "Es geht nicht weiter. XDR-Wert ist nicht gültig.",
     "INVALID_PHRASE": "Die Mnemonic Phrase ist ungültig. Versichere dich, dass du es Wort für Wort korrekt aufgeschrieben/hinzugefügt hast.",
-    "CANT_CONNECT_LEDGER_1": "Die Verbindung zum Ledger-Wallet ist nicht möglich. Stelle sicher, dass dieses an deinen Computer angeschlossen ist und wähle es aus."
+    "CANT_CONNECT_LEDGER_1": "Die Verbindung zum Ledger-Wallet ist nicht möglich. Stelle sicher, dass dieses an deinen Computer angeschlossen ist und wähle es aus.",
+    "ONLY_FILES": "Es werden nur Dateien akzeptiert",
+    "ERROR_LOADING_FILES": "Fehler beim Laden der Datei",
+    "CANT_PARSE_INCORRECT_FILE": "Wir konnten die Daten der Datei nicht parsen, dies bedeutet wahrscheinlich, dass es sich nicht um eine korrekte Datei handelt",
+    "MAKE_SURE_FILE_TYPE": "Der Dateityp ist nicht korrekt, stellen Sie sicher, dass es sich um eine {{type}}-Datei handelt",
+    "CANT_DECRYPT_BACKUP_FILE": "Wir konnten die Sicherungsdatei nicht entschlüsseln, das bedeutet, dass entweder die Schlüsseldatei oder die Sicherungsdatei falsch ist"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Vorgang abgeschlossen",
     "VALUE_UPDATED": "Wert aktualisiert",
-    "COPIED_TO_CLIPBOARD": "Text ist in die Zwischenablage kopiert"
+    "COPIED_TO_CLIPBOARD": "Text ist in die Zwischenablage kopiert",
+    "BACKUP_IMPORTED": "Backup korrekt importiert, Sie werden automatisch weitergeleitet"
   },
   "FORM_PLACEHOLDERS": {
     "WALLET_NAME": "Wallet-Name",
@@ -262,6 +268,7 @@
       "ANTI_SPAM": "Anti-SPAM",
       "BACKGROUND_IMAGE": "Hintergrundbild",
       "LOCK_SETTINGS": "Einstellungen sperren",
+      "IMPORT_AND_BACKUP": "Importieren und sichern",
       "ABOUT": "Über"
     },
     "WALLET_ACCOUNT": {
@@ -455,7 +462,8 @@
     "LOAD_MORE": "Weitere Accounts laden",
     "ACCOUNTS_TO_IMPORT": "Accounts, die importiert werden können",
     "IMPORT_MORE_LATER": "Wenn du später weitere Public Keys importieren möchtest, gehe zu den Einstellungen und füge das Wallet erneut hinzu. Wähle alle Public Keys aus, die du aufnehmen möchtest, und sie werden in denselben Wallet-Datensatz aufgenommen.",
-    "ADD_LATER_TREZOR": "Wenn du erneut ein Trezor-Wallet mit derselben ID hinzufügst, werden die Wallets zusammengeführt. Eine spätere Aktualisierung des Wallet-Namens hat keine Auswirkungen auf die Wallet-ID."
+    "ADD_LATER_TREZOR": "Wenn du erneut ein Trezor-Wallet mit derselben ID hinzufügst, werden die Wallets zusammengeführt. Eine spätere Aktualisierung des Wallet-Namens hat keine Auswirkungen auf die Wallet-ID.",
+    "IMPORT_FROM_FILE": "Aus Sicherungsdatei importieren"
   },
   "CONNECT": {
     "HAVENT_USED_BEFORE": "Sieht so aus, als hättest du xBull Wallet noch nie benutzt. Bitte gehe auf <a class=\"text-primary\" target=\"_blank\" href=\"https://wallet.xbull.app\">https://wallet.xbull.app</a>, richte deine Wallet ein und versuche es dann erneut.",
@@ -482,5 +490,19 @@
   "PASSWORD_MODAL": {
     "SIGN_WITH_PASSWORD": "Mit Passwort signieren",
     "REASON": "Dein Passwort wird verwendet, um deinen Private Key zu entschlüsseln"
+  },
+  "IMPORT_BACKUP": {
+    "TITLE": "Importieren und sichern",
+    "IMPORT": "Importieren",
+    "EXPORT": "Sichern",
+    "IMPORT_FILE": "Datei importieren",
+    "EXPORT_FILE": "Datei sichern",
+    "KEY_LOADED": "Schlüsseldatei geladen",
+    "DROP_KEY_FILE": "Legen Sie die Schlüsseldatei ab oder klicken Sie, um zu suchen",
+    "BACKUP_LOADED": "Sicherungsdatei geladen",
+    "DROP_BACKUP_FILE": "Legen Sie die Sicherungsdatei ab oder klicken Sie auf, um zu suchen",
+    "IMPORTING_MESSAGE": "Das Importieren eines neuen Snapshots entfernt alles in Ihrer Brieftasche und fügt die Daten aus der Sicherungsdatei hinzu",
+    "EXPORT_DESCRIPTION": "Beim Exportieren der Daten aus Ihrem Wallet werden zwei Dateien generiert, eine Datei enthält einen verschlüsselten Zustand Ihres Wallets und die andere Datei enthält den Schlüssel zum Entschlüsseln",
+    "EXPORT_RECOMMENDATION": "Wir empfehlen Ihnen, jede Datei an verschiedenen Orten zu speichern"
   }
 }
