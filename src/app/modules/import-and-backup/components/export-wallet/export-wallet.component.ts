@@ -6,6 +6,8 @@ import { decodeUTF8, encodeBase64 } from 'tweetnacl-util';
 import { ENV, environment } from '~env';
 import { SocialSharing } from '@awesome-cordova-plugins/social-sharing/ngx';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { TranslateService } from '@ngx-translate/core';
 
 
 
@@ -61,6 +63,9 @@ export class ExportWalletComponent implements OnInit {
       await this.socialSharing.shareWithOptions({
         files: [backupSavedFile.uri, keySavedFile.uri],
       });
+
+      await Filesystem.deleteFile({ path: 'key.json', directory: Directory.Cache });
+      await Filesystem.deleteFile({ path: 'backup.json', directory: Directory.Cache });
     } else {
       const file = new Blob([JSON.stringify(backup)], { type: 'text/plain;charset=utf-8' });
       saveAs(file, 'backup.json');
