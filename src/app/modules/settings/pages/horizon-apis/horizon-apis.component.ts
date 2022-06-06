@@ -37,7 +37,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
       nzContentParams: {
         horizonApi: horizon,
       },
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
     });
 
@@ -47,7 +47,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
   async addNewHorizonApi(): Promise<void> {
     const nzRef = this.nzDrawerService.create<AddHorizonApiComponent>({
       nzContent: AddHorizonApiComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.ADD'),
     });
 

@@ -77,7 +77,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
 
     const drawerRef = this.nzDrawerService.create<AddAccountComponent>({
       nzContent: AddAccountComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.ADD_ACCOUNT_TITLE'),
       nzContentParams: {
         parentWallet: wallet
@@ -97,7 +97,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<EditWalletNameComponent>({
       nzContent: EditWalletNameComponent,
       nzTitle: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.EDIT_NAME'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: {
         wallet
       }
@@ -121,7 +121,7 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<HardConfirmComponent>({
       nzContent: HardConfirmComponent,
       nzTitle: `${this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_TITLE')} ${wallet.name}`,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: {
         title: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_TITLE'),
         alertMessage: this.translateService.instant('SETTINGS.REGISTERED_WALLET_DETAILS.REMOVE_WALLET_ALERT')

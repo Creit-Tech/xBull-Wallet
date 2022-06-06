@@ -471,7 +471,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.transactionBuilder.build().toXDR(),
       },
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.DEPOSIT')
     });
 
@@ -561,7 +561,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         xdr: params.transactionBuilder.build().toXDR(),
       },
       nzTitle: this.translateService.instant('COMMON_WORDS.CREATE'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
     });
 
     drawerRef.open();

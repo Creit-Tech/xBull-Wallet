@@ -90,7 +90,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   async conDefaultFeeClicked(): Promise<void> {
     const drawerRef = this.nzDrawerService.create<DefaultFeeFormComponent>({
       nzContent: DefaultFeeFormComponent,
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD.SET_DEFAULT_FEE_TITLE')
     });
 
@@ -103,6 +103,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       nzPlacement: 'bottom',
       nzTitle: this.translateService.instant('SETTINGS.SETTINGS_DASHBOARD.SELECT_ASSET_TITLE'),
       nzHeight: '100%',
+      nzWrapClassName: 'ios-safe-y',
       nzCloseOnNavigation: true,
       nzContentParams: {
         defaultAssets: await this.myAssets$.pipe(take(1)).toPromise(),

@@ -107,7 +107,8 @@ export class WalletAccountComponent implements OnInit {
           nzContent: PasswordModalComponent,
           nzPlacement: 'bottom',
           nzTitle: '',
-          nzHeight: 'auto'
+          nzHeight: 'auto',
+          nzWrapClassName: 'ios-safe-y'
         });
 
         drawerRef.open();

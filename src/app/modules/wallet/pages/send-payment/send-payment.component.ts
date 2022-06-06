@@ -268,7 +268,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_CONFIRMATION_TITLE'),
-      nzWrapClassName: 'drawer-full-w-320',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
     });
 
     drawerRef.open();
@@ -289,6 +289,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
+      nzWrapClassName: 'ios-safe-y',
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_PUBLIC_KEY_TITLE'),
       nzHeight: '100%',
       nzContentParams: {
@@ -308,6 +309,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       nzPlacement: 'bottom',
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_MEMO_TITLE'),
       nzHeight: '100%',
+      nzWrapClassName: 'ios-safe-y',
       nzContentParams: {
         handleQrScanned: text => {
           this.form.controls.memo.patchValue(text);
