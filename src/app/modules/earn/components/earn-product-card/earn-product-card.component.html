@@ -1,0 +1,24 @@
+<nz-card class="w-full cursor-pointer"
+         [routerLink]="['./strategies', '629f62ec2e9f645e640d515c']"
+         [nzActions]="[apyTemplate, actionEdit, actionEllipsis]">
+  <nz-card-meta
+    nzTitle="AQUA"
+    [nzDescription]="description"
+    [nzAvatar]="avatarTemplate"
+  ></nz-card-meta>
+</nz-card>
+<ng-template #description>
+  Asset: xP001
+</ng-template>
+<ng-template #avatarTemplate>
+  <nz-avatar nzSrc="https://aqua.network/assets/img/aqua-logo.png"></nz-avatar>
+</ng-template>
+<ng-template #apyTemplate>
+  168% APY
+</ng-template>
+<ng-template #actionEdit>
+  782.54M
+</ng-template>
+<ng-template #actionEllipsis>
+  High Risk
+</ng-template>
