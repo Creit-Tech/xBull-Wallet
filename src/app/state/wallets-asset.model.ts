@@ -96,6 +96,8 @@ export interface IWalletAssetModel {
   assetCode: 'XLM' | string;
   assetIssuer: string;
 
+  domain?: string;
+
   notInToml?: boolean;
 
   lastTimeUpdated?: Date;
@@ -109,11 +111,31 @@ export interface IWalletAssetModel {
   amountIssued?: string;
   numAccount?: number;
 
-  domain?: string;
-  image?: string;
+  // Currency details
+  code_template?: string;
+  status?: 'live' | 'dead' | 'test' | 'private';
+  display_decimals?: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
   name?: string;
-  description?: string;
+  desc?: string;
   conditions?: string;
+  image?: string;
+  fixed_number?: number;
+  max_number?: number;
+  is_unlimited?: boolean;
+  is_asset_anchored?: boolean;
+  anchor_asset_type?: 'iat' | 'crypto' | 'nft' | 'stock' | 'bond' | 'commodity' | 'realestate' | 'other';
+  anchor_asset?: string;
+  attestation_of_reserve?: string;
+  redemption_instructions?: string;
+  collateral_addresses?: string[];
+  collateral_address_messages?: string[];
+  collateral_address_signatures?: string[];
+  regulated?: boolean;
+  approval_server?: string;
+  approval_criteria?: string;
+
+
+  // Org details
   orgName?: string;
   orgDba?: string;
   orgDescription?: string;
@@ -147,3 +169,30 @@ export type IWalletAsset<T extends AssetType = AssetType, R extends AssetStatus 
   : T extends 'issued'
     ? IWalletIssuedAsset<R>
     : IWalletNativeAsset<R> | IWalletIssuedAsset<R>;
+
+export const parseCurrencyDetails = (data?: { [x: string]: any }) => {
+  return {
+    notInToml: !data,
+    code_template: data?.code_template,
+    status: data?.status,
+    display_decimals: data?.display_decimals,
+    name: data?.name,
+    desc: data?.desc,
+    conditions: data?.conditions,
+    image: data?.image,
+    fixed_number: data?.fixed_number,
+    max_number: data?.max_number,
+    is_unlimited: data?.is_unlimited,
+    is_asset_anchored: data?.is_asset_anchored,
+    anchor_asset_type: data?.anchor_asset_type,
+    anchor_asset: data?.anchor_asset,
+    attestation_of_reserve: data?.attestation_of_reserve,
+    redemption_instructions: data?.redemption_instructions,
+    collateral_addresses: data?.collateral_addresses,
+    collateral_address_messages: data?.collateral_address_messages,
+    collateral_address_signatures: data?.collateral_address_signatures,
+    regulated: data?.regulated,
+    approval_server: data?.approval_server,
+    approval_criteria: data?.approval_criteria,
+  };
+};

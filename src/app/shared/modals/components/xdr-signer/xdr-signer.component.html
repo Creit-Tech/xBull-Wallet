@@ -43,7 +43,7 @@
           <dd class=" break-all text-sm mb-3 w-full">{{ 'OPERATIONS.CREATE_ACCOUNT' | translate }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.DESTINATION' | translate }}:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+          <dd appClipboard [textToCopy]="operation.destination" class=" break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'XDR_SIGNER.STARTING_BALANCE' | translate }}:</dt>
           <dd class=" break-all text-sm mb-3 w-full">{{ operation.startingBalance | number: '0.0-7' }}</dd>
@@ -54,7 +54,7 @@
           <dd class=" break-all text-sm mb-3 w-full">{{ 'OPERATIONS.PAYMENT' | translate }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.DESTINATION' | translate }}:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+          <dd appClipboard [textToCopy]="operation.destination" class=" break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.CODE' | translate }}:</dt>
           <dd class=" break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
@@ -112,7 +112,7 @@
           </dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.DESTINATION' | translate }}:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+          <dd appClipboard [textToCopy]="operation.destination" class=" break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
           <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
             <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'XDR_SIGNER.SENDING_AMOUNT' | translate }}:</dt>
@@ -289,7 +289,7 @@
           <dd class=" break-all text-sm mb-3 w-full">{{ 'OPERATIONS.ACCOUNT_MERGE' | translate }}</dd>
 
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.DESTINATION' | translate }}:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+          <dd appClipboard [textToCopy]="operation.destination" class=" break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
         </ng-container>
 
         <ng-container *ngIf="operation.type === 'manageData'">
@@ -582,7 +582,7 @@
 
         <ng-container *ngIf="!!operation.source">
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.SOURCE' | translate }}:</dt>
-          <dd class=" break-all text-sm mb-3 w-full">{{ operation.source }}</dd>
+          <dd appClipboard [textToCopy]="operation.source" class=" break-all text-sm mb-3 w-full">{{ operation.source | publicKey }}</dd>
         </ng-container>
 
       </ng-container>
