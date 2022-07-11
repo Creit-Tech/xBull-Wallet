@@ -1,21 +1,24 @@
-import { Inject, Injectable } from '@angular/core';
-import { Horizon, Server, ServerApi, TransactionBuilder, Networks, Asset, StellarTomlResolver } from 'stellar-sdk';
+import { Injectable } from '@angular/core';
+import { Horizon, Server, ServerApi, Asset, StellarTomlResolver } from 'stellar-sdk';
 import {
   BalanceAssetType,
   IHorizonApi,
   IWalletAsset,
   IWalletNativeAsset,
-  IWalletsAccount, ILpAsset, LpAssetsStore,
+  LpAssetsStore,
   WalletsAssetsState,
-  WalletsAssetsStore, IWalletIssuedAsset, SettingsQuery, IWalletAssetModel,
+  WalletsAssetsStore,
+  IWalletIssuedAsset,
+  SettingsQuery,
+  IWalletAssetModel,
+  parseCurrencyDetails,
 } from '~root/state';
 import { from, merge, Observable, of, Subject, Subscription, throwError } from 'rxjs';
-import { catchError, concatAll, filter, map, mergeMap, switchMap, take, tap, withLatestFrom } from 'rxjs/operators';
+import { catchError, filter, map, mergeMap, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { OfferAsset } from 'stellar-sdk/lib/types/offer';
-import { add, isAfter, subMinutes, subYears } from 'date-fns';
-import BigNumber from 'bignumber.js';
+import { add, isAfter } from 'date-fns';
 import { createCuratedAsset, ICuratedAsset } from '~root/state/curated-assets/curated-asset.model';
 import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.store';
 import { applyTransaction } from '@datorama/akita';
@@ -165,10 +168,11 @@ export class WalletsAssetsService {
         return from(StellarTomlResolver.resolve((accountRecord as any).home_domain))
           .pipe(withLatestFrom(of(accountRecord)));
       }))
-      .pipe(map(([parsedToml, accountRecord]) => {
-        const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
+      .pipe(switchMap(async ([parsedToml, accountRecord]) => {
         const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
-        const currency = (currencies || []).find((c: any) => {
+        const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
+        const assetMetadataServer = parsedToml.ASSET_METADATA_SERVER || parsedToml.asset_metadata_server;
+        let currency = (currencies || []).find((c: any) => {
           if (!!c.code_template) {
             const index = c.code_template.indexOf('?');
             if (index === -1) {
@@ -181,22 +185,28 @@ export class WalletsAssetsService {
             const dynamicTemplateFromAssetCode = c.code_template.slice(index);
 
             return baseTemplate === baseTemplateFromAssetCode
-            && dynamicTemplate.length === dynamicTemplateFromAssetCode.length
-            && c.issuer === data.assetIssuer;
+              && dynamicTemplate.length === dynamicTemplateFromAssetCode.length
+              && c.issuer === data.assetIssuer;
           }
 
           return c.code === data.assetCode && c.issuer === data.assetIssuer;
         });
 
+        if (!currency && !!assetMetadataServer) {
+          try {
+            currency = await this.getAssetFromMetadataServer({
+              url: assetMetadataServer,
+              code: data.assetCode,
+              issuer: data.assetIssuer
+            });
+          } catch (e) {}
+        }
+
         this.walletsAssetsStore.upsert(
           data._id,
           {
             domain: accountRecord.home_domain,
-            notInToml: !currency,
-            image: currency?.image,
-            name: currency?.name,
-            description: currency?.desc,
-            conditions: currency?.conditions,
+            ...parseCurrencyDetails(currency),
             orgName: documentation?.ORG_NAME,
             orgDba: documentation?.ORG_DBA,
             orgDescription: documentation?.ORG_DESCRIPTION,
@@ -209,6 +219,19 @@ export class WalletsAssetsService {
         );
         return accountRecord;
       }));
+  }
+
+  async getAssetFromMetadataServer(params: { url: string; code: string; issuer: string; }): Promise<any> {
+    return this.http.get<{ _embedded: { records: any[] } }>(params.url, {
+      params: {
+        code: params.code,
+        issuer: params.issuer
+      }
+    }).pipe(take(1))
+      .pipe(map(response => {
+        return response?._embedded?.records[0];
+      }))
+      .toPromise();
   }
 
   addAssetToAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
