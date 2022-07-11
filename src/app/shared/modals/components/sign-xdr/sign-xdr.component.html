@@ -46,7 +46,7 @@
             <dd class="text-label break-all text-sm mb-3 w-full">Create Account</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Destination:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+            <dd appClipboard [textToCopy]="operation.destination" class="text-label break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Amount to send:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.startingBalance | number: '0.0-7' }}</dd>
@@ -57,14 +57,14 @@
             <dd class="text-label break-all text-sm mb-3 w-full">Payment</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Destination:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+            <dd appClipboard [textToCopy]="operation.destination" class="text-label break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Asset Code:</dt>
             <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.code }}</dd>
 
             <ng-container *ngIf="operation.asset.issuer">
               <dt class="text-off-black text-base font-bold mb-1 w-full">Asset Issuer:</dt>
-              <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.issuer }}</dd>
+              <dd appClipboard [textToCopy]="operation.asset.issuer" class="text-label break-all text-sm mb-3 w-full">{{ operation.asset.issuer | publicKey }}</dd>
             </ng-container>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Amount to send:</dt>
@@ -109,7 +109,7 @@
             </dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Destination:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+            <dd appClipboard [textToCopy]="operation.destination" class="text-label break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
 
             <ng-container *ngIf="operation.type === 'pathPaymentStrictSend'">
               <dt class="text-off-black text-base font-bold mb-1 w-full">Sending amount:</dt>
@@ -278,7 +278,7 @@
             <dd class="text-label break-all text-sm mb-3 w-full">Account Merge</dd>
 
             <dt class="text-off-black text-base font-bold mb-1 w-full">Destination:</dt>
-            <dd class="text-label break-all text-sm mb-3 w-full">{{ operation.destination }}</dd>
+            <dd appClipboard [textToCopy]="operation.destination" class="text-label break-all text-sm mb-3 w-full">{{ operation.destination | publicKey }}</dd>
           </ng-container>
 
           <ng-container *ngIf="operation.type === 'manageData'">
