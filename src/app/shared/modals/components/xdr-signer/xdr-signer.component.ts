@@ -34,7 +34,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  @Output() acceptHandler!: (signedXdr: string) => void;
+  @Output() acceptHandler!: (result: string) => void;
   @Output() accept: EventEmitter<string> = new EventEmitter<string>();
 
   @Input() from: string | 'wallet' = 'wallet';
@@ -342,7 +342,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
 
     try {
-      this.nzMessageService.info('Check your wallet and please confirm or cancel the transaction in your device.', {
+      this.nzMessageService.info('Check your Ledger and please confirm or cancel the transaction in your device.', {
         nzDuration: 4000,
       });
       const signedXDR = await this.hardwareWalletsService.signWithLedger({
@@ -357,7 +357,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       this.emitData(signedXDR);
     } catch (e: any) {
       this.signing$.next(false);
-      this.nzMessageService.error(e?.message || `Make sure your wallet is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
+      this.nzMessageService.error(e?.message || `Make sure your Ledger is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
         nzDuration: 10000,
       });
       return;
@@ -395,13 +395,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     this.signing$.next(false);
   }
 
-  emitData(signedXDR: string): void {
+  emitData(result: string): void {
     if (!!this.acceptHandler) {
-      this.acceptHandler(signedXDR);
+      this.acceptHandler(result);
       this.nzDrawerRef.close();
     }
 
-    this.accept.emit(signedXDR);
+    this.accept.emit(result);
     this.nzDrawerRef.close();
   }
 
