@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { DefaultFeeFormComponent } from '~root/modules/settings/components/default-fee-form/default-fee-form.component';
 import {
@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   advanceMode$ = this.settingsQuery.advanceMode$;
   defaultFee$ = this.settingsQuery.defaultFee$;
 
-  advanceModeControl: FormControl = new FormControl(false);
+  advanceModeControl: UntypedFormControl = new UntypedFormControl(false);
 
   selectedWallet$ = this.walletsQuery.getSelectedWallet$;
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
@@ -39,7 +39,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   myAssets$: Observable<IWalletAssetModel[]> = this.walletsAssetsQuery.selectedAccountAssets$;
 
-  languageSelectControl: FormControl = new FormControl('', [Validators.required]);
+  languageSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   constructor(
     private readonly settingsQuery: SettingsQuery,

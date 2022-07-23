@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
@@ -20,8 +20,8 @@ export class ImportXdrComponent implements OnInit {
   sendingTransaction$ = new BehaviorSubject<boolean>(false);
 
   componentDestroyed$: Subject<void> = new Subject<void>();
-  signControl: FormControl = new FormControl('', Validators.required);
-  signedControl: FormControl = new FormControl('', Validators.required);
+  signControl: UntypedFormControl = new UntypedFormControl('', Validators.required);
+  signedControl: UntypedFormControl = new UntypedFormControl('', Validators.required);
 
   constructor(
     private readonly router: Router,

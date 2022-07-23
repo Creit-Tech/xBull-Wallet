@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.0] - Not released
 ### Added
-- Angular cdk version 13
+- Upgrade Angular 13 -> 14
+- Upgrade Angular cdk version 12 -> 13
 - Ng Zorro version 13
 
 ## [1.4.5] - 2022-07-11

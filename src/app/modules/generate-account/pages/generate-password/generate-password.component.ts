@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { GenerateAccountQuery, GenerateAccountService } from '~root/modules/generate-account/state';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ENV, environment } from '~env';
@@ -12,7 +12,7 @@ import { WalletsQuery } from '~root/state';
   styleUrls: ['./generate-password.component.scss']
 })
 export class GeneratePasswordComponent implements OnInit {
-  passwordFormControl: FormControl = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  passwordFormControl: UntypedFormControl = new UntypedFormControl('', [Validators.required, Validators.minLength(8)]);
 
   walletVersion = this.env.version;
 

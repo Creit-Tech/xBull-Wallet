@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject, from, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   IWalletAssetModel,
@@ -67,15 +67,15 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   sendingPayment$ = this.walletsOperationsQuery.sendingPayment$;
   showModal = false;
 
-  form: FormGroup = new FormGroup({
-    publicKey: new FormControl('', [
+  form: UntypedFormGroup = new UntypedFormGroup({
+    publicKey: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(56),
       Validators.maxLength(56),
     ]),
-    memo: new FormControl(''),
-    assetCode: new FormControl('', [Validators.required]), // it's called asset code but it's actually the id
-    amount: new FormControl('', [Validators.required])
+    memo: new UntypedFormControl(''),
+    assetCode: new UntypedFormControl('', [Validators.required]), // it's called asset code but it's actually the id
+    amount: new UntypedFormControl('', [Validators.required])
   });
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;

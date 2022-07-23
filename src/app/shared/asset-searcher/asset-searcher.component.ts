@@ -7,7 +7,7 @@ import {
 import { BehaviorSubject, combineLatest, Observable, of, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { applyTransaction, Order } from '@datorama/akita';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
@@ -44,21 +44,21 @@ export class AssetSearcherComponent implements OnInit {
       horizon?.networkPassphrase === this.stellarSdkService.SDK.Networks.PUBLIC
     ));
 
-  searchInputControl = new FormControl('', [Validators.required]);
-  searchCuratedInputControl = new FormControl('', [Validators.required]);
+  searchInputControl = new UntypedFormControl('', [Validators.required]);
+  searchCuratedInputControl = new UntypedFormControl('', [Validators.required]);
 
-  customAssetForm: FormGroup = new FormGroup({
-    assetCode: new FormControl('', [
+  customAssetForm: UntypedFormGroup = new UntypedFormGroup({
+    assetCode: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(12)
     ]),
-    assetIssuer: new FormControl('', [
+    assetIssuer: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(56),
       Validators.maxLength(56)
     ]),
-    limit: new FormControl(''),
+    limit: new UntypedFormControl(''),
   });
 
   curatedByCreitTech$ = combineLatest([

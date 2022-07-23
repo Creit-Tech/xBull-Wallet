@@ -1,6 +1,6 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
@@ -18,9 +18,9 @@ import { sameValueValidator } from '~root/shared/forms-validators/same-value.val
 export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
-  form: FormGroup = new FormGroup({
-    secretKey: new FormControl('', [Validators.required]),
-    confirmPassword: new FormControl('', [Validators.required]),
+  form: UntypedFormGroup = new UntypedFormGroup({
+    secretKey: new UntypedFormControl('', [Validators.required]),
+    confirmPassword: new UntypedFormControl('', [Validators.required]),
   });
 
   walletVersion = this.env.version;

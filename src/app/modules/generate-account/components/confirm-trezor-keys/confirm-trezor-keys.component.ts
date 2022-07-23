@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { StellarAddress, Success, Unsuccessful } from 'trezor-connect';
 import { SettingsQuery } from '~root/state';
@@ -21,13 +21,13 @@ export class ConfirmTrezorKeysComponent implements OnInit {
 
   advanceMode$ = this.settingsQuery.advanceMode$;
 
-  form = new FormGroup({
-    accounts: new FormArray([]),
-    walletId: new FormControl('', Validators.required),
+  form = new UntypedFormGroup({
+    accounts: new UntypedFormArray([]),
+    walletId: new UntypedFormControl('', Validators.required),
   });
 
-  get accounts(): FormArray {
-    return this.form.controls.accounts as FormArray;
+  get accounts(): UntypedFormArray {
+    return this.form.controls.accounts as UntypedFormArray;
   }
 
   constructor(
@@ -78,10 +78,10 @@ export class ConfirmTrezorKeysComponent implements OnInit {
     }
 
     response.payload.forEach(record => {
-      this.accounts.push(new FormGroup({
-        publicKey: new FormControl(record.address),
-        path: new FormControl(record.serializedPath),
-        active: new FormControl(true),
+      this.accounts.push(new UntypedFormGroup({
+        publicKey: new UntypedFormControl(record.address),
+        path: new UntypedFormControl(record.serializedPath),
+        active: new UntypedFormControl(true),
       }));
     });
   }

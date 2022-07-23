@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Asset } from 'stellar-sdk';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   HorizonApisQuery,
   ILpAsset,
@@ -37,9 +37,9 @@ export class SearchLiquidityPoolsComponent implements OnInit, OnDestroy {
 
   fetchingLatestPools$ = this.lpAssetsQuery.fetchingLatestPools$;
 
-  assetForm: FormGroup = new FormGroup({
-    code: new FormControl('', Validators.required),
-    issuer: new FormControl('', Validators.required)
+  assetForm: UntypedFormGroup = new UntypedFormGroup({
+    code: new UntypedFormControl('', Validators.required),
+    issuer: new UntypedFormControl('', Validators.required)
   });
 
   constructor(

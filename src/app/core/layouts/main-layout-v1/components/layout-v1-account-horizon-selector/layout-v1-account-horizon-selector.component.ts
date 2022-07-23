@@ -11,7 +11,7 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { map, pluck, startWith, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
@@ -32,9 +32,9 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
 
   advanceMode$ = this.settingsQuery.advanceMode$;
 
-  horizonSelectControl: FormControl = new FormControl('', [Validators.required]);
-  walletSelectControl: FormControl = new FormControl('', [Validators.required]);
-  accountSelectControl: FormControl = new FormControl('', [Validators.required]);
+  horizonSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+  walletSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
+  accountSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   walletAccountsPublicKeys$ = this.walletSelectControl
     .valueChanges
