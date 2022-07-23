@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { BehaviorSubject } from 'rxjs';
 import { SettingsQuery } from '~root/state';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -24,12 +24,12 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
 
   advanceMode$ = this.settingsQuery.advanceMode$;
 
-  form = new FormGroup({
-    accounts: new FormArray([]),
+  form = new UntypedFormGroup({
+    accounts: new UntypedFormArray([]),
   });
 
-  get accounts(): FormArray {
-    return this.form.controls.accounts as FormArray;
+  get accounts(): UntypedFormArray {
+    return this.form.controls.accounts as UntypedFormArray;
   }
 
   constructor(
@@ -72,10 +72,10 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
           firstAccount = key;
         }
 
-        this.accounts.push(new FormGroup({
-          publicKey: new FormControl(key),
-          path: new FormControl(path),
-          active: new FormControl(true),
+        this.accounts.push(new UntypedFormGroup({
+          publicKey: new UntypedFormControl(key),
+          path: new UntypedFormControl(path),
+          active: new UntypedFormControl(true),
         }));
 
         newAccounts.push({ key, path, active: false });

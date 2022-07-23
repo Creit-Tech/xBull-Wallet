@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { SettingsQuery } from '~root/state';
 import { take } from 'rxjs/operators';
 import { SettingsService } from '~root/core/settings/services/settings.service';
@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./default-fee-form.component.scss']
 })
 export class DefaultFeeFormComponent implements OnInit {
-  defaultFeeControl: FormControl = new FormControl('', Validators.required);
+  defaultFeeControl: UntypedFormControl = new UntypedFormControl('', Validators.required);
   recommendedFee$: Subject<string> = new Subject<string>();
 
   gettingRecommendedFee$ = this.settingsQuery.gettingRecommendedFee$;

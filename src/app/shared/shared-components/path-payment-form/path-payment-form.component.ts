@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit }
 import { BehaviorSubject, combineLatest, from, Observable, of, Subject, Subscription } from 'rxjs';
 import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { debounceTime, delay, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { AccountResponse, ServerApi } from 'stellar-sdk';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -52,55 +52,55 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
       return this.walletsAssetsQuery.getAssetsById(assetsIds);
     }));
 
-  swapForm: FormGroup = new FormGroup({
-    destination: new FormControl(''),
-    memo: new FormControl(''),
-    fromAsset: new FormGroup({
-      amount: new FormControl(0, [
+  swapForm: UntypedFormGroup = new UntypedFormGroup({
+    destination: new UntypedFormControl(''),
+    memo: new UntypedFormControl(''),
+    fromAsset: new UntypedFormGroup({
+      amount: new UntypedFormControl(0, [
         Validators.required,
         Validators.min(0.0000001)
       ]),
-      asset: new FormControl('', [Validators.required]),
+      asset: new UntypedFormControl('', [Validators.required]),
     }, [Validators.required]),
-    toAsset: new FormGroup({
-      amount: new FormControl(0, [
+    toAsset: new UntypedFormGroup({
+      amount: new UntypedFormControl(0, [
         Validators.required,
         Validators.min(0.0000001)
       ]),
-      asset: new FormControl('', [Validators.required]),
+      asset: new UntypedFormControl('', [Validators.required]),
     }, [Validators.required]),
-    pathType: new FormControl('send', [Validators.required]),
-    slippageTolerance: new FormControl(0.005, [Validators.required]),
-    path: new FormControl(undefined, [Validators.required]),
-    exchangeRate: new FormControl(undefined, [Validators.required]),
+    pathType: new UntypedFormControl('send', [Validators.required]),
+    slippageTolerance: new UntypedFormControl(0.005, [Validators.required]),
+    path: new UntypedFormControl(undefined, [Validators.required]),
+    exchangeRate: new UntypedFormControl(undefined, [Validators.required]),
   });
 
-  get destination(): FormControl {
-    return this.swapForm.controls.destination as FormControl;
+  get destination(): UntypedFormControl {
+    return this.swapForm.controls.destination as UntypedFormControl;
   }
 
-  get memo(): FormControl {
-    return this.swapForm.controls.memo as FormControl;
+  get memo(): UntypedFormControl {
+    return this.swapForm.controls.memo as UntypedFormControl;
   }
 
-  get slippageTolerance(): FormControl {
-    return this.swapForm.controls.slippageTolerance as FormControl;
+  get slippageTolerance(): UntypedFormControl {
+    return this.swapForm.controls.slippageTolerance as UntypedFormControl;
   }
 
-  get formPathType(): FormControl {
-    return this.swapForm.controls.pathType as FormControl;
+  get formPathType(): UntypedFormControl {
+    return this.swapForm.controls.pathType as UntypedFormControl;
   }
 
   get pathTypeValue(): 'send' | 'receive' {
     return this.swapForm.controls.pathType.value;
   }
 
-  get fromAssetAmount(): FormControl {
-    return (this.swapForm.controls.fromAsset as FormGroup).controls.amount as FormControl;
+  get fromAssetAmount(): UntypedFormControl {
+    return (this.swapForm.controls.fromAsset as UntypedFormGroup).controls.amount as UntypedFormControl;
   }
 
-  get toAssetAmount(): FormControl {
-    return (this.swapForm.controls.toAsset as FormGroup).controls.amount as FormControl;
+  get toAssetAmount(): UntypedFormControl {
+    return (this.swapForm.controls.toAsset as UntypedFormGroup).controls.amount as UntypedFormControl;
   }
 
   get pathValue(): ServerApi.PaymentPathRecord | undefined {
@@ -209,7 +209,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
       });
 
     if (this.mode === 'payment') {
-      this.swapForm.setControl('destination', new FormControl('', [Validators.required]));
+      this.swapForm.setControl('destination', new UntypedFormControl('', [Validators.required]));
     }
   }
 

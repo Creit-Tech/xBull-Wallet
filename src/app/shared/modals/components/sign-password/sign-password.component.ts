@@ -1,7 +1,7 @@
 // Deprecated, use password-modal instead
 
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-sign-password',
@@ -9,7 +9,7 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./sign-password.component.scss']
 })
 export class SignPasswordComponent implements AfterViewInit {
-  passwordField: FormControl = new FormControl('', [Validators.required]);
+  passwordField: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   showModal = false;
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();

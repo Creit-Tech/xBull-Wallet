@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {UntypedFormControl, Validators} from '@angular/forms';
 import {SettingsService} from '~root/core/settings/services/settings.service';
 import {SettingsQuery} from '~root/state';
 import {map, pluck} from 'rxjs/operators';
@@ -18,7 +18,7 @@ export class AntiSpamKeysComponent implements OnInit {
   showEmpty$: Observable<boolean> = this.publicKeys$
     .pipe(map(array => array.length === 0));
 
-  publicKeyControl: FormControl = new FormControl('', [
+  publicKeyControl: UntypedFormControl = new UntypedFormControl('', [
     Validators.required,
     Validators.minLength(56),
     Validators.maxLength(56)

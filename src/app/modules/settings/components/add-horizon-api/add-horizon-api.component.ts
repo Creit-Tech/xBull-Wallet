@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { Networks } from 'stellar-sdk';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -21,10 +21,10 @@ export class AddHorizonApiComponent implements OnInit {
     value: Networks.TESTNET
   }];
 
-  form: FormGroup = new FormGroup({
-    name: new FormControl('', Validators.required),
-    passphrase: new FormControl('', Validators.required),
-    url: new FormControl('', Validators.required),
+  form: UntypedFormGroup = new UntypedFormGroup({
+    name: new UntypedFormControl('', Validators.required),
+    passphrase: new UntypedFormControl('', Validators.required),
+    url: new UntypedFormControl('', Validators.required),
   });
 
   constructor(

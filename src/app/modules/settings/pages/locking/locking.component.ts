@@ -2,7 +2,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { DeviceAuthService } from '~root/mobile/services/device-auth.service';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { ENV, environment } from '~env';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { SettingsQuery, WalletsQuery } from '~root/state';
 import { map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
@@ -22,9 +22,9 @@ export class LockingComponent implements OnInit, OnDestroy {
 
   mobilePlatform = this.env.platform === 'mobile';
 
-  useDeviceAuthControl: FormControl = new FormControl(false);
-  keepPasswordControl: FormControl = new FormControl(false);
-  timeoutMinutesControl: FormControl = new FormControl('');
+  useDeviceAuthControl: UntypedFormControl = new UntypedFormControl(false);
+  keepPasswordControl: UntypedFormControl = new UntypedFormControl(false);
+  timeoutMinutesControl: UntypedFormControl = new UntypedFormControl('');
 
   globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
   keepPasswordActive$ = this.settingsQuery.keepPasswordActive$;

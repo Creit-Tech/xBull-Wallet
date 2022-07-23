@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GenerateAccountService } from '~root/modules/generate-account/state';
@@ -11,7 +11,7 @@ import { ENV, environment } from '~env';
   styleUrls: ['./generate-wallet.component.scss']
 })
 export class GenerateWalletComponent implements OnInit {
-  mnemonicPhraseFormControl: FormControl = new FormControl('', [Validators.required]);
+  mnemonicPhraseFormControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   walletVersion = this.env.version;
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, forwardRef, Input, OnInit, Output } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
@@ -27,7 +27,7 @@ export class InputComponent implements OnInit, ControlValueAccessor {
 
   value = '';
 
-  control = new FormControl('');
+  control = new UntypedFormControl('');
 
   onChange: (quantity: any) => void = (quantity) => {};
 

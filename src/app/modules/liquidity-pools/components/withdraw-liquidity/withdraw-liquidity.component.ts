@@ -20,7 +20,7 @@ import BalanceLine = Horizon.BalanceLine;
 import { LiquidityPoolsService } from '~root/core/services/liquidity-pools.service';
 import { NzMarks } from 'ng-zorro-antd/slider';
 import BigNumber from 'bignumber.js';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
@@ -53,11 +53,11 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
     100: '100%',
   };
 
-  withDrawForm: FormGroup = new FormGroup({
-    selectedPoolId: new FormControl(undefined, Validators.required),
-    amountToWithdraw: new FormControl(0, [Validators.required, Validators.min(0.0000001)]),
-    percentage: new FormControl(0, Validators.required),
-    errorPercentage: new FormControl(0.005, Validators.required),
+  withDrawForm: UntypedFormGroup = new UntypedFormGroup({
+    selectedPoolId: new UntypedFormControl(undefined, Validators.required),
+    amountToWithdraw: new UntypedFormControl(0, [Validators.required, Validators.min(0.0000001)]),
+    percentage: new UntypedFormControl(0, Validators.required),
+    errorPercentage: new UntypedFormControl(0.005, Validators.required),
   });
 
   selectedLiquidityPool$: Observable<ILpAssetLoaded> = this.withDrawForm.controls.selectedPoolId

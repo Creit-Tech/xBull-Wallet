@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable, ReplaySubject, Subject } from 'rxjs';
 import { IWallet, IWalletsAccount, IWalletWithMnemonicPhrase, IWalletWithSecretKey, WalletsAccountsQuery, WalletsQuery } from '~root/state';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
@@ -36,8 +36,8 @@ export class AddAccountComponent implements OnInit {
     ))
     .pipe(map(obj => Object.values(obj)));
 
-  secretKey: FormControl = new FormControl('', Validators.required) as FormControl;
-  password: FormControl = new FormControl('', Validators.required) as FormControl;
+  secretKey: UntypedFormControl = new UntypedFormControl('', Validators.required) as UntypedFormControl;
+  password: UntypedFormControl = new UntypedFormControl('', Validators.required) as UntypedFormControl;
 
   globalPasswordHash$: Observable<string | undefined> = this.walletsQuery.globalPasswordHash$;
 

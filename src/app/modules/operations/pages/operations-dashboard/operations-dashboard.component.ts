@@ -7,7 +7,7 @@ import {
   WalletsAccountsQuery,
   WalletsOperationsQuery
 } from '~root/state';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import {
   debounceTime,
   distinctUntilKeyChanged,
@@ -58,7 +58,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     return operations.filter(operation => operationTypesToShow.indexOf(operation.operationRecord.type) !== -1);
   }));
 
-  typeOfOperationsControl: FormControl = new FormControl('only_payments', Validators.required);
+  typeOfOperationsControl: UntypedFormControl = new UntypedFormControl('only_payments', Validators.required);
 
   constructor(
     private readonly walletsAccountsQuery: WalletsAccountsQuery,

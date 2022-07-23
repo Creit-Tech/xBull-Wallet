@@ -10,7 +10,7 @@ import {
   WalletsAccountsQuery,
   WalletsQuery
 } from '~root/state';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -48,7 +48,7 @@ export class WalletAccountComponent implements OnInit {
       return this.walletsAccountsQuery.selectEntity(accountId) as Observable<IWalletsAccount>;
     }));
 
-  accountNameControl = new FormControl('', [Validators.required]);
+  accountNameControl = new UntypedFormControl('', [Validators.required]);
   editingName = false;
 
   constructor(
