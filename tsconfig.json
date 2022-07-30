@@ -43,6 +43,9 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "paths": {
+      "~extension/*": [
+        "./src/extension/*"
+      ],
       "~root/*": [
         "./src/app/*"
       ],
