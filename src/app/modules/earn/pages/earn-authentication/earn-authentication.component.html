@@ -1,0 +1,31 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/earn">
+          Earn
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Authentication
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+
+  <div class="max-w-sm w-full px-4">
+    <app-sep-ten-authentication-card (token)="onAuthenticated($event)"
+                                     [sep10Url]="authenticationUrl">
+    </app-sep-ten-authentication-card>
+  </div>
+
+</section>
