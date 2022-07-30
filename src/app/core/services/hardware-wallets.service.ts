@@ -50,30 +50,19 @@ export class HardwareWalletsService {
   }
 
   async signWithLedger(data: {
-    xdr: string,
     accountPath: string,
     publicKey: string,
+    transaction: Transaction,
     transport: TransportWebUSB,
-    passphrase: string
-  }): Promise<string> {
-    const transaction = new this.stellarSdkService.SDK.Transaction(
-      data.xdr,
-      data.passphrase,
-    );
+  }): Promise<IHWSigningResult> {
 
     const str = new Str(data.transport);
-    const result = await str.signTransaction(data.accountPath, transaction.signatureBase());
+    const result = await str.signTransaction(data.accountPath, data.transaction.signatureBase());
 
-    // add signature to transaction
-    const keyPair = this.stellarSdkService.SDK.Keypair.fromPublicKey(data.publicKey);
-    const hint = keyPair.signatureHint();
-    const decorated = new this.stellarSdkService.SDK.xdr.DecoratedSignature({
-      hint,
-      signature: result.signature
-    });
-    transaction.signatures.push(decorated);
-
-    return transaction.toXDR();
+    return {
+      publicKey: data.publicKey,
+      signature: result.signature.toString('base64')
+    };
   }
 
   // -- Trezor Wallet
@@ -108,7 +97,7 @@ export class HardwareWalletsService {
     return TrezorConnect.stellarGetAddress({ bundle });
   }
 
-  async signWithTrezor(params: { path: string; transaction: Transaction; networkPassphrase: string; }): Promise<string> {
+  async signWithTrezor(params: { path: string; transaction: Transaction; networkPassphrase: string; }): Promise<IHWSigningResult> {
     const trezorTransaction = transformTransaction(params.path, params.transaction);
 
     const result = await TrezorConnect.stellarSignTransaction(trezorTransaction);
@@ -117,20 +106,14 @@ export class HardwareWalletsService {
       throw new Error(result.payload.error);
     }
 
-    const signature = Buffer.from(result.payload.signature, 'hex');
-    const publicKeyBytes = Buffer.from(result.payload.publicKey, 'hex');
-
-    const encodedPublicKey = this.stellarSdkService.SDK.StrKey.encodeEd25519PublicKey(publicKeyBytes);
-
-    const keyPair = this.stellarSdkService.SDK.Keypair.fromPublicKey(encodedPublicKey);
-    const hint = keyPair.signatureHint();
-    const decorated = new this.stellarSdkService.SDK.xdr.DecoratedSignature({
-      hint,
-      signature
-    });
-
-    params.transaction.signatures.push(decorated);
-
-    return params.transaction.toXDR();
+    return {
+      publicKey: result.payload.publicKey,
+      signature: result.payload.signature,
+    };
   }
+}
+
+export interface IHWSigningResult {
+  publicKey: string;
+  signature: string;
 }
