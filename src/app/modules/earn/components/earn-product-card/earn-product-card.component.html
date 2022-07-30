@@ -1,24 +1,23 @@
-<nz-card class="w-full cursor-pointer"
-         [routerLink]="['./strategies', '629f62ec2e9f645e640d515c']"
-         [nzActions]="[apyTemplate, actionEdit, actionEllipsis]">
-  <nz-card-meta
-    nzTitle="AQUA"
-    [nzDescription]="description"
-    [nzAvatar]="avatarTemplate"
-  ></nz-card-meta>
-</nz-card>
-<ng-template #description>
-  Asset: xP001
-</ng-template>
-<ng-template #avatarTemplate>
-  <nz-avatar nzSrc="https://aqua.network/assets/img/aqua-logo.png"></nz-avatar>
-</ng-template>
-<ng-template #apyTemplate>
-  168% APY
-</ng-template>
-<ng-template #actionEdit>
-  782.54M
-</ng-template>
-<ng-template #actionEllipsis>
-  High Risk
-</ng-template>
+<ng-container *ngIf="earnStrategy$ | async as earnStrategy">
+  <nz-card class="w-full cursor-pointer"
+           [routerLink]="['./strategies', earnStrategy._id]"
+           [nzActions]="[aprTemplate, actionEdit]">
+    <nz-card-meta
+      [nzTitle]="earnStrategy.name"
+      [nzDescription]="description"
+      [nzAvatar]="avatarTemplate"
+    ></nz-card-meta>
+  </nz-card>
+  <ng-template #description>
+    Asset: {{ earnStrategy.pointerAssetCode }}
+  </ng-template>
+  <ng-template #avatarTemplate>
+    <nz-avatar [nzSrc]="earnStrategy.strategyImage"></nz-avatar>
+  </ng-template>
+  <ng-template #aprTemplate>
+    {{ earnStrategy.apr | percent: '0.0-2' }} APR
+  </ng-template>
+  <ng-template #actionEdit>
+    ${{ earnStrategy.tvl | shortAmounts }} TVL
+  </ng-template>
+</ng-container>

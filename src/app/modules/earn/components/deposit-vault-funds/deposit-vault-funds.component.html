@@ -1,80 +1,89 @@
-<section class="w-full grid grid-cols-12 gap-4 mb-8">
-  <div class="col-span-4 flex justify-center items-center">
-    <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
-      <img class="w-full h-full" src="https://aqua.network/assets/img/aqua-logo.png" alt="">
+<ng-container *ngIf="strategy$ | async as strategy">
+  <section class="w-full grid grid-cols-12 gap-4 mb-8">
+    <div class="col-span-4 flex justify-center items-center">
+      <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
+        <img class="w-full h-full"
+             [src]="strategy.strategyImage" alt="">
+      </div>
+
+      <p class="text-xs m-0">
+        {{ strategy.assetCodeAccepted }}
+        <br>
+        <small class="opacity-50">
+          {{ strategy.assetIssuerAccepted | publicKey }}
+        </small>
+      </p>
     </div>
 
-    <p class="text-xs m-0">
-      AQUA
-      <br>
-      <small class="opacity-50">
-        {{ 'GC2KPQU3S43GP7Y5DH6U3FJK4EI44RHMTDR2VXEM77BJ6UCD23UYB5FR' | publicKey }}
-      </small>
-    </p>
-  </div>
-
-  <div class="col-span-8">
-    <nz-input-group [nzSuffix]="maxButton">
-      <input class="w-full" type="text" nz-input>
-    </nz-input-group>
-    <ng-template #maxButton>
-      <button nz-button>
-        Max
-      </button>
-    </ng-template>
-  </div>
-</section>
-
-<section class="w-full flex flex-col">
-
-  <div class="w-full text-center mb-4">
-    <h2 class="text-lg opacity-80">
-      Deposit calculation
-    </h2>
-  </div>
-
-  <div class="w-full mb-4 grid grid-cols-2 gap-4 place-items-center">
-    <div class="col-span-1">
-      <nz-statistic class="mx-auto text-center" nzValue="0.5%" [nzTitle]="depositFeeHelp"></nz-statistic>
-      <ng-template #depositFeeHelp>
-        Deposit Fee <i class="fa-solid fa-question-circle ml-2"></i>
+    <div class="col-span-8" *ngIf="acceptedAssetBalance$ | async as acceptedAssetBalance">
+      <nz-input-number-group [nzAddOnAfter]="maxButton" class="w-full">
+        <nz-input-number [formControl]="depositAmountControl"
+                         [nzMax]="$any(acceptedAssetBalance.balance)"
+                         [nzMin]="1"
+                         [nzPrecision]="7"
+                         nzPrecisionMode="toFixed"
+                         nzSize="large">
+        </nz-input-number>
+      </nz-input-number-group>
+      <ng-template #maxButton>
+        <button (click)="setMaxValue()" nz-button nzType="text" nzSize="small">
+          Max
+        </button>
       </ng-template>
     </div>
+  </section>
 
-    <div class="col-span-1">
-      <nz-statistic class="mx-auto text-center" nzValue="2%" [nzTitle]="performanceHelp"></nz-statistic>
-      <ng-template #performanceHelp>
-        Performance fee <i class="fa-solid fa-question-circle ml-2"></i>
-      </ng-template>
+  <section class="w-full flex flex-col">
+
+    <div class="w-full text-center mb-4">
+      <h2 class="text-lg opacity-80">
+        Deposit calculation
+      </h2>
     </div>
 
-    <div class="col-span-1">
-      <nz-statistic class="mx-auto text-center" nzValue="2" [nzTitle]="sharesToReceiveHelp"></nz-statistic>
-      <ng-template #sharesToReceiveHelp>
-        Shares to receive <i class="fa-solid fa-question-circle ml-2"></i>
-      </ng-template>
+    <div class="w-full mb-4 grid grid-cols-2 gap-4 place-items-center">
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.depositFee | percent: '0.0-2') || 0" [nzTitle]="depositFeeHelp"></nz-statistic>
+        <ng-template #depositFeeHelp>
+          Deposit Fee <i class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.holdingFee | percent: '0.0-2') || 0" [nzTitle]="performanceHelp"></nz-statistic>
+        <ng-template #performanceHelp>
+          Holding fee <i class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.withdrawFee | percent: '0.0-2') || 0" [nzTitle]="withdrawFeeHelp"></nz-statistic>
+        <ng-template #withdrawFeeHelp>
+          Withdraw fee <i class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" nzPrefix="$" [nzValue]="(strategy.tokenPrice | number: '0.0-2') || 0" [nzTitle]="tokenPriceHelp"></nz-statistic>
+        <ng-template #tokenPriceHelp>
+          Token price <i class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
     </div>
 
-    <div class="col-span-1">
-      <nz-statistic class="mx-auto text-center" nzValue="8" [nzTitle]="minToProfitHelp"></nz-statistic>
-      <ng-template #minToProfitHelp>
-        Min days to earn <i class="fa-solid fa-question-circle ml-2"></i>
-      </ng-template>
-    </div>
-  </div>
+  </section>
 
-</section>
+  <section class="w-full flex flex-col">
+    <button [nzLoading]="depositingFunds$ | async"
+            [disabled]="depositAmountControl.invalid"
+            (click)="confirm()"
+            class="mb-4" nz-button
+            nzSize="large" nzType="primary">
+      Confirm
+    </button>
 
-<section class="w-full flex flex-col">
-  <button class="mb-4" nz-button nzSize="large" nzType="primary">
-    Confirm
-  </button>
-
-  <small class="mx-auto text-center opacity-50 mb-2">
-    All APY percentages already include the fee payments
-  </small>
-
-  <small class="mx-auto text-center opacity-50">
-    Deposits are handled in order, you will receive the shares once the deposit it's accepted
-  </small>
-</section>
+    <small class="mx-auto text-center opacity-50  mb-2">
+      Deposits are handled in order, you will receive the shares once the deposit it's accepted
+    </small>
+  </section>
+</ng-container>

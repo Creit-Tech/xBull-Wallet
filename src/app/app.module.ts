@@ -33,6 +33,7 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationModule } from '~root/translation.module';
+import { MarkdownModule } from 'ngx-markdown';
 
 registerLocaleData(en);
 
@@ -75,6 +76,7 @@ registerLocaleData(en);
       registrationStrategy: 'registerWhenStable:30000'
     }),
     TranslationModule.forRoot(),
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {

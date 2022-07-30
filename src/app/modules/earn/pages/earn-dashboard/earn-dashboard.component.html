@@ -19,23 +19,56 @@
 
   <section class="container mx-auto px-4 pb-4 flex flex-wrap">
     <div class="mx-auto w-auto mb-4">
-      <nz-card class="w-auto ant-card-no-padding py-6 px-10">
+      <nz-card class="w-auto ant-card-no-padding py-4 px-8">
         <div class="text-center">
           <h1 class="text-xl">
-            <i class="fa-solid fa-piggy-bank text-2xl mr-2"></i> Earn while knowing
+            <i class="fa-solid fa-piggy-bank text-2xl mr-2"></i> Earning Strategies
           </h1>
         </div>
       </nz-card>
     </div>
 
-    <div class="w-full grid grid-cols-12 gap-4">
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
-      <app-earn-product-card class="col-span-12 md:col-span-6 lg:col-span-4 xl:col-span-3"></app-earn-product-card>
+    <div class="w-full mb-4">
+      <nz-table #strategiesTable [nzData]="(data$ | async) || []" [nzScroll]="{ x: '1000px' }">
+        <thead>
+        <tr>
+          <th>Strategy Assets</th>
+          <th [nzSortFn]="sortByStrategyApr" nzShowSort>Strategy APY <i class="ml-2 fa-solid fa-question-circle"></i></th>
+          <th>Risk Level</th>
+          <th [nzSortFn]="sortByVaultAPY" nzShowSort>My APY</th>
+          <th [nzSortFn]="sortByVaultPosition" nzShowSort>My Position</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="cursor-pointer"
+            [routerLink]="['./strategies', data._id]"
+            *ngFor="let data of strategiesTable.data">
+          <td>
+            <nz-avatar class="mr-2" [nzSrc]="data.strategyImage"></nz-avatar>
+            {{ data.name }}
+          </td>
+
+          <td>
+            {{ data.apr | aprToApy: 365 | percent: '0.0-2' }} APY
+          </td>
+
+          <td>
+            {{ data.riskLevel | titlecase }}
+          </td>
+
+          <td>
+            {{ (data.vault?.apy || 0) | percent: '0.0-2' }}
+          </td>
+
+          <td>
+            {{ (data.vault?.tvl || 0) | currency: '$' + data.assetCodeAccepted + ' ' }}
+          </td>
+        </tr>
+        </tbody>
+
+      </nz-table>
     </div>
+
   </section>
 
 </section>

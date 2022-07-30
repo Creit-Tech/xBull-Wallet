@@ -8,6 +8,7 @@ import { Networks } from 'stellar-base';
 export const ENV = 'ENVIRONMENT';
 
 export const environment = {
+  xPointersApi: 'http://localhost:3100',
   production: false,
   platform: 'extension',
   defaultApis: [{

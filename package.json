@@ -83,6 +83,7 @@
     "next-tick": "^1.1.0",
     "ng-zorro-antd": "^13.3.2",
     "ngx-file-drop": "^13.0.0",
+    "ngx-markdown": "^14.0.1",
     "ngx-mask": "^11.1.5",
     "qr-scanner": "^1.4.1",
     "qrcode": "^1.5.0",

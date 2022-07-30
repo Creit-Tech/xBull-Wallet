@@ -1,11 +1,11 @@
 {
-  "http://localhost:3000": {
-    "target": "http://localhost:3000/",
+  "api-xPointers": {
+    "target": "http://localhost:3100/",
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true,
     "pathRewrite": {
-      "^http://localhost:3000": "/"
+      "^api-xPointers": "/"
     }
   }
 }
