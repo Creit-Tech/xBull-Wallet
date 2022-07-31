@@ -4,18 +4,18 @@ export enum VaultStatus {
   CANCELLED = 'CANCELLED',
 }
 
-export enum VaultDepositStatus {
+export enum VaultTransactionStatus {
   WAITING_DEPOSIT = 'WAITING_DEPOSIT',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
 }
 
 // In the future we can have a vault deposit collection is needed
-export interface IEarnVaultDeposit {
+export interface IEarnVaultTransaction {
   _id: string;
   amount: number;
   baseXDR: string;
-  status: VaultDepositStatus;
+  status: VaultTransactionStatus;
   cancelReason?: string;
   transactionId?: string;
   createdAt: string;

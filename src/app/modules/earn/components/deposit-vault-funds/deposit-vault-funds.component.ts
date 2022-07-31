@@ -11,8 +11,8 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
-import { EarnVaultsService, IConfirmVaultDepositParams } from '~root/modules/earn/state/vaults/earn-vaults.service';
-import { IEarnVault, IEarnVaultDeposit } from '~root/modules/earn/state/vaults/earn-vault.model';
+import { EarnVaultsService, IConfirmVaultTransactionParams } from '~root/modules/earn/state/vaults/earn-vaults.service';
+import { IEarnVault, IEarnVaultTransaction } from '~root/modules/earn/state/vaults/earn-vault.model';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorParserService } from '~root/lib/error-parser/error-parser.service';
 import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.query';
@@ -102,9 +102,9 @@ export class DepositVaultFundsComponent implements OnInit {
       || !vault
     ) { return; }
 
-    let newVaultDeposit: IEarnVaultDeposit;
+    let newVaultTransaction: IEarnVaultTransaction;
     try {
-      newVaultDeposit = await this.earnVaultsService.createVaultDeposit({
+      newVaultTransaction = await this.earnVaultsService.createVaultTransaction({
         vaultId: vault._id,
         amount: this.depositAmountControl.value,
       }).pipe(take(1)).toPromise();
@@ -117,7 +117,7 @@ export class DepositVaultFundsComponent implements OnInit {
     }
 
     const transaction = new this.stellarSdkService.SDK.Transaction(
-      newVaultDeposit.baseXDR,
+      newVaultTransaction.baseXDR,
       this.stellarSdkService.networkPassphrase,
     );
 
@@ -126,13 +126,13 @@ export class DepositVaultFundsComponent implements OnInit {
       nzTitle: 'Sign transaction',
       nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContentParams: {
-        xdr: newVaultDeposit.baseXDR,
+        xdr: newVaultTransaction.baseXDR,
         signingResultsHandler: data => {
-          this.confirmVaultDeposit({
+          this.confirmVaultTransaction({
             signers: data.signers,
             baseXDR: data.baseXDR,
             vaultId: vault._id,
-            vaultDepositId: newVaultDeposit._id,
+            vaultTransactionId: newVaultTransaction._id,
           });
           drawerRef.close();
         },
@@ -140,13 +140,13 @@ export class DepositVaultFundsComponent implements OnInit {
     });
   }
 
-  async confirmVaultDeposit(data: IConfirmVaultDepositParams): Promise<void> {
+  async confirmVaultTransaction(data: IConfirmVaultTransactionParams): Promise<void> {
     const messageId = this.nzMessageService.loading(
       'Confirming Vault deposit...',
       { nzDuration: 0 }
     ).messageId;
 
-    this.earnVaultsService.confirmVaultDeposit(data)
+    this.earnVaultsService.confirmVaultTransaction(data)
       .subscribe({
         next: value => {
           this.nzMessageService.remove(messageId);

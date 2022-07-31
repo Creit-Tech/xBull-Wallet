@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { EarnVaultsStore } from './earn-vaults.store';
 import { ENV, environment } from '~env';
 import { Observable, throwError } from 'rxjs';
-import { createEarnVault, IEarnVault, IEarnVaultDeposit } from '~root/modules/earn/state/vaults/earn-vault.model';
+import { createEarnVault, IEarnVault, IEarnVaultTransaction } from '~root/modules/earn/state/vaults/earn-vault.model';
 import { catchError, map, tap } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 
@@ -88,15 +88,15 @@ export class EarnVaultsService {
       }));
   }
 
-  createVaultDeposit(params: { vaultId: IEarnVault['_id']; amount: number }): Observable<IEarnVaultDeposit> {
+  createVaultTransaction(params: { vaultId: IEarnVault['_id']; amount: number }): Observable<IEarnVaultTransaction> {
     this.earnVaultsStore.updateUIState({ creatingDeposit: true });
-    return this.http.get<{ vaultDeposit: IEarnVaultDeposit }>(
+    return this.http.get<{ vaultTransaction: IEarnVaultTransaction }>(
       this.env.xPointersApi + `/vaults/${params.vaultId}/create-deposit`,
       { params: { amount: params.amount } }
     )
       .pipe(map((response) => {
         this.earnVaultsStore.updateUIState({ creatingDeposit: false });
-        return response.vaultDeposit;
+        return response.vaultTransaction;
       }))
       .pipe(catchError(err => {
         this.earnVaultsStore.updateUIState({ creatingDeposit: false });
@@ -104,15 +104,15 @@ export class EarnVaultsService {
       }));
   }
 
-  confirmVaultDeposit(params: IConfirmVaultDepositParams): Observable<IEarnVaultDeposit> {
+  confirmVaultTransaction(params: IConfirmVaultTransactionParams): Observable<IEarnVaultTransaction> {
     this.earnVaultsStore.updateUIState({ creatingDeposit: true });
-    return this.http.post<{ vaultDeposit: IEarnVaultDeposit }>(
-      this.env.xPointersApi + `/vaults/${params.vaultId}/deposits/${params.vaultDepositId}/confirm-deposit`,
+    return this.http.post<{ vaultTransaction: IEarnVaultTransaction }>(
+      this.env.xPointersApi + `/vaults/${params.vaultId}/deposits/${params.vaultTransactionId}/confirm-deposit`,
       { baseXDR: params.baseXDR, signers: params.signers },
     )
       .pipe(map((response) => {
         this.earnVaultsStore.updateUIState({ creatingDeposit: false });
-        return response.vaultDeposit;
+        return response.vaultTransaction;
       }))
       .pipe(catchError(err => {
         this.earnVaultsStore.updateUIState({ creatingDeposit: false });
@@ -139,9 +139,9 @@ export interface IConfirmVaultCreationParams {
   }>;
 }
 
-export interface IConfirmVaultDepositParams {
+export interface IConfirmVaultTransactionParams {
   vaultId: IEarnVault['_id'];
-  vaultDepositId: IEarnVaultDeposit['_id'];
+  vaultTransactionId: IEarnVaultTransaction['_id'];
   baseXDR: string;
   signers: Array<{
     publicKey: string;
