@@ -233,6 +233,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         const transaction = new this.stellarSdkService.SDK.Transaction(xdr, selectedNetworkPassphrase);
 
         const keypairSignature = transaction.getKeypairSignature(keypair);
+
+        transaction.sign(keypair);
+
         return {
           baseXDR: xdr,
           signedXDR: transaction.toXDR(),
