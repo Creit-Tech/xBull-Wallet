@@ -210,7 +210,8 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
 
   confirmVaultCreation(params: IConfirmVaultCreationParams): void {
     const messageId = this.nzMessageService.loading(
-      'Confirming Vault creation...'
+      'Confirming Vault creation...',
+      { nzDuration: 0 }
     ).messageId;
     this.earnVaultsService.confirmVaultCreation(params)
       .subscribe({

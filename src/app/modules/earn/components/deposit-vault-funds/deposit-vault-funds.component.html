@@ -1,6 +1,6 @@
 <ng-container *ngIf="strategy$ | async as strategy">
-  <section class="w-full grid grid-cols-12 gap-4 mb-8">
-    <div class="col-span-4 flex justify-center items-center">
+  <section class="w-full grid grid-cols-12 gap-4 mb-4">
+    <div class="col-span-12 flex justify-center items-center">
       <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
         <img class="w-full h-full"
              [src]="strategy.strategyImage" alt="">
@@ -15,7 +15,7 @@
       </p>
     </div>
 
-    <div class="col-span-8" *ngIf="acceptedAssetBalance$ | async as acceptedAssetBalance">
+    <div class="col-span-12" *ngIf="acceptedAssetBalance$ | async as acceptedAssetBalance">
       <nz-input-number-group [nzAddOnAfter]="maxButton" class="w-full">
         <nz-input-number [formControl]="depositAmountControl"
                          [nzMax]="$any(acceptedAssetBalance.balance)"
@@ -37,7 +37,7 @@
 
     <div class="w-full text-center mb-4">
       <h2 class="text-lg opacity-80">
-        Deposit calculation
+        Fees and minimums
       </h2>
     </div>
 
@@ -64,9 +64,9 @@
       </div>
 
       <div class="col-span-1">
-        <nz-statistic class="mx-auto text-center" nzPrefix="$" [nzValue]="(strategy.tokenPrice | number: '0.0-2') || 0" [nzTitle]="tokenPriceHelp"></nz-statistic>
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.minDeposit | shortAmounts) || 0" [nzTitle]="tokenPriceHelp"></nz-statistic>
         <ng-template #tokenPriceHelp>
-          Token price <i class="fa-solid fa-question-circle ml-2"></i>
+          Deposit minimum <i class="fa-solid fa-question-circle ml-2"></i>
         </ng-template>
       </div>
     </div>
@@ -74,16 +74,24 @@
   </section>
 
   <section class="w-full flex flex-col">
-    <button [nzLoading]="depositingFunds$ | async"
-            [disabled]="depositAmountControl.invalid"
-            (click)="confirm()"
+    <button [nzLoading]="creatingDeposit$ | async"
+            [disabled]="depositAmountControl.invalid || strategy.minDeposit > depositAmountControl.value"
+            *ngIf="acceptedAssetBalance$ | async; else buyAsset"
+            (click)="createDeposit()"
             class="mb-4" nz-button
             nzSize="large" nzType="primary">
       Confirm
     </button>
+    <ng-template #buyAsset>
+      <button class="mb-4" nz-button
+              [disabled]="true"
+              nzSize="large" nzType="primary">
+        You don't have {{ strategy.assetCodeAccepted }}
+      </button>
+    </ng-template>
 
     <small class="mx-auto text-center opacity-50  mb-2">
-      Deposits are handled in order, you will receive the shares once the deposit it's accepted
+
     </small>
   </section>
 </ng-container>

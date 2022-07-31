@@ -28,11 +28,11 @@
 
         <div class="col-span-6 md:col-span-4 flex justify-center">
           <nz-statistic class="mx-auto text-center"
-                        [nzValue]="(strategy.apr | percent: '0.0-2') || 0"
+                        [nzValue]="((strategy.apr | aprToApy: 300) | percent: '0.0-2') || 0"
                         [nzTitle]="aprHelp">
           </nz-statistic>
           <ng-template #aprHelp>
-            APR <i class="fa-solid fa-question-circle ml-2"></i>
+            Strategy APY <i class="fa-solid fa-question-circle ml-2"></i>
           </ng-template>
         </div>
 
@@ -57,11 +57,10 @@
       <section class="w-full grid grid-cols-12 gap-4">
         <div class="col-span-6 flex justify-center">
           <nz-statistic class="mx-auto text-center"
-                        nzPrefix="$"
-                        [nzValue]="((position$ | async)?.amount || 0) | shortAmounts"
+                        [nzValue]="(((position$ | async)?.amount || 0) | percent: '0.0-2') || 0"
                         [nzTitle]="positionHelp"></nz-statistic>
           <ng-template #positionHelp>
-            Position <i class="fa-solid fa-question-circle ml-2"></i>
+            Vault APY <i class="fa-solid fa-question-circle ml-2"></i>
           </ng-template>
         </div>
 
@@ -70,23 +69,27 @@
                         [nzValue]="(position$ | async)?.shares || 0 | shortAmounts"
                         [nzTitle]="yourSharesHelp"></nz-statistic>
           <ng-template #yourSharesHelp>
-            Shares <i class="fa-solid fa-question-circle ml-2"></i>
+            TVL <i class="fa-solid fa-question-circle ml-2"></i>
           </ng-template>
         </div>
       </section>
     </nz-card>
 
     <nz-card class="order-3 md:order-4 col-span-12 md:col-span-4 ant-card-no-padding p-4 ant-card-h-full">
-      <ng-container *ngIf="(vault$ | async)?.status === 'ACTIVE'; else createVault">
-        <nz-tabset [nzCentered]="true" *ngIf="strategy$ | async as strategy">
-          <nz-tab nzTitle="Deposit">
-            <app-deposit-vault-funds [strategy]="strategy"></app-deposit-vault-funds>
-          </nz-tab>
+      <ng-container *ngIf="vault$ | async as vault else createVault">
+        <ng-container *ngIf="vault.status === 'ACTIVE'; else createVault">
+          <nz-tabset [nzCentered]="true" *ngIf="strategy$ | async as strategy">
+            <nz-tab nzTitle="Deposit">
+              <app-deposit-vault-funds [strategy]="strategy"
+                                       [vault]="vault">
+              </app-deposit-vault-funds>
+            </nz-tab>
 
-          <nz-tab nzTitle="Withdraw">
-            <app-withdraw-vault-funds></app-withdraw-vault-funds>
-          </nz-tab>
-        </nz-tabset>
+            <nz-tab nzTitle="Withdraw">
+              <app-withdraw-vault-funds></app-withdraw-vault-funds>
+            </nz-tab>
+          </nz-tabset>
+        </ng-container>
       </ng-container>
 
       <ng-template #createVault>

@@ -18,6 +18,7 @@ export interface IEarnStrategy {
   assetCodeAccepted: string;
   assetIssuerAccepted: string;
   tokenPrice: number;
+  minDeposit: number;
 
   createdAt: Date;
   updatedAt: Date;
@@ -43,6 +44,7 @@ export function createEarnStrategy(params: IEarnStrategy): IEarnStrategy {
     assetCodeAccepted: params.assetCodeAccepted,
     assetIssuerAccepted: params.assetIssuerAccepted,
     tokenPrice: params.tokenPrice,
+    minDeposit: params.minDeposit,
     createdAt: new Date(params.createdAt),
     updatedAt: new Date(params.updatedAt),
   };
