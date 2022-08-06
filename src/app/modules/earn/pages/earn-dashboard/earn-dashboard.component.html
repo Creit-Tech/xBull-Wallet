@@ -61,7 +61,7 @@
           </td>
 
           <td>
-            {{ (data.vault?.tvl || 0) | currency: '$' + data.assetCodeAccepted + ' ' }}
+            {{ '$' + data.assetCodeAccepted + ' ' }} {{ (data.vault?.tvl || 0) | shortAmounts }}
           </td>
         </tr>
         </tbody>

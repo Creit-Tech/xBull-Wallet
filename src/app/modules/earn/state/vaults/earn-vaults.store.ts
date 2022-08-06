@@ -8,6 +8,8 @@ export interface EarnVaultsState extends EntityState<IEarnVault> {
     requestingVaults: boolean;
     creatingVault: boolean;
     creatingDeposit: boolean;
+    creatingWithdrawal: boolean;
+    confirmingTransaction: boolean;
   };
 }
 
@@ -25,6 +27,8 @@ export class EarnVaultsStore extends BaseEntityStore<EarnVaultsState> {
         requestingVaults: false,
         creatingVault: false,
         creatingDeposit: false,
+        creatingWithdrawal: false,
+        confirmingTransaction: false,
       }
     });
   }

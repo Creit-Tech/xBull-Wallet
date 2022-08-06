@@ -27,7 +27,7 @@
       </nz-input-number-group>
       <ng-template #maxButton>
         <button (click)="setMaxValue()" nz-button nzType="text" nzSize="small">
-          Max
+          Max: {{ acceptedAssetBalance.balance | number: '0.0-7' }}
         </button>
       </ng-template>
     </div>
@@ -74,7 +74,7 @@
   </section>
 
   <section class="w-full flex flex-col">
-    <button [nzLoading]="creatingDeposit$ | async"
+    <button [nzLoading]="(creatingDeposit$ | async) || (confirmingTransaction$ | async)"
             [disabled]="depositAmountControl.invalid || strategy.minDeposit > depositAmountControl.value"
             *ngIf="acceptedAssetBalance$ | async; else buyAsset"
             (click)="createDeposit()"
@@ -91,7 +91,7 @@
     </ng-template>
 
     <small class="mx-auto text-center opacity-50  mb-2">
-
+      Take network fees and swaps losses during the deposit in consideration, these are not included in our deposit fee.
     </small>
   </section>
 </ng-container>

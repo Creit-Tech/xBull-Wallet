@@ -8,12 +8,10 @@ import { Horizon } from 'stellar-sdk';
 import BalanceLineAsset = Horizon.BalanceLineAsset;
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import BigNumber from 'bignumber.js';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { EarnVaultsService, IConfirmVaultTransactionParams } from '~root/modules/earn/state/vaults/earn-vaults.service';
 import { IEarnVault, IEarnVaultTransaction } from '~root/modules/earn/state/vaults/earn-vault.model';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ErrorParserService } from '~root/lib/error-parser/error-parser.service';
 import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.query';
 
@@ -24,6 +22,7 @@ import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.que
 })
 export class DepositVaultFundsComponent implements OnInit {
   creatingDeposit$ = this.earnVaultsQuery.creatingDeposit$;
+  confirmingTransaction$ = this.earnVaultsQuery.confirmingTransaction$;
 
   strategy$: ReplaySubject<IEarnStrategy> = new ReplaySubject<IEarnStrategy>();
   @Input() set strategy(data: IEarnStrategy) {
@@ -84,27 +83,20 @@ export class DepositVaultFundsComponent implements OnInit {
   async createDeposit(): Promise<void> {
     const [
       strategy,
-      acceptedAssetBalance,
-      selectedAccount,
       vault,
     ] = await Promise.all([
       this.strategy$.pipe(take(1)).toPromise(),
-      this.acceptedAssetBalance$.pipe(take(1)).toPromise(),
-      this.selectedAccount$.pipe(take(1)).toPromise(),
       this.vault$.pipe(take(1)).toPromise(),
     ]);
 
     if (
-      !acceptedAssetBalance
-      || !selectedAccount
-      || !selectedAccount.accountRecord
-      || !strategy
+      !strategy
       || !vault
     ) { return; }
 
     let newVaultTransaction: IEarnVaultTransaction;
     try {
-      newVaultTransaction = await this.earnVaultsService.createVaultTransaction({
+      newVaultTransaction = await this.earnVaultsService.createVaultDepositTransaction({
         vaultId: vault._id,
         amount: this.depositAmountControl.value,
       }).pipe(take(1)).toPromise();
@@ -115,11 +107,6 @@ export class DepositVaultFundsComponent implements OnInit {
       );
       return;
     }
-
-    const transaction = new this.stellarSdkService.SDK.Transaction(
-      newVaultTransaction.baseXDR,
-      this.stellarSdkService.networkPassphrase,
-    );
 
     const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
@@ -152,6 +139,9 @@ export class DepositVaultFundsComponent implements OnInit {
           this.nzMessageService.remove(messageId);
           this.nzMessageService.success('Funds deposited into the Vault');
           this.depositAmountControl.reset();
+
+          this.earnVaultsService.getVault(data.vaultId)
+            .subscribe();
         },
         error: err => {
           this.nzMessageService.remove(messageId);

@@ -39,6 +39,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { EarnTokensStore } from '~root/modules/earn/state/tokens/earn-tokens.store';
 import { EarnTokensService } from '~root/modules/earn/state/tokens/earn-tokens.service';
 import { EarnTokensQuery } from '~root/modules/earn/state/tokens/earn-tokens.query';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { EarnTokensQuery } from '~root/modules/earn/state/tokens/earn-tokens.que
     NzInputNumberModule,
     SharedComponentsModule,
     NzTableModule,
+    NzSliderModule,
   ],
   providers: [
     {

@@ -135,7 +135,11 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
         }));
     }))
     .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe((value: any) => this.results$.next(value)); // TODO: review this type 'any'
+    .subscribe((value: any) => {
+      if (value.length > 0) {
+        this.results$.next(value);
+      }
+    }); // TODO: review this type 'any'
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -155,6 +159,12 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
       .subscribe(strategyId => {
         this.earnStrategiesService.getStrategyDetails(strategyId)
           .subscribe();
+      });
+
+
+    timer(0, 10000)
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
         this.earnVaultsService.getVaults()
           .subscribe();
       });

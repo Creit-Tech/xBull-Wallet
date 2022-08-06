@@ -5,7 +5,7 @@ import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.que
 import { EarnVaultsService } from '~root/modules/earn/state/vaults/earn-vaults.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
-import { takeUntil } from 'rxjs/operators';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-earn-dashboard',
