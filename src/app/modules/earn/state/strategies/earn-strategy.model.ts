@@ -1,25 +1,24 @@
 export interface IEarnStrategy {
   _id: string;
-
-  strategyImage: string;
-  pointerAssetCode: string;
+  type: 'lp_aqua_farm';
+  minDeposit: number;
+  poolIdToFarm: string;
+  strategyImages: string[];
+  assetCodeAccepted: string;
+  assetIssuerAccepted: string;
   name: string;
   apr: number;
+  apy: number;
   tvl: number;
-  riskLevel: string;
-  holders: number;
+  riskLevel: 'low' | 'medium' | 'high' | 'madness';
   depositFee: number;
   withdrawFee: number;
   holdingFee: number;
-  daysToEarn: number;
-  totalSharesIssued: number;
-  contractAccount: string;
-  type: string;
-  assetCodeAccepted: string;
-  assetIssuerAccepted: string;
-  tokenPrice: number;
-  minDeposit: number;
-
+  feeAssetCode: 'USDC';
+  details: {
+    strategyDetails: string;
+    riskLevel: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -27,25 +26,23 @@ export interface IEarnStrategy {
 export function createEarnStrategy(params: IEarnStrategy): IEarnStrategy {
   return {
     _id: params._id,
-    strategyImage: params.strategyImage,
-    pointerAssetCode: params.pointerAssetCode,
+    type: params.type,
+    minDeposit: params.minDeposit,
+    poolIdToFarm: params.poolIdToFarm,
+    strategyImages: params.strategyImages,
+    assetCodeAccepted: params.assetCodeAccepted,
+    assetIssuerAccepted: params.assetIssuerAccepted,
     name: params.name,
     apr: params.apr,
+    apy: params.apy,
     tvl: params.tvl,
     riskLevel: params.riskLevel,
-    holders: params.holders,
     depositFee: params.depositFee,
     withdrawFee: params.withdrawFee,
     holdingFee: params.holdingFee,
-    daysToEarn: params.daysToEarn,
-    totalSharesIssued: params.totalSharesIssued,
-    contractAccount: params.contractAccount,
-    type: params.type,
-    assetCodeAccepted: params.assetCodeAccepted,
-    assetIssuerAccepted: params.assetIssuerAccepted,
-    tokenPrice: params.tokenPrice,
-    minDeposit: params.minDeposit,
-    createdAt: new Date(params.createdAt),
-    updatedAt: new Date(params.updatedAt),
+    feeAssetCode: params.feeAssetCode,
+    details: params.details,
+    createdAt: params.createdAt,
+    updatedAt: params.updatedAt,
   };
 }

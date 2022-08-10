@@ -69,10 +69,8 @@ export type IEarnStrategySnapshot = { datePeriod: string, strategyId: string }
   & Pick<IEarnStrategy,
       '_id' |
       'apr' |
+      'apy' |
       'createdAt' |
-      'daysToEarn' |
-      'tokenPrice' |
-      'totalSharesIssued' |
       'tvl' |
       'updatedAt'
     >;

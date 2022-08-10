@@ -5,7 +5,7 @@
       <div class="w-full flex justify-center items-center mb-4">
         <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
           <img class="w-full h-full"
-               [src]="strategy.strategyImage" alt="">
+               [src]="strategy.strategyImages[0]" alt="">
         </div>
 
         <p class="text-xs m-0">
@@ -33,7 +33,7 @@
                       [nzTitle]="feeToPay">
         </nz-statistic>
         <ng-template #feeToPay>
-          ${{ strategy.assetCodeAccepted }} to pay (Withdrawal fee) <i class="fa-solid fa-question-circle ml-2"></i>
+          ${{ strategy.assetCodeAccepted }} to pay (Withdrawal fee)
         </ng-template>
       </div>
     </section>
@@ -50,7 +50,7 @@
 
     <section class="w-full text-center">
       <small class="text-xs opacity-50">
-        Amounts are calculations and might be different once the withdraw is completed.
+        Amounts are calculated and might be different once the withdraw is completed.
         Take network fees and swaps losses during the withdraw in consideration.
       </small>
     </section>

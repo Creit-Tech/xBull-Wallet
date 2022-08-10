@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { EarnRoutingModule } from './earn-routing.module';
 import { EarnDashboardComponent } from './pages/earn-dashboard/earn-dashboard.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { EarnProductCardComponent } from './components/earn-product-card/earn-product-card.component';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { StrategyDetailsComponent } from './pages/strategy-details/strategy-details.component';
@@ -40,12 +39,15 @@ import { EarnTokensStore } from '~root/modules/earn/state/tokens/earn-tokens.sto
 import { EarnTokensService } from '~root/modules/earn/state/tokens/earn-tokens.service';
 import { EarnTokensQuery } from '~root/modules/earn/state/tokens/earn-tokens.query';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { MarkdownModule } from 'ngx-markdown';
+import { NzListModule } from 'ng-zorro-antd/list';
+import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 
 
 @NgModule({
   declarations: [
     EarnDashboardComponent,
-    EarnProductCardComponent,
     StrategyDetailsComponent,
     DepositVaultFundsComponent,
     WithdrawVaultFundsComponent,
@@ -73,6 +75,10 @@ import { NzSliderModule } from 'ng-zorro-antd/slider';
     SharedComponentsModule,
     NzTableModule,
     NzSliderModule,
+    NzToolTipModule,
+    MarkdownModule.forChild(),
+    NzListModule,
+    ClipboardModule,
   ],
   providers: [
     {

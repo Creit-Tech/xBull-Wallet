@@ -1,0 +1,21 @@
+.markdown-classic {
+  p {
+    @apply mb-2 opacity-80;
+  }
+
+  h2 {
+    @apply text-xl mb-3;
+  }
+
+  h3 {
+    @apply text-lg mb-2;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  li {
+    @apply mb-2 opacity-80;
+  }
+}

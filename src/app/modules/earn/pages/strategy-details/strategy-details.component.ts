@@ -69,66 +69,29 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
   creatingVault$ = this.earnVaultsQuery.creatingVault$;
 
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
-  position$ = combineLatest([
-    this.strategy$,
-    this.selectedAccount$,
-  ])
-    .pipe(debounceTime(100))
-    .pipe(map(([strategy, selectedAccount]) => {
-      if (!strategy || !selectedAccount.accountRecord) {
-        return { amount: 0, shares: 0 };
-      }
-
-      const tokenBalance = selectedAccount.accountRecord.balances.find(b => {
-        return (
-          (b.asset_type === 'credit_alphanum4' || b.asset_type === 'credit_alphanum12')
-          && b.asset_code === strategy.pointerAssetCode
-          && b.asset_issuer === strategy.contractAccount
-        );
-      });
-
-      return {
-        amount: new BigNumber(tokenBalance?.balance || 0)
-          .multipliedBy(strategy.tokenPrice)
-          .toNumber(),
-        shares: tokenBalance?.balance || 0
-      };
-    }));
 
   fetchUpdatedSnapshots: Subscription = timer(0, 5000)
     .pipe(switchMap(_ => this.strategyId$))
     .pipe(switchMap(strategyId => {
       // TODO: make this easier to read
       return this.earnStrategiesService.getStrategySnapshots(strategyId)
-        .pipe(switchMap(snapshots => {
-          return scheduled([of(this.graphFilterControl.value), this.graphFilterControl.valueChanges], asapScheduler)
-            .pipe(concatAll())
-            .pipe(map(filter => {
-              return [{
-                name: filter,
-                series: snapshots.map(item => {
-                  let targetValue: number;
-                  switch (filter) {
-                    case 'tokenPrice':
-                      targetValue = item.tokenPrice;
-                      break;
-
-                    case 'apr':
-                      targetValue = item.apr * 100;
-                      break;
-
-                    case 'tvl':
-                      targetValue = item.tvl;
-                      break;
-
-                    default:
-                      targetValue = 0;
-                  }
-
-                  return { name: new Date(item.datePeriod), value: targetValue || 0 };
-                })
-              }];
-            }));
+        .pipe(map(snapshots => {
+          return [
+            {
+              name: 'APY',
+              series: snapshots.map(item => ({
+                name: new Date(item.datePeriod),
+                value: (item.apy * 100) || 0
+              }))
+            },
+            {
+              name: 'APR',
+              series: snapshots.map(item => ({
+                name: new Date(item.datePeriod),
+                value: (item.apr * 100) || 0
+              }))
+            }
+          ];
         }))
         .pipe(catchError(err => {
           return of([]);

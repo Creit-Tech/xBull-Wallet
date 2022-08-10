@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { combineQueries, QueryEntity } from '@datorama/akita';
-import { EarnStrategiesStore, EarnStrategiesState } from './earn-strategies.store';
+import { combineQueries, Order, QueryEntity } from '@datorama/akita';
+import { EarnStrategiesState, EarnStrategiesStore } from './earn-strategies.store';
 import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.query';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -21,7 +21,7 @@ export class EarnStrategiesQuery extends QueryEntity<EarnStrategiesState> {
 
   getStrategiesWithActiveVault(): Observable<IStrategyWithVault[]> {
     return combineQueries([
-      this.selectAll(),
+      this.selectAll({ sortBy: 'apr', sortByOrder: Order.DESC }),
       this.earnVaultsQuery.selectAll({
         filterBy: entity => entity.status === 'ACTIVE'
       }),

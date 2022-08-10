@@ -29,11 +29,16 @@
     </div>
 
     <div class="w-full mb-4">
-      <nz-table #strategiesTable [nzData]="(data$ | async) || []" [nzScroll]="{ x: '1000px' }">
+      <nz-table #strategiesTable
+                [nzPageSize]="20"
+                [nzData]="(data$ | async) || []"
+                [nzScroll]="{ x: '800px', y: '500px' }">
         <thead>
         <tr>
-          <th>Strategy Assets</th>
-          <th [nzSortFn]="sortByStrategyApr" nzShowSort>Strategy APY <i class="ml-2 fa-solid fa-question-circle"></i></th>
+          <th nzWidth="350px">Strategy Assets</th>
+          <th [nzSortFn]="sortByStrategyApr" nzShowSort>
+            Strategy APY <i nz-tooltip="This is the APY that our own vault is currently getting and it serves as a reference for user vaults" class="ml-2 fa-solid fa-question-circle"></i>
+          </th>
           <th>Risk Level</th>
           <th [nzSortFn]="sortByVaultAPY" nzShowSort>My APY</th>
           <th [nzSortFn]="sortByVaultPosition" nzShowSort>My Position</th>
@@ -44,12 +49,15 @@
             [routerLink]="['./strategies', data._id]"
             *ngFor="let data of strategiesTable.data">
           <td>
-            <nz-avatar class="mr-2" [nzSrc]="data.strategyImage"></nz-avatar>
+            <div class="bg-gray inline-block rounded-full p-2 mr-2">
+              <nz-avatar *ngFor="let image of data.strategyImages"
+                         [nzSrc]="image"></nz-avatar>
+            </div>
             {{ data.name }}
           </td>
 
           <td>
-            {{ data.apr | aprToApy: 365 | percent: '0.0-2' }} APY
+            {{ data.apy | percent: '0.0-2' }} APY
           </td>
 
           <td>
