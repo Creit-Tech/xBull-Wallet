@@ -1,0 +1,90 @@
+<ng-container *ngIf="strategy$ | async as strategy">
+  <section class="w-full grid grid-cols-12 gap-4 mb-4">
+    <div class="col-span-12 flex justify-center items-center">
+      <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
+        <img class="w-full h-full"
+             [src]="strategy.strategyImages[0]" alt="">
+      </div>
+
+      <p class="text-xs m-0">
+        {{ strategy.assetCodeAccepted }}
+        <br>
+        <small class="opacity-50">
+          {{ strategy.assetIssuerAccepted | publicKey }}
+        </small>
+      </p>
+    </div>
+
+    <div class="col-span-12" *ngIf="acceptedAssetBalance$ | async as acceptedAssetBalance">
+      <nz-input-number-group [nzAddOnAfter]="maxButton" class="w-full">
+        <nz-input-number [formControl]="depositAmountControl"
+                         [nzMax]="$any(acceptedAssetBalance.balance)"
+                         [nzMin]="1"
+                         [nzPrecision]="7"
+                         nzPrecisionMode="toFixed"
+                         nzSize="large">
+        </nz-input-number>
+      </nz-input-number-group>
+      <ng-template #maxButton>
+        <button (click)="setMaxValue()" nz-button nzType="text" nzSize="small">
+          Max: {{ acceptedAssetBalance.balance | number: '0.0-7' }}
+        </button>
+      </ng-template>
+    </div>
+  </section>
+
+  <section class="w-full flex flex-col">
+    <div class="w-full mb-4 grid grid-cols-2 gap-4 place-items-center">
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.depositFee | percent: '0.0-2') || 0" [nzTitle]="depositFeeHelp"></nz-statistic>
+        <ng-template #depositFeeHelp>
+          Deposit Fee
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.holdingFee | percent: '0.0-2') || 0" [nzTitle]="performanceHelp"></nz-statistic>
+        <ng-template #performanceHelp>
+          Holding fee <i nz-tooltip="The holding fee is an anual based fee which is paid in monthly pieces (ex: if the holding fee is 0.48%, you will pay 0.04% every month)" class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.withdrawFee | percent: '0.0-2') || 0" [nzTitle]="withdrawFeeHelp"></nz-statistic>
+        <ng-template #withdrawFeeHelp>
+          Withdraw fee
+        </ng-template>
+      </div>
+
+      <div class="col-span-1">
+        <nz-statistic class="mx-auto text-center" [nzValue]="(strategy.minDeposit | shortAmounts) || 0" [nzTitle]="tokenPriceHelp"></nz-statistic>
+        <ng-template #tokenPriceHelp>
+          Deposit minimum <i nz-tooltip="Each vault has a minimun deposit, this deposit is the same amount we have lock in our own vault and the amount we can confirm its getting the APY we calculated" class="fa-solid fa-question-circle ml-2"></i>
+        </ng-template>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="w-full flex flex-col">
+    <button [nzLoading]="(creatingDeposit$ | async) || (confirmingTransaction$ | async)"
+            [disabled]="depositAmountControl.invalid || strategy.minDeposit > depositAmountControl.value"
+            *ngIf="acceptedAssetBalance$ | async; else buyAsset"
+            (click)="createDeposit()"
+            class="mb-4" nz-button
+            nzSize="large" nzType="primary">
+      Confirm
+    </button>
+    <ng-template #buyAsset>
+      <button class="mb-4" nz-button
+              [disabled]="true"
+              nzSize="large" nzType="primary">
+        You don't have {{ strategy.assetCodeAccepted }}
+      </button>
+    </ng-template>
+
+    <small class="mx-auto text-center opacity-50  mb-2">
+      Take network fees and swaps losses during the deposit in consideration, these are not included in our deposit fee.
+    </small>
+  </section>
+</ng-container>

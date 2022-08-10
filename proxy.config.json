@@ -1,0 +1,11 @@
+{
+  "api-xPointers": {
+    "target": "http://localhost:3100/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^api-xPointers": "/"
+    }
+  }
+}

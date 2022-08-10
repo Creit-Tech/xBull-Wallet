@@ -20,7 +20,10 @@ const persistStateParams: Partial<PersistStateParams> = {
     'UI/wallets-assets',
     'settings',
     'sites-connections',
-    'horizon-apis'
+    'horizon-apis',
+    'earn-tokens',
+    'earn-vaults',
+    'earn-strategies'
   ],
   preStorageUpdate(storeName: string, state: any): any {
     try {

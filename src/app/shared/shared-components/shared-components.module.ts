@@ -14,10 +14,14 @@ import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { ScamAlertIconComponent } from '~root/shared/shared-components/scam-alert-icon/scam-alert-icon.component';
+import {
+  SepTenAuthenticationCardComponent
+} from '~root/shared/shared-components/sep-ten-authentication-card/sep-ten-authentication-card.component';
 
 const COMPONENTS = [
   PathPaymentFormComponent,
   ScamAlertIconComponent,
+  SepTenAuthenticationCardComponent,
 ];
 
 @NgModule({

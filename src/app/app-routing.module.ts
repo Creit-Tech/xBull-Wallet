@@ -57,7 +57,11 @@ const routes: Routes = [
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),
       },
-
+      {
+        path: 'earn',
+        loadChildren: () => import('./modules/earn/earn.module')
+          .then(m => m.EarnModule),
+      },
       {
         path: 'liquidity-pools',
         loadChildren: () => import('./modules/liquidity-pools/liquidity-pools.module')

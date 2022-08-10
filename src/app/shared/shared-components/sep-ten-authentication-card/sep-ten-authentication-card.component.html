@@ -1,0 +1,36 @@
+<nz-card *ngIf="selectedAccount$ | async as selectedAccount" class="w-full ant-card-no-padding p-4">
+  <div class="w-full mb-4">
+    <img class="w-7/12 mx-auto" src="/assets/images/xBull-plat-icon-no-circle.svg" style="max-width: 60px;" alt="">
+  </div>
+
+  <div class="w-full text-center mb-4">
+    <h1 class="text-lg font-semibold">
+      {{ title }}
+    </h1>
+  </div>
+
+  <div class="w-full flex flex-col">
+    <div class="w-full mb-4">
+      <input type="text" nz-input
+             [disabled]="true"
+             [value]="selectedAccount.publicKey | publicKey"
+             nzSize="large">
+    </div>
+  </div>
+
+  <div class="w-full mb-4">
+    <button [nzLoading]="authenticating$ | async"
+            (click)="onConfirm()" nzSize="large"
+            nz-button nzType="primary" nzBlock>
+      Confirm
+    </button>
+  </div>
+
+  <div class="w-full text-center">
+    <small class="opacity-80">
+      You will receive a non-valid challenge which needs to be signed with your private key to prove ownership.
+      <br>
+      Make sure its sequence number is "0"
+    </small>
+  </div>
+</nz-card>

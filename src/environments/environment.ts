@@ -8,6 +8,7 @@ import { Networks } from 'stellar-base';
 export const ENV = 'ENVIRONMENT';
 
 export const environment = {
+  xPointersApi: '/api-xPointers',
   production: false,
   platform: 'website',
   defaultApis: [{
