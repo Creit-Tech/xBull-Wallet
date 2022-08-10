@@ -15,6 +15,11 @@
       <span>{{ 'COMMON_WORDS.SWAPS' | translate }}</span>
     </li>
 
+    <li (click)="closeDrawer()" routerLink="/earn" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-piggy-bank"></i>
+      <span>{{ 'COMMON_WORDS.EARN' | translate }}</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/liquidity-pools" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-water-ladder"></i>
       <span>{{ 'COMMON_WORDS.LP' | translate }}</span>

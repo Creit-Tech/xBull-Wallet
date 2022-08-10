@@ -16,7 +16,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2020",
     "module": "es2020",
     "lib": [
       "es2018",
@@ -43,6 +43,9 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
     "paths": {
+      "~extension/*": [
+        "./src/extension/*"
+      ],
       "~root/*": [
         "./src/app/*"
       ],
@@ -56,10 +59,10 @@
         "./node_modules/readable-stream"
       ],
       "http": [
-        "./node_modules/@angular/common/http"
+        "./node_modules/stream-http"
       ],
       "https": [
-        "./node_modules/@angular/common/http"
+        "./node_modules/https-browserify"
       ]
     }
   }

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   BalanceAssetType,
   HorizonApisQuery,
@@ -65,14 +65,14 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return this.walletsAssetsService.filterBalancesLines(selectedAccount.accountRecord?.balances || []);
     }));
 
-  depositForm: FormGroup = new FormGroup({
-    amountAssetA: new FormControl('0', [Validators.required, Validators.min(0.0000001)]),
-    multiplierA: new FormControl(undefined),
-    assetABalanceLine: new FormControl(undefined, Validators.required),
-    amountAssetB: new FormControl('0', [Validators.required, Validators.min(0.0000001)]),
-    multiplierB: new FormControl(undefined),
-    assetBBalanceLine: new FormControl(undefined, Validators.required),
-    errorPercentage: new FormControl(0.005, Validators.required),
+  depositForm: UntypedFormGroup = new UntypedFormGroup({
+    amountAssetA: new UntypedFormControl('0', [Validators.required, Validators.min(0.0000001)]),
+    multiplierA: new UntypedFormControl(undefined),
+    assetABalanceLine: new UntypedFormControl(undefined, Validators.required),
+    amountAssetB: new UntypedFormControl('0', [Validators.required, Validators.min(0.0000001)]),
+    multiplierB: new UntypedFormControl(undefined),
+    assetBBalanceLine: new UntypedFormControl(undefined, Validators.required),
+    errorPercentage: new UntypedFormControl(0.005, Validators.required),
   });
 
   assetA$: Observable<IWalletAssetModel | undefined> = this.depositForm.valueChanges

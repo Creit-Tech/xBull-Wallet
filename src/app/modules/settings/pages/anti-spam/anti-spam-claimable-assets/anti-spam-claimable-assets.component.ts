@@ -1,7 +1,7 @@
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SettingsQuery} from '~root/state';
 import {map} from 'rxjs/operators';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {SettingsService} from '~root/core/settings/services/settings.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
@@ -23,13 +23,13 @@ export class AntiSpamClaimableAssetsComponent implements OnInit {
   showEmpty$: Observable<boolean> = this.claimableAssets$
     .pipe(map(array => array.length === 0));
 
-  addAssetForm: FormGroup = new FormGroup({
-    assetCode: new FormControl('', [
+  addAssetForm: UntypedFormGroup = new UntypedFormGroup({
+    assetCode: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(1),
       Validators.maxLength(12),
     ]),
-    assetIssuer: new FormControl('', [
+    assetIssuer: new UntypedFormControl('', [
       Validators.required,
       Validators.minLength(56),
       Validators.maxLength(56)

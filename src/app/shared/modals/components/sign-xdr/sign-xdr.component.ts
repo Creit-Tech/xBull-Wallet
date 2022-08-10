@@ -291,13 +291,19 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
       this.nzMessageService.info('Check your wallet and please confirm or cancel the transaction in your device.', {
         nzDuration: 4000,
       });
-      const signedXDR = await this.hardwareWalletsService.signWithLedger({
-        xdr,
+      const passphrase = this.stellarSdkService.networkPassphrase;
+
+      const transaction = new this.stellarSdkService.SDK.Transaction(xdr, passphrase);
+
+      const result = await this.hardwareWalletsService.signWithLedger({
+        transaction,
         accountPath: selectedAccount.path,
         publicKey: selectedAccount.publicKey,
         transport,
-        passphrase: this.stellarSdkService.networkPassphrase,
       });
+
+      transaction.addSignature(result.publicKey, result.signature);
+      const signedXDR = transaction.toXDR();
 
       this.signing$.next(false);
       this.accept.emit(signedXDR);
@@ -322,13 +328,15 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
 
     try {
-      const signedXDR = await this.hardwareWalletsService.signWithTrezor({
+      const result = await this.hardwareWalletsService.signWithTrezor({
         path: selectedAccount.path,
         transaction,
         networkPassphrase: this.stellarSdkService.networkPassphrase,
       });
 
-      this.accept.emit(signedXDR);
+      transaction.addSignature(result.publicKey, result.signature);
+
+      this.accept.emit(transaction.toXDR());
     } catch (e: any) {
       console.error(e);
       this.signing$.next(false);

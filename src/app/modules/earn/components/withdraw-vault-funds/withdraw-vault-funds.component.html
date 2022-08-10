@@ -1,0 +1,61 @@
+<ng-container *ngIf="strategy$ | async as strategy">
+  <ng-container *ngIf="vault$ | async as vault">
+
+    <section class="w-full flex flex-wrap mb-4">
+      <div class="w-full flex justify-center items-center mb-4">
+        <div class="w-6 h-6 bg-white p-1 rounded-full mr-2">
+          <img class="w-full h-full"
+               [src]="strategy.strategyImages[0]" alt="">
+        </div>
+
+        <p class="text-xs m-0">
+          {{ strategy.assetCodeAccepted }}
+          <br>
+          <small class="opacity-50">
+            {{ strategy.assetIssuerAccepted | publicKey }}
+          </small>
+        </p>
+      </div>
+
+      <div class="w-full mb-4">
+        <nz-statistic class="mx-auto text-center"
+                      [nzValue]="(tvl$ | async | number: '0.0-7') || 0"
+                      [nzTitle]="tvl">
+        </nz-statistic>
+        <ng-template #tvl>
+          Amount to withdraw
+        </ng-template>
+      </div>
+
+      <div class="w-full mb-4">
+        <nz-statistic class="mx-auto text-center"
+                      [nzValue]="(feeToPay$ | async | number: '0.0-7') || 0"
+                      [nzTitle]="feeToPay">
+        </nz-statistic>
+        <ng-template #feeToPay>
+          ${{ strategy.assetCodeAccepted }} to pay (Withdrawal fee)
+        </ng-template>
+      </div>
+    </section>
+
+    <section class="w-full mb-4">
+      <button nz-button nzSize="large"
+              [disabled]="!vault.tvl"
+              (click)="createWithdrawal()"
+              [nzLoading]="(confirmingTransaction$ | async) || (creatingWithdrawal$ | async)"
+              nzBlock nzType="primary">
+        Withdraw funds
+      </button>
+    </section>
+
+    <section class="w-full text-center">
+      <small class="text-xs opacity-50">
+        Amounts are calculated and might be different once the withdraw is completed.
+        Take network fees and swaps losses during the withdraw in consideration.
+      </small>
+    </section>
+
+
+  </ng-container>
+</ng-container>
+

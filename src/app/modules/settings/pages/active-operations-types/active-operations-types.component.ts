@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { SettingsQuery, WalletsOperationsQuery } from '~root/state';
 import { take, takeUntil } from 'rxjs/operators';
@@ -12,34 +12,34 @@ import { SettingsService } from '~root/core/settings/services/settings.service';
 })
 export class ActiveOperationsTypesComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
-  form = new FormGroup({
-    create_account: new FormControl(false),
-    payment: new FormControl(false),
-    path_payment_strict_receive: new FormControl(false),
-    path_payment_strict_send: new FormControl(false),
-    create_passive_sell_offer: new FormControl(false),
-    manage_sell_offer: new FormControl(false),
-    manage_buy_offer: new FormControl(false),
-    set_options: new FormControl(false),
-    change_trust: new FormControl(false),
-    allow_trust: new FormControl(false),
-    account_merge: new FormControl(false),
-    manage_data: new FormControl(false),
-    bump_sequence: new FormControl(false),
-    create_claimable_balance: new FormControl(false),
-    claim_claimable_balance: new FormControl(false),
-    begin_sponsoring_future_reserves: new FormControl(false),
-    end_sponsoring_future_reserves: new FormControl(false),
-    revoke_sponsorship: new FormControl(false),
-    clawback: new FormControl(false),
-    clawback_claimable_balance: new FormControl(false),
-    set_trust_line_flags: new FormControl(false),
-    liquidity_pool_deposit: new FormControl(false),
-    liquidity_pool_withdraw: new FormControl(false),
+  form = new UntypedFormGroup({
+    create_account: new UntypedFormControl(false),
+    payment: new UntypedFormControl(false),
+    path_payment_strict_receive: new UntypedFormControl(false),
+    path_payment_strict_send: new UntypedFormControl(false),
+    create_passive_sell_offer: new UntypedFormControl(false),
+    manage_sell_offer: new UntypedFormControl(false),
+    manage_buy_offer: new UntypedFormControl(false),
+    set_options: new UntypedFormControl(false),
+    change_trust: new UntypedFormControl(false),
+    allow_trust: new UntypedFormControl(false),
+    account_merge: new UntypedFormControl(false),
+    manage_data: new UntypedFormControl(false),
+    bump_sequence: new UntypedFormControl(false),
+    create_claimable_balance: new UntypedFormControl(false),
+    claim_claimable_balance: new UntypedFormControl(false),
+    begin_sponsoring_future_reserves: new UntypedFormControl(false),
+    end_sponsoring_future_reserves: new UntypedFormControl(false),
+    revoke_sponsorship: new UntypedFormControl(false),
+    clawback: new UntypedFormControl(false),
+    clawback_claimable_balance: new UntypedFormControl(false),
+    set_trust_line_flags: new UntypedFormControl(false),
+    liquidity_pool_deposit: new UntypedFormControl(false),
+    liquidity_pool_withdraw: new UntypedFormControl(false),
   });
 
-  get values(): FormArray {
-    return this.form.controls.values as FormArray;
+  get values(): UntypedFormArray {
+    return this.form.controls.values as UntypedFormArray;
   }
 
   constructor(

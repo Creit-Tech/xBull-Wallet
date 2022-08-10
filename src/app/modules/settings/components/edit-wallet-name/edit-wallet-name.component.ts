@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { IWallet } from '~root/state';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { take, takeUntil } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -21,7 +21,7 @@ export class EditWalletNameComponent implements OnInit, OnDestroy {
     this.wallet$.next(data);
   }
 
-  nameField: FormControl = new FormControl('', Validators.required);
+  nameField: UntypedFormControl = new UntypedFormControl('', Validators.required);
 
   constructor(
     private readonly walletsService: WalletsService,

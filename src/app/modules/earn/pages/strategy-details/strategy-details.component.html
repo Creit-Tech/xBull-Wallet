@@ -1,0 +1,195 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item routerLink="/earn" class="flex items-center">
+        <a class="flex items-center">
+          Earn
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          {{ (strategy$ | async)?.name }}
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full">
+
+  <section class="container mx-auto px-4 pb-4 grid grid-cols-12 gap-4">
+    <nz-card class="order-1 col-span-12 md:col-span-8 ant-card-no-padding p-4">
+      <section *ngIf="(strategy$ | async) as strategy" class="w-full grid grid-cols-12 gap-4">
+
+        <div class="col-span-6 md:col-span-4 flex justify-center">
+          <nz-statistic class="mx-auto text-center"
+                        [nzValue]="(strategy.apy | percent: '0.0-2') || 0"
+                        [nzTitle]="aprHelp">
+          </nz-statistic>
+          <ng-template #aprHelp>
+            Strategy APY <i nz-tooltip="This is the APY that our own vault is currently getting and it serves as a reference for user vaults" class="fa-solid fa-question-circle ml-2"></i>
+          </ng-template>
+        </div>
+
+        <div class="col-span-6 md:col-span-4 flex justify-center">
+          <nz-statistic class="mx-auto text-center" [nzValue]="strategy.tvl | shortAmounts" nzPrefix="$" [nzTitle]="tvlHelp"></nz-statistic>
+          <ng-template #tvlHelp>
+            TVL (${{ strategy.assetCodeAccepted }}) <i nz-tooltip="This is the amount locked in the reference strategy, we use a low amount to be able to have a proper image of the majority of users" class="fa-solid fa-question-circle ml-2"></i>
+          </ng-template>
+        </div>
+
+        <div class="col-span-4 justify-center hidden md:flex">
+          <nz-statistic class="mx-auto text-center" [nzValue]="strategy.riskLevel | titlecase" [nzTitle]="riskHelp"></nz-statistic>
+          <ng-template #riskHelp>
+            Risk <i nz-tooltip="We give each strategy a risk level based on the strategy used, the assets involved and the companies/issuers behind them" class="fa-solid fa-question-circle ml-2"></i>
+          </ng-template>
+        </div>
+
+      </section>
+    </nz-card>
+
+    <nz-card class="order-2 col-span-12 md:col-span-4 ant-card-no-padding p-4">
+      <section class="w-full grid grid-cols-12 gap-4">
+        <div class="col-span-6 flex justify-center">
+          <nz-statistic class="mx-auto text-center"
+                        [nzValue]="(((vault$ | async)?.apy || 0) | percent: '0.0-2') || 0"
+                        [nzTitle]="positionHelp"></nz-statistic>
+          <ng-template #positionHelp>
+            Vault APY <i nz-tooltip="This is your current APY. For each change you make in the vault, you will need to wait 24hrs to see the correct APY calculated" class="fa-solid fa-question-circle ml-2"></i>
+          </ng-template>
+        </div>
+
+        <div class="col-span-6 flex justify-center">
+          <nz-statistic class="mx-auto text-center"
+                        nzPrefix="$"
+                        [nzValue]="((vault$ | async)?.tvl || 0) | shortAmounts"
+                        [nzTitle]="yourSharesHelp"></nz-statistic>
+          <ng-template #yourSharesHelp>
+            Vault TVL (${{ (strategy$ | async)?.assetCodeAccepted }}) <i nz-tooltip="This is the value of your vault based on the deposit asset. The value takes in consideration both funds on hand and those already deposited into pools" class="fa-solid fa-question-circle ml-2"></i>
+          </ng-template>
+        </div>
+      </section>
+    </nz-card>
+
+    <nz-card class="order-3 md:order-4 col-span-12 md:col-span-4 ant-card-no-padding p-4 ant-card-h-full">
+      <ng-container *ngIf="vault$ | async as vault else createVault">
+        <ng-container *ngIf="vault.status === 'ACTIVE'; else createVault">
+          <nz-tabset [nzCentered]="true" *ngIf="strategy$ | async as strategy">
+            <nz-tab nzTitle="Deposit">
+              <app-deposit-vault-funds [strategy]="strategy"
+                                       [vault]="vault">
+              </app-deposit-vault-funds>
+            </nz-tab>
+
+            <nz-tab nzTitle="Withdraw">
+              <app-withdraw-vault-funds [strategy]="strategy"
+                                        [vault]="vault">
+              </app-withdraw-vault-funds>
+            </nz-tab>
+
+            <nz-tab nzTitle="My Vault">
+              <nz-list class="w-full">
+                <nz-list-item class="px-4">
+                  <p class="font-semibold">Account:</p>
+                  <p class="cursor-pointer opacity-80" appClipboard [textToCopy]="vault.vaultAccount">{{ vault.vaultAccount | publicKey }}</p>
+                </nz-list-item>
+                <nz-list-item class="px-4">
+                  <p class="font-semibold">TVL:</p>
+                  <p class="cursor-pointer opacity-80">${{ strategy.assetCodeAccepted }} {{ (vault.tvl || 0) | shortAmounts }}</p>
+                </nz-list-item>
+                <nz-list-item class="px-4">
+                  <p class="font-semibold">APY:</p>
+                  <p class="cursor-pointer opacity-80">{{ ((vault.apy || 0) | percent: '0.0-2') || 0 }}</p>
+                </nz-list-item>
+                <nz-list-item class="px-4">
+                  <p class="font-semibold">Status:</p>
+                  <p class="cursor-pointer opacity-80">{{ vault.status }}</p>
+                </nz-list-item>
+                <nz-list-item class="px-4">
+                  <p class="font-semibold">Last update:</p>
+                  <p class="cursor-pointer opacity-80">{{ vault.updatedAt | date: 'MMM dd, yyyy' }}</p>
+                </nz-list-item>
+              </nz-list>
+            </nz-tab>
+          </nz-tabset>
+        </ng-container>
+      </ng-container>
+
+      <ng-template #createVault>
+        <section class="w-full h-full flex justify-center items-center">
+          <section class="w-full">
+            <div class="w-full text-center mb-4">
+              <h2 class="text-2xl">Create a Vault</h2>
+            </div>
+
+            <div class="text-center mb-4">
+              <p class="px-8">
+                Each strategy is run individually, this means your funds will be separated from others and you will be a signer of the vault.
+                <br>
+                <br>
+                Vaults require a deposit of 50 XLM, this will be used to manage the Vault and will be returned to you (minus the amount used during the lifetime of the Vault) if you decide to cancel the vault at some point
+              </p>
+            </div>
+
+            <div class="w-full text-center">
+              <button [nzLoading]="creatingVault$ | async"
+                      (click)="createOrConfirmVault()"
+                      nzSize="large" nzType="primary"
+                      class="px-8" nz-button>
+                Confirm
+              </button>
+            </div>
+          </section>
+        </section>
+      </ng-template>
+    </nz-card>
+
+    <nz-card class="order-4 md:order-3 col-span-12 md:col-span-8 ant-card-no-padding p-8">
+      <section class="w-full flex flex-col items-center">
+        <div class="w-full text-center mb-4">
+<!--          <nz-radio-group [formControl]="graphFilterControl" nzButtonStyle="solid">-->
+<!--            <label nz-radio-button nzValue="apr">Strategy</label>-->
+<!--            <label nz-radio-button nzValue="apy">My Vault</label>-->
+<!--          </nz-radio-group>-->
+        </div>
+
+        <div class="w-full h-34 md:h-auto">
+          <ngx-charts-area-chart
+            [scheme]="graphColors"
+            [results]="(results$ | async) || []"
+            [showGridLines]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [gradient]="true">
+          </ngx-charts-area-chart>
+        </div>
+      </section>
+    </nz-card>
+
+    <nz-card class="order-5 col-span-12 md:col-span-6 ant-card-no-padding p-4">
+      <div class="w-full mb-4 text-center">
+        <h2 class="text-xl font-semibold m-0">Strategy details</h2>
+      </div>
+
+      <div class="w-full px-4">
+        <div class="mx-auto markdown-classic" markdown [data]="(strategy$ | async)?.details?.strategyDetails"> </div>
+      </div>
+    </nz-card>
+
+    <nz-card class="order-5 col-span-12 md:col-span-6 ant-card-no-padding p-4">
+      <div class="w-full mb-4 text-center">
+        <h2 class="text-xl font-semibold m-0">Risk Level</h2>
+      </div>
+
+      <div class="w-full px-4">
+        <div class="mx-auto markdown-classic" markdown [data]="(strategy$ | async)?.details?.riskLevel"> </div>
+      </div>
+    </nz-card>
+  </section>
+
+</section>

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,7 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./password-modal.component.scss']
 })
 export class PasswordModalComponent {
-  passwordField: FormControl = new FormControl('', [Validators.required]);
+  passwordField: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   @Input() description = this.translateService.instant('PASSWORD_MODAL.REASON');
   @Input() handlePasswordEvent!: (password: string) => any;

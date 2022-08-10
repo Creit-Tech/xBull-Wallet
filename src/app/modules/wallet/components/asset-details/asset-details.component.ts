@@ -143,7 +143,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.nzDrawerRef.close();
           } catch (e) {
             console.error(e);
-            this.nzMessageService.success(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
+            this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'), {
               nzDuration: 5000,
             });
             return;

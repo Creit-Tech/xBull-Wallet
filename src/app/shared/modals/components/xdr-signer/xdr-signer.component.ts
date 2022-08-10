@@ -34,8 +34,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  // Deprecated
   @Output() acceptHandler!: (result: string) => void;
+  // Deprecated
   @Output() accept: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output() signingResults: EventEmitter<ISigningResults> = new EventEmitter<ISigningResults>();
+  @Output() signingResultsHandler?: (data: ISigningResults) => any;
 
   @Input() from: string | 'wallet' = 'wallet';
 
@@ -224,16 +229,30 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       .pipe(withLatestFrom(this.selectedNetworkPassphrase$))
       .pipe(map(([xdr, selectedNetworkPassphrase]) => {
         const secret = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
-        return this.stellarSdkService.signTransaction({
-          xdr,
-          secret,
-          passphrase: selectedNetworkPassphrase,
-        });
+        const keypair = this.stellarSdkService.SDK.Keypair.fromSecret(secret);
+        const transaction = new this.stellarSdkService.SDK.Transaction(xdr, selectedNetworkPassphrase);
+
+        const keypairSignature = transaction.getKeypairSignature(keypair);
+
+        transaction.sign(keypair);
+
+        return {
+          baseXDR: xdr,
+          signedXDR: transaction.toXDR(),
+          signers: [{
+            publicKey: keypair.publicKey(),
+            signature: keypairSignature,
+          }],
+        };
       }))
       .pipe(takeUntil(this.componentDestroyed$))
-      .subscribe(xdr => {
+      .subscribe((result: ISigningResults) => {
         this.signing$.next(false);
-        this.emitData(xdr);
+
+        // DEPRECATED
+        this.emitData(result.signedXDR);
+
+        this.emitSigningResults(result);
       }, error => {
         console.log(error);
         this.nzMessageService.error(`We couldn't sign the transaction, please try again or contact support`);
@@ -282,11 +301,18 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       const xdr = await this.xdr$.pipe(take(1)).toPromise();
       const selectedNetworkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
-      const signedXdr = this.stellarSdkService.signTransaction({
+      const keypair = this.stellarSdkService.SDK.Keypair.fromSecret(secret);
+
+      const transaction = new this.stellarSdkService.SDK.Transaction(
         xdr,
-        secret,
-        passphrase: selectedNetworkPassphrase,
-      });
+        selectedNetworkPassphrase
+      );
+
+      const keypairSignature = transaction.getKeypairSignature(keypair);
+
+      transaction.sign(keypair);
+
+      const signedXDR = transaction.toXDR();
 
       this.signing$.next(false);
 
@@ -294,7 +320,17 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         this.settingsService.setKeptPassword(password);
       }
 
-      this.emitData(signedXdr);
+      // DEPRECATED
+      this.emitData(signedXDR);
+
+      this.emitSigningResults({
+        baseXDR: xdr,
+        signedXDR,
+        signers: [{
+          publicKey: keypair.publicKey(),
+          signature: keypairSignature
+        }]
+      });
     } catch (error) {
       console.log(error);
       this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
@@ -345,16 +381,34 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       this.nzMessageService.info('Check your Ledger and please confirm or cancel the transaction in your device.', {
         nzDuration: 4000,
       });
-      const signedXDR = await this.hardwareWalletsService.signWithLedger({
-        xdr,
+
+      const passphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+
+      const transaction = new this.stellarSdkService.SDK.Transaction(xdr, passphrase);
+
+      const result = await this.hardwareWalletsService.signWithLedger({
+        transaction,
         accountPath: selectedAccount.path,
         publicKey: selectedAccount.publicKey,
         transport,
-        passphrase: await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise(),
       });
 
+      transaction.addSignature(result.publicKey, result.signature);
+      const signedXDR = transaction.toXDR();
+
       this.signing$.next(false);
+
+      // DEPRECATED
       this.emitData(signedXDR);
+
+      this.emitSigningResults({
+        baseXDR: xdr,
+        signedXDR,
+        signers: [{
+          publicKey: result.publicKey,
+          signature: result.signature,
+        }],
+      });
     } catch (e: any) {
       this.signing$.next(false);
       this.nzMessageService.error(e?.message || `Make sure your Ledger is unlocked and using the Stellar App. It's possible that your device doesn't support an operation type you're trying to sign`, {
@@ -377,13 +431,25 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
 
     try {
-      const signedXDR = await this.hardwareWalletsService.signWithTrezor({
+      const result = await this.hardwareWalletsService.signWithTrezor({
         path: selectedAccount.path,
         transaction,
         networkPassphrase,
       });
 
-      this.emitData(signedXDR);
+      transaction.addSignature(result.publicKey, result.signature);
+
+      // DEPRECATED
+      this.emitData(transaction.toXDR());
+
+      this.emitSigningResults({
+        baseXDR: xdr,
+        signedXDR: transaction.toXDR(),
+        signers: [{
+          publicKey: result.publicKey,
+          signature: result.signature,
+        }],
+      });
     } catch (e: any) {
       console.error(e);
       this.signing$.next(false);
@@ -395,6 +461,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     this.signing$.next(false);
   }
 
+  // DEPRECATED
   emitData(result: string): void {
     if (!!this.acceptHandler) {
       this.acceptHandler(result);
@@ -402,6 +469,15 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
 
     this.accept.emit(result);
+    this.nzDrawerRef.close();
+  }
+
+  emitSigningResults(data: ISigningResults): void {
+    if (!!this.signingResultsHandler) {
+      this.signingResultsHandler(data);
+    }
+
+    this.signingResults.emit(data);
     this.nzDrawerRef.close();
   }
 
@@ -415,4 +491,14 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     return fromUnixTime(epoch);
   }
 
+}
+
+
+export interface ISigningResults {
+  baseXDR: string;
+  signedXDR: string;
+  signers: Array<{
+    publicKey: string;
+    signature: string;
+  }>;
 }

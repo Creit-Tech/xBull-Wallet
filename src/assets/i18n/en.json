@@ -133,7 +133,8 @@
     "SIGNER": "Signer",
     "REVOKE": "Revoke",
     "WALLETS": "Wallets",
-    "ASSET": "Asset"
+    "ASSET": "Asset",
+    "EARN": "Earn"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",

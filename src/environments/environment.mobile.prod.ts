@@ -3,6 +3,7 @@ import { Networks } from 'stellar-base';
 export const ENV = 'ENVIRONMENT';
 
 export const environment = {
+  xPointersApi: 'https://farming.xbull.app',
   production: true,
   platform: 'mobile',
   defaultApis: [{
@@ -24,5 +25,5 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '1.4.5'
+  version: '1.5.0'
 };

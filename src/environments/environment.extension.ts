@@ -8,6 +8,7 @@ import { Networks } from 'stellar-base';
 export const ENV = 'ENVIRONMENT';
 
 export const environment = {
+  xPointersApi: 'http://localhost:3100',
   production: false,
   platform: 'extension',
   defaultApis: [{
@@ -29,7 +30,7 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '1.4.5'
+  version: '1.5.0'
 };
 
 /*

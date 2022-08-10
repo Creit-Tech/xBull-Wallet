@@ -3,7 +3,7 @@ import { SettingsQuery, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/s
 import { debounceTime, map, skip, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import BigNumber from 'bignumber.js';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { combineLatest, forkJoin, merge, of, Subject, Subscription } from 'rxjs';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { NzMarks } from 'ng-zorro-antd/slider';
@@ -82,7 +82,7 @@ export class BackgroundImageComponent implements OnInit, AfterViewInit, OnDestro
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly settingsService: SettingsService,
     private readonly settingsQuery: SettingsQuery,
-    private readonly fb: FormBuilder,
+    private readonly fb: UntypedFormBuilder,
     private readonly cdr: ChangeDetectorRef
   ) { }
 

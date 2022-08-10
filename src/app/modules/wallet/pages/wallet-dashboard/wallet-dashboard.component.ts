@@ -23,7 +23,7 @@ import BigNumber from 'bignumber.js';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import BalanceLineLiquidityPool = Horizon.BalanceLineLiquidityPool;
 import BalanceLine = Horizon.BalanceLine;
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, FormGroup } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BalanceLineNative = Horizon.BalanceLineNative;
 import {
@@ -45,7 +45,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountsQuery.getSelectedAccount$;
 
-  graphTypeControl: FormControl = new FormControl('value_distribution');
+  graphTypeControl: UntypedFormControl = new UntypedFormControl('value_distribution');
 
   disableAddAssetButton$ = new BehaviorSubject<boolean>(false);
   addingAsset$ = this.walletsAssetsQuery.addingAsset$;

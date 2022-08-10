@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {FormArray, FormControl, FormGroup, Validators} from '@angular/forms';
+import {UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { Subject, Subscription } from 'rxjs';
 import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -24,15 +24,15 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   wordList: string[] = this.mnemonicPhraseService.getWordList();
   filteredOptions: string[] = [];
 
-  form: FormGroup = new FormGroup({
-    words: new FormArray([]),
-    searchInput: new FormControl(''),
-    confirmPhrase: new FormControl('', Validators.required),
-    confirmPassword: new FormControl('', [Validators.required]),
-  }) as unknown as FormGroup;
+  form: UntypedFormGroup = new UntypedFormGroup({
+    words: new UntypedFormArray([]),
+    searchInput: new UntypedFormControl(''),
+    confirmPhrase: new UntypedFormControl('', Validators.required),
+    confirmPassword: new UntypedFormControl('', [Validators.required]),
+  }) as unknown as UntypedFormGroup;
 
-  get phraseArray(): FormArray {
-    return this.form.controls.words as FormArray;
+  get phraseArray(): UntypedFormArray {
+    return this.form.controls.words as UntypedFormArray;
   }
 
   walletVersion = this.env.version;
@@ -94,7 +94,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
       }
     } else {
       this.mnemonicPhraseService.getTestAccount().forEach(word => {
-        this.phraseArray.push(new FormControl(word, Validators.required));
+        this.phraseArray.push(new UntypedFormControl(word, Validators.required));
       });
       this.form.controls.confirmPassword.patchValue(testPassword);
     }
@@ -135,7 +135,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     }
 
     this.phraseArray.push(
-      new FormControl(word, Validators.required)
+      new UntypedFormControl(word, Validators.required)
     );
 
     this.form.get('searchInput')?.patchValue('');
@@ -161,7 +161,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
 
 export interface IConfirmPhrasePasswordForm {
   searchInput: string;
-  words: FormArray;
+  words: UntypedFormArray;
   confirmPhrase: string;
   confirmPassword: string;
 }

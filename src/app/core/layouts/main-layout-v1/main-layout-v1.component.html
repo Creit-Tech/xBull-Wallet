@@ -37,6 +37,15 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          routerLink="/earn"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-piggy-bank" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.EARN' | translate }}</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/liquidity-pools"
           nzMatchRouter
           nz-menu-item class="flex">

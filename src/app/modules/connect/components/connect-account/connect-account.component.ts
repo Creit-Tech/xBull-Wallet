@@ -11,7 +11,7 @@ import { ConnectQuery } from '~root/modules/connect/state/connect.query';
 import { combineLatest, Observable } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { FormControl, Validators } from '@angular/forms';
+import { UntypedFormControl, Validators } from '@angular/forms';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { ConnectService, EventType } from '~root/modules/connect/services/connect.service';
 import { box, randomBytes } from 'tweetnacl';
@@ -39,7 +39,7 @@ export class ConnectAccountComponent implements OnInit {
     }))
     .pipe(map(alreadyConnected => alreadyConnected ? 1 : 0));
 
-  accountSelectedControl: FormControl = new FormControl('', [Validators.required]);
+  accountSelectedControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
   wallets$ = this.walletsQuery.selectAll();
   walletsAccounts$ = this.walletsAccountsQuery.selectAll();
