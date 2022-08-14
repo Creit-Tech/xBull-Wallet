@@ -9,16 +9,20 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { ModalsModule } from '~root/shared/modals/modals.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
-import {NzButtonModule} from "ng-zorro-antd/button";
-import {NzInputModule} from "ng-zorro-antd/input";
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { TranslationModule } from '~root/translation.module';
+import { MergeAccountsComponent } from './pages/merge-accounts/merge-accounts.component';
+import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 
 @NgModule({
   declarations: [
     LabComponent,
     ImportXdrComponent,
+    MergeAccountsComponent,
   ],
   imports: [
     CommonModule,
@@ -32,6 +36,8 @@ import { TranslationModule } from '~root/translation.module';
     NzInputModule,
     NzBreadCrumbModule,
     TranslationModule.forChild(),
+    NzCardModule,
+    NzToolTipModule,
   ],
 })
 export class LabModule { }
