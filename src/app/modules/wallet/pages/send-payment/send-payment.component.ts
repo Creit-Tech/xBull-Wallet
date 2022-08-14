@@ -231,12 +231,26 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         return;
       }
-      transaction.addOperation(
-        Operation.createAccount({
-          destination: this.form.value.publicKey,
-          startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
-        })
-      );
+
+      const modalResult$ = new Subject<boolean>();
+      this.nzModalService.confirm({
+        nzContent: `Destination does not exist, are you sure you want to create the recipient's account?`,
+        nzOnOk: () => modalResult$.next(true),
+        nzOnCancel: () => modalResult$.next(false),
+        nzClosable: false,
+        nzCentered: true
+      });
+
+      if (await modalResult$.pipe(take(1)).toPromise()) {
+        transaction.addOperation(
+          Operation.createAccount({
+            destination: this.form.value.publicKey,
+            startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
+          })
+        );
+      } else {
+        return;
+      }
     }
 
     if (!!this.form.value.memo) {

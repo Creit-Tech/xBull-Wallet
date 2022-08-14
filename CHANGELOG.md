@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.6.0] - Not released
 ### Added 
 - Allow merging accounts from the lab module
+- Alert the user if he wants to create a new account when sending a new payment
 
 ## [1.5.0] - 2022-08-09
 ### Added
