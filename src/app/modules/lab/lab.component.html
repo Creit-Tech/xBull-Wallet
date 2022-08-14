@@ -24,6 +24,12 @@
     </div>
 
     <div class="w-full mb-4">
+      <button routerLink="/lab/merge-account" nz-button class="w-full" nzSize="large" nzType="primary">
+        {{ 'LAB.MERGE_ACCOUNT' | translate }}
+      </button>
+    </div>
+
+    <div class="w-full mb-4">
       <button nz-button class="w-full" nzSize="large" nzType="primary" [disabled]="true">
         {{ 'LAB.BUILD_TRANSACTION' | translate }}
       </button>

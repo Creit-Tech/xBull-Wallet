@@ -152,7 +152,8 @@
     "ERROR_LOADING_FILES": "Error when loading the file",
     "CANT_PARSE_INCORRECT_FILE": "We were not able to parse the file's data, this probably means is not a correct file",
     "MAKE_SURE_FILE_TYPE": "File type is not correct, make sure is a {{type}} file",
-    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect"
+    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect",
+    "YOUR_ACCOUNT_NOT_CREATED": "Your account doesn't exist"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
@@ -437,6 +438,10 @@
     "BUILD_TRANSACTION": "Build transaction",
     "SIGN_MESSAGE": "Sign message",
     "IMPORT_XDR": "Import XDR (manually sign)",
+    "MERGE_ACCOUNT": "Merge account",
+    "MERGE_ACCOUNT_DISCLAIMER": "When you merge an account, the remaining XLMs will be sent and the account removed from the ledger.",
+    "MERGE_ACCOUNT_COMPLETED": "Account merged",
+    "CANT_BE_MERGED": "Account can't be merged",
     "NOTICE": "This section includes operations that could be dangerous if you don't know what you're doing. Be careful.",
     "COPY_SIGNED": "Copy Signed",
     "SIGN_SIGNED": "Sign XDR",

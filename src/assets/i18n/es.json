@@ -151,7 +151,8 @@
     "ERROR_LOADING_FILES": "Error al cargar el archivo",
     "CANT_PARSE_INCORRECT_FILE": "No pudimos leer la informacion en el archivo, esto puede significar que no es el archivo correcto",
     "MAKE_SURE_FILE_TYPE": "El tipo de archivo es incorrecto, asegurese que es un archivo: {{type}}",
-    "CANT_DECRYPT_BACKUP_FILE": "No pudimos desencriptar el archivo de respaldo, esto significa que la llave o el archivo de respaldo son incorrectos"
+    "CANT_DECRYPT_BACKUP_FILE": "No pudimos desencriptar el archivo de respaldo, esto significa que la llave o el archivo de respaldo son incorrectos",
+    "YOUR_ACCOUNT_NOT_CREATED": "Tu cuenta no existe en la red"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operación completada",
@@ -436,6 +437,10 @@
     "BUILD_TRANSACTION": "Construir transacción",
     "SIGN_MESSAGE": "Firmar mensaje",
     "IMPORT_XDR": "Importar XDR (firma manual)",
+    "MERGE_ACCOUNT": "Combinar cuenta",
+    "MERGE_ACCOUNT_DISCLAIMER": "Al combinar tu cuenta, los XLMs restantes seran enviados y tu cuenta eliminada de Stellar",
+    "MERGE_ACCOUNT_COMPLETED": "Cuenta combinada",
+    "CANT_BE_MERGED": "La cuenta no puede ser combinada",
     "NOTICE": "Esta sección incluye operaciones que pueden ser peligrosas si no sabes lo que haces. Ten cuidado.",
     "COPY_SIGNED": "Copiar firmada",
     "SIGN_SIGNED": "Firmar XDR",
