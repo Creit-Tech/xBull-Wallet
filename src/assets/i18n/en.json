@@ -215,6 +215,8 @@
     "SEND_PAYMENT": {
       "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
       "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
+      "CONFIRM_CREATE_ACCOUNT": "Destination does not exist, are you sure you want to create the recipient's account?",
+      "CONFIRM_CLAIMABLE_BALANCE": "Destination does not has this asset, do you want to create a claimable balance instead (this requires 1 XLM locked until is claimed)?",
       "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
       "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
       "SCAN_MEMO_TITLE": "Scan memo",

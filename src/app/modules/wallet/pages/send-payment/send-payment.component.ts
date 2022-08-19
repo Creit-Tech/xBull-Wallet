@@ -42,7 +42,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { Account, Asset, Operation, TransactionBuilder } from 'stellar-base';
-import { Memo } from 'stellar-sdk';
+import { AccountResponse, Claimant, Memo } from 'stellar-sdk';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -213,17 +213,67 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     }).setTimeout(this.stellarSdkService.defaultTimeout);
 
+    let destinationLoadedAccount: AccountResponse;
     try {
-      await this.stellarSdkService.Server.loadAccount(this.form.value.publicKey);
-      transaction.addOperation(
-        Operation.payment({
-          asset: selectedAsset._id === 'native'
-            ? Asset.native()
-            : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
-          destination: this.form.value.publicKey,
-          amount: new BigNumber(this.form.value.amount).toFixed(7),
-        })
-      );
+      destinationLoadedAccount = await this.stellarSdkService.Server.loadAccount(this.form.value.publicKey);
+
+      if (selectedAsset._id === 'native') {
+        transaction.addOperation(
+          Operation.payment({
+            asset: selectedAsset._id === 'native'
+              ? Asset.native()
+              : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+            destination: this.form.value.publicKey,
+            amount: new BigNumber(this.form.value.amount).toFixed(7),
+          })
+        );
+      } else {
+        const hasTrustline = destinationLoadedAccount.balances.find(b => {
+          if (
+            b.asset_type !== 'credit_alphanum4' &&
+            b.asset_type !== 'credit_alphanum12'
+          ) {
+            return false;
+          }
+
+          return (
+            b.asset_code === selectedAsset.assetCode &&
+            b.asset_issuer === selectedAsset.assetIssuer
+          );
+        });
+
+        if (hasTrustline) {
+          transaction.addOperation(
+            Operation.payment({
+              asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+              destination: this.form.value.publicKey,
+              amount: new BigNumber(this.form.value.amount).toFixed(7),
+            })
+          );
+        } else {
+          const modalResult$ = new Subject<boolean>();
+          this.nzModalService.confirm({
+            nzContent: this.translateService.instant('WALLET.SEND_PAYMENT.CONFIRM_CLAIMABLE_BALANCE'),
+            nzOnOk: () => modalResult$.next(true),
+            nzOnCancel: () => modalResult$.next(false),
+            nzClosable: false,
+            nzCentered: true
+          });
+
+          if (await modalResult$.pipe(take(1)).toPromise()) {
+            transaction.addOperation(
+              Operation.createClaimableBalance({
+                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                amount: new BigNumber(this.form.value.amount).toFixed(7),
+                claimants: [new Claimant(this.form.value.publicKey), new Claimant(loadedAccount.account_id)],
+              })
+            );
+          } else {
+            return;
+          }
+        }
+      }
+
     } catch (e: any) {
       if (selectedAsset._id !== 'native') {
         this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
@@ -234,7 +284,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
       const modalResult$ = new Subject<boolean>();
       this.nzModalService.confirm({
-        nzContent: `Destination does not exist, are you sure you want to create the recipient's account?`,
+        nzContent: this.translateService.instant('WALLET.SEND_PAYMENT.CONFIRM_CREATE_ACCOUNT'),
         nzOnOk: () => modalResult$.next(true),
         nzOnCancel: () => modalResult$.next(false),
         nzClosable: false,
