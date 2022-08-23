@@ -36,7 +36,6 @@ export class DepositVaultFundsComponent implements OnInit {
 
   depositAmountControl: FormControl = new FormControl(0, [
     Validators.required,
-    Validators.min(1),
   ]);
 
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
