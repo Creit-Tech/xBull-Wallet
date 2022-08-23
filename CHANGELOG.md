@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ask the user if it wants to create a new account when sending a payment to an uncreated account
 - Ask the user if it wants to create a new claimable balance for the destination if the destination does not have a trust line set up yet
 
+## [1.5.1] - 2022-08-23
+### Fixed
+- Deposit vaults validation was expecting a wrong min value. Now it's dynamic, and it expects the correct one for each vault.
+- Small typo in the English version of the earn help information
+
 ## [1.5.0] - 2022-08-09
 ### Added
 - "Earn" feature which connects to our farming service for the Stellar Network -> https://xbull.app/farming
