@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   Inject,
   NgZone,
@@ -31,13 +32,14 @@ import { GlobalsService } from '~root/lib/globals/globals.service';
 import { ENV, environment } from '~env';
 import { TranslateService } from '@ngx-translate/core';
 import { AlertsLabelsService } from '~root/core/services/alerts-labels/alerts-labels.service';
+import { WalletConnectService } from '~root/modules/walletconnect/services/walletconnect.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   backgroundImg$ = this.settingsQuery.backgroundImg$;
   backgroundCover$ = this.settingsQuery.backgroundCover$;
 
@@ -62,6 +64,7 @@ export class AppComponent implements OnInit {
     private readonly globalsService: GlobalsService,
     private readonly ngZone: NgZone,
     private readonly translateService: TranslateService,
+    private walletConnectService: WalletConnectService, // Being imported just to start the instance
   ) { }
 
   updateAlertsLabelsSuscription: Subscription = timer(0, 15000)
@@ -124,6 +127,10 @@ export class AppComponent implements OnInit {
     }
 
     this.setTranslation();
+  }
+
+  ngAfterViewInit(): void {
+    this.walletConnectService.startClient();
   }
 
   activateWindowMode(): void {

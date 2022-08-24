@@ -1,0 +1,33 @@
+<section class="w-full flex-col max-w-md mx-auto">
+  <div class="w-full flex flex-col justify-center items-center mb-4">
+    <nz-avatar class="mb-2" nzSize="large" [nzSrc]="img"></nz-avatar>
+    <div class="w-full text-center">
+      <h3 class="text-lg mb-0 opacity-80">{{ name }}</h3>
+    </div>
+    <div class="w-full text-center mb-4">
+      <p class="m-0 opacity-50">{{ url }}</p>
+    </div>
+    <div class="w-full text-center">
+      <p class="m-0 opacity-80 text-xs">
+        This app just requested a new signing from you, you can either accept or reject the transaction.
+        Your keys are protected and will not be shared with the app. Always check before signing.
+      </p>
+    </div>
+  </div>
+
+  <div class="w-full grid grid-cols-2 gap-4">
+    <button class="col-span-1"
+            (click)="onReject()"
+            nz-button nzSize="large"
+            nzBlock nzType="primary" nzDanger>
+      Reject
+    </button>
+    <button class="col-span-1"
+            (click)="onAccept()"
+            [nzLoading]="loading"
+            nzBlock nzType="primary"
+            nz-button nzSize="large">
+      Accept
+    </button>
+  </div>
+</section>

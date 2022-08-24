@@ -1,0 +1,46 @@
+<section *ngIf="session$ | async as session" class="w-full flex-col max-w-md mx-auto">
+  <div class="w-full flex flex-col justify-center items-center mb-4">
+    <nz-avatar class="mb-2" nzSize="large" [nzSrc]="session.peer.metadata.icons[0]"></nz-avatar>
+    <div class="w-full text-center">
+      <h3 class="text-lg mb-0 opacity-80">{{ session.peer.metadata.name }}</h3>
+    </div>
+    <div class="w-full text-center mb-4">
+      <p class="m-0 opacity-50">{{ session.peer.metadata.url }}</p>
+    </div>
+    <div class="w-full text-center">
+      <p class="m-0 opacity-80 text-xs">
+        {{ session.peer.metadata.description }}
+      </p>
+    </div>
+  </div>
+
+  <nz-list class="w-full">
+    <nz-list-item>
+      <p><b>Methods:</b></p>
+
+      <p>
+        {{ methodAvailable(session.namespaces.stellar.methods) }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p><b>Expiry:</b></p>
+
+      <p>
+        {{ session.expiry * 1000 | date: 'MMM dd, yyyy' }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p><b>Created At:</b></p>
+
+      <p>
+        {{ session.createdAt | date: 'MMM dd, yyyy' }}
+      </p>
+    </nz-list-item>
+
+    <nz-list-item>
+      <button (click)="deleteSession()" nz-button nzType="primary" nzSize="large" nzBlock nzDanger>
+        Delete session
+      </button>
+    </nz-list-item>
+  </nz-list>
+</section>
