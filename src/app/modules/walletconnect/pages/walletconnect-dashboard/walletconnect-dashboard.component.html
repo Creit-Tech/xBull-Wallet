@@ -53,7 +53,7 @@
 
 <ng-template #newSessionModal>
   <section class="w-full flex flex-col">
-    <div class="w-full mb-4">
+    <div *ngIf="hasCamera" class="w-full mb-4">
       <button (click)="onQrScan()" nz-button nzBlock nzSize="large" nzType="primary">
         <i class="fa-solid fa-camera mr-2"></i> Scan QR
       </button>
