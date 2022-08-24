@@ -239,6 +239,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         return {
           baseXDR: xdr,
           signedXDR: transaction.toXDR(),
+          transaction,
           signers: [{
             publicKey: keypair.publicKey(),
             signature: keypairSignature,
@@ -326,6 +327,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       this.emitSigningResults({
         baseXDR: xdr,
         signedXDR,
+        transaction,
         signers: [{
           publicKey: keypair.publicKey(),
           signature: keypairSignature
@@ -404,6 +406,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       this.emitSigningResults({
         baseXDR: xdr,
         signedXDR,
+        transaction,
         signers: [{
           publicKey: result.publicKey,
           signature: result.signature,
@@ -444,6 +447,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
       this.emitSigningResults({
         baseXDR: xdr,
+        transaction,
         signedXDR: transaction.toXDR(),
         signers: [{
           publicKey: result.publicKey,
@@ -495,6 +499,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
 
 export interface ISigningResults {
+  transaction: Transaction;
   baseXDR: string;
   signedXDR: string;
   signers: Array<{

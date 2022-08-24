@@ -152,7 +152,8 @@
     "ERROR_LOADING_FILES": "Error when loading the file",
     "CANT_PARSE_INCORRECT_FILE": "We were not able to parse the file's data, this probably means is not a correct file",
     "MAKE_SURE_FILE_TYPE": "File type is not correct, make sure is a {{type}} file",
-    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect"
+    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect",
+    "YOUR_ACCOUNT_NOT_CREATED": "Your account doesn't exist"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
@@ -214,6 +215,8 @@
     "SEND_PAYMENT": {
       "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
       "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
+      "CONFIRM_CREATE_ACCOUNT": "Destination does not exist, are you sure you want to create the recipient's account?",
+      "CONFIRM_CLAIMABLE_BALANCE": "Destination does not has this asset, do you want to create a claimable balance instead (this requires 1 XLM locked until is claimed)?",
       "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
       "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
       "SCAN_MEMO_TITLE": "Scan memo",
@@ -437,6 +440,10 @@
     "BUILD_TRANSACTION": "Build transaction",
     "SIGN_MESSAGE": "Sign message",
     "IMPORT_XDR": "Import XDR (manually sign)",
+    "MERGE_ACCOUNT": "Merge account",
+    "MERGE_ACCOUNT_DISCLAIMER": "When you merge an account, the remaining XLMs will be sent and the account removed from the ledger.",
+    "MERGE_ACCOUNT_COMPLETED": "Account merged",
+    "CANT_BE_MERGED": "Account can't be merged",
     "NOTICE": "This section includes operations that could be dangerous if you don't know what you're doing. Be careful.",
     "COPY_SIGNED": "Copy Signed",
     "SIGN_SIGNED": "Sign XDR",

@@ -23,7 +23,8 @@ const persistStateParams: Partial<PersistStateParams> = {
     'horizon-apis',
     'earn-tokens',
     'earn-vaults',
-    'earn-strategies'
+    'earn-strategies',
+    'walletconnect-sessions',
   ],
   preStorageUpdate(storeName: string, state: any): any {
     try {

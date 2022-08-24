@@ -40,6 +40,16 @@
       <span>{{ 'COMMON_WORDS.LAB' | translate }}</span>
     </li>
 
+    <li [class.hidden]="!(advanceMode$ | async)"
+        (click)="closeDrawer()"
+        routerLink="/walletconnect"
+        nzMatchRouter
+        nz-menu-item
+        class="flex">
+      <img class="h-4 w-4 mr-4" src="/assets/images/walletconnect.svg" alt="">
+      <span>WalletConnect</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-gear"></i>
       <span>{{ 'COMMON_WORDS.SETTINGS' | translate }}</span>
