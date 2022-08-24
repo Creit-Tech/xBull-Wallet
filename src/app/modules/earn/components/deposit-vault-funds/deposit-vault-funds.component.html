@@ -19,7 +19,7 @@
       <nz-input-number-group [nzAddOnAfter]="maxButton" class="w-full">
         <nz-input-number [formControl]="depositAmountControl"
                          [nzMax]="$any(acceptedAssetBalance.balance)"
-                         [nzMin]="1"
+                         [nzMin]="strategy.minDeposit"
                          [nzPrecision]="7"
                          nzPrecisionMode="toFixed"
                          nzSize="large">

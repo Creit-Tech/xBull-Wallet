@@ -74,6 +74,17 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          class="flex opacity-90 hover:opacity-100"
+          routerLink="/walletconnect"
+          nzMatchRouter
+          nz-menu-item>
+        <img class="h-4 w-4" [class.mr-4]="!isCollapsed"
+             src="/assets/images/walletconnect.svg" alt="">
+        <span *ngIf="!isCollapsed">WalletConnect</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/settings"
           nzMatchRouter
           nz-menu-item class="flex">
