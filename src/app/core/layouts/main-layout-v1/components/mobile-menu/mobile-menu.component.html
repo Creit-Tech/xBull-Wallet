@@ -40,8 +40,7 @@
       <span>{{ 'COMMON_WORDS.LAB' | translate }}</span>
     </li>
 
-    <li [class.hidden]="!(advanceMode$ | async)"
-        (click)="closeDrawer()"
+    <li (click)="closeDrawer()"
         routerLink="/walletconnect"
         nzMatchRouter
         nz-menu-item
