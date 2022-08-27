@@ -127,15 +127,15 @@ export class MergeAccountsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const targetAccount = new this.stellarSdkService.SDK.Account(loadedAccount.accountId(), loadedAccount.sequence);
+    const sourceAccount = new this.stellarSdkService.SDK.Account(loadedAccount.accountId(), loadedAccount.sequence);
 
-    const transactionBuilder = new this.stellarSdkService.SDK.TransactionBuilder(targetAccount, {
+    const transactionBuilder = new this.stellarSdkService.SDK.TransactionBuilder(sourceAccount, {
       fee: this.stellarSdkService.fee,
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     }).setTimeout(this.stellarSdkService.defaultTimeout);
 
     try {
-      await this.stellarSdkService.Server.loadAccount(this.form.value.destination);
+      await this.stellarSdkService.loadAccount(this.form.value.destination);
     } catch (e) {
       this.nzMessageService.error(`Destination account does not exist.`);
       return;

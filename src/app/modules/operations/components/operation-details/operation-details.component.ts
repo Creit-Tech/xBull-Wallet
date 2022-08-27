@@ -16,7 +16,6 @@ export class OperationDetailsComponent implements OnInit {
     this.operation$.next(data);
   }
 
-
   constructor(
     private readonly globalsService: GlobalsService,
     private readonly horizonApisQuery: HorizonApisQuery,
