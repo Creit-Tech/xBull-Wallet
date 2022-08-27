@@ -49,6 +49,7 @@ import { ActivatedRoute } from '@angular/router';
 import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
+import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 
 @Component({
   selector: 'app-send-payment',
@@ -70,8 +71,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   form: UntypedFormGroup = new UntypedFormGroup({
     publicKey: new UntypedFormControl('', [
       Validators.required,
-      Validators.minLength(56),
-      Validators.maxLength(56),
+      validPublicKeyValidator
     ]),
     memo: new UntypedFormControl(''),
     assetCode: new UntypedFormControl('', [Validators.required]), // it's called asset code but it's actually the id
@@ -204,7 +204,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+    const loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 
@@ -215,7 +215,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let destinationLoadedAccount: AccountResponse;
     try {
-      destinationLoadedAccount = await this.stellarSdkService.Server.loadAccount(this.form.value.publicKey);
+      destinationLoadedAccount = await this.stellarSdkService.loadAccount(this.form.value.publicKey);
 
       if (selectedAsset._id === 'native') {
         transaction.addOperation(

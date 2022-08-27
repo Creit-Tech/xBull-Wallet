@@ -4,6 +4,8 @@ import BigNumber from 'bignumber.js';
 import {BalanceAssetType, HorizonApisQuery, IHorizonApi, SettingsQuery} from '~root/state';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Account } from 'stellar-base';
+import { AccountResponse, MuxedAccount } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +39,15 @@ export class StellarSdkService {
     private readonly settingsQuery: SettingsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
+
+  loadAccount(account: string): Promise<AccountResponse> {
+    if (this.SDK.StrKey.isValidMed25519PublicKey(account)) {
+      const muxedAccount = this.SDK.MuxedAccount.fromAddress(account, '-1');
+      return this.Server.loadAccount(muxedAccount.baseAccount().accountId());
+    } else {
+      return this.Server.loadAccount(account);
+    }
+  }
 
   signTransaction(data: { xdr: string, secret: string, passphrase: string; }): string {
     const keypair = this.SDK.Keypair.fromSecret(data.secret);
