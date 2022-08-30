@@ -54,7 +54,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     }));
 
   swapForm: UntypedFormGroup = new UntypedFormGroup({
-    destination: new UntypedFormControl('', [validPublicKeyValidator]),
+    destination: new UntypedFormControl(''),
     memo: new UntypedFormControl(''),
     fromAsset: new UntypedFormGroup({
       amount: new UntypedFormControl(0, [
