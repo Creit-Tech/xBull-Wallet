@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - not released
+
+## [1.6.2] - 2022-08-30
+- Add support to Muxed accounts
+- Fix path payment component
+
 ## [1.6.1] - 2022-08-25
 ### Fixed
 - WalletConnect option was not available unless you set your wallet in advanced mode which was incorrect
@@ -27,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade Angular 13 -> 14
 - Upgrade Angular cdk version 12 -> 13
 - Ng Zorro version 13
-
 
 ### Fixed
 - Fixed multiple places where text was not showed because of wrong translate implementation

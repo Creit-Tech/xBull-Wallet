@@ -32,14 +32,48 @@
 
         <ng-container *ngIf="operation.operationRecord.type === 'payment'">
           <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.TO' | translate }}:</dt>
-          <dd appClipboard [textToCopy]="operation.operationRecord.to" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+          <dd appClipboard [textToCopy]="operation.operationRecord.to"
+              class="opacity-80 cursor-pointer text-sm mb-3 break-all">
             {{ operation.operationRecord.to | publicKey }}
           </dd>
 
+          <ng-container *ngIf="operation.operationRecord.to_muxed && operation.operationRecord.to_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.TO' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.to_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.to_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.to_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.to_muxed_id }}
+            </dd>
+          </ng-container>
+
           <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.FROM' | translate }}:</dt>
-          <dd appClipboard [textToCopy]="operation.operationRecord.from" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+          <dd appClipboard [textToCopy]="operation.operationRecord.from"
+              class="opacity-80 cursor-pointer text-sm mb-3 break-all">
             {{ operation.operationRecord.from | publicKey }}
           </dd>
+
+          <ng-container *ngIf="operation.operationRecord.from_muxed && operation.operationRecord.from_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.FROM' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed_id }}
+            </dd>
+          </ng-container>
 
           <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.AMOUNT' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">
@@ -58,10 +92,42 @@
             {{ operation.operationRecord.to | publicKey }}
           </dd>
 
+          <ng-container *ngIf="operation.operationRecord.to_muxed && operation.operationRecord.to_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.TO' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.to_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.to_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.to_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.to_muxed_id }}
+            </dd>
+          </ng-container>
+
           <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.FROM' | translate }}:</dt>
           <dd appClipboard [textToCopy]="operation.operationRecord.from" class="opacity-80 cursor-pointer text-sm mb-3 break-all">
             {{ operation.operationRecord.from | publicKey }}
           </dd>
+
+          <ng-container *ngIf="operation.operationRecord.from_muxed && operation.operationRecord.from_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.FROM' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed_id }}
+            </dd>
+          </ng-container>
 
           <dt class="text-base font-bold mb-1">{{ 'OPERATIONS.SOURCE_AMOUNT' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3 break-all">
@@ -269,6 +335,22 @@
           <dd class="opacity-80 text-sm mb-3 cursor-pointer" appClipboard [textToCopy]="operation.operationRecord.into">
             {{ operation.operationRecord.into | publicKey }}
           </dd>
+
+          <ng-container *ngIf="operation.operationRecord.into_muxed && operation.operationRecord.into_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.RECEIVER' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.into_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.into_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.into_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.into_muxed_id }}
+            </dd>
+          </ng-container>
         </ng-container>
 
         <ng-container *ngIf="operation.operationRecord.type === 'manage_data'">
@@ -301,6 +383,44 @@
           <dt class="text-base font-bold mb-1">{{ 'OPERATIONS.BEGIN_SPONSORING' | translate }}:</dt>
           <dd class="opacity-80 text-sm mb-3">
             {{ operation.operationRecord.begin_sponsor | publicKey }}
+          </dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.operationRecord.type === 'clawback'">
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.AMOUNT' | translate }}:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.amount | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.FROM' | translate }}:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.from | publicKey }}
+          </dd>
+
+          <ng-container *ngIf="operation.operationRecord.from_muxed && operation.operationRecord.from_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.RECEIVER' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.from_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.from_muxed_id }}
+            </dd>
+          </ng-container>
+
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.CODE' | translate }}:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.asset_code | publicKey }}
+          </dd>
+
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.ISSUER' | translate }}:</dt>
+          <dd class="opacity-80 text-sm mb-3">
+            {{ operation.operationRecord.asset_issuer | publicKey }}
           </dd>
         </ng-container>
 
@@ -401,6 +521,32 @@
             <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.MEMO' | translate }}:</dt>
             <dd class="opacity-80 text-sm mb-3 truncate">
               {{ transaction.memo }}
+            </dd>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="operation?.operationRecord.source_account">
+          <dt class="py-2 w-full"></dt>
+
+          <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.SOURCE' | translate }}:</dt>
+          <dd appClipboard [textToCopy]="operation.operationRecord.source_account"
+              class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+            {{ operation.operationRecord.source_account | publicKey }}
+          </dd>
+
+          <ng-container *ngIf="operation.operationRecord.source_account_muxed && operation.operationRecord.source_account_muxed_id">
+            <dt class="text-base font-bold mb-1">{{ 'COMMON_WORDS.SOURCE' | translate }} Muxed:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.source_account_muxed"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.source_account_muxed | publicKey }}
+            </dd>
+
+            <dt class="text-base font-bold mb-1">Muxed ID:</dt>
+            <dd appClipboard
+                [textToCopy]="operation.operationRecord.source_account_muxed_id"
+                class="opacity-80 cursor-pointer text-sm mb-3 break-all">
+              {{ operation.operationRecord.source_account_muxed_id }}
             </dd>
           </ng-container>
         </ng-container>
