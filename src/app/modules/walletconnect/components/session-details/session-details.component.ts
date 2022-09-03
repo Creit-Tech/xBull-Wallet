@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { IWalletConnectSessionModel } from '~root/state/walletconnect-sessions/walletconnect-session.model';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-session-details',
@@ -24,6 +25,7 @@ export class SessionDetailsComponent implements OnInit {
     private readonly walletConnectService: WalletConnectService,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly nzMessageService: NzMessageService,
+    private readonly nzModalService: NzModalService,
   ) { }
 
   ngOnInit(): void {
@@ -43,8 +45,8 @@ export class SessionDetailsComponent implements OnInit {
 
   async deleteSession(): Promise<void> {
     this.loading = true;
+    const session = await this.session$.pipe(take(1)).toPromise();
     try {
-      const session = await this.session$.pipe(take(1)).toPromise();
       await this.walletConnectService.disconnectSession({
         topic: session.topic,
         reason: 'User deleted the session',
@@ -54,7 +56,13 @@ export class SessionDetailsComponent implements OnInit {
       this.nzDrawerRef.close();
     } catch (e) {
       this.loading = false;
-      this.nzMessageService.error('We were not able to disconnect the session');
+      this.nzModalService.confirm({
+        nzContent: 'We were not able to disconnect the session. Do you want to remove it from this wallet only instead?',
+        nzOnOk: instance => {
+          this.walletConnectService.removeSession(session.topic);
+          this.nzDrawerRef.close();
+        }
+      });
     }
   }
 

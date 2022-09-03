@@ -260,4 +260,8 @@ export class WalletConnectService {
 
     this.walletConnectSessionsStore.remove(params.topic);
   }
+
+  public removeSession(topic: string): void {
+    this.walletConnectSessionsStore.remove(topic);
+  }
 }
