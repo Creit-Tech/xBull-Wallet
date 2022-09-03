@@ -108,7 +108,7 @@ export class WalletConnectService {
       const savedSession = this.walletConnectSessionsQuery.getEntity(topic);
 
       if (!!savedSession) {
-        const updatedSession = { ...savedSession, namespaces };
+        const updatedSession = createWalletConnectSession({ ...savedSession, namespaces });
         this.walletConnectSessionsStore.upsert(topic, updatedSession);
       }
     });
