@@ -6,7 +6,7 @@ export interface IWalletConnectSessionModel extends SessionTypes.Struct {
   createdAt: Date;
 }
 
-export const createWalletConnectSession = (data: Omit<IWalletConnectSessionModel, '_id'>) => {
+export const createWalletConnectSession = (data: Omit<IWalletConnectSessionModel, '_id'>): IWalletConnectSessionModel => {
   return {
     ...data,
     _id: data.topic,
@@ -15,6 +15,6 @@ export const createWalletConnectSession = (data: Omit<IWalletConnectSessionModel
     //   + '_' +
     //   data.peer.metadata.url
     // ).toString(),
-    createAt: new Date(data.createdAt),
+    createdAt: new Date(data.createdAt),
   };
 };

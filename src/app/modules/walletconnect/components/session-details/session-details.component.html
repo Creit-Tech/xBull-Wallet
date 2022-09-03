@@ -22,14 +22,14 @@
         {{ methodAvailable(session.namespaces.stellar.methods) }}
       </p>
     </nz-list-item>
-    <nz-list-item>
+    <nz-list-item *ngIf="session.expiry">
       <p><b>Expiry:</b></p>
 
       <p>
         {{ session.expiry * 1000 | date: 'MMM dd, yyyy' }}
       </p>
     </nz-list-item>
-    <nz-list-item>
+    <nz-list-item *ngIf="!!session.createdAt?.toISOString">
       <p><b>Created At:</b></p>
 
       <p>

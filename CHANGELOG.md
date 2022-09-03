@@ -6,8 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.0] - not released
 
+## [1.6.3] - 2022-09-03
+### Fixed
+- Fix typo and add validations in the Walletconnect model so we prevent issues when there was a missing value after the entity was updated
+
 ## [1.6.2] - 2022-08-30
+### Added
 - Add support to Muxed accounts
+- 
+### Fixed
 - Fix path payment component
 
 ## [1.6.1] - 2022-08-25
