@@ -34,6 +34,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationModule } from '~root/translation.module';
 import { MarkdownModule } from 'ngx-markdown';
+import { AnchorsModule } from '~root/modules/anchors/anchors.module';
 
 registerLocaleData(en);
 
@@ -77,6 +78,7 @@ registerLocaleData(en);
     }),
     TranslationModule.forRoot(),
     MarkdownModule.forRoot(),
+    AnchorsModule,
   ],
   providers: [
     {

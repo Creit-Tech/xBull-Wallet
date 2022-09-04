@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.6.2] - 2022-08-30
 ### Added
 - Add support to Muxed accounts
-- 
+
 ### Fixed
 - Fix path payment component
 

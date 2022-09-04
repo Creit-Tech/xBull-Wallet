@@ -41,11 +41,15 @@
     "ASSET_BUYING": "Asset en compra"
   },
   "COMMON_WORDS": {
+    "MORE": "Más",
+    "FIXED": "Fijo",
+    "PERCENTAGE": "Porcentaje",
     "SIMPLE": "Simple",
     "ADVANCED": "Avanzado",
     "OPERATIONS": "Operaciones",
     "SWAPS": "Intercambios",
     "LP": "Pools de liquidez",
+    "ANCHORS": "Anclas",
     "AIRDROPS": "Airdrops",
     "LAB": "Lab",
     "SETTINGS": "Configuraciones",
@@ -511,5 +515,18 @@
     "IMPORTING_MESSAGE": "Importar un nuevo archivo de respaldo removerá todo en tu Wallet y lo reemplazará con la información en el archivo de respaldo",
     "EXPORT_DESCRIPTION": "Exportar la información en tu Wallet generará dos archivos, uno con la informacion de tu Wallet encriptada y otro con la llave para desencriptarla",
     "EXPORT_RECOMMENDATION": "Te recomendamos guardar cada archivo en lugares distintos"
+  },
+  "ANCHORS": {
+    "ADD_NEW": "Agregar nueva Ancla",
+    "DEPOSIT_MIN": "Deposito Mínimo",
+    "DEPOSIT_MAX": "Deposito Máximo",
+    "DEPOSIT_FEE": "Comisión de deposito",
+    "WITHDRAW_MIN": "Retiro Mínimo",
+    "WITHDRAW_MAX": "Retiro Máximo",
+    "WITHDRAW_FEE": "Comisión de retiro",
+    "ANCHOR_DETAILS": "Detalles de Ancla",
+    "REMOVE_ANCHOR": "Remover Ancla",
+    "ADD_ANCHOR_STEP_1_TITLE": "Primero obtengamos la informacion del Ancla",
+    "ADD_ANCHOR_STEP_2_TITLE": "Ahora confirma los datos"
   }
 }
