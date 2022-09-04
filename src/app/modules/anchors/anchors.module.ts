@@ -30,6 +30,7 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { AddAnchorModalComponent } from './components/add-anchor-modal/add-anchor-modal.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -57,7 +58,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     NzModalModule,
     NzStepsModule,
     NzInputModule,
-    NzFormModule
+    NzFormModule,
+    TranslationModule.forChild(),
   ],
   providers: [
     {

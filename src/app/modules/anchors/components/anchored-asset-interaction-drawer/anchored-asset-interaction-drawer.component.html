@@ -13,7 +13,7 @@
   <div class="col-span-1 row-span-1 overflow-y-auto no-scrollbar">
     <div class="w-full text-center mb-4">
       <h2 class="opacity-80 font-semibold">
-        Transfer history
+        {{ 'COMMON_WORDS.OPERATIONS' | translate }}
       </h2>
     </div>
 
@@ -69,7 +69,7 @@
                 nzBlock nzSize="large"
                 (click)="onDeposit(anchorCurrency)"
                 nz-button nzType="primary">
-          <i class="mr-2 fa-solid fa-download"></i> Deposit
+          <i class="mr-2 fa-solid fa-download"></i> {{ 'COMMON_WORDS.DEPOSIT' | translate }}
         </button>
         <nz-divider nzType="vertical"></nz-divider>
         <button [disabled]="!anchorCurrency.withdraw.enabled"
@@ -77,7 +77,7 @@
                 (click)="onWithdraw(anchorCurrency)"
                 nzBlock nzSize="large" nzDanger
                 nz-button nzType="primary">
-          Withdraw <i class="ml-2 fa-solid fa-upload"></i>
+          {{ 'COMMON_WORDS.WITHDRAW' | translate }} <i class="ml-2 fa-solid fa-upload"></i>
         </button>
       </div>
     </ng-container>

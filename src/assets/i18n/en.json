@@ -41,6 +41,9 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "MORE": "More",
+    "FIXED": "Fixed",
+    "PERCENTAGE": "Percentage",
     "SIMPLE": "Simple",
     "ADVANCED": "Advanced",
     "OPERATIONS": "Operations",
@@ -513,5 +516,18 @@
     "IMPORTING_MESSAGE": "Importing a new snapshot will remove everything in your wallet and add the data from the backup file",
     "EXPORT_DESCRIPTION": "Exporting the data from your wallet will generate two files, one file will include an encrypted state of your wallet and the other file will include the key to decrypt it",
     "EXPORT_RECOMMENDATION": "We recommend you saving each file on different places"
+  },
+  "ANCHORS": {
+    "ADD_NEW": "Add new anchor",
+    "DEPOSIT_MIN": "Deposit Min",
+    "DEPOSIT_MAX": "Deposit Max",
+    "DEPOSIT_FEE": "Deposit Fee",
+    "WITHDRAW_MIN": "Withdraw Min",
+    "WITHDRAW_MAX": "Withdraw Max",
+    "WITHDRAW_FEE": "Withdraw Fee",
+    "ANCHOR_DETAILS": "Anchor details",
+    "REMOVE_ANCHOR": "Remove Anchor",
+    "ADD_ANCHOR_STEP_1_TITLE": "Let's start by fetching the anchor's data",
+    "ADD_ANCHOR_STEP_2_TITLE": "Now check and confirm"
   }
 }

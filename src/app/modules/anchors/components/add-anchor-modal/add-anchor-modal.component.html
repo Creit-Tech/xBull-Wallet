@@ -10,7 +10,7 @@
 <section *ngIf="(currentStep$ | async) === 0" class="w-full flex flex-col">
   <div class="w-full text-center mb-4">
     <h2 class="text-lg opacity-80">
-      Let's start by fetching the anchor's data
+      {{ 'ANCHORS.ADD_ANCHOR_STEP_1_TITLE' | translate }}
     </h2>
   </div>
 
@@ -23,7 +23,7 @@
 
   <ng-template #confirmUrl>
     <button (click)="fetchData()" [nzLoading]="fetchingTomlData" nz-button [disabled]="urlControl.invalid">
-      Confirm
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
     </button>
   </ng-template>
 </section>
@@ -31,7 +31,7 @@
 <section *ngIf="(currentStep$ | async) === 1" class="w-full flex flex-col">
   <div class="w-full text-center mb-4">
     <h2 class="text-lg opacity-80">
-      Now check and confirm
+      {{ 'ANCHORS.ADD_ANCHOR_STEP_2_TITLE' | translate }}
     </h2>
   </div>
 
@@ -96,7 +96,7 @@
     <button (click)="confirmAdd()"
             [disabled]="anchorDataForm.invalid"
             nz-button nzSize="large" nzType="primary">
-      Confirm
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
     </button>
   </div>
 </section>

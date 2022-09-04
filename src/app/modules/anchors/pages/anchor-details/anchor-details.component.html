@@ -8,7 +8,7 @@
       </nz-breadcrumb-item>
       <nz-breadcrumb-item class="flex items-center">
         <a class="flex items-center" routerLink="/anchors">
-          Anchors
+          {{ 'COMMON_WORDS.ANCHORS' | translate }}
         </a>
       </nz-breadcrumb-item>
       <nz-breadcrumb-item class="flex items-center">
@@ -43,13 +43,13 @@
             [nzData]="(currencies$ | async) || []">
     <thead>
     <tr>
-      <th>Asset</th>
-      <th class="hidden lg:table-cell">Deposit Min</th>
-      <th class="hidden lg:table-cell">Deposit Max</th>
-      <th class="hidden lg:table-cell">Deposit Fee</th>
-      <th class="hidden lg:table-cell">Withdraw Min</th>
-      <th class="hidden lg:table-cell">Withdraw Max</th>
-      <th class="hidden lg:table-cell">Withdraw Fee</th>
+      <th>{{ 'COMMON_WORDS.ASSET' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.DEPOSIT_MIN' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.DEPOSIT_MAX' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.DEPOSIT_FEE' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.WITHDRAW_MIN' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.WITHDRAW_MAX' | translate }}</th>
+      <th class="hidden lg:table-cell">{{ 'ANCHORS.WITHDRAW_FEE' | translate }}</th>
       <th class="hidden lg:table-cell"></th>
       <th class="lg:hidden"></th>
     </tr>
@@ -75,11 +75,11 @@
 
           <td class="hidden lg:table-cell">
             <div *ngIf="data.deposit.feeFixed" class="w-full">
-              Fixed: {{ data.deposit.feeFixed | number:'0.0-7' }}
+              {{ 'COMMON_WORDS.FIXED' | translate }}: {{ data.deposit.feeFixed | number:'0.0-7' }}
             </div>
 
             <div *ngIf="data.deposit.feePercentage" class="w-full">
-              Percentage: {{ data.deposit.feePercentage }}%
+              {{ 'COMMON_WORDS.PERCENTAGE' | translate }}: {{ data.deposit.feePercentage }}%
             </div>
 
             <div *ngIf="data.deposit.feeMin" class="w-full">
@@ -97,11 +97,11 @@
 
           <td class="hidden lg:table-cell">
             <div *ngIf="data.withdraw.feeFixed" class="w-full">
-              Fixed: {{ data.withdraw.feeFixed | number:'0.0-7' }}
+              {{ 'COMMON_WORDS.FIXED' | translate }}: {{ data.withdraw.feeFixed | number:'0.0-7' }}
             </div>
 
             <div *ngIf="data.withdraw.feePercentage" class="w-full">
-              Percentage: {{ data.withdraw.feePercentage }}%
+              {{ 'COMMON_WORDS.PERCENTAGE' | translate }}: {{ data.withdraw.feePercentage }}%
             </div>
 
             <div *ngIf="data.withdraw.feeMin" class="w-full">
@@ -113,7 +113,7 @@
             <div class="w-full h-full flex items-center justify-center">
               <button (click)="openAssetInteractionDrawer(data)"
                       nz-button nzType="primary">
-                More <i class="ml-2 fa-solid fa-plus"></i>
+                {{ 'COMMON_WORDS.MORE' | translate }} <i class="ml-2 fa-solid fa-plus"></i>
               </button>
             </div>
           </td>
@@ -132,23 +132,23 @@
         <tr [nzExpand]="cellState.open">
           <nz-list class="w-full">
             <nz-list-item class="px-4">
-              <b>Deposit Min:</b> <div>{{ data.deposit.minAmount | number:'0.0-7' }}</div>
+              <b>{{ 'ANCHORS.DEPOSIT_MIN' | translate }}:</b> <div>{{ data.deposit.minAmount | number:'0.0-7' }}</div>
             </nz-list-item>
 
             <nz-list-item class="px-4">
-              <b>Deposit Max:</b> <div>{{ data.deposit.maxAmount | number:'0.0-7' }}</div>
+              <b>{{ 'ANCHORS.DEPOSIT_MAX' | translate }}:</b> <div>{{ data.deposit.maxAmount | number:'0.0-7' }}</div>
             </nz-list-item>
 
             <nz-list-item class="px-4">
-              <b>Deposit Fee:</b>
+              <b>{{ 'ANCHORS.DEPOSIT_MAX' | translate }}:</b>
 
               <div>
                 <div *ngIf="data.deposit.feeFixed" class="w-full">
-                  Fixed: {{ data.deposit.feeFixed | number:'0.0-7' }}
+                  {{ 'COMMON_WORDS.FIXED' | translate }}: {{ data.deposit.feeFixed | number:'0.0-7' }}
                 </div>
 
                 <div *ngIf="data.deposit.feePercentage" class="w-full">
-                  Percentage: {{ data.deposit.feePercentage }}%
+                  {{ 'COMMON_WORDS.PERCENTAGE' | translate }}: {{ data.deposit.feePercentage }}%
                 </div>
 
                 <div *ngIf="data.deposit.feeMin" class="w-full">
@@ -158,22 +158,22 @@
             </nz-list-item>
 
             <nz-list-item class="px-4">
-              <b>Withdraw Min:</b> <div>{{ data.withdraw.minAmount | number:'0.0-7' }}</div>
+              <b>{{ 'ANCHORS.WITHDRAW_MIN' | translate }}:</b> <div>{{ data.withdraw.minAmount | number:'0.0-7' }}</div>
             </nz-list-item>
 
             <nz-list-item class="px-4">
-              <b>Withdraw Max:</b> <div>{{ data.withdraw.maxAmount | number:'0.0-7' }}</div>
+              <b>{{ 'ANCHORS.WITHDRAW_MAX' | translate }}:</b> <div>{{ data.withdraw.maxAmount | number:'0.0-7' }}</div>
             </nz-list-item>
 
             <nz-list-item class="px-4">
-              <b>Withdraw Fee:</b>
+              <b>{{ 'ANCHORS.WITHDRAW_FEE' | translate }}:</b>
               <div>
                 <div *ngIf="data.withdraw.feeFixed" class="w-full">
-                  Fixed: {{ data.withdraw.feeFixed | number:'0.0-7' }}
+                  {{ 'COMMON_WORDS.FIXED' | translate }}: {{ data.withdraw.feeFixed | number:'0.0-7' }}
                 </div>
 
                 <div *ngIf="data.withdraw.feePercentage" class="w-full">
-                  Percentage: {{ data.withdraw.feePercentage }}%
+                  {{ 'COMMON_WORDS.PERCENTAGE' | translate }}: {{ data.withdraw.feePercentage }}%
                 </div>
 
                 <div *ngIf="data.withdraw.feeMin" class="w-full">
@@ -185,7 +185,7 @@
             <nz-list-item class="w-full flex justify-center">
               <button (click)="openAssetInteractionDrawer(data)"
                       nz-button nzType="primary">
-                More <i class="ml-2 fa-solid fa-plus"></i>
+                {{ 'COMMON_WORDS.MORE' | translate }} <i class="ml-2 fa-solid fa-plus"></i>
               </button>
             </nz-list-item>
           </nz-list>
@@ -199,7 +199,7 @@
 <section class="max-w-lg mx-auto px-4 mb-4" *ngIf="anchor$ | async as anchor">
   <div class="w-full text-center mb-4">
     <h2 class="text-xl opacity-80 font-semibold">
-      Anchor details
+      {{ 'ANCHORS.ANCHOR_DETAILS' | translate }}
     </h2>
   </div>
 
@@ -233,7 +233,7 @@
 
   <div *ngIf="anchor.canBeRemoved" class="w-full flex justify-center">
     <button (click)="removeAnchor(anchor._id)" nz-button nzType="primary" nzDanger>
-      Remove anchor
+      {{ 'ANCHORS.REMOVE_ANCHOR' | translate }}
     </button>
   </div>
 </section>
