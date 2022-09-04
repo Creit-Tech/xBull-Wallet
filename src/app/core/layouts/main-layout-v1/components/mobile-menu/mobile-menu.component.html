@@ -25,6 +25,11 @@
       <span>{{ 'COMMON_WORDS.LP' | translate }}</span>
     </li>
 
+    <li (click)="closeDrawer()" routerLink="/anchors" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-anchor"></i>
+      <span>{{ 'COMMON_WORDS.ANCHORS' | translate }}</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/airdrops" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-parachute-box"></i>
       <span>{{ 'COMMON_WORDS.AIRDROPS' | translate }}</span>

@@ -1,0 +1,239 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/anchors">
+          Anchors
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          {{ (anchor$ | async)?.name }}
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section *ngIf="anchor$ | async as anchor" class="container mx-auto flex justify-center flex-wrap mb-4">
+  <div class="w-full md:w-6/12 lg:w-5/12 px-4">
+    <nz-card class="w-full">
+      <nz-card-meta
+        [nzTitle]="anchor.name"
+        [nzDescription]="anchor.description"
+        [nzAvatar]="avatarTemplate"
+      ></nz-card-meta>
+    </nz-card>
+    <ng-template #avatarTemplate>
+      <nz-avatar [nzSrc]="anchor.image"></nz-avatar>
+    </ng-template>
+  </div>
+</section>
+
+<section class="container mx-auto px-4 mb-4">
+  <nz-table #basicTable
+            [nzPageSize]="10"
+            [nzBordered]="true"
+            [nzLoading]="loading"
+            [nzData]="(currencies$ | async) || []">
+    <thead>
+    <tr>
+      <th>Asset</th>
+      <th class="hidden lg:table-cell">Deposit Min</th>
+      <th class="hidden lg:table-cell">Deposit Max</th>
+      <th class="hidden lg:table-cell">Deposit Fee</th>
+      <th class="hidden lg:table-cell">Withdraw Min</th>
+      <th class="hidden lg:table-cell">Withdraw Max</th>
+      <th class="hidden lg:table-cell">Withdraw Fee</th>
+      <th class="hidden lg:table-cell"></th>
+      <th class="lg:hidden"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let data of basicTable.data">
+      <ng-container *ngIf="{ open: false } as cellState">
+        <tr class="cursor-pointer lg:cursor-default">
+          <td>
+            <div class="w-full h-full items-center">
+              <nz-avatar class="mr-2" [nzSrc]="data.image"></nz-avatar>
+              {{ data.code }} ({{ data.issuer | publicKey }})
+            </div>
+          </td>
+
+          <td class="hidden lg:table-cell">
+            {{ data.deposit.minAmount | number:'0.0-7' }}
+          </td>
+
+          <td class="hidden lg:table-cell">
+            {{ data.deposit.maxAmount | number:'0.0-7' }}
+          </td>
+
+          <td class="hidden lg:table-cell">
+            <div *ngIf="data.deposit.feeFixed" class="w-full">
+              Fixed: {{ data.deposit.feeFixed | number:'0.0-7' }}
+            </div>
+
+            <div *ngIf="data.deposit.feePercentage" class="w-full">
+              Percentage: {{ data.deposit.feePercentage }}%
+            </div>
+
+            <div *ngIf="data.deposit.feeMin" class="w-full">
+              Min: {{ data.deposit.feeMin | number:'0.0-7' }}
+            </div>
+          </td>
+
+          <td class="hidden lg:table-cell">
+            {{ data.withdraw.minAmount | number:'0.0-7' }}
+          </td>
+
+          <td class="hidden lg:table-cell">
+            {{ data.withdraw.maxAmount | number:'0.0-7' }}
+          </td>
+
+          <td class="hidden lg:table-cell">
+            <div *ngIf="data.withdraw.feeFixed" class="w-full">
+              Fixed: {{ data.withdraw.feeFixed | number:'0.0-7' }}
+            </div>
+
+            <div *ngIf="data.withdraw.feePercentage" class="w-full">
+              Percentage: {{ data.withdraw.feePercentage }}%
+            </div>
+
+            <div *ngIf="data.withdraw.feeMin" class="w-full">
+              Min: {{ data.withdraw.feeMin | number:'0.0-7' }}
+            </div>
+          </td>
+
+          <td class="hidden lg:table-cell">
+            <div class="w-full h-full flex items-center justify-center">
+              <button (click)="openAssetInteractionDrawer(data)"
+                      nz-button nzType="primary">
+                More <i class="ml-2 fa-solid fa-plus"></i>
+              </button>
+            </div>
+          </td>
+
+          <td class="lg:hidden" (click)="cellState.open = !cellState.open">
+            <div class="w-full h-full flex justify-center items-center">
+              <button nz-button nzSize="small">
+                <i class="fa-solid"
+                   [class.fa-minus]="cellState.open"
+                   [class.fa-plus]="!cellState.open"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <tr [nzExpand]="cellState.open">
+          <nz-list class="w-full">
+            <nz-list-item class="px-4">
+              <b>Deposit Min:</b> <div>{{ data.deposit.minAmount | number:'0.0-7' }}</div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <b>Deposit Max:</b> <div>{{ data.deposit.maxAmount | number:'0.0-7' }}</div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <b>Deposit Fee:</b>
+
+              <div>
+                <div *ngIf="data.deposit.feeFixed" class="w-full">
+                  Fixed: {{ data.deposit.feeFixed | number:'0.0-7' }}
+                </div>
+
+                <div *ngIf="data.deposit.feePercentage" class="w-full">
+                  Percentage: {{ data.deposit.feePercentage }}%
+                </div>
+
+                <div *ngIf="data.deposit.feeMin" class="w-full">
+                  Min: {{ data.deposit.feeMin | number:'0.0-7' }}
+                </div>
+              </div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <b>Withdraw Min:</b> <div>{{ data.withdraw.minAmount | number:'0.0-7' }}</div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <b>Withdraw Max:</b> <div>{{ data.withdraw.maxAmount | number:'0.0-7' }}</div>
+            </nz-list-item>
+
+            <nz-list-item class="px-4">
+              <b>Withdraw Fee:</b>
+              <div>
+                <div *ngIf="data.withdraw.feeFixed" class="w-full">
+                  Fixed: {{ data.withdraw.feeFixed | number:'0.0-7' }}
+                </div>
+
+                <div *ngIf="data.withdraw.feePercentage" class="w-full">
+                  Percentage: {{ data.withdraw.feePercentage }}%
+                </div>
+
+                <div *ngIf="data.withdraw.feeMin" class="w-full">
+                  Min: {{ data.withdraw.feeMin | number:'0.0-7' }}
+                </div>
+              </div>
+            </nz-list-item>
+
+            <nz-list-item class="w-full flex justify-center">
+              <button (click)="openAssetInteractionDrawer(data)"
+                      nz-button nzType="primary">
+                More <i class="ml-2 fa-solid fa-plus"></i>
+              </button>
+            </nz-list-item>
+          </nz-list>
+        </tr>
+      </ng-container>
+    </ng-container>
+    </tbody>
+  </nz-table>
+</section>
+
+<section class="max-w-lg mx-auto px-4 mb-4" *ngIf="anchor$ | async as anchor">
+  <div class="w-full text-center mb-4">
+    <h2 class="text-xl opacity-80 font-semibold">
+      Anchor details
+    </h2>
+  </div>
+
+  <nz-list class="mb-8">
+    <nz-list-item>
+      <p class="w-full text-center opacity-80">
+        <b>URL:</b> {{ anchor.url }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p class="w-full text-center opacity-80">
+        <b>E-mail:</b> {{ anchor.email || 'N/A' }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p class="w-full text-center opacity-80">
+        <b>Signing key:</b> {{ (anchor.signingKey | publicKey) || 'N/A' }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p class="w-full text-center opacity-80">
+        <b>Auth URL:</b> {{ (anchor.transferServerSep24) || 'N/A' }}
+      </p>
+    </nz-list-item>
+    <nz-list-item>
+      <p class="w-full text-center opacity-80">
+        <b>Hosted transfer URL:</b> {{ (anchor.transferServerSep24) || 'N/A' }}
+      </p>
+    </nz-list-item>
+  </nz-list>
+
+  <div *ngIf="anchor.canBeRemoved" class="w-full flex justify-center">
+    <button (click)="removeAnchor(anchor._id)" nz-button nzType="primary" nzDanger>
+      Remove anchor
+    </button>
+  </div>
+</section>

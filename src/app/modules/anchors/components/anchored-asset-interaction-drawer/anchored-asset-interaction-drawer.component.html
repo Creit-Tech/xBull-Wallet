@@ -1,0 +1,85 @@
+<section class="w-full h-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+  <div class="col-span-1 row-auto">
+    <div *ngIf="anchorCurrency$ | async as anchorCurrency" class="w-full h-full flex justify-center items-center">
+      <nz-avatar nzSize="large" class="mr-2" [nzSrc]="anchorCurrency.image"></nz-avatar>
+      <p>
+        <span class="text-lg">{{ anchorCurrency.code }}</span>
+        <br>
+        <span class="opacity-80">{{ anchorCurrency.issuer | publicKey }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="col-span-1 row-span-1 overflow-y-auto no-scrollbar">
+    <div class="w-full text-center mb-4">
+      <h2 class="opacity-80 font-semibold">
+        Transfer history
+      </h2>
+    </div>
+
+    <nz-list [nzLoading]="gettingTransactions$ | async" class="w-full">
+      <ng-container *ngIf="showEmpty$ | async; else txs">
+        <nz-list-empty></nz-list-empty>
+      </ng-container>
+      <ng-template #txs>
+        <nz-list-item *ngFor="let transaction of transactions$ | async"
+                      (click)="showTransactionMoreInfo(transaction)"
+                      class="cursor-pointer">
+          <div class="w-full flex cursor-pointer items-center justify-between">
+            <div class="w-full flex items-center">
+              <p class="flex flex-col items-start">
+              <span class="opacity-80">
+                <i [class.fa-upload]="transaction.kind === 'withdrawal'"
+                   [class.fa-download]="transaction.kind === 'deposit'"
+                   class="fa-solid mr-1"></i>
+                {{ transaction.kind | titlecase }}
+              </span>
+                <span class="opacity-50 text-xs">{{ transaction.started_at | date: 'yyyy-MM-dd' }}</span>
+              </p>
+            </div>
+
+            <nz-divider nzType="vertical"></nz-divider>
+
+            <div class="w-full flex justify-end items-center">
+              <p class="flex flex-col items-end">
+                <span *ngIf="transaction.amount_in" class="opacity-80">{{ transaction.amount_in | number: '0.0-7' }}</span>
+                <span class="opacity-50 text-xs text-right">{{ transaction.message }}</span>
+              </p>
+            </div>
+          </div>
+        </nz-list-item>
+      </ng-template>
+    </nz-list>
+  </div>
+
+  <div class="col-span-1 row-auto flex flex-col">
+    <ng-container *ngIf="anchorCurrency$ | async as anchorCurrency">
+      <div class="w-full mb-4 flex">
+        <nz-input-number
+          class="w-full mr-2"
+          [formControl]="amountControl"
+          [nzPrecision]="7"
+          nzPrecisionMode="toFixed">
+        </nz-input-number>
+      </div>
+
+      <div class="w-full h-full flex items-center justify-center">
+        <button [disabled]="!anchorCurrency.deposit.enabled"
+                [nzLoading]="loadingDeposit"
+                nzBlock nzSize="large"
+                (click)="onDeposit(anchorCurrency)"
+                nz-button nzType="primary">
+          <i class="mr-2 fa-solid fa-download"></i> Deposit
+        </button>
+        <nz-divider nzType="vertical"></nz-divider>
+        <button [disabled]="!anchorCurrency.withdraw.enabled"
+                [nzLoading]="loadingWithdraw"
+                (click)="onWithdraw(anchorCurrency)"
+                nzBlock nzSize="large" nzDanger
+                nz-button nzType="primary">
+          Withdraw <i class="ml-2 fa-solid fa-upload"></i>
+        </button>
+      </div>
+    </ng-container>
+  </div>
+</section>
