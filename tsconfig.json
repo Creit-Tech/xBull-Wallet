@@ -58,6 +58,9 @@
       "stream": [
         "./node_modules/readable-stream"
       ],
+      "path": [
+        "./node_modules/path-browserify"
+      ],
       "http": [
         "./node_modules/stream-http"
       ],

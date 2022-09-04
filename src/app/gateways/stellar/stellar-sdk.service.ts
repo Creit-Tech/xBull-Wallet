@@ -32,7 +32,7 @@ export class StellarSdkService {
 
   // TODO: Make this optional before launching the app IE add a settings store
   get defaultTimeout(): number {
-    return 60;
+    return 180;
   }
 
   constructor(

@@ -83,6 +83,11 @@ const routes: Routes = [
           .then(m => m.WalletconnectModule)
       },
       {
+        path: 'anchors',
+        loadChildren: () => import('./modules/anchors/anchors.module')
+          .then(m => m.AnchorsModule)
+      },
+      {
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.module')
           .then(m => m.SettingsModule)

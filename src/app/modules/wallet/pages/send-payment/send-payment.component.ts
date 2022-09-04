@@ -2,14 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Inject,
   OnDestroy,
   OnInit,
-  ViewChild
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, from, merge, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subject, Subscription } from 'rxjs';
 import {
   IWalletAssetModel,
   IWalletsAccount,
@@ -19,13 +17,12 @@ import {
 } from '~root/state';
 import {
   delay,
-  distinctUntilChanged, distinctUntilKeyChanged,
+  distinctUntilKeyChanged,
   map,
   shareReplay,
   switchMap,
   take,
   takeUntil,
-  tap,
   withLatestFrom
 } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
