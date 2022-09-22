@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] - not released
+## [1.7.1] - 2022-09-22
+### Added
+- If recipient of a payment doesn't have a trustline and the sender doesn't want to create a claimable balance, fallback to a regular payment (this is use when burning funds)
+
+## [1.7.0] - 2022-09-03
 ### Added
 - Add new anchors module with Sep-24 support
 
