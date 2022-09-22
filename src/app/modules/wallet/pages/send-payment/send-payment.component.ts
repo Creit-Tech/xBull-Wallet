@@ -251,7 +251,9 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           const modalResult$ = new Subject<boolean>();
           this.nzModalService.confirm({
             nzContent: this.translateService.instant('WALLET.SEND_PAYMENT.CONFIRM_CLAIMABLE_BALANCE'),
+            nzOkText: 'Yes',
             nzOnOk: () => modalResult$.next(true),
+            nzCancelText: 'No',
             nzOnCancel: () => modalResult$.next(false),
             nzClosable: false,
             nzCentered: true
@@ -266,7 +268,16 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
               })
             );
           } else {
-            return;
+            this.nzMessageService.info(this.translateService.instant('WALLET.SEND_PAYMENT.ALERT_SENDING_NO_TRUSTLINE'), {
+              nzDuration: 5000,
+            });
+            transaction.addOperation(
+              Operation.payment({
+                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                destination: this.form.value.publicKey,
+                amount: new BigNumber(this.form.value.amount).toFixed(7),
+              })
+            );
           }
         }
       }

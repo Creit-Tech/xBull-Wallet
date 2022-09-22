@@ -220,6 +220,7 @@
       "PAYMENT_CONFIRMATION_TITLE": "confirmación de pago",
       "CONFIRM_CREATE_ACCOUNT": "El destino no existe, ¿estas seguro de que quieres crear esta cuenta?",
       "CONFIRM_CLAIMABLE_BALANCE": "El destino no tiene este asset, ¿quieres crear un balance para este (esto require bloquear 1 XLM hasta que sea aceptado)?",
+      "ALERT_SENDING_NO_TRUSTLINE": "El pago fallará si quien recibe no posee el asset y tampoco es el emisor de este",
       "PAYMENT_SENT_MESSAGE": "Pago enviado correctamente",
       "SCAN_PUBLIC_KEY_TITLE": "Escanear llave pública",
       "SCAN_MEMO_TITLE": "Scan memo",
