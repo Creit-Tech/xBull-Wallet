@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { GiftCardAccountToken, GiftCardsStore } from '~root/modules/gift-cards/state/gift-cards.store';
 import { ENV, environment } from '~env';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { from, Observable, of, throwError } from 'rxjs';
 import { omitBy, isNil} from 'lodash';
@@ -57,7 +57,19 @@ export class GiftCardsService {
     return accountToken.token;
   }
 
-  searchGiftCardsProducts(params: {
+  removeAuthToken(token: string) {
+    return (err: any) => {
+      if (err instanceof HttpErrorResponse) {
+        if (err.status === 403) { // 403 is only returned when token is not valid anymore
+          this.giftCardsStore.removeTokenByPredicate(entity => entity.token === token);
+        }
+      }
+
+      return throwError(err);
+    };
+  }
+
+   searchGiftCardsProducts(params: {
     countryCode?: string;
     productName?: string;
     page: number;
@@ -92,6 +104,24 @@ export class GiftCardsService {
 
 
   // --- Authenticated routes
+  getAccountsOrders(): Observable<IGiftCardOrder[]> {
+    this.giftCardsStore.updateUIState({ gettingOrders: true });
+    return from(this.getAuthToken())
+      .pipe(switchMap(token => {
+        return this.http.get<{ orders: IGiftCardOrder[] }>(this.env.xGCApi + '/orders', {
+          headers: { authorization: 'Bearer ' + token },
+        })
+          .pipe(catchError(this.removeAuthToken(token)));
+      }))
+      .pipe(map(response => {
+        this.giftCardsStore.updateUIState({ gettingOrders: false });
+        return response.orders;
+      }))
+      .pipe(catchError(err => {
+        this.giftCardsStore.updateUIState({ gettingOrders: false });
+        return throwError(err);
+      }));
+  }
 
   generateOrder(params: {
     productId: IGiftCardDetails['productId'],
@@ -103,7 +133,8 @@ export class GiftCardsService {
       .pipe(switchMap(token => {
         return this.http.post<{ tx: string; network: Networks }>(this.env.xGCApi + '/orders/generate-order', params, {
           headers: { authorization: 'Bearer ' + token },
-        });
+        })
+          .pipe(catchError(this.removeAuthToken(token)));
       }))
       .pipe(map(response => {
         this.giftCardsStore.updateUIState({ generatingOrder: false });
@@ -131,7 +162,8 @@ export class GiftCardsService {
           signatures: params.signatures
         }, {
           headers: { authorization: 'Bearer ' + token }
-        });
+        })
+          .pipe(catchError(this.removeAuthToken(token)));
       }))
       .pipe(map(response => {
         this.giftCardsStore.updateUIState({ confirmOrder: false });
@@ -139,6 +171,26 @@ export class GiftCardsService {
       }))
       .pipe(catchError(err => {
         this.giftCardsStore.updateUIState({ confirmOrder: false });
+        return throwError(err);
+      }));
+  }
+
+  getRedeemCode(orderId: IGiftCardOrder['_id']): Observable<Array<{ cardNumber: number; pinCode: number }>> {
+    this.giftCardsStore.updateUIState({ gettingRedeemCode: true });
+    return from(this.getAuthToken())
+      .pipe(switchMap(token => {
+        return this.http.get<{ codes: Array<{ cardNumber: number; pinCode: number }>; }>(
+          this.env.xGCApi + `/orders/${orderId}/redeem-code`,
+          { headers: { authorization: 'Bearer ' + token } }
+        )
+          .pipe(catchError(this.removeAuthToken(token)));
+      }))
+      .pipe(map(response => {
+        this.giftCardsStore.updateUIState({ gettingRedeemCode: false });
+        return response.codes;
+      }))
+      .pipe(catchError(err => {
+        this.giftCardsStore.updateUIState({ gettingRedeemCode: false });
         return throwError(err);
       }));
   }
@@ -178,4 +230,5 @@ export interface IGiftCardOrder {
   orderStatus: string;
   cancelReason?: string;
   transactionId: string;
+  createdAt: string;
 }

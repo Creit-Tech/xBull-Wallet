@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { arrayAdd, arrayRemove, StoreConfig } from '@datorama/akita';
 import { BaseStore } from '~root/state/base.store';
 import { IWalletsAccount } from '~root/state';
+import { ItemPredicate } from '@datorama/akita/lib/types';
 
 export interface GiftCardAccountToken {
   walletAccountId: IWalletsAccount['_id'];
@@ -12,8 +13,10 @@ export interface GiftCardsState {
   UIState: {
     searchingProducts: boolean;
     gettingProductDetails: boolean;
+    gettingOrders: boolean;
     generatingOrder: boolean;
     confirmOrder: boolean;
+    gettingRedeemCode: boolean;
   };
   authTokens: GiftCardAccountToken[];
 }
@@ -23,8 +26,10 @@ export function createInitialState(): GiftCardsState {
     UIState: {
       searchingProducts: false,
       gettingProductDetails: false,
+      gettingOrders: false,
       generatingOrder: false,
       confirmOrder: false,
+      gettingRedeemCode: false,
     },
     authTokens: [],
   };
@@ -44,9 +49,9 @@ export class GiftCardsStore extends BaseStore<GiftCardsState> {
     }));
   }
 
-  removeTokenById(id: GiftCardAccountToken['walletAccountId']): void {
+  removeTokenByPredicate(predicate: ItemPredicate<GiftCardAccountToken>): void {
     this.update((state) => ({
-      authTokens: arrayRemove(state.authTokens, id, 'walletAccountId'),
+      authTokens: arrayRemove(state.authTokens, predicate),
     }));
   }
 

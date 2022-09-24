@@ -26,7 +26,8 @@ const persistStateParams: Partial<PersistStateParams> = {
     'earn-strategies',
     'walletconnect-sessions',
     'anchors',
-    'anchors-auth-tokens'
+    'anchors-auth-tokens',
+    'gift-cards',
   ],
   preStorageUpdate(storeName: string, state: any): any {
     try {

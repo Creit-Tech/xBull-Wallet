@@ -17,12 +17,18 @@ import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
+import { GiftCardsOrdersComponent } from './components/gift-cards-orders/gift-cards-orders.component';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { GiftCardOrderDetailsComponent } from './components/gift-card-order-details/gift-card-order-details.component';
+import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 
 
 @NgModule({
   declarations: [
     GiftCardsSearchComponent,
     GiftCardDetailsComponent,
+    GiftCardsOrdersComponent,
+    GiftCardOrderDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -39,7 +45,9 @@ import { SharedComponentsModule } from '~root/shared/shared-components/shared-co
     NzInputNumberModule,
     SharedPipesModule,
     NzModalModule,
-    SharedComponentsModule
+    SharedComponentsModule,
+    NzDividerModule,
+    ClipboardModule
   ]
 })
 export class GiftCardsModule { }

@@ -8,6 +8,9 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   GiftCardDetailsComponent
 } from '~root/modules/gift-cards/components/gift-card-details/gift-card-details.component';
+import {
+  GiftCardsOrdersComponent
+} from '~root/modules/gift-cards/components/gift-cards-orders/gift-cards-orders.component';
 
 @Component({
   selector: 'app-gift-cards-search',
@@ -72,6 +75,15 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
       nzContentParams: {
         productId: searchedGiftCard.productId,
       }
+    });
+  }
+
+  openOrders(): void {
+    this.nzDrawerService.create({
+      nzTitle: 'My orders',
+      nzPlacement: 'right',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzContent: GiftCardsOrdersComponent,
     });
   }
 
