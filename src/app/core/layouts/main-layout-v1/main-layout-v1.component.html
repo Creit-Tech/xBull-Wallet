@@ -28,6 +28,16 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          routerLink="/gift-cards"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-gifts" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Gift Cards</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/swaps"
           nzMatchRouter
           nz-menu-item class="flex">

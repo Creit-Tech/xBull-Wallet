@@ -1,0 +1,107 @@
+<section class="w-full flex justify-center items-center">
+
+  <div *ngIf="productDetails$ | async as productDetails; else empty"
+       class="max-w-md w-full">
+    <nz-card class="w-full shadow ant-card-no-padding p-4 mb-4">
+      <img [alt]="productDetails.productName + '_image'"
+           class="w-full"
+           [src]="productDetails.productImage" />
+    </nz-card>
+
+    <div class="w-full text-center mb-4">
+      <h2 class="text-2xl">{{ productDetails.productName }}</h2>
+    </div>
+
+    <nz-list class="mb-4">
+      <nz-list-item>
+        <b>Brand:</b> <p class="text-right">{{ productDetails.brandName }}</p>
+      </nz-list-item>
+      <nz-list-item>
+        <b>Product:</b> <p class="text-right">{{ productDetails.productName }}</p>
+      </nz-list-item>
+      <nz-list-item>
+        <b>Country:</b> <p class="text-right">{{ productDetails.countryCode }}</p>
+      </nz-list-item>
+    </nz-list>
+
+    <nz-list>
+      <nz-list-item>
+        <b>Amount:</b>
+
+        <ng-container *ngIf="productDetails.optionsMaps as optionsMaps; else rangeAmount">
+          <nz-select class="w-6/12" [formControl]="cardAmountControl"
+                     nzPlaceHolder="Pick a gift card value">
+            <ng-container *ngFor="let option of optionsMaps">
+              <ng-container *ngIf="option.source === option.recipient">
+                <nz-option nzLabel="${{ option.source }}"
+                           [nzValue]="option.source"></nz-option>
+              </ng-container>
+              <ng-container *ngIf="option.source !== option.recipient">
+                <nz-option nzLabel="${{ option.source }} (${{ productDetails.recipientCurrencyCode + ' ' + option.recipient }})"
+                           [nzValue]="option.source"></nz-option>
+              </ng-container>
+            </ng-container>
+          </nz-select>
+        </ng-container>
+
+        <ng-template #rangeAmount>
+          <nz-input-number [nzMin]="productDetails.minAmount || 0"
+                           [formControl]="cardAmountControl"
+                           class="w-6/12"
+                           nzPlaceHolder="{{productDetails.minAmount}} - {{ productDetails.maxAmount}}"
+                           [nzMax]="productDetails.maxAmount || 0"></nz-input-number>
+        </ng-template>
+      </nz-list-item>
+
+      <nz-list-item>
+        <b>Fee:</b> <p>{{ feeToPay$ | async | currency: '$' }}</p>
+      </nz-list-item>
+
+      <nz-list-item>
+        <b>Total:</b> <p>{{ total$ | async | currency: '$USDC ' }}</p>
+      </nz-list-item>
+
+      <nz-list-item>
+        <b>Paying with:</b>
+
+        <button class="flex items-center h-auto py-2 justify-center"
+                (click)="searchAsset()"
+                nz-button>
+          <ng-container *ngIf="assetPickedControl.value as value; else pickAsset">
+            <div class="w-5 h-5 bg-white p-1 rounded-full mr-2">
+              <img [src]="value.image" class="w-full h-full rounded-full" alt="">
+            </div>
+
+            <p class="text-xs m-0">
+              {{ value.assetCode }}
+              <br>
+              <small class="opacity-50">
+                {{ (value.assetIssuer | publicKey) || 'native' }}
+              </small>
+            </p>
+          </ng-container>
+
+          <ng-template #pickAsset>
+            <p class="text-xs m-0">
+              Pick asset
+            </p>
+          </ng-template>
+        </button>
+      </nz-list-item>
+
+      <nz-list-item>
+        <button [disabled]="cardAmountControl.invalid || assetPickedControl.invalid"
+                (click)="generateOrder()"
+                [nzLoading]="(generatingOrder$ | async) || (confirmOrder$ | async)"
+                nz-button nzBlock nzSize="large" nzType="primary">
+          Confirm
+        </button>
+      </nz-list-item>
+    </nz-list>
+  </div>
+
+  <ng-template #empty>
+    <nz-empty nzNotFoundContent="Loading..."></nz-empty>
+  </ng-template>
+
+</section>

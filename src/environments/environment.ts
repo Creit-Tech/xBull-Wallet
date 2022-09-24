@@ -9,6 +9,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   xPointersApi: '/api-xPointers',
+  xGCApi: '/api-xGC',
   production: false,
   platform: 'website',
   defaultApis: [{
