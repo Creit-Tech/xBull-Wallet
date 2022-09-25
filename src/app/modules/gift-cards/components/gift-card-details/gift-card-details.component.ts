@@ -21,6 +21,7 @@ import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xd
 import { Networks } from 'stellar-base';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gift-card-details',
@@ -106,6 +107,7 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
     private readonly nzMessageService: NzMessageService,
     private readonly nzModalService: NzModalService,
     private readonly drawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -122,7 +124,7 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<AssetSearcherComponent>({
       nzContent: AssetSearcherComponent,
       nzPlacement: 'bottom',
-      nzTitle: 'My assets',
+      nzTitle: this.translateService.instant('COMMON_WORDS.MY_ASSETS'),
       nzHeight: '100%',
       nzCloseOnNavigation: true,
       nzWrapClassName: 'ios-safe-y',
@@ -181,13 +183,15 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
-      nzTitle: 'Sign transaction',
+      nzTitle: this.translateService.instant('COMMON_WORDS.SIGN_TRANSACTION'),
       nzContentParams: {
         xdr: newOrder.tx,
         pickedNetworkPassphrase: newOrder.network,
         signingResultsHandler: data => {
           if (orderTransaction.memo.type !== 'text') {
-            this.nzMessageService.error('Generated order is not correctly formatted, please contact support');
+            this.nzMessageService.error(
+              this.translateService.instant('GIFT_CARDS.INVALID_ORDER_REQUEST')
+            );
             return;
           }
 
@@ -200,7 +204,7 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
               next: value => {
                 this.drawerRef.close();
                 this.nzModalService.success({
-                  nzContent: 'Gift Card generated, check the details about it in the orders section',
+                  nzContent: this.translateService.instant('GIFT_CARDS.GIFT_CARD_GENERATED'),
                 });
               },
               error: err => {

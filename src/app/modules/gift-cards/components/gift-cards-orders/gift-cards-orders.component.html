@@ -22,5 +22,6 @@
     </ng-template>
   </nz-list-item>
 
-  <nz-list-empty *ngIf="!(orders$ | async)?.length" nzNoResult="You don't have any order yet for this Stellar account"></nz-list-empty>
+  <nz-list-empty *ngIf="!(orders$ | async)?.length"
+                 [nzNoResult]="'GIFT_CARDS.NO_ORDERS_YET' | translate"></nz-list-empty>
 </nz-list>

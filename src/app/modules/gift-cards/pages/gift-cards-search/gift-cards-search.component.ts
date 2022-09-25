@@ -3,7 +3,7 @@ import { CountriesService } from '~root/core/services/countries/countries.servic
 import { FormControl, FormGroup } from '@angular/forms';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
 import { GiftCardsService, ISearchedGiftCard } from '~root/modules/gift-cards/services/gift-cards.service';
-import { BehaviorSubject, combineLatest, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   GiftCardDetailsComponent
@@ -11,6 +11,8 @@ import {
 import {
   GiftCardsOrdersComponent
 } from '~root/modules/gift-cards/components/gift-cards-orders/gift-cards-orders.component';
+import { TranslateService } from '@ngx-translate/core';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-gift-cards-search',
@@ -35,6 +37,8 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
     private readonly giftCardsQuery: GiftCardsQuery,
     private readonly giftCardsService: GiftCardsService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly translateService: TranslateService,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -61,7 +65,10 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
           this.products$.next(data);
         },
         error: err => {
-
+          this.nzMessageService.error(
+            this.translateService.instant('GIFT_CARDS.CANT_GET_PRODUCTS'),
+            { nzDuration: 5000 }
+          );
         }
       });
   }
@@ -80,7 +87,7 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
 
   openOrders(): void {
     this.nzDrawerService.create({
-      nzTitle: 'My orders',
+      nzTitle: this.translateService.instant('GIFT_CARDS.MY_ORDERS'),
       nzPlacement: 'right',
       nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzContent: GiftCardsOrdersComponent,

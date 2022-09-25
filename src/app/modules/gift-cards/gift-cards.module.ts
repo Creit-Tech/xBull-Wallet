@@ -21,6 +21,8 @@ import { GiftCardsOrdersComponent } from './components/gift-cards-orders/gift-ca
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { GiftCardOrderDetailsComponent } from './components/gift-card-order-details/gift-card-order-details.component';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslationModule } from '~root/translation.module';
 
 
 @NgModule({
@@ -47,7 +49,8 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
     NzModalModule,
     SharedComponentsModule,
     NzDividerModule,
-    ClipboardModule
+    ClipboardModule,
+    TranslationModule.forChild(),
   ]
 })
 export class GiftCardsModule { }

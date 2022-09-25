@@ -2,12 +2,13 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { GiftCardsService, IGiftCardOrder } from '~root/modules/gift-cards/services/gift-cards.service';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
-import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   GiftCardOrderDetailsComponent
 } from '~root/modules/gift-cards/components/gift-card-order-details/gift-card-order-details.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gift-cards-orders',
@@ -24,6 +25,7 @@ export class GiftCardsOrdersComponent implements OnInit, AfterViewInit {
     private readonly nzModalService: NzModalService,
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerRef: NzDrawerRef,
+    private readonly translateService: TranslateService,
   ) { }
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class GiftCardsOrdersComponent implements OnInit, AfterViewInit {
 
   openDetails(order: IGiftCardOrder): void {
     this.nzModalService.create({
-      nzTitle: 'Order: ' + order._id,
+      nzTitle: `${this.translateService.instant('COMMON_WORDS.ORDER')}: ${order._id}`,
       nzContent: GiftCardOrderDetailsComponent,
       nzComponentParams: { order },
       nzFooter: null

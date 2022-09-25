@@ -41,6 +41,16 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "BRAND": "Brand",
+    "PRODUCT": "Product",
+    "COUNTRY": "Country",
+    "LOADING": "Loading",
+    "PAYING_WITH": "Paying with",
+    "MY_ASSETS": "My assets",
+    "SIGN_TRANSACTION": "Sign transaction",
+    "TRANSACTION": "Transaction",
+    "STATUS": "Status",
+    "ORDER": "Order",
     "MORE": "More",
     "FIXED": "Fixed",
     "PERCENTAGE": "Percentage",
@@ -530,5 +540,14 @@
     "REMOVE_ANCHOR": "Remove Anchor",
     "ADD_ANCHOR_STEP_1_TITLE": "Let's start by fetching the anchor's data",
     "ADD_ANCHOR_STEP_2_TITLE": "Now check and confirm"
+  },
+  "GIFT_CARDS": {
+    "MY_ORDERS": "My orders",
+    "CANT_GET_PRODUCTS": "There was an error when getting the products available, try again later or contact support.",
+    "PICK_CARD_VALUE": "Pick a gift card value",
+    "GIFT_CARD_GENERATED": "Gift Card generated, check the details about it in the orders section",
+    "INVALID_ORDER_REQUEST": "Order is not correctly formatted, please contact support",
+    "GET_REDEEM_CODES": "Get redeem codes",
+    "NO_ORDERS_YET": "You don't have any order yet for this Stellar account"
   }
 }

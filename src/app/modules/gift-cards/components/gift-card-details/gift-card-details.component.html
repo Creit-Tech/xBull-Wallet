@@ -14,23 +14,23 @@
 
     <nz-list class="mb-4">
       <nz-list-item>
-        <b>Brand:</b> <p class="text-right">{{ productDetails.brandName }}</p>
+        <b>{{ 'COMMON_WORDS.BRAND' | translate }}:</b> <p class="text-right">{{ productDetails.brandName }}</p>
       </nz-list-item>
       <nz-list-item>
-        <b>Product:</b> <p class="text-right">{{ productDetails.productName }}</p>
+        <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> <p class="text-right">{{ productDetails.productName }}</p>
       </nz-list-item>
       <nz-list-item>
-        <b>Country:</b> <p class="text-right">{{ productDetails.countryCode }}</p>
+        <b>{{ 'COMMON_WORDS.COUNTRY' | translate }}:</b> <p class="text-right">{{ productDetails.countryCode }}</p>
       </nz-list-item>
     </nz-list>
 
     <nz-list>
       <nz-list-item>
-        <b>Amount:</b>
+        <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b>
 
         <ng-container *ngIf="productDetails.optionsMaps as optionsMaps; else rangeAmount">
           <nz-select class="w-6/12" [formControl]="cardAmountControl"
-                     nzPlaceHolder="Pick a gift card value">
+                     [nzPlaceHolder]="'GIFT_CARDS.PICK_CARD_VALUE' | translate">
             <ng-container *ngFor="let option of optionsMaps">
               <ng-container *ngIf="option.source === option.recipient">
                 <nz-option nzLabel="${{ option.source }}"
@@ -54,15 +54,15 @@
       </nz-list-item>
 
       <nz-list-item>
-        <b>Fee:</b> <p>{{ feeToPay$ | async | currency: '$' }}</p>
+        <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> <p>{{ feeToPay$ | async | currency: '$' }}</p>
       </nz-list-item>
 
       <nz-list-item>
-        <b>Total:</b> <p>{{ total$ | async | currency: '$USDC ' }}</p>
+        <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> <p>{{ total$ | async | currency: '$USDC ' }}</p>
       </nz-list-item>
 
       <nz-list-item>
-        <b>Paying with:</b>
+        <b>{{ 'COMMON_WORDS.PAYING_WITH' | translate }}:</b>
 
         <button class="flex items-center h-auto py-2 justify-center"
                 (click)="searchAsset()"
@@ -94,14 +94,14 @@
                 (click)="generateOrder()"
                 [nzLoading]="(generatingOrder$ | async) || (confirmOrder$ | async)"
                 nz-button nzBlock nzSize="large" nzType="primary">
-          Confirm
+          {{ 'COMMON_WORDS.CONFIRM' | translate }}
         </button>
       </nz-list-item>
     </nz-list>
   </div>
 
   <ng-template #empty>
-    <nz-empty nzNotFoundContent="Loading..."></nz-empty>
+    <nz-empty nzNotFoundContent="{{ 'COMMON_WORDS.LOADING' | translate }}..."></nz-empty>
   </ng-template>
 
 </section>

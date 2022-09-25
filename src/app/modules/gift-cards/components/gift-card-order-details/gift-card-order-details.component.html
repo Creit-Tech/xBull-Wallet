@@ -3,26 +3,26 @@
     <b>ID:</b> {{ order._id }}
   </nz-list-item>
   <nz-list-item>
-    <b>Product Name:</b> {{ order.productName }}
+    <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> {{ order.productName }}
   </nz-list-item>
   <nz-list-item>
-    <b>Amount:</b> {{ order.orderAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b> {{ order.orderAmount | currency: '$' }}
   </nz-list-item>
   <nz-list-item>
-    <b>Fee:</b> {{ order.feeAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> {{ order.feeAmount | currency: '$' }}
   </nz-list-item>
   <nz-list-item>
-    <b>Total:</b> {{ order.totalAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> {{ order.totalAmount | currency: '$' }}
   </nz-list-item>
   <nz-list-item>
-    <b>Date:</b> {{ order.createdAt | date: 'MMM, dd yyyy' }}
+    <b>{{ 'COMMON_WORDS.DATE' | translate }}:</b> {{ order.createdAt | date: 'MMM, dd yyyy' }}
   </nz-list-item>
   <nz-list-item class="cursor-pointer" appClipboard [textToCopy]="order.transactionId">
-    <b>Transaction ID:</b> {{ order.transactionId | publicKey }}
+    <b>{{ 'COMMON_WORDS.TRANSACTION' | translate }}:</b> {{ order.transactionId | publicKey }}
   </nz-list-item>
 
   <nz-list-item>
-    <b>Status:</b> {{ order.orderStatus }}
+    <b>{{ 'COMMON_WORDS.STATUS' | translate }}:</b> {{ order.orderStatus }}
   </nz-list-item>
 
   <ng-container *ngIf="order.orderStatus === 'PAID'">
@@ -30,14 +30,14 @@
       <button (click)="getCodes()"
               [nzLoading]="gettingRedeemCode$ | async"
               nz-button nzBlock>
-        Get redeem codes
+        {{ 'GIFT_CARDS.GET_REDEEM_CODES' | translate }}
       </button>
     </nz-list-item>
 
     <ng-template #codes>
       <ng-container *ngFor="let code of redeemCodes" class="w-full">
         <nz-list-item>
-          <b>Card Number:</b> {{ code.cardNumber }}
+          <b>Gift Card:</b> {{ code.cardNumber }}
         </nz-list-item>
         <nz-list-item>
           <b>Pin:</b> {{ code.pinCode }}
