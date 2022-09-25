@@ -53,6 +53,11 @@ const routes: Routes = [
           .then(m => m.OperationsModule)
       },
       {
+        path: 'gift-cards',
+        loadChildren: () => import('./modules/gift-cards/gift-cards.module')
+          .then(m => m.GiftCardsModule)
+      },
+      {
         path: 'swaps',
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),

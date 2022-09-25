@@ -132,5 +132,13 @@ export class StellarSdkService {
       .pipe(map(value => value.toFixed(0)));
   }
 
+  assetToCanonicalString(asset: SDK.Asset): string {
+    if (asset.isNative()) {
+      return 'native';
+    } else {
+      return asset.code + ':' + asset.issuer;
+    }
+  }
+
 
 }

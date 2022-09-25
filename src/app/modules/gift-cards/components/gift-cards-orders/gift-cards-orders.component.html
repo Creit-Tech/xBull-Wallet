@@ -1,0 +1,27 @@
+<nz-list [nzLoading]="gettingOrders$ | async" nzItemLayout="horizontal">
+  <nz-list-item class="cursor-pointer"
+                (click)="openDetails(order)"
+                *ngFor="let order of orders$ | async">
+    <nz-list-item-meta [nzDescription]="order.productName"
+                       [nzAvatar]="avatar">
+      <nz-list-item-meta-title>
+        ${{ order.orderAmount }}
+        <nz-divider nzType="vertical"></nz-divider>
+        {{ order.createdAt | date: 'MMM dd, yyyy' }}
+      </nz-list-item-meta-title>
+    </nz-list-item-meta>
+
+    <ng-template #avatar>
+      <ng-container *ngIf="order.orderStatus === 'PAID'">
+        <i class="fa-solid fa-check-circle text-success"></i>
+      </ng-container>
+
+      <ng-container *ngIf="order.orderStatus !== 'PAID'">
+        <i class="fa-solid fa-times-circle text-danger"></i>
+      </ng-container>
+    </ng-template>
+  </nz-list-item>
+
+  <nz-list-empty *ngIf="!(orders$ | async)?.length"
+                 [nzNoResult]="'GIFT_CARDS.NO_ORDERS_YET' | translate"></nz-list-empty>
+</nz-list>

@@ -41,6 +41,16 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "BRAND": "Brand",
+    "PRODUCT": "Product",
+    "COUNTRY": "Country",
+    "LOADING": "Loading",
+    "PAYING_WITH": "Paying with",
+    "MY_ASSETS": "My assets",
+    "SIGN_TRANSACTION": "Sign transaction",
+    "TRANSACTION": "Transaction",
+    "STATUS": "Status",
+    "ORDER": "Order",
     "MORE": "More",
     "FIXED": "Fixed",
     "PERCENTAGE": "Percentage",
@@ -220,7 +230,8 @@
       "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
       "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
       "CONFIRM_CREATE_ACCOUNT": "Destination does not exist, are you sure you want to create the recipient's account?",
-      "CONFIRM_CLAIMABLE_BALANCE": "Destination does not has this asset, do you want to create a claimable balance instead (this requires 1 XLM locked until is claimed)?",
+      "CONFIRM_CLAIMABLE_BALANCE": "Destination does not have this asset, do you want to create a claimable balance instead (this requires 1 XLM locked until is claimed)?",
+      "ALERT_SENDING_NO_TRUSTLINE": "Payment will fail if the recipient doesn't hold the asset and is not the issuer",
       "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
       "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
       "SCAN_MEMO_TITLE": "Scan memo",
@@ -529,5 +540,14 @@
     "REMOVE_ANCHOR": "Remove Anchor",
     "ADD_ANCHOR_STEP_1_TITLE": "Let's start by fetching the anchor's data",
     "ADD_ANCHOR_STEP_2_TITLE": "Now check and confirm"
+  },
+  "GIFT_CARDS": {
+    "MY_ORDERS": "My orders",
+    "CANT_GET_PRODUCTS": "There was an error when getting the products available, try again later or contact support.",
+    "PICK_CARD_VALUE": "Pick a gift card value",
+    "GIFT_CARD_GENERATED": "Gift Card generated, check the details about it in the orders section",
+    "INVALID_ORDER_REQUEST": "Order is not correctly formatted, please contact support",
+    "GET_REDEEM_CODES": "Get redeem codes",
+    "NO_ORDERS_YET": "You don't have any order yet for this Stellar account"
   }
 }

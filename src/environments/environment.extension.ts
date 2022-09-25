@@ -9,6 +9,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   xPointersApi: 'http://localhost:3100',
+  xGCApi: 'http://localhost:3300',
   production: false,
   platform: 'extension',
   defaultApis: [{
@@ -30,7 +31,7 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '1.7.0',
+  version: '1.7.1',
 };
 
 /*
