@@ -1,0 +1,76 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Gift Cards
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="relative w-full flex flex-col justify-center items-center">
+
+  <div class="w-full sticky top-0 container mx-auto flex justify-center z-10 mb-4">
+    <nz-card class="w-full ant-card-no-padding p-4 border-none rounded-none">
+      <section [formGroup]="searchDataForm" class="flex items-center">
+        <nz-select [nzShowSearch]="true"
+                   (ngModelChange)="getProducts()"
+                   style="min-width: 90px;"
+                   formControlName="country"
+                   nzSize="large" class="h-full"
+                   [nzDropdownMatchSelectWidth]="false">
+          <nz-option nzValue="" nzLabel="ALL"></nz-option>
+          <ng-container *ngFor="let data of countriesData">
+            <nz-option [nzValue]="data.code" nzLabel="{{ data.emoji }} {{ data.code }}"></nz-option>
+          </ng-container>
+        </nz-select>
+
+        <div class="px-2"></div>
+
+        <nz-input-group class="max-w-md mx-auto" [nzSuffix]="inputSearch">
+          <input (keydown.enter)="getProducts()" formControlName="search" type="text" nz-input placeholder="Ex: Amazon">
+        </nz-input-group>
+
+        <div class="px-2"></div>
+
+        <button nz-button
+                (click)="openOrders()"
+                nzSize="large"
+                class="h-full">
+          <span class="hidden md:inline-block">{{ 'GIFT_CARDS.MY_ORDERS' | translate }}</span>
+          <i class="fa-solid fa-list md:ml-2"></i>
+        </button>
+      </section>
+    </nz-card>
+
+    <ng-template #inputSearch>
+      <button (click)="getProducts()" nz-button nzType="text">
+        <i class="fa-solid fa-search"></i>
+      </button>
+    </ng-template>
+  </div>
+
+  <nz-spin [nzSpinning]="searchingProducts$ | async" class="w-full min-h-12">
+    <div class="container mx-auto flex flex-wrap px-2">
+      <div class="w-full sm:w-6/12 md:w-4/12 lg:w-3/12 xl:w-2/12 px-2 mb-4"
+           *ngFor="let product of products$ | async;">
+        <nz-card nzHoverable class="w-full"
+                 (click)="openProductDetails(product)"
+                 [nzCover]="coverTemplate">
+          <nz-card-meta [nzTitle]="product.brandName" [nzDescription]="product.productName"></nz-card-meta>
+        </nz-card>
+        <ng-template #coverTemplate>
+          <img [alt]="product.productName + '_image'" [src]="product.productImage" />
+        </ng-template>
+      </div>
+    </div>
+  </nz-spin>
+
+</section>

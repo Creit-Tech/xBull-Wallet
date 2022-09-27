@@ -244,7 +244,6 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
         disableCuratedAssetByCreitTech: formValue === 'from',
       }
     });
-
   }
 
   async updatePaymentPath(): Promise<void> {
