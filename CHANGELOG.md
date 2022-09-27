@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2022-09-27
+### Added
+- Gift Cards section, users can now buy popular brands' gift cards directly from the wallet and with any asset they hold.
+
 ## [1.7.1] - 2022-09-22
 ### Added
 - If recipient of a payment doesn't have a trustline and the sender doesn't want to create a claimable balance, fallback to a regular payment (this is use when burning funds)
