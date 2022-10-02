@@ -1,6 +1,6 @@
 <nz-list *ngIf="order$ | async as order">
-  <nz-list-item>
-    <b>ID:</b> {{ order._id }}
+  <nz-list-item appClipboard [textToCopy]="order._id">
+    <b>ID:</b> {{ order._id | publicKey }}
   </nz-list-item>
   <nz-list-item>
     <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> {{ order.productName }}
