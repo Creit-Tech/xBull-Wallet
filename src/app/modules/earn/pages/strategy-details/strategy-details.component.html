@@ -149,19 +149,53 @@
       </ng-template>
     </nz-card>
 
-    <nz-card class="order-4 md:order-3 col-span-12 md:col-span-8 ant-card-no-padding p-8">
+    <nz-card class="order-4 md:order-3 col-span-12 md:col-span-8 ant-card-no-padding p-8 ant-card-h-full">
       <section class="w-full flex flex-col items-center">
         <div class="w-full text-center mb-4">
-<!--          <nz-radio-group [formControl]="graphFilterControl" nzButtonStyle="solid">-->
-<!--            <label nz-radio-button nzValue="apr">Strategy</label>-->
-<!--            <label nz-radio-button nzValue="apy">My Vault</label>-->
-<!--          </nz-radio-group>-->
+          <ng-container *ngIf="vault$ | async">
+            <nz-radio-group [formControl]="graphFilterControl" nzButtonStyle="solid">
+              <label nz-radio-button nzValue="strategy_aprapy">APY/APR</label>
+              <label nz-radio-button nzValue="vault_tvl">TVL</label>
+              <label nz-radio-button nzValue="vault_poolshares">Shares</label>
+            </nz-radio-group>
+          </ng-container>
         </div>
 
-        <div class="w-full h-34 md:h-auto">
+        <div class="w-full h-34 md:h-auto" style="max-height: 400px">
           <ngx-charts-area-chart
+            *ngIf="!(vault$ | async)"
             [scheme]="graphColors"
             [results]="(results$ | async) || []"
+            [showGridLines]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [gradient]="true">
+          </ngx-charts-area-chart>
+
+          <ngx-charts-area-chart
+            *ngIf="graphFilterControl.value === 'strategy_aprapy'"
+            [scheme]="graphColors"
+            [results]="(vaultApyAprSnapshot$ | async) || []"
+            [showGridLines]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [gradient]="true">
+          </ngx-charts-area-chart>
+
+          <ngx-charts-area-chart
+            *ngIf="graphFilterControl.value === 'vault_tvl'"
+            [scheme]="graphColors"
+            [results]="(vaultTvlSnapshot$ | async) || []"
+            [showGridLines]="false"
+            [xAxis]="true"
+            [yAxis]="true"
+            [gradient]="true">
+          </ngx-charts-area-chart>
+
+          <ngx-charts-area-chart
+            *ngIf="graphFilterControl.value === 'vault_poolshares'"
+            [scheme]="graphColors"
+            [results]="(vaultPoolSharesTvlSnapshot$ | async) || []"
             [showGridLines]="false"
             [xAxis]="true"
             [yAxis]="true"
