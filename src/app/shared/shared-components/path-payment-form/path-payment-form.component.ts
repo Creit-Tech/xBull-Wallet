@@ -16,6 +16,7 @@ import BigNumber from 'bignumber.js';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 
 @Component({
   selector: 'app-path-payment-form',
@@ -209,7 +210,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
       });
 
     if (this.mode === 'payment') {
-      this.swapForm.setControl('destination', new UntypedFormControl('', [Validators.required]));
+      this.swapForm.setControl('destination', new UntypedFormControl('', [Validators.required, validPublicKeyValidator]));
     }
   }
 
@@ -243,7 +244,6 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
         disableCuratedAssetByCreitTech: formValue === 'from',
       }
     });
-
   }
 
   async updatePaymentPath(): Promise<void> {
@@ -354,7 +354,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let loadedAccount: AccountResponse;
     try {
-      loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+      loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
     } catch (e) {
       this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'));
       return;
@@ -454,7 +454,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzWrapClassName: 'ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_PUBLIC_KEY_TITLE'),
       nzHeight: '100%',
       nzContentParams: {

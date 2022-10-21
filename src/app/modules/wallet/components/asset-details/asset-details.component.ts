@@ -107,7 +107,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+    const loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 

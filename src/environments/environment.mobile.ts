@@ -4,6 +4,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   xPointersApi: 'https://farming.xbull.app',
+  xGCApi: 'https://gcsr.xbull.app',
   production: false,
   platform: 'mobile',
   defaultApis: [{
@@ -25,5 +26,5 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '1.5.0'
+  version: '1.8.0'
 };

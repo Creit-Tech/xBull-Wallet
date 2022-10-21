@@ -41,11 +41,25 @@
     "ASSET_BUYING": "Asset Buying"
   },
   "COMMON_WORDS": {
+    "BRAND": "Brand",
+    "PRODUCT": "Product",
+    "COUNTRY": "Country",
+    "LOADING": "Loading",
+    "PAYING_WITH": "Paying with",
+    "MY_ASSETS": "My assets",
+    "SIGN_TRANSACTION": "Sign transaction",
+    "TRANSACTION": "Transaction",
+    "STATUS": "Status",
+    "ORDER": "Order",
+    "MORE": "More",
+    "FIXED": "Fixed",
+    "PERCENTAGE": "Percentage",
     "SIMPLE": "Simple",
     "ADVANCED": "Advanced",
     "OPERATIONS": "Operations",
     "SWAPS": "Swaps",
     "LP": "Liquidity pools",
+    "ANCHORS": "Anchors",
     "AIRDROPS": "Airdrops",
     "LAB": "Lab",
     "SETTINGS": "Settings",
@@ -152,7 +166,8 @@
     "ERROR_LOADING_FILES": "Error when loading the file",
     "CANT_PARSE_INCORRECT_FILE": "We were not able to parse the file's data, this probably means is not a correct file",
     "MAKE_SURE_FILE_TYPE": "File type is not correct, make sure is a {{type}} file",
-    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect"
+    "CANT_DECRYPT_BACKUP_FILE": "We were not able to decrypt the backup file, this means either the key file or the backup file are incorrect",
+    "YOUR_ACCOUNT_NOT_CREATED": "Your account doesn't exist"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operation completed",
@@ -214,6 +229,9 @@
     "SEND_PAYMENT": {
       "CUSTOM_ASSET_TO_NON_TRUSTED": "We ca not send custom assets to an account that has not been created yet.",
       "PAYMENT_CONFIRMATION_TITLE": "Payment confirmation",
+      "CONFIRM_CREATE_ACCOUNT": "Destination does not exist, are you sure you want to create the recipient's account?",
+      "CONFIRM_CLAIMABLE_BALANCE": "Destination does not have this asset, do you want to create a claimable balance instead (this requires 1 XLM locked until is claimed)?",
+      "ALERT_SENDING_NO_TRUSTLINE": "Payment will fail if the recipient doesn't hold the asset and is not the issuer",
       "PAYMENT_SENT_MESSAGE": "Payment sent correctly",
       "SCAN_PUBLIC_KEY_TITLE": "Scan Public key",
       "SCAN_MEMO_TITLE": "Scan memo",
@@ -437,6 +455,10 @@
     "BUILD_TRANSACTION": "Build transaction",
     "SIGN_MESSAGE": "Sign message",
     "IMPORT_XDR": "Import XDR (manually sign)",
+    "MERGE_ACCOUNT": "Merge account",
+    "MERGE_ACCOUNT_DISCLAIMER": "When you merge an account, the remaining XLMs will be sent and the account removed from the ledger.",
+    "MERGE_ACCOUNT_COMPLETED": "Account merged",
+    "CANT_BE_MERGED": "Account can't be merged",
     "NOTICE": "This section includes operations that could be dangerous if you don't know what you're doing. Be careful.",
     "COPY_SIGNED": "Copy Signed",
     "SIGN_SIGNED": "Sign XDR",
@@ -505,5 +527,27 @@
     "IMPORTING_MESSAGE": "Importing a new snapshot will remove everything in your wallet and add the data from the backup file",
     "EXPORT_DESCRIPTION": "Exporting the data from your wallet will generate two files, one file will include an encrypted state of your wallet and the other file will include the key to decrypt it",
     "EXPORT_RECOMMENDATION": "We recommend you saving each file on different places"
+  },
+  "ANCHORS": {
+    "ADD_NEW": "Add new anchor",
+    "DEPOSIT_MIN": "Deposit Min",
+    "DEPOSIT_MAX": "Deposit Max",
+    "DEPOSIT_FEE": "Deposit Fee",
+    "WITHDRAW_MIN": "Withdraw Min",
+    "WITHDRAW_MAX": "Withdraw Max",
+    "WITHDRAW_FEE": "Withdraw Fee",
+    "ANCHOR_DETAILS": "Anchor details",
+    "REMOVE_ANCHOR": "Remove Anchor",
+    "ADD_ANCHOR_STEP_1_TITLE": "Let's start by fetching the anchor's data",
+    "ADD_ANCHOR_STEP_2_TITLE": "Now check and confirm"
+  },
+  "GIFT_CARDS": {
+    "MY_ORDERS": "My orders",
+    "CANT_GET_PRODUCTS": "There was an error when getting the products available, try again later or contact support.",
+    "PICK_CARD_VALUE": "Pick a gift card value",
+    "GIFT_CARD_GENERATED": "Gift Card generated, check the details about it in the orders section",
+    "INVALID_ORDER_REQUEST": "Order is not correctly formatted, please contact support",
+    "GET_REDEEM_CODES": "Get redeem codes",
+    "NO_ORDERS_YET": "You don't have any order yet for this Stellar account"
   }
 }

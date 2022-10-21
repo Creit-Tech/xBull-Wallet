@@ -53,6 +53,11 @@ const routes: Routes = [
           .then(m => m.OperationsModule)
       },
       {
+        path: 'gift-cards',
+        loadChildren: () => import('./modules/gift-cards/gift-cards.module')
+          .then(m => m.GiftCardsModule)
+      },
+      {
         path: 'swaps',
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),
@@ -76,6 +81,16 @@ const routes: Routes = [
         path: 'lab',
         loadChildren: () => import('./modules/lab/lab.module')
           .then(m => m.LabModule)
+      },
+      {
+        path: 'walletconnect',
+        loadChildren: () => import('./modules/walletconnect/walletconnect.module')
+          .then(m => m.WalletconnectModule)
+      },
+      {
+        path: 'anchors',
+        loadChildren: () => import('./modules/anchors/anchors.module')
+          .then(m => m.AnchorsModule)
       },
       {
         path: 'settings',

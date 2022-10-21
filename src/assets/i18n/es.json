@@ -41,11 +41,25 @@
     "ASSET_BUYING": "Asset en compra"
   },
   "COMMON_WORDS": {
+    "BRAND": "Marca",
+    "PRODUCT": "Producto",
+    "COUNTRY": "País",
+    "LOADING": "Cargando",
+    "PAYING_WITH": "Pagando con",
+    "MY_ASSETS": "Mis Assets",
+    "SIGN_TRANSACTION": "Firmar transacción",
+    "TRANSACTION": "Transacción",
+    "STATUS": "Estado",
+    "ORDER": "Orden",
+    "MORE": "Más",
+    "FIXED": "Fijo",
+    "PERCENTAGE": "Porcentaje",
     "SIMPLE": "Simple",
     "ADVANCED": "Avanzado",
     "OPERATIONS": "Operaciones",
     "SWAPS": "Intercambios",
     "LP": "Pools de liquidez",
+    "ANCHORS": "Anclas",
     "AIRDROPS": "Airdrops",
     "LAB": "Lab",
     "SETTINGS": "Configuraciones",
@@ -133,7 +147,8 @@
     "SIGNER": "Firmante",
     "REVOKE": "Remover",
     "WALLETS": "Wallets",
-    "ASSET": "Asset"
+    "ASSET": "Asset",
+    "EARN": "Ganar"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegúrate que estas usando el Horizon correcto y que tienes internet.",
@@ -151,7 +166,8 @@
     "ERROR_LOADING_FILES": "Error al cargar el archivo",
     "CANT_PARSE_INCORRECT_FILE": "No pudimos leer la informacion en el archivo, esto puede significar que no es el archivo correcto",
     "MAKE_SURE_FILE_TYPE": "El tipo de archivo es incorrecto, asegurese que es un archivo: {{type}}",
-    "CANT_DECRYPT_BACKUP_FILE": "No pudimos desencriptar el archivo de respaldo, esto significa que la llave o el archivo de respaldo son incorrectos"
+    "CANT_DECRYPT_BACKUP_FILE": "No pudimos desencriptar el archivo de respaldo, esto significa que la llave o el archivo de respaldo son incorrectos",
+    "YOUR_ACCOUNT_NOT_CREATED": "Tu cuenta no existe en la red"
   },
   "SUCCESS_MESSAGE": {
     "OPERATION_COMPLETED": "Operación completada",
@@ -213,6 +229,9 @@
     "SEND_PAYMENT": {
       "CUSTOM_ASSET_TO_NON_TRUSTED": "No podemos enviar assets personalizados a una cuenta que aún no se ha creado.",
       "PAYMENT_CONFIRMATION_TITLE": "confirmación de pago",
+      "CONFIRM_CREATE_ACCOUNT": "El destino no existe, ¿estas seguro de que quieres crear esta cuenta?",
+      "CONFIRM_CLAIMABLE_BALANCE": "El destino no tiene este asset, ¿quieres crear un balance para este (esto require bloquear 1 XLM hasta que sea aceptado)?",
+      "ALERT_SENDING_NO_TRUSTLINE": "El pago fallará si quien recibe no posee el asset y tampoco es el emisor de este",
       "PAYMENT_SENT_MESSAGE": "Pago enviado correctamente",
       "SCAN_PUBLIC_KEY_TITLE": "Escanear llave pública",
       "SCAN_MEMO_TITLE": "Scan memo",
@@ -436,6 +455,10 @@
     "BUILD_TRANSACTION": "Construir transacción",
     "SIGN_MESSAGE": "Firmar mensaje",
     "IMPORT_XDR": "Importar XDR (firma manual)",
+    "MERGE_ACCOUNT": "Combinar cuenta",
+    "MERGE_ACCOUNT_DISCLAIMER": "Al combinar tu cuenta, los XLMs restantes seran enviados y tu cuenta eliminada de Stellar",
+    "MERGE_ACCOUNT_COMPLETED": "Cuenta combinada",
+    "CANT_BE_MERGED": "La cuenta no puede ser combinada",
     "NOTICE": "Esta sección incluye operaciones que pueden ser peligrosas si no sabes lo que haces. Ten cuidado.",
     "COPY_SIGNED": "Copiar firmada",
     "SIGN_SIGNED": "Firmar XDR",
@@ -504,5 +527,27 @@
     "IMPORTING_MESSAGE": "Importar un nuevo archivo de respaldo removerá todo en tu Wallet y lo reemplazará con la información en el archivo de respaldo",
     "EXPORT_DESCRIPTION": "Exportar la información en tu Wallet generará dos archivos, uno con la informacion de tu Wallet encriptada y otro con la llave para desencriptarla",
     "EXPORT_RECOMMENDATION": "Te recomendamos guardar cada archivo en lugares distintos"
+  },
+  "ANCHORS": {
+    "ADD_NEW": "Agregar nueva Ancla",
+    "DEPOSIT_MIN": "Deposito Mínimo",
+    "DEPOSIT_MAX": "Deposito Máximo",
+    "DEPOSIT_FEE": "Comisión de deposito",
+    "WITHDRAW_MIN": "Retiro Mínimo",
+    "WITHDRAW_MAX": "Retiro Máximo",
+    "WITHDRAW_FEE": "Comisión de retiro",
+    "ANCHOR_DETAILS": "Detalles de Ancla",
+    "REMOVE_ANCHOR": "Remover Ancla",
+    "ADD_ANCHOR_STEP_1_TITLE": "Primero obtengamos la informacion del Ancla",
+    "ADD_ANCHOR_STEP_2_TITLE": "Ahora confirma los datos"
+  },
+  "GIFT_CARDS": {
+    "MY_ORDERS": "Mis ordenes",
+    "CANT_GET_PRODUCTS": "Ocurrió un error al obtener los productos disponibles, intenta mas tarde o contacta soporte.",
+    "PICK_CARD_VALUE": "Selecciona un valor de tarjeta",
+    "GIFT_CARD_GENERATED": "Tarjeta generada, revisa los detalles en la seccion de tus ordenes",
+    "INVALID_ORDER_REQUEST": "La orden no es correcta, contacta soporte",
+    "GET_REDEEM_CODES": "Obtener codigos de tarjeta",
+    "NO_ORDERS_YET": "Aun no tienes ordenes para esta cuenta de Stellar"
   }
 }

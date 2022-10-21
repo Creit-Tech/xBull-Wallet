@@ -15,6 +15,11 @@
       <span>{{ 'COMMON_WORDS.SWAPS' | translate }}</span>
     </li>
 
+    <li (click)="closeDrawer()" routerLink="/gift-cards" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-gifts"></i>
+      <span>Gift Cards</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/earn" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-piggy-bank"></i>
       <span>{{ 'COMMON_WORDS.EARN' | translate }}</span>
@@ -23,6 +28,11 @@
     <li (click)="closeDrawer()" routerLink="/liquidity-pools" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-water-ladder"></i>
       <span>{{ 'COMMON_WORDS.LP' | translate }}</span>
+    </li>
+
+    <li (click)="closeDrawer()" routerLink="/anchors" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-anchor"></i>
+      <span>{{ 'COMMON_WORDS.ANCHORS' | translate }}</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/airdrops" nzMatchRouter nz-menu-item class="flex">
@@ -38,6 +48,15 @@
         class="flex">
       <i class="mr-4 fa-solid fa-flask"></i>
       <span>{{ 'COMMON_WORDS.LAB' | translate }}</span>
+    </li>
+
+    <li (click)="closeDrawer()"
+        routerLink="/walletconnect"
+        nzMatchRouter
+        nz-menu-item
+        class="flex">
+      <img class="h-4 w-4 mr-4" src="/assets/images/walletconnect.svg" alt="">
+      <span>WalletConnect</span>
     </li>
 
     <li (click)="closeDrawer()" routerLink="/settings" nzMatchRouter nz-menu-item class="flex">

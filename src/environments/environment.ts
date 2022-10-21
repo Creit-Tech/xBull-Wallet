@@ -9,6 +9,7 @@ export const ENV = 'ENVIRONMENT';
 
 export const environment = {
   xPointersApi: '/api-xPointers',
+  xGCApi: '/api-xGC',
   production: false,
   platform: 'website',
   defaultApis: [{
@@ -30,7 +31,7 @@ export const environment = {
     networkPassphrase: Networks.PUBLIC,
     canRemove: true,
   }],
-  version: '1.5.0'
+  version: '1.8.0'
 };
 
 /*

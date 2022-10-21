@@ -28,6 +28,16 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          routerLink="/gift-cards"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-gifts" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Gift Cards</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/swaps"
           nzMatchRouter
           nz-menu-item class="flex">
@@ -55,6 +65,15 @@
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
+          routerLink="/anchors"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-anchor" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.ANCHORS' | translate }}</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
           routerLink="/airdrops"
           nzMatchRouter
           nz-menu-item class="flex">
@@ -70,6 +89,17 @@
           nz-menu-item class="flex">
         <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
         <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.LAB' | translate }}</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          class="flex opacity-90 hover:opacity-100"
+          routerLink="/walletconnect"
+          nzMatchRouter
+          nz-menu-item>
+        <img class="h-4 w-4" [class.mr-4]="!isCollapsed"
+             src="/assets/images/walletconnect.svg" alt="">
+        <span *ngIf="!isCollapsed">WalletConnect</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"

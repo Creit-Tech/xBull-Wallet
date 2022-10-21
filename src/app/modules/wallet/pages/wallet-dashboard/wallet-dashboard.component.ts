@@ -237,7 +237,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
 
     let loadedAccount: AccountResponse;
     try {
-      loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+      loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
     } catch (e) {
       this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'));
       return;

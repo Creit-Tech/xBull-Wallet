@@ -1,0 +1,102 @@
+<section class="w-full mb-6">
+  <nz-steps [nzCurrent]="(currentStep$ | async) || 0" nzType="navigation" nzSize="small">
+    <nz-step nzTitle="Fetch" nzStatus="process"></nz-step>
+
+    <nz-step nzTitle="Confirm" nzStatus="process"></nz-step>
+  </nz-steps>
+</section>
+
+
+<section *ngIf="(currentStep$ | async) === 0" class="w-full flex flex-col">
+  <div class="w-full text-center mb-4">
+    <h2 class="text-lg opacity-80">
+      {{ 'ANCHORS.ADD_ANCHOR_STEP_1_TITLE' | translate }}
+    </h2>
+  </div>
+
+  <nz-input-group class="w-full" [nzSuffix]="confirmUrl">
+    <input placeholder="Domain Ex: testanchor.stellar.org"
+           [formControl]="urlControl"
+           (keydown.enter)="fetchData()"
+           type="text" class="w-full" nz-input>
+  </nz-input-group>
+
+  <ng-template #confirmUrl>
+    <button (click)="fetchData()" [nzLoading]="fetchingTomlData" nz-button [disabled]="urlControl.invalid">
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
+    </button>
+  </ng-template>
+</section>
+
+<section *ngIf="(currentStep$ | async) === 1" class="w-full flex flex-col">
+  <div class="w-full text-center mb-4">
+    <h2 class="text-lg opacity-80">
+      {{ 'ANCHORS.ADD_ANCHOR_STEP_2_TITLE' | translate }}
+    </h2>
+  </div>
+
+  <div [formGroup]="anchorDataForm" nz-form nzLayout="vertical" class="w-full mb-4">
+    <nz-form-item>
+      <nz-form-label>Name</nz-form-label>
+      <fieldset [disabled]="false">
+        <input nz-input formControlName="name" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzRequired]="true">URL</nz-form-label>
+      <fieldset [disabled]="true">
+        <input nz-input formControlName="url" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Description</nz-form-label>
+      <fieldset [disabled]="false">
+        <input nz-input formControlName="description" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>Image</nz-form-label>
+      <fieldset [disabled]="false">
+        <input nz-input formControlName="image" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label>E-mail</nz-form-label>
+      <fieldset [disabled]="false">
+        <input nz-input formControlName="email" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzRequired]="true">Network passphrase</nz-form-label>
+      <fieldset [disabled]="true">
+        <input nz-input formControlName="networkPassphrase" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzRequired]="true">Signing key</nz-form-label>
+      <fieldset [disabled]="true">
+        <input nz-input formControlName="signingKey" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzRequired]="true">Web Auth URL</nz-form-label>
+      <fieldset [disabled]="true">
+        <input nz-input formControlName="webAuthEndpoint" />
+      </fieldset>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzRequired]="true">SEP 24 URL</nz-form-label>
+      <fieldset [disabled]="true">
+        <input nz-input formControlName="transferServerSep24" />
+      </fieldset>
+    </nz-form-item>
+  </div>
+
+  <div class="w-full flex justify-center">
+    <button (click)="confirmAdd()"
+            [disabled]="anchorDataForm.invalid"
+            nz-button nzSize="large" nzType="primary">
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
+    </button>
+  </div>
+</section>

@@ -1,10 +1,10 @@
-import { Server } from 'stellar-sdk';
+import { Networks } from 'stellar-base';
 
 export interface IHorizonApi {
   _id: string;
   name: string;
   url: string;
-  networkPassphrase: string;
+  networkPassphrase: Networks;
   canRemove: boolean;
 }
 

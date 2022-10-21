@@ -1,0 +1,80 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          WalletConnect
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex justify-center items-center">
+
+  <div class="max-w-md w-full px-4">
+    <nz-card class="w-full ant-card-no-padding p-4 mb-6">
+      <section class="flex flex-col">
+
+        <div class="w-full text-center mb-4">
+          <h1 class="text-lg font-semibold">
+            WalletConnect sessions
+          </h1>
+        </div>
+
+        <nz-list class="w-full">
+          <nz-list-item *ngFor="let session of (sessions$ | async)"
+                        (click)="showSessionDetails(session)"
+                        class="cursor-pointer">
+            <nz-list-item-meta
+              [nzAvatar]="session.peer.metadata.icons[0]"
+              [nzDescription]="session.peer.metadata.name">
+              <nz-list-item-meta-title>
+                {{ session.peer.metadata.url }}
+              </nz-list-item-meta-title>
+            </nz-list-item-meta>
+          </nz-list-item>
+
+          <nz-list-item>
+            <button (click)="addNewSession()" nz-button nzBlock nzType="primary" nzSize="large">
+              New session
+            </button>
+          </nz-list-item>
+        </nz-list>
+      </section>
+    </nz-card>
+  </div>
+</section>
+
+<ng-template #newSessionModal>
+  <section class="w-full flex flex-col">
+    <div *ngIf="hasCamera" class="w-full mb-4">
+      <button (click)="onQrScan()" nz-button nzBlock nzSize="large" nzType="primary">
+        <i class="fa-solid fa-camera mr-2"></i> Scan QR
+      </button>
+    </div>
+    <div class="w-full">
+      <button (click)="onUriOption()" nz-button nzBlock nzSize="large" nzType="primary">
+        <i class="fa-solid fa-link mr-2"></i> Use URI
+      </button>
+    </div>
+  </section>
+</ng-template>
+
+<ng-template #uriOption>
+  <section class="w-full flex flex-col">
+    <input type="text" nz-input
+           [formControl]="uriControl"
+           class="w-full mb-4" nzSize="large"
+           placeholder="Paste the URI here">
+
+    <button (click)="connectURI()" nz-button nzBlock nzSize="large" nzType="primary">
+      Confirm
+    </button>
+  </section>
+</ng-template>

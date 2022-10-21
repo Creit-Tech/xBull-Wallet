@@ -2,14 +2,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Inject,
   OnDestroy,
   OnInit,
-  ViewChild
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, from, merge, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, from, Observable, Subject, Subscription } from 'rxjs';
 import {
   IWalletAssetModel,
   IWalletsAccount,
@@ -19,13 +17,12 @@ import {
 } from '~root/state';
 import {
   delay,
-  distinctUntilChanged, distinctUntilKeyChanged,
+  distinctUntilKeyChanged,
   map,
   shareReplay,
   switchMap,
   take,
   takeUntil,
-  tap,
   withLatestFrom
 } from 'rxjs/operators';
 import { ISelectOptions } from '~root/shared/forms-components/select/select.component';
@@ -42,13 +39,14 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { Account, Asset, Operation, TransactionBuilder } from 'stellar-base';
-import { Memo } from 'stellar-sdk';
+import { AccountResponse, Claimant, Memo } from 'stellar-sdk';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
 import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
+import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 
 @Component({
   selector: 'app-send-payment',
@@ -70,8 +68,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   form: UntypedFormGroup = new UntypedFormGroup({
     publicKey: new UntypedFormControl('', [
       Validators.required,
-      Validators.minLength(56),
-      Validators.maxLength(56),
+      validPublicKeyValidator
     ]),
     memo: new UntypedFormControl(''),
     assetCode: new UntypedFormControl('', [Validators.required]), // it's called asset code but it's actually the id
@@ -204,7 +201,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    const loadedAccount = await this.stellarSdkService.Server.loadAccount(selectedAccount.publicKey);
+    const loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 
@@ -213,17 +210,78 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       networkPassphrase: this.stellarSdkService.networkPassphrase,
     }).setTimeout(this.stellarSdkService.defaultTimeout);
 
+    let destinationLoadedAccount: AccountResponse;
     try {
-      await this.stellarSdkService.Server.loadAccount(this.form.value.publicKey);
-      transaction.addOperation(
-        Operation.payment({
-          asset: selectedAsset._id === 'native'
-            ? Asset.native()
-            : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
-          destination: this.form.value.publicKey,
-          amount: new BigNumber(this.form.value.amount).toFixed(7),
-        })
-      );
+      destinationLoadedAccount = await this.stellarSdkService.loadAccount(this.form.value.publicKey);
+
+      if (selectedAsset._id === 'native') {
+        transaction.addOperation(
+          Operation.payment({
+            asset: selectedAsset._id === 'native'
+              ? Asset.native()
+              : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+            destination: this.form.value.publicKey,
+            amount: new BigNumber(this.form.value.amount).toFixed(7),
+          })
+        );
+      } else {
+        const hasTrustline = destinationLoadedAccount.balances.find(b => {
+          if (
+            b.asset_type !== 'credit_alphanum4' &&
+            b.asset_type !== 'credit_alphanum12'
+          ) {
+            return false;
+          }
+
+          return (
+            b.asset_code === selectedAsset.assetCode &&
+            b.asset_issuer === selectedAsset.assetIssuer
+          );
+        });
+
+        if (hasTrustline) {
+          transaction.addOperation(
+            Operation.payment({
+              asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+              destination: this.form.value.publicKey,
+              amount: new BigNumber(this.form.value.amount).toFixed(7),
+            })
+          );
+        } else {
+          const modalResult$ = new Subject<boolean>();
+          this.nzModalService.confirm({
+            nzContent: this.translateService.instant('WALLET.SEND_PAYMENT.CONFIRM_CLAIMABLE_BALANCE'),
+            nzOkText: 'Yes',
+            nzOnOk: () => modalResult$.next(true),
+            nzCancelText: 'No',
+            nzOnCancel: () => modalResult$.next(false),
+            nzClosable: false,
+            nzCentered: true
+          });
+
+          if (await modalResult$.pipe(take(1)).toPromise()) {
+            transaction.addOperation(
+              Operation.createClaimableBalance({
+                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                amount: new BigNumber(this.form.value.amount).toFixed(7),
+                claimants: [new Claimant(this.form.value.publicKey), new Claimant(loadedAccount.account_id)],
+              })
+            );
+          } else {
+            this.nzMessageService.info(this.translateService.instant('WALLET.SEND_PAYMENT.ALERT_SENDING_NO_TRUSTLINE'), {
+              nzDuration: 5000,
+            });
+            transaction.addOperation(
+              Operation.payment({
+                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                destination: this.form.value.publicKey,
+                amount: new BigNumber(this.form.value.amount).toFixed(7),
+              })
+            );
+          }
+        }
+      }
+
     } catch (e: any) {
       if (selectedAsset._id !== 'native') {
         this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
@@ -231,12 +289,26 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         return;
       }
-      transaction.addOperation(
-        Operation.createAccount({
-          destination: this.form.value.publicKey,
-          startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
-        })
-      );
+
+      const modalResult$ = new Subject<boolean>();
+      this.nzModalService.confirm({
+        nzContent: this.translateService.instant('WALLET.SEND_PAYMENT.CONFIRM_CREATE_ACCOUNT'),
+        nzOnOk: () => modalResult$.next(true),
+        nzOnCancel: () => modalResult$.next(false),
+        nzClosable: false,
+        nzCentered: true
+      });
+
+      if (await modalResult$.pipe(take(1)).toPromise()) {
+        transaction.addOperation(
+          Operation.createAccount({
+            destination: this.form.value.publicKey,
+            startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
+          })
+        );
+      } else {
+        return;
+      }
     }
 
     if (!!this.form.value.memo) {

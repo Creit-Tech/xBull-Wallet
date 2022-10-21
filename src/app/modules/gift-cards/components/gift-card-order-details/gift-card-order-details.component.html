@@ -1,0 +1,48 @@
+<nz-list *ngIf="order$ | async as order">
+  <nz-list-item appClipboard [textToCopy]="order._id">
+    <b>ID:</b> {{ order._id | publicKey }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> {{ order.productName }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b> {{ order.orderAmount | currency: '$' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> {{ order.feeAmount | currency: '$' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> {{ order.totalAmount | currency: '$' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.DATE' | translate }}:</b> {{ order.createdAt | date: 'MMM, dd yyyy' }}
+  </nz-list-item>
+  <nz-list-item class="cursor-pointer" appClipboard [textToCopy]="order.transactionId">
+    <b>{{ 'COMMON_WORDS.TRANSACTION' | translate }}:</b> {{ order.transactionId | publicKey }}
+  </nz-list-item>
+
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.STATUS' | translate }}:</b> {{ order.orderStatus }}
+  </nz-list-item>
+
+  <ng-container *ngIf="order.orderStatus === 'PAID'">
+    <nz-list-item *ngIf="redeemCodes.length === 0; else codes">
+      <button (click)="getCodes()"
+              [nzLoading]="gettingRedeemCode$ | async"
+              nz-button nzBlock>
+        {{ 'GIFT_CARDS.GET_REDEEM_CODES' | translate }}
+      </button>
+    </nz-list-item>
+
+    <ng-template #codes>
+      <ng-container *ngFor="let code of redeemCodes" class="w-full">
+        <nz-list-item>
+          <b>Gift Card:</b> {{ code.cardNumber }}
+        </nz-list-item>
+        <nz-list-item>
+          <b>Pin:</b> {{ code.pinCode }}
+        </nz-list-item>
+      </ng-container>
+    </ng-template>
+  </ng-container>
+</nz-list>
