@@ -3,7 +3,12 @@ import { Inject, Injectable } from '@angular/core';
 import { EarnVaultsStore } from './earn-vaults.store';
 import { ENV, environment } from '~env';
 import { Observable, throwError } from 'rxjs';
-import { createEarnVault, IEarnVault, IEarnVaultTransaction } from '~root/modules/earn/state/vaults/earn-vault.model';
+import {
+  createEarnVault,
+  IEarnVault,
+  IEarnVaultSnapshot,
+  IEarnVaultTransaction
+} from '~root/modules/earn/state/vaults/earn-vault.model';
 import { catchError, map, tap } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 
@@ -24,7 +29,12 @@ export class EarnVaultsService {
         const vaults = response.vaults.map(v => createEarnVault(v));
         applyTransaction(() => {
           this.earnVaultsStore.updateUIState({ requestingVaults: false });
-          this.earnVaultsStore.upsertMany(vaults);
+          for (const vault of response.vaults) {
+            this.earnVaultsStore.upsert(vault._id, (state) => ({
+              ...vault,
+              snapshots: (state as IEarnVault).snapshots
+            }));
+          }
         });
         return vaults;
       }))
@@ -41,7 +51,10 @@ export class EarnVaultsService {
         const vault = createEarnVault(response.vault);
         applyTransaction(() => {
           this.earnVaultsStore.updateUIState({ requestingVaults: false });
-          this.earnVaultsStore.upsert(vault._id, vault);
+          this.earnVaultsStore.upsert(vault._id, (state) => ({
+            ...vault,
+            snapshots: (state as IEarnVault).snapshots
+          }));
         });
         return vault;
       }))
@@ -51,13 +64,28 @@ export class EarnVaultsService {
       }));
   }
 
+  getVaultSnapshots(vaultId: IEarnVault['_id']): Observable<IEarnVaultSnapshot[]> {
+    this.earnVaultsStore.updateUIState({ requestingVaultSnapshots: true });
+    return this.http.get<{ snapshots: IEarnVaultSnapshot[] }>(this.env.xPointersApi + `/vaults/${vaultId}/snapshots`)
+      .pipe(map((response) => {
+        applyTransaction(() => {
+          this.earnVaultsStore.updateUIState({ requestingVaultSnapshots: false });
+          this.earnVaultsStore.upsert(vaultId, { snapshots: response.snapshots });
+        });
+        return response.snapshots;
+      }));
+  }
+
   createVault(strategyId: IEarnVault['strategyId']): Observable<IEarnVault> {
     this.earnVaultsStore.updateUIState({ creatingVault: true });
     return this.http.post<ICreateVaultResponse>(this.env.xPointersApi + `/vaults`, { strategyId })
       .pipe(map((response) => {
         const vault = createEarnVault(response.vault);
         applyTransaction(() => {
-          this.earnVaultsStore.upsert(vault._id, vault);
+          this.earnVaultsStore.upsert(vault._id, (state) => ({
+            ...vault,
+            snapshots: (state as IEarnVault).snapshots
+          }));
           this.earnVaultsStore.updateUIState({ creatingVault: false });
         });
         return vault;
@@ -77,7 +105,10 @@ export class EarnVaultsService {
       .pipe(map((response) => {
         const vault = createEarnVault(response.vault);
         applyTransaction(() => {
-          this.earnVaultsStore.upsert(vault._id, vault);
+          this.earnVaultsStore.upsert(vault._id, (state) => ({
+            ...vault,
+            snapshots: (state as IEarnVault).snapshots
+          }));
           this.earnVaultsStore.updateUIState({ creatingVault: false });
         });
         return vault;

@@ -4,13 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { EarnStrategiesQuery } from '~root/modules/earn/state/strategies/earn-strategies.query';
 import {
   catchError,
-  concatAll,
-  debounceTime,
-  distinctUntilKeyChanged,
+  concatAll, debounce,
+  debounceTime, distinct, distinctUntilChanged,
+  distinctUntilKeyChanged, filter,
   map,
   switchMap,
   take,
-  takeUntil
+  takeUntil, tap
 } from 'rxjs/operators';
 import { EarnStrategiesService } from '~root/modules/earn/services/earn-strategies.service';
 import { asapScheduler, BehaviorSubject, combineLatest, of, scheduled, Subject, Subscription, timer } from 'rxjs';
@@ -24,6 +24,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { distinctUntilArrayItemChanged } from '@datorama/akita';
 
 @Component({
   selector: 'app-strategy-details',
@@ -33,7 +34,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 export class StrategyDetailsComponent implements OnInit, OnDestroy {
   componentDestroyed$ = new Subject<void>();
 
-  graphFilterControl = new FormControl('apr', [Validators.required]);
+  graphFilterControl = new FormControl('strategy_aprapy', [Validators.required]);
   graphFilter$: BehaviorSubject<'apr' | 'tvl' | 'tokenPrice'> = new BehaviorSubject<'apr' | 'tvl' | 'tokenPrice'>('apr');
   results$: BehaviorSubject<IGraphResult[]> = new BehaviorSubject<IGraphResult[]>([]);
   graphColors: Color = {
@@ -104,6 +105,73 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
       }
     }); // TODO: review this type 'any'
 
+
+  // TODO: make this three observables one and use a filter instead, maybe it's better that way
+  vaultApyAprSnapshot$ = this.vault$
+    .pipe(filter(vault => !!vault?.snapshots))
+    .pipe(map(vault => vault?.snapshots))
+    .pipe(distinctUntilArrayItemChanged())
+    .pipe(map((snapshots = []) => {
+      const reversed = [...snapshots].reverse();
+      return [
+        {
+          name: 'APR',
+          series: reversed.map((r) => ({
+            name: new Date(r.datePeriod),
+            value: (r.apr * 100) || 0,
+          })),
+        },
+        {
+          name: 'APY',
+          series: reversed.map((r) => ({
+            name: new Date(r.datePeriod),
+            value: (r.apy * 100) || 0,
+          })),
+        },
+      ];
+    }));
+
+  vaultTvlSnapshot$ = this.vault$
+    .pipe(filter(vault => !!vault?.snapshots))
+    .pipe(map(vault => vault?.snapshots))
+    .pipe(distinctUntilArrayItemChanged())
+    .pipe(map((snapshots = []) => {
+      const reversed = [...snapshots].reverse();
+      return [
+        {
+          name: 'TVL',
+          series: reversed.map((r) => ({
+            name: new Date(r.datePeriod),
+            value: r.tvl,
+          })),
+        },
+        {
+          name: 'USD TVL',
+          series: reversed.map((r) => ({
+            name: new Date(r.datePeriod),
+            value: r.usdTvl,
+          })),
+        },
+      ];
+    }));
+
+  vaultPoolSharesTvlSnapshot$ = this.vault$
+    .pipe(filter(vault => !!vault?.snapshots))
+    .pipe(map(vault => vault?.snapshots))
+    .pipe(distinctUntilArrayItemChanged())
+    .pipe(map((snapshots = []) => {
+      const reversed = [...snapshots].reverse();
+      return [
+        {
+          name: 'Pool shares',
+          series: reversed.map((r) => ({
+            name: new Date(r.datePeriod),
+            value: r.poolShares,
+          })),
+        },
+      ];
+    }));
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly earnStrategiesQuery: EarnStrategiesQuery,
@@ -131,6 +199,16 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
         this.earnVaultsService.getVaults()
           .subscribe();
       });
+
+    this.vault$
+      .pipe(filter(val => !!val))
+      .pipe(distinctUntilKeyChanged('_id'))
+      .pipe(switchMap(vault => {
+        return timer(0, 10000)
+          .pipe(switchMap(() => this.earnVaultsService.getVaultSnapshots(vault._id)));
+      }))
+      .pipe(takeUntil(this.componentDestroyed$.asObservable()))
+      .subscribe();
   }
 
   ngOnDestroy(): void {
