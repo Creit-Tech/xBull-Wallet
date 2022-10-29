@@ -132,7 +132,7 @@ export class GiftCardsService {
     return from(this.getAuthToken())
       .pipe(switchMap(token => {
         return this.http.post<{ tx: string; network: Networks }>(this.env.xGCApi + '/orders/generate-order', params, {
-          headers: { authorization: 'Bearer ' + token },
+          headers: { authorization: 'Bearer ' + token, APIv: '2' },
         })
           .pipe(catchError(this.removeAuthToken(token)));
       }))
@@ -217,6 +217,7 @@ export interface IGiftCardDetails extends ISearchedGiftCard {
   optionsMaps?: Array<{ source: number; recipient: number; }>;
   minAmount?: number;
   maxAmount?: number;
+  fxRate: number;
 }
 
 export interface IGiftCardOrder {
@@ -227,6 +228,7 @@ export interface IGiftCardOrder {
   orderAmount: number;
   feeAmount: number;
   totalAmount: number;
+  giftCardAmount: number;
   orderStatus: string;
   cancelReason?: string;
   transactionId: string;

@@ -9,7 +9,7 @@ import {
   IEarnVaultSnapshot,
   IEarnVaultTransaction
 } from '~root/modules/earn/state/vaults/earn-vault.model';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { applyTransaction } from '@datorama/akita';
 
 @Injectable()

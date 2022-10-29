@@ -1,6 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { distinctUntilChanged, filter, map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  filter,
+  map,
+  startWith,
+  switchMap,
+  take,
+  takeUntil,
+  withLatestFrom
+} from 'rxjs/operators';
 import { combineLatest, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import {
   GiftCardsService,
@@ -76,10 +85,18 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
       }
     }));
 
-  total$: Observable<number> = this.cardAmountControl.valueChanges
-    .pipe(withLatestFrom(this.feeToPay$))
-    .pipe(map(([cardAmount, feeToPay]) => {
-      return !!cardAmount ? cardAmount + feeToPay : 0;
+  total$: Observable<number> = this.productDetails$.asObservable()
+    .pipe(switchMap(productDetails => {
+      return this.cardAmountControl.valueChanges
+        .pipe(startWith(this.cardAmountControl.value))
+        .pipe(withLatestFrom(this.feeToPay$))
+        .pipe(map(([cardAmount, feeToPay]) => {
+          return new BigNumber((cardAmount || 0))
+            .dividedBy(productDetails.fxRate)
+            .plus(feeToPay)
+            .dp(2, BigNumber.ROUND_HALF_UP)
+            .toNumber();
+        }));
     }));
 
   selectedWalletAccount$ = this.walletAccountsQuery.getSelectedAccount$;
