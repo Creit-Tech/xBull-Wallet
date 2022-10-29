@@ -26,20 +26,19 @@
 
     <nz-list>
       <nz-list-item>
-        <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b>
+        <b>
+          {{ 'COMMON_WORDS.AMOUNT' | translate }}
+          <ng-container *ngIf="!!productDetails.maxAmount && productDetails.recipientCurrencyCode !== productDetails.senderCurrencyCode">
+            (${{productDetails.recipientCurrencyCode}})
+          </ng-container>:
+        </b>
 
         <ng-container *ngIf="productDetails.optionsMaps as optionsMaps; else rangeAmount">
           <nz-select class="w-6/12" [formControl]="cardAmountControl"
                      [nzPlaceHolder]="'GIFT_CARDS.PICK_CARD_VALUE' | translate">
             <ng-container *ngFor="let option of optionsMaps">
-              <ng-container *ngIf="option.source === option.recipient">
-                <nz-option nzLabel="${{ option.source }}"
-                           [nzValue]="option.source"></nz-option>
-              </ng-container>
-              <ng-container *ngIf="option.source !== option.recipient">
-                <nz-option nzLabel="${{ option.source }} (${{ productDetails.recipientCurrencyCode + ' ' + option.recipient }})"
-                           [nzValue]="option.source"></nz-option>
-              </ng-container>
+              <nz-option nzLabel="{{ option.recipient | currency: '$' + productDetails.recipientCurrencyCode + ' ' }}"
+                         [nzValue]="option.recipient"></nz-option>
             </ng-container>
           </nz-select>
         </ng-container>
@@ -47,14 +46,14 @@
         <ng-template #rangeAmount>
           <nz-input-number [nzMin]="productDetails.minAmount || 0"
                            [formControl]="cardAmountControl"
-                           class="w-6/12"
+                           class="w-6/12 text-right"
                            nzPlaceHolder="{{productDetails.minAmount}} - {{ productDetails.maxAmount}}"
                            [nzMax]="productDetails.maxAmount || 0"></nz-input-number>
         </ng-template>
       </nz-list-item>
 
       <nz-list-item>
-        <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> <p>{{ feeToPay$ | async | currency: '$' }}</p>
+        <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> <p>{{ feeToPay$ | async | currency: '$USDC ' }}</p>
       </nz-list-item>
 
       <nz-list-item>
@@ -87,6 +86,10 @@
             </p>
           </ng-template>
         </button>
+      </nz-list-item>
+
+      <nz-list-item *ngIf="productDetails.recipientCurrencyCode !== productDetails.senderCurrencyCode" class="text-center">
+        <small class="opacity-80 mx-auto">$USDC 1 = {{ (productDetails.fxRate) | currency: '$' + productDetails.recipientCurrencyCode + ' '}}</small>
       </nz-list-item>
 
       <nz-list-item>

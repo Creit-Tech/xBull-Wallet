@@ -6,13 +6,13 @@
     <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> {{ order.productName }}
   </nz-list-item>
   <nz-list-item>
-    <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b> {{ order.orderAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b> {{ order.giftCardAmount | currency: order.giftCardAmount !== order.orderAmount ? '$' : '$USDC ' }} <ng-container *ngIf="order.giftCardAmount !== order.orderAmount">({{ order.orderAmount | currency: '$USDC ' }})</ng-container>
   </nz-list-item>
   <nz-list-item>
-    <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> {{ order.feeAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> {{ order.feeAmount | currency: '$USDC ' }}
   </nz-list-item>
   <nz-list-item>
-    <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> {{ order.totalAmount | currency: '$' }}
+    <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> {{ order.totalAmount | currency: '$USDC ' }}
   </nz-list-item>
   <nz-list-item>
     <b>{{ 'COMMON_WORDS.DATE' | translate }}:</b> {{ order.createdAt | date: 'MMM, dd yyyy' }}
