@@ -46,7 +46,7 @@ export class GiftCardsOrdersComponent implements OnInit, AfterViewInit {
 
   openDetails(order: IGiftCardOrder): void {
     this.nzModalService.create({
-      nzTitle: `${this.translateService.instant('COMMON_WORDS.ORDER')}: ${order._id}`,
+      nzTitle: `${this.translateService.instant('COMMON_WORDS.ORDER')}:`,
       nzContent: GiftCardOrderDetailsComponent,
       nzComponentParams: { order },
       nzFooter: null

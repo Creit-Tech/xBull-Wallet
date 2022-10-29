@@ -10,6 +10,21 @@ export enum VaultTransactionStatus {
   CANCELLED = 'CANCELLED',
 }
 
+export interface IEarnVaultSnapshot {
+  _id: string;
+  vaultId: string;
+  tvl: number;
+  usdTvl: number;
+  poolShares: number;
+  apr: number;
+  apy: number;
+  datePeriod: Date;
+  datePeriodText: string;
+
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 // In the future we can have a vault deposit collection is needed
 export interface IEarnVaultTransaction {
   _id: string;
@@ -35,6 +50,9 @@ export interface IEarnVault {
   creationXDR: string;
   vaultAccount: string;
   transactionId?: string;
+
+  snapshots: IEarnVaultSnapshot[];
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -53,6 +71,9 @@ export function createEarnVault(params: IEarnVault): IEarnVault {
     creationXDR: params.creationXDR,
     vaultAccount: params.vaultAccount,
     transactionId: params.transactionId,
+
+    snapshots: params.snapshots,
+
     createdAt: new Date(params.createdAt),
     updatedAt: new Date(params.updatedAt),
   };
