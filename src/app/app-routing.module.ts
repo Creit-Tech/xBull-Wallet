@@ -58,6 +58,11 @@ const routes: Routes = [
           .then(m => m.GiftCardsModule)
       },
       {
+        path: 'airtime',
+        loadChildren: () => import('./modules/airtime/airtime.module')
+          .then(m => m.AirtimeModule)
+      },
+      {
         path: 'swaps',
         loadChildren: () => import('./modules/swaps/swaps.module')
           .then(m => m.SwapsModule),

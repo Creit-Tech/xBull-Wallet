@@ -81,16 +81,6 @@
         <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.AIRDROPS' | translate }}</span>
       </li>
 
-      <li [class.hidden]="!(advanceMode$ | async)"
-          [class.justify-center]="isCollapsed"
-          [class.items-center]="isCollapsed"
-          routerLink="/lab"
-          nzMatchRouter
-          nz-menu-item class="flex">
-        <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.LAB' | translate }}</span>
-      </li>
-
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           class="flex opacity-90 hover:opacity-100"
@@ -100,6 +90,26 @@
         <img class="h-4 w-4" [class.mr-4]="!isCollapsed"
              src="/assets/images/walletconnect.svg" alt="">
         <span *ngIf="!isCollapsed">WalletConnect</span>
+      </li>
+
+      <li [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/airtime"
+          nzMatchRouter
+          nzMatchRouterExact
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-mobile-screen-button" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">Airtime</span>
+      </li>
+
+      <li [class.hidden]="!(advanceMode$ | async)"
+          [class.justify-center]="isCollapsed"
+          [class.items-center]="isCollapsed"
+          routerLink="/lab"
+          nzMatchRouter
+          nz-menu-item class="flex">
+        <i class="fa-solid fa-flask" [class.mr-4]="!isCollapsed"></i>
+        <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.LAB' | translate }}</span>
       </li>
 
       <li [class.justify-center]="isCollapsed"

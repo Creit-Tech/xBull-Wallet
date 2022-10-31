@@ -1,0 +1,30 @@
+<nz-list *ngIf="order$ | async as order">
+  <nz-list-item appClipboard [textToCopy]="order._id">
+    <b>ID:</b> {{ order._id | publicKey }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.ACCOUNT' | translate }}:</b> {{ order.recipientPhoneNumber }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.PRODUCT' | translate }}:</b> {{ order.productName }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.AMOUNT' | translate }}:</b> {{ order.orderAmount | currency: '$USDC ' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.FEE' | translate }}:</b> {{ order.feeAmount | currency: '$USDC ' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.TOTAL' | translate }}:</b> {{ order.totalAmount | currency: '$USDC ' }}
+  </nz-list-item>
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.DATE' | translate }}:</b> {{ order.createdAt | date: 'MMM, dd yyyy' }}
+  </nz-list-item>
+  <nz-list-item class="cursor-pointer" appClipboard [textToCopy]="order.transactionId">
+    <b>{{ 'COMMON_WORDS.TRANSACTION' | translate }}:</b> {{ order.transactionId | publicKey }}
+  </nz-list-item>
+
+  <nz-list-item>
+    <b>{{ 'COMMON_WORDS.STATUS' | translate }}:</b> {{ order.orderStatus }}
+  </nz-list-item>
+</nz-list>

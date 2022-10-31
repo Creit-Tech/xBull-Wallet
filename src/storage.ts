@@ -28,6 +28,7 @@ const persistStateParams: Partial<PersistStateParams> = {
     'anchors',
     'anchors-auth-tokens',
     'gift-cards',
+    'airtime'
   ],
   preStorageUpdate(storeName: string, state: any): any {
     try {
