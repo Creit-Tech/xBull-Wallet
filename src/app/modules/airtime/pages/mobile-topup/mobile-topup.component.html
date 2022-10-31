@@ -1,0 +1,192 @@
+<section class="container mx-auto p-4">
+  <section class="w-full">
+    <nz-breadcrumb class="flex">
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center" routerLink="/">
+          <i class="fa-solid fa-home"></i>
+        </a>
+      </nz-breadcrumb-item>
+      <nz-breadcrumb-item class="flex items-center">
+        <a class="flex items-center">
+          Mobile Top-up
+        </a>
+      </nz-breadcrumb-item>
+    </nz-breadcrumb>
+  </section>
+</section>
+
+<section class="w-full flex flex-col justify-center items-center">
+
+  <div class="max-w-md w-full px-4 mb-2">
+    <section class="flex flex-col">
+
+      <div class="w-full text-center mb-4">
+        <h1 class="text-lg font-semibold">
+          Mobile Top-up
+        </h1>
+      </div>
+
+      <div class="w-full">
+        <div class="w-full mb-4">
+          <nz-steps [nzCurrent]="form.controls.currentStep.value || 0"
+                    nzType="navigation" nzSize="small">
+            <nz-step nzTitle="Step 1" [nzStatus]="(form.controls.currentStep.value || 0) > 0 ? 'finish' : 'wait'"></nz-step>
+            <nz-step nzTitle="Step 2" [nzStatus]="(form.controls.currentStep.value || 0) > 1 ? 'finish' : 'wait'"></nz-step>
+            <nz-step nzTitle="Step 3" [nzStatus]="(form.controls.currentStep.value || 0) > 2 ? 'finish' : 'wait'"></nz-step>
+          </nz-steps>
+        </div>
+      </div>
+
+      <nz-card [formGroup]="form"
+               class="w-full ant-card-no-padding p-4 mb-6">
+        <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 0">
+          <div class="w-full text-center px-4 mb-4">
+            <h2>
+              Pick a country
+            </h2>
+          </div>
+
+          <nz-select nzShowSearch
+                     formControlName="countryCode"
+                     class="w-full mb-4"
+                     nzSize="large"
+                     nzPlaceHolder="Country where you number is from">
+            <nz-option *ngFor="let country of countries$ | async"
+                       [nzLabel]="country.name" [nzValue]="country.isoName"></nz-option>
+          </nz-select>
+
+          <div class="w-full">
+            <button nz-button nzBlock
+                    [nzLoading]="gettingCountryOperators$ | async"
+                    (click)="confirmCountry()"
+                    [disabled]="form.controls.countryCode.invalid"
+                    nzType="primary" nzSize="large">
+              Confirm
+            </button>
+          </div>
+        </section>
+
+        <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 1">
+          <div class="w-full text-center px-4 mb-4">
+            <h2>
+              Pick the operator
+            </h2>
+          </div>
+
+          <nz-select nzShowSearch
+                     formControlName="operatorId"
+                     class="w-full mb-4"
+                     nzSize="large"
+                     nzPlaceHolder="Operator where your number is registered">
+            <nz-option *ngFor="let operator of operators$ | async"
+                       [nzLabel]="operator.name" [nzValue]="operator.id"></nz-option>
+          </nz-select>
+
+          <div class="w-full flex">
+            <button nz-button nzBlock
+                    (click)="goBackToStep1()"
+                    nzSize="large">
+              Go Back
+            </button>
+
+            <div class="px-2"></div>
+
+            <button nz-button nzBlock
+                    (click)="confirmOperator()"
+                    [disabled]="form.controls.operatorId.invalid"
+                    nzType="primary" nzSize="large">
+              Confirm
+            </button>
+          </div>
+        </section>
+
+        <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 2">
+          <div class="w-full text-center px-4 mb-4">
+            <h2>
+              Amount and number to recharge
+            </h2>
+          </div>
+
+          <nz-input-number-group [nzAddOnBefore]="areaCodes" nzSize="large" class="w-full mb-4">
+            <nz-input-number class="w-full" type="text"
+                   formControlName="phone"
+                   nzSize="large" nzPlaceHolder="Ex: 943 4321 2333">
+            </nz-input-number>
+            <ng-template #areaCodes>
+              <nz-select formControlName="phoneAreaCode"
+                         nzPlaceHolder="Code"
+                         class="w-20">
+                <ng-container *ngIf="selectedCountry$ | async as selectedCountry">
+                  <nz-option *ngFor="let callingCode of selectedCountry.callingCodes"
+                             [nzValue]="callingCode"
+                             [nzLabel]="callingCode"></nz-option>
+                </ng-container>
+              </nz-select>
+            </ng-template>
+          </nz-input-number-group>
+
+          <ng-container *ngIf="selectedOperator$ | async as selectedOperator">
+            <nz-select nzShowSearch
+                       *ngIf="!!selectedOperator.optionsMaps?.length"
+                       formControlName="amount"
+                       class="w-full mb-4"
+                       nzSize="large"
+                       nzPlaceHolder="Operator where your number is registered">
+              <nz-option *ngFor="let option of selectedOperator.optionsMaps"
+                         nzLabel="${{option.source}} (${{selectedOperator.destinationCurrencyCode}} {{option.recipient}})"
+                         [nzValue]="option.source"></nz-option>
+            </nz-select>
+
+            <nz-input-number nzSize="large"
+                             class="w-full mb-4"
+                             formControlName="amount"
+                             nzPlaceHolder="Amount: $USDC {{ selectedOperator.minAmount }} - $USDC {{ selectedOperator.maxAmount }}"
+                             *ngIf="!!selectedOperator.maxAmount"
+                             [nzMax]="selectedOperator.maxAmount || 0"
+                             [nzMin]="selectedOperator.minAmount || 0">
+            </nz-input-number>
+          </ng-container>
+
+          <div class="w-full mb-4 text-center">
+            <small class="opacity-80">
+              Rate: 1 USD = {{ (selectedOperator$ | async)?.destinationCurrencyCode }} {{ (selectedOperator$ | async)?.fxRate }}
+            </small>
+          </div>
+
+          <div class="w-full flex">
+            <button nz-button nzBlock
+                    (click)="goBackToStep2()"
+                    nzSize="large">
+              Go Back
+            </button>
+
+            <div class="px-2"></div>
+
+            <button nz-button nzBlock
+                    (click)="openSummary()"
+                    [disabled]="form.invalid"
+                    nzType="primary" nzSize="large">
+              Continue
+            </button>
+          </div>
+        </section>
+      </nz-card>
+
+    </section>
+  </div>
+
+  <div class="mx-w-md w-full px-4 text-center flex justify-center mb-4">
+    <button nz-button (click)="openOrders()">
+      <i class="fa-solid fa-list mr-2"></i> My orders
+    </button>
+  </div>
+
+  <div class="max-w-md w-full px-4 text-center">
+    <small class="text-center opacity-80">
+      This service works with pre-paid compatible numbers only.
+      <br>
+      Sales are final.
+    </small>
+  </div>
+
+</section>
