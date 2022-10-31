@@ -1,0 +1,82 @@
+<section class="w-full pt-4">
+  <div class="w-full mb-4 text-center">
+    <h1 class="text-xl">Check and confirm</h1>
+  </div>
+
+  <nz-list class="w-full">
+    <nz-list-item>
+      <div>Phone:</div>
+      <div>{{ phone }}</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <div>Country:</div>
+      <div>{{ country.name }}</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <div>Operator:</div>
+      <div>{{ operator.name }}</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <div>Amount:</div>
+      <div>$USDC {{ amount }} ({{ operator.destinationCurrencyCode }} {{ (amount * operator.fxRate) | number: '0.0-2' }})</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <div>Fee:</div>
+      <div>$USDC {{ operator.fee | number: '0.0-2' }}</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <div>Total:</div>
+      <div>$USDC {{ (amount + operator.fee) | number: '0.0-2' }}</div>
+    </nz-list-item>
+
+    <nz-list-item>
+      <b>{{ 'COMMON_WORDS.PAYING_WITH' | translate }}:</b>
+
+      <button class="flex items-center h-auto py-2 justify-center"
+              (click)="searchAsset()"
+              nzType="primary"
+              nzGhost
+              nz-button>
+        <ng-container *ngIf="assetPickedControl.value as value; else pickAsset">
+          <div class="w-5 h-5 bg-white p-1 rounded-full mr-2">
+            <img [src]="value.image" class="w-full h-full rounded-full" alt="">
+          </div>
+
+          <p class="text-xs m-0">
+            {{ value.assetCode }}
+            <br>
+            <small class="opacity-50">
+              {{ (value.assetIssuer | publicKey) || 'native' }}
+            </small>
+          </p>
+        </ng-container>
+
+        <ng-template #pickAsset>
+          <p class="text-xs m-0">
+            Pick asset
+          </p>
+        </ng-template>
+      </button>
+    </nz-list-item>
+
+    <nz-list-item class="text-center">
+      <label [formControl]="confirmControl" nz-checkbox>
+        <small>I confirm the phone number is correct and it can receive this type of recharge</small>
+      </label>
+    </nz-list-item>
+
+    <nz-list-item>
+      <button [disabled]="assetPickedControl.invalid || confirmControl.invalid"
+              [nzLoading]="(generatingOrder$ | async) || (confirmOrder$ | async)"
+              (click)="generateOrder()"
+              nz-button nzSize="large" nzType="primary" nzBlock>
+        Confirm
+      </button>
+    </nz-list-item>
+  </nz-list>
+</section>
