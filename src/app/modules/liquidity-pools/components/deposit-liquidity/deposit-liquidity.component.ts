@@ -26,7 +26,7 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { BehaviorSubject, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { AccountResponse, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
+import { AccountResponse, Asset, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
@@ -312,6 +312,24 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
+  getAssetAandAssetBFromForm(): [Asset, Asset] {
+    const A = this.depositForm.value.assetABalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetABalanceLine.asset_code,
+        this.depositForm.value.assetABalanceLine.asset_issuer
+      );
+
+    const B = this.depositForm.value.assetBBalanceLine.asset_type === 'native'
+      ? this.stellarSdkService.SDK.Asset.native()
+      : new this.stellarSdkService.SDK.Asset(
+        this.depositForm.value.assetBBalanceLine.asset_code,
+        this.depositForm.value.assetBBalanceLine.asset_issuer
+      );
+
+    return [A, B];
+  }
+
   calculateAvailableFunds(selectedAsset: IWalletAssetModel | undefined, selectedAccount: IWalletsAccount): number {
     if (!selectedAsset || !selectedAccount.accountRecord) {
       console.warn('Balance or Account record is undefined');
@@ -424,24 +442,27 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const [A, B] = this.getAssetAandAssetBFromForm();
+    const [assetA, assetB] = this.liquidityPoolsService.orderAssets(A, B);
+
+    const maxAmountA = A.equals(assetA)
+      ? new BigNumber(this.depositForm.value.amountAssetA)
+        .toFixed(7)
+      : new BigNumber(this.depositForm.value.amountAssetB)
+        .toFixed(7);
+
+    const maxAmountB = B.equals(assetB)
+      ? new BigNumber(this.depositForm.value.amountAssetB)
+        .toFixed(7)
+      : new BigNumber(this.depositForm.value.amountAssetA)
+        .toFixed(7);
+
     if (
       !params.loadedAccount.balances.find(b => {
         return b.asset_type === 'liquidity_pool_shares'
           && b.liquidity_pool_id === liquidityPool.id;
       })
     ) {
-      const assetA = liquidityPool.reserves[0].asset === 'native'
-        ? this.stellarSdkService.SDK.Asset.native()
-        : new this.stellarSdkService.SDK.Asset(
-          liquidityPool.reserves[0].asset.split(':')[0],
-          liquidityPool.reserves[0].asset.split(':')[1]
-        );
-
-      const assetB = new this.stellarSdkService.SDK.Asset(
-        liquidityPool.reserves[1].asset.split(':')[0],
-        liquidityPool.reserves[1].asset.split(':')[1]
-      );
-
       const asset = new this.stellarSdkService.SDK.LiquidityPoolAsset(assetA, assetB, liquidityPool.fee_bp);
 
       params.transactionBuilder.addOperation(
@@ -457,10 +478,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       .addOperation(
         this.stellarSdkService.SDK.Operation.liquidityPoolDeposit({
           liquidityPoolId: liquidityPool.id,
-          maxAmountA: new BigNumber(this.depositForm.value.amountAssetA)
-            .toFixed(7),
-          maxAmountB: new BigNumber(this.depositForm.value.amountAssetB)
-            .toFixed(7),
+          maxAmountA,
+          maxAmountB,
           maxPrice,
           minPrice
         })
@@ -529,20 +548,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
     loadedAccount: AccountResponse,
     transactionBuilder: TransactionBuilder,
   }): Promise<void> {
-    const A = this.depositForm.value.assetABalanceLine.asset_type === 'native'
-      ? this.stellarSdkService.SDK.Asset.native()
-      : new this.stellarSdkService.SDK.Asset(
-        this.depositForm.value.assetABalanceLine.asset_code,
-        this.depositForm.value.assetABalanceLine.asset_issuer
-      );
-
-    const B = this.depositForm.value.assetBBalanceLine.asset_type === 'native'
-      ? this.stellarSdkService.SDK.Asset.native()
-      : new this.stellarSdkService.SDK.Asset(
-        this.depositForm.value.assetBBalanceLine.asset_code,
-        this.depositForm.value.assetBBalanceLine.asset_issuer
-      );
-
+    const [A, B] = this.getAssetAandAssetBFromForm();
     const [assetA, assetB] = this.liquidityPoolsService.orderAssets(A, B);
 
     const asset = new this.stellarSdkService.SDK.LiquidityPoolAsset(
