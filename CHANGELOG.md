@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.1] - 2022-11-01
+### Add
+- Add a check in the deposit LP page so if the user is not sorting the assets correctly, the wallet sorts them 
+
 ## [1.10.0] - 2022-10-30
 ### Add
 - Add versioning in the generate order request (gift cards section)
