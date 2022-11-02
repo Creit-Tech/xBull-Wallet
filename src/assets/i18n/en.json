@@ -148,7 +148,8 @@
     "REVOKE": "Revoke",
     "WALLETS": "Wallets",
     "ASSET": "Asset",
-    "EARN": "Earn"
+    "EARN": "Earn",
+    "STEP": "Step"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
@@ -549,5 +550,16 @@
     "INVALID_ORDER_REQUEST": "Order is not correctly formatted, please contact support",
     "GET_REDEEM_CODES": "Get redeem codes",
     "NO_ORDERS_YET": "You don't have any order yet for this Stellar account"
+  },
+  "AIRTIME": {
+    "TOPUP_TITLE": "Mobile Top-up",
+    "PICK_COUNTRY": "Pick a country",
+    "COUNTRY_CODE_PLACEHOLDER": "Country where your number is from",
+    "PICK_OPERATOR": "Pick the operator",
+    "OPERATOR_PLACEHOLDER": "Operator where your number is registered",
+    "AMOUNT_NUMBER": "Amount and number to recharge",
+    "CHARGE_AMOUNT": "Amount to recharge",
+    "MY_ORDERS": "My orders",
+    "FOOTER_DISCLOSE": "This service works with pre-paid compatible numbers only. Sales are final."
   }
 }
