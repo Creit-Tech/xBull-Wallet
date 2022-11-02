@@ -22,7 +22,7 @@
 
       <div class="w-full text-center mb-4">
         <h1 class="text-lg font-semibold">
-          Mobile Top-up
+          {{ 'AIRTIME.TOPUP_TITLE' | translate }}
         </h1>
       </div>
 
@@ -30,9 +30,9 @@
         <div class="w-full mb-4">
           <nz-steps [nzCurrent]="form.controls.currentStep.value || 0"
                     nzType="navigation" nzSize="small">
-            <nz-step nzTitle="Step 1" [nzStatus]="(form.controls.currentStep.value || 0) > 0 ? 'finish' : 'wait'"></nz-step>
-            <nz-step nzTitle="Step 2" [nzStatus]="(form.controls.currentStep.value || 0) > 1 ? 'finish' : 'wait'"></nz-step>
-            <nz-step nzTitle="Step 3" [nzStatus]="(form.controls.currentStep.value || 0) > 2 ? 'finish' : 'wait'"></nz-step>
+            <nz-step nzTitle="{{ 'COMMON_WORDS.STEP' | translate }} 1" [nzStatus]="(form.controls.currentStep.value || 0) > 0 ? 'finish' : 'wait'"></nz-step>
+            <nz-step nzTitle="{{ 'COMMON_WORDS.STEP' | translate }} 2" [nzStatus]="(form.controls.currentStep.value || 0) > 1 ? 'finish' : 'wait'"></nz-step>
+            <nz-step nzTitle="{{ 'COMMON_WORDS.STEP' | translate }} 3" [nzStatus]="(form.controls.currentStep.value || 0) > 2 ? 'finish' : 'wait'"></nz-step>
           </nz-steps>
         </div>
       </div>
@@ -42,7 +42,7 @@
         <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 0">
           <div class="w-full text-center px-4 mb-4">
             <h2>
-              Pick a country
+              {{ 'AIRTIME.PICK_COUNTRY' | translate }}
             </h2>
           </div>
 
@@ -50,7 +50,7 @@
                      formControlName="countryCode"
                      class="w-full mb-4"
                      nzSize="large"
-                     nzPlaceHolder="Country where you number is from">
+                     [nzPlaceHolder]="'AIRTIME.COUNTRY_CODE_PLACEHOLDER' | translate">
             <nz-option *ngFor="let country of countries$ | async"
                        [nzLabel]="country.name" [nzValue]="country.isoName"></nz-option>
           </nz-select>
@@ -61,7 +61,7 @@
                     (click)="confirmCountry()"
                     [disabled]="form.controls.countryCode.invalid"
                     nzType="primary" nzSize="large">
-              Confirm
+              {{ 'COMMON_WORDS.CONFIRM' | translate }}
             </button>
           </div>
         </section>
@@ -69,7 +69,7 @@
         <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 1">
           <div class="w-full text-center px-4 mb-4">
             <h2>
-              Pick the operator
+              {{ 'AIRTIME.PICK_OPERATOR' | translate }}
             </h2>
           </div>
 
@@ -77,7 +77,7 @@
                      formControlName="operatorId"
                      class="w-full mb-4"
                      nzSize="large"
-                     nzPlaceHolder="Operator where your number is registered">
+                     [nzPlaceHolder]="'AIRTIME.OPERATOR_PLACEHOLDER' | translate">
             <nz-option *ngFor="let operator of operators$ | async"
                        [nzLabel]="operator.name" [nzValue]="operator.id"></nz-option>
           </nz-select>
@@ -86,7 +86,7 @@
             <button nz-button nzBlock
                     (click)="goBackToStep1()"
                     nzSize="large">
-              Go Back
+              {{ 'COMMON_WORDS.GO_BACK' | translate }}
             </button>
 
             <div class="px-2"></div>
@@ -95,7 +95,7 @@
                     (click)="confirmOperator()"
                     [disabled]="form.controls.operatorId.invalid"
                     nzType="primary" nzSize="large">
-              Confirm
+              {{ 'COMMON_WORDS.CONFIRM' | translate }}
             </button>
           </div>
         </section>
@@ -103,14 +103,14 @@
         <section class="w-full" [class.hidden]="form.controls.currentStep.value !== 2">
           <div class="w-full text-center px-4 mb-4">
             <h2>
-              Amount and number to recharge
+              {{ 'AIRTIME.AMOUNT_NUMBER' | translate }}
             </h2>
           </div>
 
           <nz-input-number-group [nzAddOnBefore]="areaCodes" nzSize="large" class="w-full mb-4">
             <nz-input-number class="w-full" type="text"
                    formControlName="phone"
-                   nzSize="large" nzPlaceHolder="Ex: 943 4321 2333">
+                   nzSize="large" nzPlaceHolder="Ex: 234 4321 2333">
             </nz-input-number>
             <ng-template #areaCodes>
               <nz-select formControlName="phoneAreaCode"
@@ -131,7 +131,7 @@
                        formControlName="amount"
                        class="w-full mb-4"
                        nzSize="large"
-                       nzPlaceHolder="Operator where your number is registered">
+                       [nzPlaceHolder]="'AIRTIME.CHARGE_AMOUNT' | translate">
               <nz-option *ngFor="let option of selectedOperator.optionsMaps"
                          nzLabel="${{option.source}} (${{selectedOperator.destinationCurrencyCode}} {{option.recipient}})"
                          [nzValue]="option.source"></nz-option>
@@ -140,7 +140,7 @@
             <nz-input-number nzSize="large"
                              class="w-full mb-4"
                              formControlName="amount"
-                             nzPlaceHolder="Amount: $USDC {{ selectedOperator.minAmount }} - $USDC {{ selectedOperator.maxAmount }}"
+                             nzPlaceHolder="$USDC {{ selectedOperator.minAmount }} - $USDC {{ selectedOperator.maxAmount }}"
                              *ngIf="!!selectedOperator.maxAmount"
                              [nzMax]="selectedOperator.maxAmount || 0"
                              [nzMin]="selectedOperator.minAmount || 0">
@@ -157,7 +157,7 @@
             <button nz-button nzBlock
                     (click)="goBackToStep2()"
                     nzSize="large">
-              Go Back
+              {{ 'COMMON_WORDS.GO_BACK' | translate }}
             </button>
 
             <div class="px-2"></div>
@@ -166,7 +166,7 @@
                     (click)="openSummary()"
                     [disabled]="form.invalid"
                     nzType="primary" nzSize="large">
-              Continue
+              {{ 'COMMON_WORDS.CONTINUE' | translate }}
             </button>
           </div>
         </section>
@@ -177,15 +177,13 @@
 
   <div class="mx-w-md w-full px-4 text-center flex justify-center mb-4">
     <button nz-button (click)="openOrders()">
-      <i class="fa-solid fa-list mr-2"></i> My orders
+      <i class="fa-solid fa-list mr-2"></i> {{ 'AIRTIME.MY_ORDERS' | translate }}
     </button>
   </div>
 
-  <div class="max-w-md w-full px-4 text-center">
+  <div class="max-w-sm w-full px-4 text-center mb-4">
     <small class="text-center opacity-80">
-      This service works with pre-paid compatible numbers only.
-      <br>
-      Sales are final.
+      {{ 'AIRTIME.FOOTER_DISCLOSE' | translate }}
     </small>
   </div>
 

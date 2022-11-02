@@ -148,7 +148,8 @@
     "REVOKE": "Remover",
     "WALLETS": "Wallets",
     "ASSET": "Asset",
-    "EARN": "Ganar"
+    "EARN": "Ganar",
+    "STEP": "Paso"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "Hubo un error al solicitar tu cuenta desde Horizon, asegúrate que estas usando el Horizon correcto y que tienes internet.",
@@ -549,5 +550,16 @@
     "INVALID_ORDER_REQUEST": "La orden no es correcta, contacta soporte",
     "GET_REDEEM_CODES": "Obtener codigos de tarjeta",
     "NO_ORDERS_YET": "Aun no tienes ordenes para esta cuenta de Stellar"
+  },
+  "AIRTIME": {
+    "TOPUP_TITLE": "Recarga de numero",
+    "PICK_COUNTRY": "Selecciona el país",
+    "COUNTRY_CODE_PLACEHOLDER": "País de donde es tu numero",
+    "PICK_OPERATOR": "Selecciona el operador",
+    "OPERATOR_PLACEHOLDER": "Operador donde tu numero es registrado",
+    "AMOUNT_NUMBER": "Monto y numero a recargar",
+    "CHARGE_AMOUNT": "Monto a recargar",
+    "MY_ORDERS": "Mis ordenes",
+    "FOOTER_DISCLOSE": "Este servicio solo funciona con numeros pre-pagados. Ventas son finales."
   }
 }
