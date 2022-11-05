@@ -15,6 +15,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import {
   SessionRequestComponent
 } from '~root/modules/walletconnect/components/session-request/session-request.component';
+import { Core } from '@walletconnect/core';
 
 @Injectable({ providedIn: 'root' })
 export class WalletConnectService {
@@ -22,6 +23,17 @@ export class WalletConnectService {
   private chain = {
     [Networks.PUBLIC]: 'pubnet',
     [Networks.TESTNET]: 'testnet',
+  };
+
+  private core = new Core({
+    projectId: '889aa10e443859bdfdbab44c2b34fc8e',
+  });
+
+  private metadata = {
+    name: 'xBull Wallet',
+    description: 'The most versatile wallet in the Stellar Network',
+    url: 'https://xbull.app',
+    icons: ['https://cdn-xbull-app.nyc3.digitaloceanspaces.com/logo.svg'],
   };
 
   constructor(
@@ -41,14 +53,9 @@ export class WalletConnectService {
 
     try {
       this.client = await SignClient.init({
-        projectId: '889aa10e443859bdfdbab44c2b34fc8e',
+        core: this.core,
         logger: this.env.production ? undefined : 'debug',
-        metadata: {
-          name: 'xBull Wallet',
-          description: 'The most versatile wallet in the Stellar Network',
-          url: 'https://xbull.app',
-          icons: ['https://cdn-xbull-app.nyc3.digitaloceanspaces.com/logo.svg'],
-        },
+        metadata: this.metadata
       });
       this.handleSessionProposal();
       // this.handleSessionEvent();
@@ -159,7 +166,7 @@ export class WalletConnectService {
   }
 
   public async pairWithClient(uri: string): Promise<PairingTypes.Struct> {
-    return this.client.pair({ uri });
+    return this.client.core.pairing.pair({ uri });
   }
 
   public async approvePairing(data: {
@@ -250,14 +257,7 @@ export class WalletConnectService {
   }
 
   public async disconnectSession(params: { topic: string; reason: string; }): Promise<void> {
-    await this.client.disconnect({
-      topic: params.topic,
-      reason: {
-        message: params.reason,
-        code: -1
-      }
-    });
-
+    await this.client.core.pairing.disconnect({ topic: params.topic });
     this.walletConnectSessionsStore.remove(params.topic);
   }
 
