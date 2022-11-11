@@ -55,9 +55,13 @@ export class HardwareWalletsService {
     transaction: Transaction,
     transport: TransportWebUSB,
   }): Promise<IHWSigningResult> {
-
     const str = new Str(data.transport);
-    const result = await str.signTransaction(data.accountPath, data.transaction.signatureBase());
+
+    // I know that the ledger can get a signatureBase with 1540 length
+    // But I have received issues even with ~1400 long signatures, so we use a hash method if 1000 is reached
+    const result = data.transaction.signatureBase().length < 1000
+      ? await str.signTransaction(data.accountPath, data.transaction.signatureBase())
+      : await str.signHash(data.accountPath, data.transaction.hash());
 
     return {
       publicKey: data.publicKey,
