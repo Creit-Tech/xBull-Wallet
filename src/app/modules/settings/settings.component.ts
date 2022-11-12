@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { Observable, of, Subject, Subscription } from 'rxjs';
 import { SettingsQuery } from '~root/state/settings.query';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { UntypedFormControl, Validators } from '@angular/forms';
@@ -35,7 +35,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   counterAssetId$ = this.settingsQuery.counterAssetId$;
   counterAsset$ = this.counterAssetId$
-    .pipe(switchMap(assetId => this.walletsAssetsQuery.selectEntity(assetId)));
+    .pipe(switchMap(assetId => this.walletsAssetsQuery.selectEntity(assetId)))
+    .pipe(switchMap((entity) => {
+      if (!!entity) {
+        return of(entity);
+      } else {
+        this.settingsService.setCounterAsset('native');
+        return of(undefined);
+      }
+    }));
 
   myAssets$: Observable<IWalletAssetModel[]> = this.walletsAssetsQuery.selectedAccountAssets$;
 
@@ -108,6 +116,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       nzContentParams: {
         defaultAssets: await this.myAssets$.pipe(take(1)).toPromise(),
         disableCustomAsset: true,
+        disableCuratedAssetByCreitTech: true,
         assetSelectedFunc: asset => {
           this.settingsService.setCounterAsset(asset._id);
         },
