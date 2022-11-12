@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [1.10.6] - not released
+### Fixed
+- Fix issue with counter asset when using assets no account in the wallet holds
+
 ### Changed
 - WalletConnect now uses the new core.pairing methods
+- If transaction base signature is longer than 1000 digits, we use transaction signing over regular signing (when using ledger wallets)
 
 ## [1.10.5] - 2022-11-03
 ### Changed
