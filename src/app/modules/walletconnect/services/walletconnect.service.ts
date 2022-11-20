@@ -15,9 +15,12 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import {
   SessionRequestComponent
 } from '~root/modules/walletconnect/components/session-request/session-request.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class WalletConnectService {
+  public walletConnectStarted$ = new BehaviorSubject(false);
+
   private client!: SignClient;
   private chain = {
     [Networks.PUBLIC]: 'pubnet',
@@ -56,6 +59,7 @@ export class WalletConnectService {
       this.handleSessionRequest();
       this.handleSessionDelete();
       console.log('WalletConnect client started');
+      this.walletConnectStarted$.next(true);
     } catch (e) {
       console.error('WalletConnect client failed to start');
     }

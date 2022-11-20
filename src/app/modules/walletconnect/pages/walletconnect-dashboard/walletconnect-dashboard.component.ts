@@ -22,6 +22,8 @@ import { IWalletConnectSessionModel } from '~root/state/walletconnect-sessions/w
   styleUrls: ['./walletconnect-dashboard.component.scss']
 })
 export class WalletConnectDashboardComponent implements OnInit {
+  walletConnectStarted$ = this.walletConnectService.walletConnectStarted$;
+
   hasCamera = from(QrScanner.hasCamera());
 
   newSessionModalRef?: NzModalRef;
