@@ -41,8 +41,9 @@
           </nz-list-item>
 
           <nz-list-item>
-            <button (click)="addNewSession()" nz-button nzBlock nzType="primary" nzSize="large">
-              New session
+            <button (click)="addNewSession()" [nzLoading]="!(walletConnectStarted$ | async)"
+                    nz-button nzBlock nzType="primary" nzSize="large">
+              {{ (walletConnectStarted$ | async) ? 'New session' : 'Loading WalletConnect...' }}
             </button>
           </nz-list-item>
         </nz-list>
