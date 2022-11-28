@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "xBull Wallet",
-  "version": "1.10.8",
+  "version": "1.11.0",
   "description": "A powerful but easy to use Stellar network wallet.",
   "homepage_url": "https://xbull.app",
   "icons": {
