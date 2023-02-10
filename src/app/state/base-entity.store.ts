@@ -1,6 +1,6 @@
-import { EntityStore } from '@datorama/akita';
+import { EntityState, EntityStore } from '@datorama/akita';
 
-export class BaseEntityStore<T> extends EntityStore<T> {
+export class BaseEntityStore<T extends EntityState> extends EntityStore<T> {
   constructor(initialState: T) {
     super(initialState);
   }
