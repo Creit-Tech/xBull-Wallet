@@ -62,8 +62,8 @@
     "@ionic-native/core": "^5.36.0",
     "@ionic-native/qr-scanner": "^5.36.0",
     "@ionic/angular": "^6.1.7",
-    "@ledgerhq/hw-app-str": "^6.27.6",
-    "@ledgerhq/hw-transport-webusb": "^6.27.6",
+    "@ledgerhq/hw-app-str": "^6.27.11",
+    "@ledgerhq/hw-transport-webusb": "^6.27.11",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "@swimlane/ngx-charts": "^20.1.0",
@@ -86,7 +86,7 @@
     "next-tick": "^1.1.0",
     "ng-zorro-antd": "15.0.3",
     "ngx-file-drop": "^13.0.0",
-    "ngx-markdown": "^14.0.1",
+    "ngx-markdown": "^15.1.1",
     "ngx-mask": "^11.1.5",
     "path-browserify": "^1.0.1",
     "qr-scanner": "^1.4.1",
@@ -99,7 +99,7 @@
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1",
     "url": "^0.11.0",
-    "util": "^0.12.4",
+    "util": "^0.12.5",
     "zone.js": "^0.11.5"
   },
   "devDependencies": {
