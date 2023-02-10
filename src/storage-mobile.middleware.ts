@@ -1,19 +1,19 @@
-import { Storage } from '@capacitor/storage';
+import { Preferences } from '@capacitor/preferences';
 
 export const storageMobileMiddleware = {
   async setItem(key: string, value: any): Promise<boolean> {
-    await Storage.set({ key, value: JSON.stringify(value) });
+    await Preferences.set({ key, value: JSON.stringify(value) });
     return true;
   },
 
   async getItem(key: string): Promise<any> {
-    return Storage.get({ key })
+    return Preferences.get({ key })
       .then(response => {
         return response.value && JSON.parse(response.value);
       });
   },
 
   async clear(): Promise<void> {
-    await Storage.clear();
+    await Preferences.clear();
   },
 };
