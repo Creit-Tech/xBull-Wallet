@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { arrayAdd, arrayRemove, StoreConfig } from '@datorama/akita';
 import { BaseStore } from '~root/state/base.store';
 import { IWalletsAccount } from '~root/state';
-import { ItemPredicate } from '@datorama/akita/lib/types';
+import { ItemPredicate } from '@datorama/akita';
 
 export interface GiftCardAccountToken {
   walletAccountId: IWalletsAccount['_id'];
