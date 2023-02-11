@@ -169,9 +169,9 @@ export class WalletsAssetsService {
           .pipe(withLatestFrom(of(accountRecord)));
       }))
       .pipe(switchMap(async ([parsedToml, accountRecord]) => {
-        const documentation = parsedToml.DOCUMENTATION || parsedToml.documentation;
-        const currencies = parsedToml.CURRENCIES || parsedToml.currencies;
-        const assetMetadataServer = parsedToml.ASSET_METADATA_SERVER || parsedToml.asset_metadata_server;
+        const documentation: any = parsedToml.DOCUMENTATION || parsedToml.documentation;
+        const currencies: any = parsedToml.CURRENCIES || parsedToml.currencies;
+        const assetMetadataServer: any = parsedToml.ASSET_METADATA_SERVER || parsedToml.asset_metadata_server;
         let currency = (currencies || []).find((c: any) => {
           if (!!c.code_template) {
             const index = c.code_template.indexOf('?');

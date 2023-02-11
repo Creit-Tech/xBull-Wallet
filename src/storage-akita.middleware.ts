@@ -1,6 +1,4 @@
-import { PersistStateStorage } from '@datorama/akita/lib/persistState';
-
-export const storageAkitaMiddleware: PersistStateStorage = {
+export const storageAkitaMiddleware = {
   setItem(key: string, value: any): Promise<boolean> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.set({ [key]: value }, () => {
