@@ -173,7 +173,7 @@ export class WalletConnectService {
   }): Promise<void> {
     const targetChain = `stellar:${this.chain[data.network]}`;
 
-    if (!data.proposal.requiredNamespaces.stellar.chains.includes(targetChain)) {
+    if (!data.proposal.requiredNamespaces.stellar.chains?.includes(targetChain)) {
       throw new Error('Network is not supported, make sure you are using the accepted from the app (Public or Testnet)');
     }
 
