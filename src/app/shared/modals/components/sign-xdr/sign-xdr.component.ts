@@ -5,7 +5,8 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { BehaviorSubject, merge, Observable, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { filter, map, pluck, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
-import { Networks, Operation, Transaction } from 'stellar-base';
+import { Transaction } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import {
   HorizonApisQuery,
   IHorizonApi,

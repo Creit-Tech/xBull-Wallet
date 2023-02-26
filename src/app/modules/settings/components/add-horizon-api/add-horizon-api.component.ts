@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
-import { Networks } from 'stellar-sdk';
+import { Networks } from 'soroban-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,13 +13,11 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AddHorizonApiComponent implements OnInit {
 
-  passphraseOptions = [{
-    name: 'Mainnet',
-    value: Networks.PUBLIC
-  }, {
-    name: 'Testnet',
-    value: Networks.TESTNET
-  }];
+  passphraseOptions: Array<{ name: string; value: string }> = Object.keys(Networks)
+    .map((key: any) => ({
+      name: key,
+      value: (Networks as any)[key],
+    }));
 
   form: UntypedFormGroup = new UntypedFormGroup({
     name: new UntypedFormControl('', Validators.required),

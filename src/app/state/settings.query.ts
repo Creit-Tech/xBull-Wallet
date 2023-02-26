@@ -29,6 +29,9 @@ export class SettingsQuery extends Query<SettingsState> {
 
   counterAssetId$ = this.select(state => state.counterAssetId);
 
+  allowSorobanSigning$ = this.select(state => state.allowSorobanSigning);
+  enableSorobanDevelopment$ = this.select(state => state.enableSorobanDevelopment);
+
   constructor(protected store: SettingsStore) {
     super(store);
   }

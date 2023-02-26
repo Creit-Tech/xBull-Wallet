@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Memo, Networks, Operation, Transaction } from 'stellar-base';
+import { Keypair, Memo, Operation, Transaction } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { randomBytes, createHash } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -11,7 +12,7 @@ import {
   IWallet,
   IWalletsAccount,
   IWalletsAccountLedger, IWalletsAccountTrezor,
-  IWalletsAccountWithSecretKey,
+  IWalletsAccountWithSecretKey, WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsOperationsStore,
   WalletsStore,
@@ -61,6 +62,7 @@ export class WalletsService {
 
   constructor(
     private readonly walletsStore: WalletsStore,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsStore: WalletsAccountsStore,
     private readonly cryptoService: CryptoService,
     private readonly mnemonicPhraseService: MnemonicPhraseService,
@@ -80,7 +82,6 @@ export class WalletsService {
   }
 
   async createNewAccount(params: INewAccountType): Promise<Keypair> {
-    let newWalletAccounts: { mainnet: IWalletsAccount; testnet: IWalletsAccount };
     let newWalletAccount: Omit<IWalletsAccount, '_id'>;
     let keypair: Keypair;
 
@@ -137,23 +138,15 @@ export class WalletsService {
         throw new Error(`We can not handle the type: ${(params as any).type}`);
     }
 
+    const walletAccounts = Object.values(Networks)
+      .map(network =>
+        createWalletsAccount({
+          _id: this.generateWalletAccountId({ network, publicKey: keypair.publicKey() }),
+          ...(newWalletAccount as any)
+        })
+      );
 
-    newWalletAccounts = {
-      mainnet: createWalletsAccount({
-        _id: createHash('md5')
-          .update(`${Networks.PUBLIC}_${keypair.publicKey()}`)
-          .digest('hex'),
-        ...(newWalletAccount as any)
-      }),
-      testnet: createWalletsAccount({
-        _id: createHash('md5')
-          .update(`${Networks.TESTNET}_${keypair.publicKey()}`)
-          .digest('hex'),
-        ...(newWalletAccount as any)
-      }),
-    };
-
-    this.walletsAccountsStore.upsertMany(Object.values(newWalletAccounts));
+    this.walletsAccountsStore.upsertMany(Object.values(walletAccounts));
     return keypair;
   }
 
@@ -308,6 +301,25 @@ export class WalletsService {
         this.walletsOperationsStore.updateUIState({ sendingPayment: false });
         return Promise.reject(error);
       });
+  }
+
+  /*
+   * This method takes all accounts and checks which ones of them do not have all of the networks variations so it creates them
+   */
+  @transaction()
+  async addMissingAccountsForSoroban(): Promise<void> {
+    const allAccounts = this.walletsAccountsQuery.getAll();
+    for (const account of allAccounts) {
+      const futurenetId = this.generateWalletAccountId({ network: Networks.FUTURENET, publicKey: account.publicKey });
+      const standaloneId = this.generateWalletAccountId({ network: Networks.STANDALONE, publicKey: account.publicKey });
+      const sandboxId = this.generateWalletAccountId({ network: Networks.SANDBOX, publicKey: account.publicKey });
+      const { _id, ...rest } = account;
+      this.walletsAccountsStore.upsertMany([
+        { _id: futurenetId, ...rest },
+        { _id: standaloneId, ...rest },
+        { _id: sandboxId, ...rest },
+      ]);
+    }
   }
 }
 

@@ -4,8 +4,7 @@ import BigNumber from 'bignumber.js';
 import {BalanceAssetType, HorizonApisQuery, IHorizonApi, SettingsQuery} from '~root/state';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { Account } from 'stellar-base';
-import { AccountResponse, MuxedAccount } from 'stellar-sdk';
+import { AccountResponse } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'

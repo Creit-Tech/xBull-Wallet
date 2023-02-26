@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Outpu
 import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription, throwError } from 'rxjs';
 import {WalletsService} from '~root/core/wallets/services/wallets.service';
 import { catchError, filter, map, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
-import { Networks, Operation, Transaction } from 'stellar-base';
+import { Transaction } from 'stellar-base';
 import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery, IHorizonApi,

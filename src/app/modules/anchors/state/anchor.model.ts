@@ -1,4 +1,4 @@
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { createHash } from 'crypto';
 
 export interface IAnchor {
