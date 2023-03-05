@@ -54,6 +54,7 @@ The Stellar Blockchain supports multiple kind of transactions, xBull is designed
 - [X] Set Trust Line Flags
 - [X] Liquidity Pool Deposit
 - [X] Liquidity Pool Withdraw
+- [x] Invoke host functions
 
 
 # xBull "SDK"

@@ -83,7 +83,10 @@ export class WalletsAccountsService {
 
   getAccountData({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): Observable<IWalletsAccount> {
     this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: true }));
-    const accountPromise = new Server(horizonApi.url).accounts().accountId(account.publicKey).call();
+    const accountPromise = this.stellarSdkService.selectServer(horizonApi.url)
+      .accounts()
+      .accountId(account.publicKey)
+      .call();
 
     // TODO: change this IE remove the select entity logic and return the record instead
     const walletAccount = this.walletsAccountsQuery.selectEntity(account._id);
@@ -110,7 +113,8 @@ export class WalletsAccountsService {
 
   createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
     if (account) {
-      const newStream = new Server(horizonApi.url).accounts()
+      const newStream = this.stellarSdkService.selectServer(horizonApi.url)
+        .accounts()
         .accountId(account.publicKey)
         .stream({
           onmessage: accountRecord => {
@@ -137,7 +141,8 @@ export class WalletsAccountsService {
     horizonApi: IHorizonApi
   }): void {
     if (params.account) {
-      const streamBuilder = new Server(params.horizonApi.url).operations()
+      const streamBuilder = this.stellarSdkService.selectServer(params.horizonApi.url)
+        .operations()
         .forAccount(params.account.publicKey)
         .join('transactions');
 
@@ -193,7 +198,7 @@ export class WalletsAccountsService {
     onlyPayments?: boolean,
   }): Promise<IWalletsOperation[]> {
     this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: true });
-    const server = new this.stellarSdkService.SDK.Server(params.horizonApi.url);
+    const server = this.stellarSdkService.selectServer(params.horizonApi.url);
     return (!!params.onlyPayments ? server.payments() : server.operations())
       .forAccount(params.account.publicKey)
       .limit(100)

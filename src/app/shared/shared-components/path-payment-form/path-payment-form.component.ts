@@ -260,7 +260,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let response: { records: ServerApi.PaymentPathRecord[] };
     if (this.pathTypeValue === 'send') {
-      response = await this.stellarSdkService.Server.strictSendPaths(
+      response = await this.stellarSdkService.selectServer().strictSendPaths(
         this.walletsAssetsService.sdkAssetFromAssetId(fromAsset._id),
         new BigNumber(this.fromAssetAmount.value).toFixed(7),
         [this.walletsAssetsService.sdkAssetFromAssetId(toAsset._id)]
@@ -269,7 +269,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
         return { records: [] };
       });
     } else if (this.pathTypeValue === 'receive') {
-      response = await this.stellarSdkService.Server.strictReceivePaths(
+      response = await this.stellarSdkService.selectServer().strictReceivePaths(
         [this.walletsAssetsService.sdkAssetFromAssetId(fromAsset._id)],
         this.walletsAssetsService.sdkAssetFromAssetId(toAsset._id),
         new BigNumber(this.toAssetAmount.value).toFixed(7),

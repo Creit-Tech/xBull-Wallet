@@ -56,7 +56,7 @@ export class HorizonApisService {
     this.addHorizonApi({
       networkPassphrase: Networks.STANDALONE,
       url: 'http://localhost:8000',
-      name: 'Sandbox',
+      name: 'Standalone',
       canRemove: false,
     });
   }

@@ -93,7 +93,7 @@ export class SessionRequestComponent implements OnInit, OnDestroy {
             });
           } else {
             try {
-              await this.stellarSdkService.Server.submitTransaction(data.transaction);
+              await this.stellarSdkService.submit(data.transaction);
               await this.walletConnectService.requestResponse({
                 success: true,
                 topic: this.topic,

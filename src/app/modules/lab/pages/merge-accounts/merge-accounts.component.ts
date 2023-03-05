@@ -12,7 +12,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { AccountResponse } from 'stellar-sdk';
+import * as StellarSDK from 'stellar-sdk';
 
 @Component({
   selector: 'app-merge-accounts',
@@ -115,10 +115,10 @@ export class MergeAccountsComponent implements OnInit, OnDestroy {
       !this.form.value.destination
     ) { return; }
 
-    let loadedAccount: AccountResponse;
+    let loadedAccount: StellarSDK.AccountResponse;
     try {
       loadedAccount = await this.stellarSdkService
-        .Server
+        .selectServer()
         .loadAccount(selectedAccount.publicKey);
     } catch (e) {
       this.nzMessageService.error(
@@ -167,7 +167,7 @@ export class MergeAccountsComponent implements OnInit, OnDestroy {
             .loading('loading...', { nzDuration: 0 })
             .messageId;
 
-          this.stellarSdkService.Server.submitTransaction(data.transaction)
+          this.stellarSdkService.submit(data.transaction)
             .then(_ => {
               this.nzMessageService.remove(messageId);
               this.nzMessageService.success(

@@ -125,7 +125,7 @@ export class SearchLiquidityPoolsComponent implements OnInit, OnDestroy {
     }
 
     const fetchAssets = await Promise.all(codesArray.map(({ code, issuer }) => {
-      return (new this.stellarSdkService.SDK.Server(horizonApi.url))
+      return this.stellarSdkService.selectServer(horizonApi.url)
         .assets()
         .forCode(code)
         .forIssuer(issuer)

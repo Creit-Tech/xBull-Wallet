@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Memo, Operation, Transaction } from 'stellar-base';
-import { Networks } from 'soroban-client';
+import { Keypair, Memo, Operation } from 'stellar-base';
+import * as SorobanClient from 'soroban-client';
 import { randomBytes, createHash } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -12,7 +12,7 @@ import {
   IWallet,
   IWalletsAccount,
   IWalletsAccountLedger, IWalletsAccountTrezor,
-  IWalletsAccountWithSecretKey, WalletsAccountsQuery,
+  IWalletsAccountWithSecretKey, SettingsStore, WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsOperationsStore,
   WalletsStore,
@@ -26,39 +26,6 @@ import { Horizon, ServerApi } from 'stellar-sdk';
   providedIn: 'root'
 })
 export class WalletsService {
-  // TODO: Think a better way of doing this
-  private handledOperations: Array<string> = [
-    'createAccount',
-    'payment',
-    'pathPaymentStrictReceive',
-    'pathPaymentStrictSend',
-    'createPassiveSellOffer',
-    'manageSellOffer',
-    'manageBuyOffer',
-    'setOptions',
-    'changeTrust',
-    'allowTrust',
-    'accountMerge',
-    'inflation',
-    'manageData',
-    'bumpSequence',
-    'createClaimableBalance',
-    'claimClaimableBalance',
-    'beginSponsoringFutureReserves',
-    'endSponsoringFutureReserves',
-    'revokeAccountSponsorship',
-    'revokeTrustlineSponsorship',
-    'revokeOfferSponsorship',
-    'revokeDataSponsorship',
-    'revokeClaimableBalanceSponsorship',
-    'revokeLiquidityPoolSponsorship',
-    'revokeSignerSponsorship',
-    'clawback',
-    'clawbackClaimableBalance',
-    'setTrustLineFlags',
-    'liquidityPoolDeposit',
-    'liquidityPoolWithdraw',
-  ];
 
   constructor(
     private readonly walletsStore: WalletsStore,
@@ -75,7 +42,7 @@ export class WalletsService {
     return `${params.productId}_${params.vendorId}`;
   }
 
-  generateWalletAccountId(params: { network: Networks; publicKey: string }): string {
+  generateWalletAccountId(params: { network: SorobanClient.Networks; publicKey: string }): string {
     return createHash('md5')
       .update(`${params.network}_${params.publicKey}`)
       .digest('hex');
@@ -138,7 +105,7 @@ export class WalletsService {
         throw new Error(`We can not handle the type: ${(params as any).type}`);
     }
 
-    const walletAccounts = Object.values(Networks)
+    const walletAccounts = Object.values(SorobanClient.Networks)
       .map(network =>
         createWalletsAccount({
           _id: this.generateWalletAccountId({ network, publicKey: keypair.publicKey() }),
@@ -267,27 +234,12 @@ export class WalletsService {
     this.walletsStore.remove(walletId);
   }
 
-  checkIfAllOperationsAreHandled(operations: Operation[]): true {
-    for (const operation of operations) {
-      if (this.handledOperations.indexOf(operation.type) === -1) {
-        throw new Error(`Operation type "${operation.type}" is not handled by this wallet yet.`);
-      }
-    }
-
-    return true;
-
-  }
-
   parseMemo(memo: Memo): string | undefined {
     if (!memo.value) {
       return;
     }
 
     return Buffer.from(memo.value).toString();
-  }
-
-  parseFromXDRToTransactionInterface(xdr: string): Transaction {
-    return new Transaction(xdr, this.stellarSdkService.networkPassphrase);
   }
 
   sendPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
@@ -310,9 +262,9 @@ export class WalletsService {
   async addMissingAccountsForSoroban(): Promise<void> {
     const allAccounts = this.walletsAccountsQuery.getAll();
     for (const account of allAccounts) {
-      const futurenetId = this.generateWalletAccountId({ network: Networks.FUTURENET, publicKey: account.publicKey });
-      const standaloneId = this.generateWalletAccountId({ network: Networks.STANDALONE, publicKey: account.publicKey });
-      const sandboxId = this.generateWalletAccountId({ network: Networks.SANDBOX, publicKey: account.publicKey });
+      const futurenetId = this.generateWalletAccountId({ network: SorobanClient.Networks.FUTURENET, publicKey: account.publicKey });
+      const standaloneId = this.generateWalletAccountId({ network: SorobanClient.Networks.STANDALONE, publicKey: account.publicKey });
+      const sandboxId = this.generateWalletAccountId({ network: SorobanClient.Networks.SANDBOX, publicKey: account.publicKey });
       const { _id, ...rest } = account;
       this.walletsAccountsStore.upsertMany([
         { _id: futurenetId, ...rest },

@@ -127,7 +127,8 @@ export class WalletsAssetsService {
     assetCode: IWalletAsset<'issued'>['assetCode'],
     horizonApi: IHorizonApi,
   }): Observable<ServerApi.AssetRecord> {
-    const recordPromise = new Server(data.horizonApi.url).assets()
+    const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
+      .assets()
       .forCode(data.assetCode)
       .forIssuer(data.assetIssuer)
       .call();
@@ -158,7 +159,8 @@ export class WalletsAssetsService {
     assetCode: IWalletAsset<'issued'>['assetCode'],
     horizonApi: IHorizonApi,
   }): Observable<ServerApi.AccountRecord> {
-    const recordPromise = new Server(data.horizonApi.url).accounts()
+    const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
+      .accounts()
       .accountId(data.assetIssuer)
       .call();
 
@@ -349,7 +351,7 @@ export class WalletsAssetsService {
 
     let horizonResponse;
     try {
-      horizonResponse = await this.stellarSdkService.Server.strictSendPaths(
+      horizonResponse = await this.stellarSdkService.selectServer().strictSendPaths(
         this.sdkAssetFromAssetId(asset._id),
         '1',
         [this.sdkAssetFromAssetId(counterAssetId)],

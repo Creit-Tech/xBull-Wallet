@@ -259,7 +259,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
 
       let loadedAccount;
       try {
-        loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+        loadedAccount = await this.stellarSdkService.selectServer(horizonApi.url)
           .loadAccount(selectedAccount.publicKey);
       } catch (e: any) {
         this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {
@@ -406,7 +406,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         this.depositForm.value.assetBBalanceLine.asset_issuer
       );
 
-    const server = new this.stellarSdkService.SDK.Server(horizonApi.url);
+    const server = this.stellarSdkService.selectServer(horizonApi.url);
     server.liquidityPools()
       .forAssets(assetA, assetB)
       .call()

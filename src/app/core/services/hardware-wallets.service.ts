@@ -5,6 +5,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import TrezorConnect from 'trezor-connect';
 import { BehaviorSubject } from 'rxjs';
 import { Transaction } from 'stellar-base';
+import * as SorobanClient from 'soroban-client';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
@@ -52,7 +53,7 @@ export class HardwareWalletsService {
   async signWithLedger(data: {
     accountPath: string,
     publicKey: string,
-    transaction: Transaction,
+    transaction: Transaction | SorobanClient.Transaction,
     transport: TransportWebUSB,
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
@@ -101,7 +102,11 @@ export class HardwareWalletsService {
     return TrezorConnect.stellarGetAddress({ bundle });
   }
 
-  async signWithTrezor(params: { path: string; transaction: Transaction; networkPassphrase: string; }): Promise<IHWSigningResult> {
+  async signWithTrezor(params: {
+    path: string;
+    transaction: Transaction | SorobanClient.Transaction;
+    networkPassphrase: string;
+  }): Promise<IHWSigningResult> {
     const trezorTransaction = transformTransaction(params.path, params.transaction);
 
     const result = await TrezorConnect.stellarSignTransaction(trezorTransaction);

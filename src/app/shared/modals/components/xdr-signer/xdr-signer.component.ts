@@ -3,6 +3,7 @@ import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscri
 import {WalletsService} from '~root/core/wallets/services/wallets.service';
 import { catchError, filter, map, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { Transaction } from 'stellar-base';
+import * as SorobanClient from 'soroban-client';
 import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery, IHorizonApi,
@@ -52,10 +53,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   xdrParsed$: ReplaySubject<Transaction> = new ReplaySubject<Transaction>();
   @Input() set xdr(data: string) {
     try {
-      const parsedXdr = this.walletsService.parseFromXDRToTransactionInterface(data);
+      const parsedXdr = this.stellarSdkService.createTransaction({ xdr: data });
       this.xdr$.next(data);
-      this.xdrParsed$.next(parsedXdr);
+      this.xdrParsed$.next(parsedXdr as any);
     } catch (e) {
+      console.error(e);
       this.nzMessageService.error('The transaction you are trying to sign is invalid');
       this.onClose();
     }
@@ -99,7 +101,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(xdr => {
       try {
-        this.walletsService.checkIfAllOperationsAreHandled(xdr.operations);
+        this.stellarSdkService.checkIfAllOperationsAreHandled(xdr.operations);
       } catch (e: any) {
         this.nzMessageService.error(e.message);
         this.onClose();
@@ -229,9 +231,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       .pipe(withLatestFrom(this.selectedNetworkPassphrase$))
       .pipe(map(([xdr, selectedNetworkPassphrase]) => {
         const secret = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
-        const keypair = this.stellarSdkService.SDK.Keypair.fromSecret(secret);
-        const transaction = new this.stellarSdkService.SDK.Transaction(xdr, selectedNetworkPassphrase);
-
+        const transaction = this.stellarSdkService.createTransaction({
+          xdr,
+          networkPassphrase: selectedNetworkPassphrase
+        });
+        const keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
         const keypairSignature = transaction.getKeypairSignature(keypair);
 
         transaction.sign(keypair);
@@ -302,12 +306,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       const xdr = await this.xdr$.pipe(take(1)).toPromise();
       const selectedNetworkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
-      const keypair = this.stellarSdkService.SDK.Keypair.fromSecret(secret);
-
-      const transaction = new this.stellarSdkService.SDK.Transaction(
+      const transaction = this.stellarSdkService.createTransaction({
         xdr,
-        selectedNetworkPassphrase
-      );
+        networkPassphrase: selectedNetworkPassphrase
+      });
+
+      const keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
 
       const keypairSignature = transaction.getKeypairSignature(keypair);
 
@@ -386,7 +390,10 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
       const passphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
-      const transaction = new this.stellarSdkService.SDK.Transaction(xdr, passphrase);
+      const transaction = this.stellarSdkService.createTransaction({
+        xdr,
+        networkPassphrase: passphrase,
+      });
 
       const result = await this.hardwareWalletsService.signWithLedger({
         transaction,
@@ -426,10 +433,10 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     const xdr = await this.xdr$.pipe(take(1)).toPromise();
     const networkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
-    const transaction = new this.stellarSdkService.SDK.Transaction(
+    const transaction = this.stellarSdkService.createTransaction({
       xdr,
       networkPassphrase,
-    );
+    });
 
     await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
 
@@ -499,7 +506,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
 
 export interface ISigningResults {
-  transaction: Transaction;
+  transaction: Transaction | SorobanClient.Transaction;
   baseXDR: string;
   signedXDR: string;
   signers: Array<{

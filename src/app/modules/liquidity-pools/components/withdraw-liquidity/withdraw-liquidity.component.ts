@@ -231,7 +231,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
 
     let loadedAccount;
     try {
-      loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+      loadedAccount = await this.stellarSdkService.selectServer(horizonApi.url)
         .loadAccount(selectedAccount.publicKey);
     } catch (e: any) {
       this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {

@@ -28,6 +28,7 @@ import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {DeviceAuthService} from "~root/mobile/services/device-auth.service";
 import { fromUnixTime } from 'date-fns';
+import * as SorobanClient from 'soroban-client';
 
 @Component({
   selector: 'app-sign-xdr',
@@ -49,9 +50,9 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     this.xdr$.next(data);
   }
 
-  xdrParsed$: Observable<Transaction> = this.xdr$.asObservable()
+  xdrParsed$: Observable<Transaction | SorobanClient.Transaction> = this.xdr$.asObservable()
     .pipe(map(xdr =>
-      this.walletsService.parseFromXDRToTransactionInterface(xdr)
+      this.stellarSdkService.createTransaction({ xdr })
     ));
 
   unhandledXdrCheckerSubscription: Subscription = this.xdrParsed$
@@ -59,7 +60,7 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(xdr => {
       try {
-        this.walletsService.checkIfAllOperationsAreHandled(xdr.operations);
+        this.stellarSdkService.checkIfAllOperationsAreHandled(xdr.operations as any);
       } catch (e: any) {
         this.nzMessageService.error(e.message);
         this.onClose();
@@ -72,8 +73,8 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
 
   // TODO: Make this dynamic with a config store
   fee$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(data => !!data))
-    .pipe(pluck<Transaction, string>('fee'))
+    .pipe(filter<Transaction | SorobanClient.Transaction>(data => !!data))
+    .pipe(pluck<Transaction | SorobanClient.Transaction, string>('fee'))
     .pipe(map(fee =>
       new BigNumber(fee)
         .dividedBy('10000000')
@@ -81,17 +82,17 @@ export class SignXdrComponent implements OnInit, AfterViewInit {
     ));
 
   memoText$: Observable<string | undefined> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
+    .pipe(filter<Transaction | SorobanClient.Transaction>(Boolean))
     .pipe(map(transaction => {
       return this.walletsService.parseMemo(transaction.memo);
     }));
 
   sequenceNumber$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
+    .pipe(filter<Transaction | SorobanClient.Transaction>(Boolean))
     .pipe(pluck('sequence'));
 
   source$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
+    .pipe(filter<Transaction | SorobanClient.Transaction>(Boolean))
     .pipe(pluck('source'));
 
   selectedAccount$: Observable<IWalletsAccount> = this.walletsAccountQuery.getSelectedAccount$;

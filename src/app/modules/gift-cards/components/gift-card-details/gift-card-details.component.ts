@@ -192,10 +192,10 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const orderTransaction = new this.stellarSdkService.SDK.Transaction(
-      newOrder.tx,
-      newOrder.network,
-    );
+    const orderTransaction = this.stellarSdkService.createTransaction({
+      xdr: newOrder.tx,
+      networkPassphrase: newOrder.network,
+    });
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,

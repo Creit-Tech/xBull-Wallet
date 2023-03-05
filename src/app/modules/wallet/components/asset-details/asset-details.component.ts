@@ -75,9 +75,10 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
       .subscribe(([asset, horizonApi]: [IWalletAssetModel, IHorizonApi]) => {
-        this.walletsAssetsService.requestAssetData$.next({
-          ...asset,
+        this.walletsAssetsService.requestAssetInformation$.next({
+          asset,
           horizonApi,
+          forceUpdate: false
         });
       });
   }

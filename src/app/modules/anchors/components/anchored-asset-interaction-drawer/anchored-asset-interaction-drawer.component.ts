@@ -374,7 +374,7 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
         xdr: transactionBuild.toXDR(),
         signingResultsHandler: data => {
           const loadingMessageId = this.nzMessageService.loading('Loading...', { nzDuration: 0 }).messageId;
-          this.stellarSdkService.Server.submitTransaction(data.transaction)
+          this.stellarSdkService.submit(data.transaction)
             .then(_ => {
               this.nzMessageService.remove(loadingMessageId);
               this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));
