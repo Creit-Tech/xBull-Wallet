@@ -368,7 +368,7 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzTitle: 'Complete Withdrawal',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzPlacement: 'right',
       nzContentParams: {
         xdr: transactionBuild.toXDR(),

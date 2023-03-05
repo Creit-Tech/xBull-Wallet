@@ -5,31 +5,32 @@
 xBull is a wallet to serve as a bridge between websites/users and the Stellar blockchain.
 
 ### Our goals with xBull are:
-- Be part of the infrastructure to boots the Stellar network adoption.
+- Be part of the infrastructure to boost the Stellar network adoption.
 - Offer a curated and flawless user experience.
-- Be a reference in the Stellar Blockchain wallets options.
+- Be a reference in the Stellar Blockchain wallet options.
 - Make the interaction between users and the Stellar Blockchain easier.
 
 * * *
 
 ## **Why another extension wallet?**
-We are a software development team, we (and our partners) have specific requests for businesses. Instead of telling other extensions that they need to add the features we want, we decided that we will create our own extension and at the same time provide more options to end users... Competition is the key to increase the Stellar ecosystem.
+We are a software development team, and we (and our partners) have specific requests for businesses. Instead of telling other extensions that they need to add the features we want, we decided that we will create our own extension and at the same time provide more options to end users... Competition is the key to increasing the Stellar ecosystem.
 
 But even if our wallet is aimed to serve our businesses, we designed it in a way it can be used by anyone so it's most likely that you will never notice that it was built with our projects in mind.
 
 ## **Features**
-xBull tries to be an *easy to use* but powerful wallet so you will find lots of features, some of them are:
+xBull tries to be an *easy to use* but powerful wallet, so you will find lots of features, some of them are:
 - Generate keypairs from Mnemonic phrases or import one (you own the private keys).
 - Support of multi wallets and different Horizon APIs.
 - Trade assets with offers, limits and swaps operations.
 - Advanced features like manually signing XDRs or generating a chain of operations (similar to the Stellar laboratory).
 - Integrated SDK so sites can talk with the extension.
-- Encrypted private keys and protection of public key from websites until the user accepts to share it.
+- Encrypted private keys and protection of public keys from websites until the user accepts to share them.
+- And way more advanced features!
 
 We are constantly adding new features, want to know all of them? Visit the [docs](https://xbull.app/?utm_source=github&utm_medium=Websites&utm_campaign=organic) and check all this wallet has to offer.
 
 ## Operations handled by the wallet
-The Stellar Blockchain supports multiple kind of transactions, xBull is designed to handle all of them. At this moment the supported operations are:
+The Stellar Blockchain supports multiple kinds of transactions, xBull is designed to handle all of them. At this moment the supported operations are:
 
 - [X] Create account
 - [X] Payment
@@ -58,7 +59,9 @@ The Stellar Blockchain supports multiple kind of transactions, xBull is designed
 
 
 # xBull "SDK"
-Our wallet is shipped with an internal "SDK" which helps website owners to interact with the wallet. You can read all the details in the site, the SDK helps you talking with our wallet like this:
+> We suggest using our library "Stellar Wallets Kit" because by using it you will be able to integrate xBull and all other wallets in your website/app using a single library. Check it out [here](https://https://github.com/Creit-Tech/Stellar-Wallets-Kit)
+
+Our wallet is shipped with an internal "SDK" which helps website owners to interact with the wallet. You can read all the details in the site, the SDK helps you to talk with our wallet like this:
 
 **Request permissions to the wallet:**
 ```javascript
@@ -83,7 +86,7 @@ const signedTransaction = await xBullSDK.signXDR('AAAAAgAAAQAAAAAAAAAAAOwLt5VQAs
 
 # FAQs
 
-If you have any question about the functionality of the wallet, please check our documentation [here](https://xbull.app/?utm_source=github&utm_medium=Websites&utm_campaign=organic) where you can find all the details about our wallet.
+If you have any questions about the functionality of the wallet, please check our documentation [here](https://xbull.app/?utm_source=github&utm_medium=Websites&utm_campaign=organic) where you can find all the details about our wallet.
 
 # Contributing
 Pull requests are welcome. please open an issue first to discuss what you would like to change/add to the wallet, if you need to include new dependencies please explain the reasons why you can not do the changes without that new library.
@@ -95,7 +98,7 @@ xBull Wallet is available to use by anyone and it's on the google Chrome Store o
 
 Because of this, xBull Wallet is possible to be audited and built by anyone. You can pull the source code and generate the build which you can then import into your browser, that way the extension you don't need to trust the version that is hosted in the Google Chrome store.
 
-If you want to learn more about this, please read the documentation [here](https://xbull.app/?utm_source=github&utm_medium=Websites&utm_campaign=organic) where we explain you how to manually do it
+If you want to learn more about this, please read the documentation [here](https://xbull.app/?utm_source=github&utm_medium=Websites&utm_campaign=organic) where we explain to you how to manually do it
 
 # License
 ![](https://img.shields.io/badge/License-AGPLv3-lightgrey)

@@ -135,7 +135,7 @@ export class MobileTopupSummaryComponent implements OnInit {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.SIGN_TRANSACTION'),
       nzContentParams: {
         xdr: newOrder.tx,

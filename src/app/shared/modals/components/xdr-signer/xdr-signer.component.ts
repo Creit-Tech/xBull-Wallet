@@ -18,13 +18,15 @@ import {ComponentCreatorService} from '~root/core/services/component-creator.ser
 import {HardwareWalletsService} from '~root/core/services/hardware-wallets.service';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
-import {SignPasswordComponent} from '~root/shared/modals/components/sign-password/sign-password.component';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import {NzDrawerRef, NzDrawerService} from 'ng-zorro-antd/drawer';
 import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
 import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
 import { fromUnixTime } from 'date-fns';
 import { SettingsService } from '~root/core/settings/services/settings.service';
+import { distinctUntilArrayItemChanged } from '@datorama/akita';
+import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
+import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -112,7 +114,6 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   operations$: Observable<any> = this.xdrParsed$
     .pipe(map(xdrParse => xdrParse?.operations || []));
 
-  // TODO: Make this dynamic with a config store
   fee$: Observable<string> = this.xdrParsed$
     .pipe(filter<Transaction>(data => !!data))
     .pipe(pluck<Transaction, string>('fee'))
@@ -136,6 +137,22 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(filter<Transaction>(Boolean))
     .pipe(pluck('source'));
 
+  /**
+   * This observable includes all possible invoke functions from the tx and tries to parse them
+   */
+  invokeFunctions$: Observable<Array<NzTreeNodeOptions[]>> = this.operations$
+    .pipe(distinctUntilArrayItemChanged())
+    .pipe(map((operations: any) => {
+      return operations.filter(
+        (operation: SorobanClient.Operation) => operation.type === 'invokeHostFunction'
+      );
+    }))
+    .pipe(map((operations: any[]) => {
+      return operations.map((operation, i) => {
+        return this.hostFunctionsService.parseHostFunctionIntoNodeTree(operation.function, i);
+      });
+    }));
+
 
   constructor(
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
@@ -153,6 +170,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     private readonly settingsQuery: SettingsQuery,
     private readonly deviceAuthService: DeviceAuthService,
     private readonly settingsService: SettingsService,
+    private readonly hostFunctionsService: HostFunctionsService,
   ) { }
 
   ngOnInit(): void {

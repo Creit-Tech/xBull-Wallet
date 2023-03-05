@@ -270,7 +270,7 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: transactionBuilder.build().toXDR()
       },
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'),
     });
 

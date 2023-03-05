@@ -48,7 +48,7 @@ export class Sep10Service {
         pickedNetworkPassphrase: challenge.network_passphrase,
         acceptHandler: (signed) => signedXdr = signed,
       },
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: 'Authentication Challenge',
     });
 
