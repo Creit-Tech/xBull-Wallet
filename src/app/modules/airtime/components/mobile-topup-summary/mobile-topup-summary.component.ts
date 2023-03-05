@@ -13,7 +13,7 @@ import {
   IAirtimeCountryOperator
 } from '~root/modules/airtime/services/airtime.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
@@ -135,7 +135,7 @@ export class MobileTopupSummaryComponent implements OnInit {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.SIGN_TRANSACTION'),
       nzContentParams: {
         xdr: newOrder.tx,

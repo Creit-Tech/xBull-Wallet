@@ -15,7 +15,10 @@ export class WalletsOffersService {
   ) { }
 
   async getAccountActiveOffers(publicKey: IWalletsAccount['publicKey']) {
-    const response = await this.stellarSdkService.Server.offers().forAccount(publicKey).call();
+    const response = await this.stellarSdkService.selectServer()
+      .offers()
+      .forAccount(publicKey)
+      .call();
     this.walletsOffersStore.add(response.records);
 
     return response;

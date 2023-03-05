@@ -20,7 +20,7 @@ export class LiquidityPoolsService {
     lpId: ILpAsset['_id'];
     horizonApi: IHorizonApi;
   }): Promise<ServerApi.LiquidityPoolRecord> {
-    const record = await new Server(params.horizonApi.url)
+    const record = await this.stellarSdkService.selectServer(params.horizonApi.url)
       .liquidityPools()
       .liquidityPoolId(params.lpId)
       .call();
@@ -39,7 +39,7 @@ export class LiquidityPoolsService {
   // getLatestPools(data: { horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
   getPoolsByAssets(data: { assets: Asset[], horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
     this.lpAssetsStore.updateUIState({ fetchingLatestPools: true });
-    const serverCall = new this.stellarSdkService.SDK.Server(data.horizonApi.url)
+    const serverCall = this.stellarSdkService.selectServer(data.horizonApi.url)
       .liquidityPools()
       .forAssets(...data.assets)
       .limit(100)

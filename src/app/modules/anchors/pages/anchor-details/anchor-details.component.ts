@@ -157,7 +157,7 @@ export class AnchorDetailsComponent implements OnInit, OnDestroy {
     this.nzDrawerService.create<AnchoredAssetInteractionDrawerComponent>({
       nzContent: AnchoredAssetInteractionDrawerComponent,
       nzPlacement: 'right',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: anchorCurrency.code,
       nzContentParams: {
         anchor,

@@ -255,7 +255,7 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
         },
       },
       nzTitle: 'Confirm creation of the vault',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
     });
   }
 

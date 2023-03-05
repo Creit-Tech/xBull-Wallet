@@ -27,7 +27,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpErrorResponse } from '@angular/common/http';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
 import { TranslateService } from '@ngx-translate/core';
@@ -192,14 +192,14 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const orderTransaction = new this.stellarSdkService.SDK.Transaction(
-      newOrder.tx,
-      newOrder.network,
-    );
+    const orderTransaction = this.stellarSdkService.createTransaction({
+      xdr: newOrder.tx,
+      networkPassphrase: newOrder.network,
+    });
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.SIGN_TRANSACTION'),
       nzContentParams: {
         xdr: newOrder.tx,

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { BehaviorSubject, merge, Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
@@ -42,7 +41,7 @@ export class ImportXdrComponent implements OnInit {
 
     const nzRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.SIGN'),
       nzContentParams: {
         xdr: this.signControl.value,

@@ -148,7 +148,6 @@ export class SettingsService {
 
   // timeout is messured in minutes IE 5, 15 or 30
   setKeptPasswordTimeout(timeout: number): void {
-    console.log(timeout);
     this.settingsStore.updateState({ timeoutPasswordSaved: timeout });
     this.removeLocallySavedPasswordTrigger$.next();
   }

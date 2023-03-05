@@ -13,7 +13,6 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { ModalsService } from '~root/shared/modals/modals.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
-import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
@@ -75,9 +74,10 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
       .subscribe(([asset, horizonApi]: [IWalletAssetModel, IHorizonApi]) => {
-        this.walletsAssetsService.requestAssetData$.next({
-          ...asset,
+        this.walletsAssetsService.requestAssetInformation$.next({
+          asset,
           horizonApi,
+          forceUpdate: false
         });
       });
   }
@@ -127,7 +127,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'ios-safe-y drawer-full-w-320',
+      nzWrapClassName: 'ios-safe-y drawer-full-w-340',
       nzTitle: 'Remove Asset',
       nzContentParams: {
         xdr: formattedXDR,

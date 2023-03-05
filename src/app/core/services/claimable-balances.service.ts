@@ -21,7 +21,7 @@ export class ClaimableBalancesService {
     this.claimableBalancesStore.updateUIState({ gettingClaimableBalances: true });
 
     try {
-      const response = await this.stellarSdkService.Server
+      const response = await this.stellarSdkService.selectServer()
         .claimableBalances()
         .limit(100)
         .claimant(walletAccount.publicKey)

@@ -340,7 +340,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_CONFIRMATION_TITLE'),
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
     });
 
     drawerRef.open();

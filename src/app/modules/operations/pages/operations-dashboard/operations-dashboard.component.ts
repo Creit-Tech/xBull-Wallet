@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
@@ -107,7 +107,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
       nzContent: OperationDetailsComponent,
       nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
       nzCloseOnNavigation: true,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzContentParams: { operation }
     });
   }

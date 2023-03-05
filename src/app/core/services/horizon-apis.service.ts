@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createHorizonApi, HorizonApisStore, IHorizonApi } from '~root/state';
 import { randomBytes } from 'crypto';
-import {Networks} from "stellar-base";
+import { Networks } from 'soroban-client';
 
 @Injectable({
   providedIn: 'root'
@@ -40,13 +40,24 @@ export class HorizonApisService {
     }
   }
 
-  userNetworkName(network: string): string {
-    if (network === Networks.PUBLIC) {
-      return 'Public';
-    } else if (network === Networks.TESTNET) {
-      return 'Testnet';
-    } else {
-      return network;
-    }
+  userNetworkName(network: Networks): string {
+    const index = Object.values(Networks).indexOf(network);
+    return Object.keys(Networks)[index] || network;
+  }
+
+  addSorobanDevelopmentHorizons(): void {
+    this.addHorizonApi({
+      networkPassphrase: Networks.FUTURENET,
+      url: 'https://horizon-futurenet.stellar.org',
+      name: 'Futurenet',
+      canRemove: false,
+    });
+
+    this.addHorizonApi({
+      networkPassphrase: Networks.STANDALONE,
+      url: 'http://localhost:8000',
+      name: 'Standalone',
+      canRemove: false,
+    });
   }
 }

@@ -112,7 +112,8 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
       ? Asset.native()
       : new Asset(record.asset.split(':')[0], record.asset.split(':')[1]);
 
-    const loadedAccount = await new Server(selectedHorizonApi.url).loadAccount(selectedAccount.publicKey);
+    const loadedAccount = await this.stellarSdkService.selectServer(selectedHorizonApi.url)
+      .loadAccount(selectedAccount.publicKey);
 
     const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
 
@@ -145,7 +146,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
     if (type === 'trash_it' && !asset.isNative()) {
       let pathRecords: ServerApi.PaymentPathRecord[] = [];
       try {
-        pathRecords = await this.stellarSdkService.Server.strictSendPaths(
+        pathRecords = await this.stellarSdkService.selectServer().strictSendPaths(
           asset,
           record.amount,
           [this.stellarSdkService.SDK.Asset.native()],
@@ -190,7 +191,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
 
     const ref = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'ios-safe-y drawer-full-w-320',
+      nzWrapClassName: 'ios-safe-y drawer-full-w-340',
       nzTitle: 'Claim Airdrop',
       nzContentParams: {
         xdr: transactionXDR,

@@ -75,7 +75,7 @@ export class SessionRequestComponent implements OnInit, OnDestroy {
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzCloseOnNavigation: true,
       nzTitle: 'Confirm request',
       nzContentParams: {
@@ -93,7 +93,7 @@ export class SessionRequestComponent implements OnInit, OnDestroy {
             });
           } else {
             try {
-              await this.stellarSdkService.Server.submitTransaction(data.transaction);
+              await this.stellarSdkService.submit(data.transaction);
               await this.walletConnectService.requestResponse({
                 success: true,
                 topic: this.topic,

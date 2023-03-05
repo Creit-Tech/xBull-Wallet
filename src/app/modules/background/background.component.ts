@@ -15,11 +15,12 @@ import { catchError, delay, filter, pluck, switchMap, take, takeUntil, withLates
 import { merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { SignXdrComponent } from '~root/shared/modals/components/sign-xdr/sign-xdr.component';
 import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
+import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-background',
@@ -40,6 +41,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private readonly walletsAccountsService: WalletsAccountsService,
     private readonly walletsService: WalletsService,
     private readonly horizonApisService: HorizonApisService,
+    private readonly nzDrawerService: NzDrawerService,
   ) { }
 
   connectHandler$ = this.runtimeEvent$.asObservable()
@@ -180,38 +182,39 @@ export class BackgroundComponent implements OnInit, OnDestroy {
       }
     }
 
-    const ref = await this.componentCreatorService.createOnBody<SignXdrComponent>(SignXdrComponent);
-
-    ref.component.instance.xdr = params.xdr;
-    ref.component.instance.from = params.host;
-
-    ref.open();
-
-    return new Promise(resolve => {
-      merge(ref.component.instance.deny.asObservable(), ref.destroyed$.asObservable())
-        .pipe(take(1))
-        .pipe(takeUntil(this.componentDestroyed$))
-        .subscribe(() => {
-          resolve({
-            error: true,
-            errorMessage: 'Sign request denied'
-          });
-          ref.component.instance.onClose()
-            .then(() => ref.close());
-        });
-
-      ref.component.instance.accept
-        .pipe(take(1))
-        .pipe(takeUntil(merge(this.componentDestroyed$, ref.destroyed$.asObservable())))
-        .subscribe(signedXDR => {
-          resolve({
+    const resultSubject: Subject<IRuntimeSignXDRResponse | IRuntimeErrorResponse> =
+      new Subject<IRuntimeSignXDRResponse | IRuntimeErrorResponse>();
+    const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzContentParams: {
+        xdr: params.xdr,
+        from: params.host,
+        signingResultsHandler: data => {
+          resultSubject.next({
             error: false,
-            payload: signedXDR
+            payload: data.signedXDR,
           });
-          ref.component.instance.onClose()
-            .then(() => ref.close());
-        });
+          drawerRef.close();
+        },
+      },
+      nzTitle: 'Confirm creation of the vault',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
     });
+
+    drawerRef.afterClose
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        resultSubject.next({
+          error: true,
+          errorMessage: 'Sign request denied'
+        });
+      });
+
+    drawerRef.open();
+
+    return resultSubject
+      .pipe(take(1))
+      .toPromise();
   }
 
 }

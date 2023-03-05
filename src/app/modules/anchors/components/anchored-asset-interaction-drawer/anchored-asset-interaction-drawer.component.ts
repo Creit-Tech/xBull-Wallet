@@ -368,13 +368,13 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzTitle: 'Complete Withdrawal',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzPlacement: 'right',
       nzContentParams: {
         xdr: transactionBuild.toXDR(),
         signingResultsHandler: data => {
           const loadingMessageId = this.nzMessageService.loading('Loading...', { nzDuration: 0 }).messageId;
-          this.stellarSdkService.Server.submitTransaction(data.transaction)
+          this.stellarSdkService.submit(data.transaction)
             .then(_ => {
               this.nzMessageService.remove(loadingMessageId);
               this.nzMessageService.success(this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED'));

@@ -88,7 +88,7 @@ export class WithdrawVaultFundsComponent implements OnInit {
     const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzTitle: 'Sign transaction',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzContentParams: {
         xdr: newVaultTransaction.baseXDR,
         signingResultsHandler: data => {

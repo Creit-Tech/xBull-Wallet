@@ -5,7 +5,6 @@ import { ModalsService } from '~root/shared/modals/modals.service';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ModalWrapperComponent } from './modal-wrapper/modal-wrapper.component';
-import { SignXdrComponent } from './components/sign-xdr/sign-xdr.component';
 import { SignPasswordComponent } from './components/sign-password/sign-password.component';
 import { HardConfirmComponent } from './components/hard-confirm/hard-confirm.component';
 import { PressButtonModule } from '~root/shared/press-button/press-button.module';
@@ -22,11 +21,11 @@ import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-mod
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { TranslationModule } from '~root/translation.module';
+import { NzTreeModule } from 'ng-zorro-antd/tree';
 
 const COMPONENTS = [
   ModalContainerComponent,
   ModalWrapperComponent,
-  SignXdrComponent,
   SignPasswordComponent,
   HardConfirmComponent,
   XdrSignerComponent,
@@ -52,6 +51,7 @@ const COMPONENTS = [
     NzSpinModule,
     NzCardModule,
     TranslationModule.forChild(),
+    NzTreeModule,
   ],
 })
 export class ModalsModule {

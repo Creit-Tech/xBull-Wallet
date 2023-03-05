@@ -38,7 +38,8 @@
     "SELLING_ISSUER": "Selling Issuer",
     "BUYING_ISSUER": "Buying Issuer",
     "MIN_AMOUNT": "Min amount",
-    "ASSET_BUYING": "Asset Buying"
+    "ASSET_BUYING": "Asset Buying",
+    "INVOKE_HOST_FUNCTION": "Invoke Host Function"
   },
   "COMMON_WORDS": {
     "BRAND": "Brand",
