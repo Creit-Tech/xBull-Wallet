@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
-import { Networks } from 'stellar-sdk';
+import { Networks } from 'soroban-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SettingsQuery } from '~root/state';
 
 @Component({
   selector: 'app-add-horizon-api',
@@ -13,13 +16,24 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AddHorizonApiComponent implements OnInit {
 
-  passphraseOptions = [{
-    name: 'Mainnet',
-    value: Networks.PUBLIC
-  }, {
-    name: 'Testnet',
-    value: Networks.TESTNET
-  }];
+  passphraseOptions$: Observable<Array<{ name: string; value: string }>> = this.settingsQuery.allowSorobanSigning$
+    .pipe(map(allow => {
+      if (allow) {
+        return Object.keys(Networks)
+          .map((key: any) => ({
+            name: key,
+            value: (Networks as any)[key],
+          }));
+      } else {
+        return [{
+          name: 'PUBLIC',
+          value: Networks.PUBLIC,
+        }, {
+          name: 'TESTNET',
+          value: Networks.TESTNET,
+        }];
+      }
+    }));
 
   form: UntypedFormGroup = new UntypedFormGroup({
     name: new UntypedFormControl('', Validators.required),
@@ -32,6 +46,7 @@ export class AddHorizonApiComponent implements OnInit {
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly translateService: TranslateService,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngOnInit(): void {

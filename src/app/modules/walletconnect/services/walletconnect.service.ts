@@ -3,7 +3,7 @@ import SignClient from '@walletconnect/sign-client';
 import { PairingTypes, ProposalTypes } from '@walletconnect/types';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ENV, environment } from '~env';
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   SessionProposalComponent
@@ -171,9 +171,13 @@ export class WalletConnectService {
     accountsPublicKeys: string[];
     network: Networks;
   }): Promise<void> {
+    if (data.network !== Networks.PUBLIC && data.network !== Networks.TESTNET) {
+      throw new Error('Network is not supported, Currently WalletConnect only supports the Public and Testnet network');
+    }
+
     const targetChain = `stellar:${this.chain[data.network]}`;
 
-    if (!data.proposal.requiredNamespaces.stellar.chains.includes(targetChain)) {
+    if (!data.proposal.requiredNamespaces.stellar.chains?.includes(targetChain)) {
       throw new Error('Network is not supported, make sure you are using the accepted from the app (Public or Testnet)');
     }
 

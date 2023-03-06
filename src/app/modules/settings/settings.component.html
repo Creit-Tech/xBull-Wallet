@@ -30,6 +30,31 @@
         </div>
       </nz-list-item>
 
+      <nz-list-item *ngIf="enableSorobanDevelopment$ | async" class="px-4">
+        <div class="w-auto">
+          <p class="m-0 text-sm font-bold">
+            Allow Signing Soroban Contracts
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch [formControl]="allowSorobanContractsControl"></nz-switch>
+        </div>
+      </nz-list-item>
+
+      <nz-list-item class="px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            Enable soroban development
+          </p>
+        </div>
+        <div class="w-auto">
+          <button [disabled]="enableSorobanDevelopment$ | async"
+                  (click)="enableSorobanDevelopment()" nz-button>
+            {{ (enableSorobanDevelopment$ | async) ? 'Enabled' : 'Enable'}}
+          </button>
+        </div>
+      </nz-list-item>
+
       <nz-list-item *ngIf="counterAsset$ | async as counterAsset"
                     class="cursor-pointer px-4 justify-between items-center"
                     (click)="setCounterAsset()">

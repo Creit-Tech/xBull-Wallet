@@ -259,7 +259,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
 
       let loadedAccount;
       try {
-        loadedAccount = await new this.stellarSdkService.SDK.Server(horizonApi.url)
+        loadedAccount = await this.stellarSdkService.selectServer(horizonApi.url)
           .loadAccount(selectedAccount.publicKey);
       } catch (e: any) {
         this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.CANT_FETCH_ACCOUNT_FROM_HORIZON'), {
@@ -406,7 +406,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         this.depositForm.value.assetBBalanceLine.asset_issuer
       );
 
-    const server = new this.stellarSdkService.SDK.Server(horizonApi.url);
+    const server = this.stellarSdkService.selectServer(horizonApi.url);
     server.liquidityPools()
       .forAssets(assetA, assetB)
       .call()
@@ -490,7 +490,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.transactionBuilder.build().toXDR(),
       },
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('COMMON_WORDS.DEPOSIT')
     });
 
@@ -567,7 +567,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
         xdr: params.transactionBuilder.build().toXDR(),
       },
       nzTitle: this.translateService.instant('COMMON_WORDS.CREATE'),
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
     });
 
     drawerRef.open();

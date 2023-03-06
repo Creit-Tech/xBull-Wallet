@@ -78,7 +78,7 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
       nzTitle: searchedGiftCard.productName,
       nzPlacement: 'right',
       nzContent: GiftCardDetailsComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzContentParams: {
         productId: searchedGiftCard.productId,
       }
@@ -89,7 +89,7 @@ export class GiftCardsSearchComponent implements OnInit, AfterViewInit, OnDestro
     this.nzDrawerService.create({
       nzTitle: this.translateService.instant('GIFT_CARDS.MY_ORDERS'),
       nzPlacement: 'right',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzContent: GiftCardsOrdersComponent,
     });
   }

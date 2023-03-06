@@ -4,7 +4,7 @@
   </div>
   <div class="w-full mb-4">
     <nz-select class="w-full" nzSize="large" formControlName="passphrase" [nzPlaceHolder]="'FORM_PLACEHOLDERS.NETWORK_PASS' | translate" [nzDropdownMatchSelectWidth]="false">
-      <nz-option *ngFor="let option of passphraseOptions"
+      <nz-option *ngFor="let option of passphraseOptions$ | async"
                  [nzValue]="option.value"
                  [nzLabel]="option.name">
       </nz-option>

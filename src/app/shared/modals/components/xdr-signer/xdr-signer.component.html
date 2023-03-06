@@ -580,6 +580,13 @@
           <dd class=" break-all text-sm mb-3 w-full">{{ operation.minAmountB | number: '0.0-7' }}</dd>
         </ng-container>
 
+        <ng-container *ngIf="operation.type === 'invokeHostFunction'">
+          <ng-container *ngFor="let func of invokeFunctions$ | async">
+            <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'XDR_SIGNER.INVOKE_HOST_FUNCTION' | translate }}:</dt>
+            <nz-tree [nzData]="func" nzShowLine [nzShowIcon]="true"></nz-tree>
+          </ng-container>
+        </ng-container>
+
         <ng-container *ngIf="!!operation.source">
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.SOURCE' | translate }}:</dt>
           <dd appClipboard [textToCopy]="operation.source" class=" break-all text-sm mb-3 w-full">{{ operation.source | publicKey }}</dd>

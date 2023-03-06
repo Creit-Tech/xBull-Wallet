@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 // Included with Angular CLI.
 
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 
 export const ENV = 'ENVIRONMENT';
 
@@ -24,14 +24,8 @@ export const environment = {
     url: 'https://horizon-testnet.stellar.org',
     networkPassphrase: Networks.TESTNET,
     canRemove: false,
-  }, {
-    _id: 'c49b3d6410e8dc1497ee9cf50d7e0a89',
-    name: 'Public Node',
-    url: 'https://horizon.publicnode.org',
-    networkPassphrase: Networks.PUBLIC,
-    canRemove: true,
   }],
-  version: '1.11.0',
+  version: '1.15.0',
 };
 
 /*

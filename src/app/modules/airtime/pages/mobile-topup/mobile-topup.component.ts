@@ -136,7 +136,7 @@ export class MobileTopupComponent implements OnInit, AfterViewInit {
     this.nzDrawerService.create({
       nzTitle: '',
       nzPlacement: 'right',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzContent: AirtimeOrdersComponent,
     });
   }

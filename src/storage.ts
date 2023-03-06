@@ -3,7 +3,7 @@ import { storageAkitaMiddleware } from './storage-akita.middleware';
 import { debounceTime } from 'rxjs/operators';
 import { migrationsHandler } from './migrations/migrations';
 import { environment } from '~env';
-import { PersistStateParams } from '@datorama/akita/lib/persistState';
+import { PersistStateParams } from '@datorama/akita';
 import { storageMobileMiddleware } from './storage-mobile.middleware';
 import * as localForage from 'localforage';
 import { snapshotManager } from '@datorama/akita';

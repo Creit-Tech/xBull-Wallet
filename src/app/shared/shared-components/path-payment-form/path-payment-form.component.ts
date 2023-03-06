@@ -260,7 +260,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
 
     let response: { records: ServerApi.PaymentPathRecord[] };
     if (this.pathTypeValue === 'send') {
-      response = await this.stellarSdkService.Server.strictSendPaths(
+      response = await this.stellarSdkService.selectServer().strictSendPaths(
         this.walletsAssetsService.sdkAssetFromAssetId(fromAsset._id),
         new BigNumber(this.fromAssetAmount.value).toFixed(7),
         [this.walletsAssetsService.sdkAssetFromAssetId(toAsset._id)]
@@ -269,7 +269,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
         return { records: [] };
       });
     } else if (this.pathTypeValue === 'receive') {
-      response = await this.stellarSdkService.Server.strictReceivePaths(
+      response = await this.stellarSdkService.selectServer().strictReceivePaths(
         [this.walletsAssetsService.sdkAssetFromAssetId(fromAsset._id)],
         this.walletsAssetsService.sdkAssetFromAssetId(toAsset._id),
         new BigNumber(this.toAssetAmount.value).toFixed(7),
@@ -433,7 +433,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
 
     this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzCloseOnNavigation: true,
       nzTitle: this.translateService.instant('SWAP.SWAP_CONFIRM_TITLE'),
       nzContentParams: {
@@ -454,7 +454,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
       nzContent: QrScanModalComponent,
       nzPlacement: 'bottom',
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.SCAN_PUBLIC_KEY_TITLE'),
       nzHeight: '100%',
       nzContentParams: {

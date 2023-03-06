@@ -8,7 +8,7 @@ import { merge, Subject, throwError } from 'rxjs';
 import { mergeAll, switchMap, take } from 'rxjs/operators';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { Networks } from 'stellar-base';
+import { Networks } from 'soroban-client';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +48,7 @@ export class Sep10Service {
         pickedNetworkPassphrase: challenge.network_passphrase,
         acceptHandler: (signed) => signedXdr = signed,
       },
-      nzWrapClassName: 'drawer-full-w-320 ios-safe-y',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
       nzTitle: 'Authentication Challenge',
     });
 
