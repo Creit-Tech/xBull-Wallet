@@ -197,7 +197,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
           drawerRef.close();
         },
       },
-      nzTitle: 'Confirm creation of the vault',
+      nzTitle: 'Confirm and sign',
       nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
     });
 
