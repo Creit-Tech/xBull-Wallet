@@ -5,6 +5,9 @@ import { Networks } from 'soroban-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { SettingsQuery } from '~root/state';
 
 @Component({
   selector: 'app-add-horizon-api',
@@ -13,10 +16,23 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AddHorizonApiComponent implements OnInit {
 
-  passphraseOptions: Array<{ name: string; value: string }> = Object.keys(Networks)
-    .map((key: any) => ({
-      name: key,
-      value: (Networks as any)[key],
+  passphraseOptions$: Observable<Array<{ name: string; value: string }>> = this.settingsQuery.allowSorobanSigning$
+    .pipe(map(allow => {
+      if (allow) {
+        return Object.keys(Networks)
+          .map((key: any) => ({
+            name: key,
+            value: (Networks as any)[key],
+          }));
+      } else {
+        return [{
+          name: 'PUBLIC',
+          value: Networks.PUBLIC,
+        }, {
+          name: 'TESTNET',
+          value: Networks.TESTNET,
+        }];
+      }
     }));
 
   form: UntypedFormGroup = new UntypedFormGroup({
@@ -30,6 +46,7 @@ export class AddHorizonApiComponent implements OnInit {
     private readonly nzMessageService: NzMessageService,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly translateService: TranslateService,
+    private readonly settingsQuery: SettingsQuery,
   ) { }
 
   ngOnInit(): void {

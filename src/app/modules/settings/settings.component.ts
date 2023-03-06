@@ -167,7 +167,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         applyTransaction(() => {
           this.walletsService.addMissingAccountsForSoroban();
           this.horizonApisService.addSorobanDevelopmentHorizons();
-          this.settingsStore.updateState({ enableSorobanDevelopment: true });
+          this.settingsStore.updateState({ enableSorobanDevelopment: true, allowSorobanSigning: true });
         });
       }
     });

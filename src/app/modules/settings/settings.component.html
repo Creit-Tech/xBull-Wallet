@@ -30,7 +30,7 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item class="px-4">
+      <nz-list-item *ngIf="enableSorobanDevelopment$ | async" class="px-4">
         <div class="w-auto">
           <p class="m-0 text-sm font-bold">
             Allow Signing Soroban Contracts
@@ -41,7 +41,7 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item *ngIf="allowSorobanSigning$ | async" class="px-4">
+      <nz-list-item class="px-4">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">
             Enable soroban development

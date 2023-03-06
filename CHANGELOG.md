@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.0] - Not released
+### Add
+- Add Soroban Client dependency and allow Soroban operations
+
+### Updated
+- Multiple dependencies updated
+
 ## [1.11.0] - 2022-11-28
 ### Add
 - Disable WalletConnect button while is starting the process and show a message notifying it
