@@ -115,14 +115,20 @@ export class StellarSdkService {
   // TODO: once soroban client is here to stay, refactor all the SDK logic
   createTransaction(params: { xdr: string; networkPassphrase?: string; }): SDK.Transaction | SorobanClient.Transaction {
     let tempT: any;
+    let err: any;
     try {
       tempT = new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
-    } catch (e) {}
+    } catch (e) {
+      err = e;
+    }
     try {
       tempT = new this.SorobanSDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
-    } catch (e) {}
+    } catch (e) {
+      err = e;
+    }
 
     if (!tempT) {
+      console.error(err);
       throw new Error('Transaction creation failed');
     }
 
