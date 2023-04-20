@@ -113,6 +113,21 @@ export class WalletsAccountsService {
 
   createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
     if (account) {
+      // First load
+      this.stellarSdkService.selectServer(horizonApi.url)
+        .accounts()
+        .accountId(account.publicKey)
+        .call()
+        .then(response => {
+          this.saveAccountAndAssets(account._id, response);
+          this.walletsAccountsStore.upsert(account._id, state => ({ ...state, streamCreated: true }));
+        })
+        .catch(err => {
+          if (err.message === 'Not Found') {
+            this.saveAccountAndAssets(account._id, undefined);
+          }
+        });
+
       const newStream = this.stellarSdkService.selectServer(horizonApi.url)
         .accounts()
         .accountId(account.publicKey)

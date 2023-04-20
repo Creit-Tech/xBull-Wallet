@@ -8,20 +8,17 @@ import {
   WalletsAccountsQuery, WalletsAssetsQuery
 } from '~root/state';
 import {
-  debounceTime, distinct, distinctUntilChanged,
+  distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
   map,
-  pluck,
   switchMap,
   take, takeUntil,
   withLatestFrom
 } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { combineLatest, Observable, of, Subject } from 'rxjs';
-import { ServerApi } from 'stellar-sdk';
-import ClaimableBalanceRecord = ServerApi.ClaimableBalanceRecord;
+import { Observable, Subject } from 'rxjs';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   ClaimableBalanceDetailsComponent
@@ -60,7 +57,7 @@ export class ClaimableBalancesDashboardComponent implements OnInit, OnDestroy {
             console.warn('There seems to be an issue with the claimable balance: ' + record.id);
             return false;
           }
-          return this.claimableBalancesService.canBeClaimed(targetClaimant.predicate);
+          return true;
         });
     }));
 

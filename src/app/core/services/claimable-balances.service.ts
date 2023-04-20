@@ -58,35 +58,4 @@ export class ClaimableBalancesService {
   removeClaimableBalance(claimableBalanceId: string): void {
     this.claimableBalancesStore.remove(claimableBalanceId);
   }
-
-  canBeClaimed(predicate: Horizon.Predicate): boolean {
-    let canClaim = false;
-
-    // TODO: later when there is proper typing from the SDK, update this
-    if ((predicate as any).unconditional === true) {
-      canClaim = true;
-    }
-
-    if (typeof predicate.abs_before !== 'undefined') {
-      canClaim = isBefore(new Date(), new Date(predicate.abs_before));
-    }
-
-    if (typeof predicate.rel_before !== 'undefined') {
-      canClaim = isAfter(new Date(), new Date(predicate.rel_before));
-    }
-
-    if (typeof predicate.not !== 'undefined') {
-      canClaim = !this.canBeClaimed(predicate.not);
-    }
-
-    if (typeof predicate.and !== 'undefined') {
-      canClaim = predicate.and.every(p => this.canBeClaimed(p));
-    }
-
-    if (typeof predicate.or !== 'undefined') {
-      canClaim = !!predicate.or.find(p => this.canBeClaimed(p));
-    }
-
-    return canClaim;
-  }
 }

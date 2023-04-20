@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.15.2] - Not released
+### Add
+- Now when the wallet loads we also make a basic account request so we also handle those cases where the stream is not available (soroban sandbox development)
+
+### Fixed
+- Trezor signing broken: The public key was in the wrong format when creating the tx after a Trezor device has sined it
+- Claimable balances list: Some types of claimable balances predictions were wrongly validated
+
 ## [1.15.1] - 2023-04-07
 ### Add
 - Add support to Soroban preview 8
