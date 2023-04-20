@@ -465,7 +465,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         networkPassphrase,
       });
 
-      transaction.addSignature(result.publicKey, result.signature);
+      const publicKeyBytes = Buffer.from(result.publicKey, 'hex');
+      const encodedPublicKey = this.stellarSdkService.SDK.StrKey.encodeEd25519PublicKey(publicKeyBytes);
+
+      transaction.addSignature(
+        encodedPublicKey,
+        Buffer.from(result.signature, 'hex').toString('base64')
+      );
 
       // DEPRECATED
       this.emitData(transaction.toXDR());
