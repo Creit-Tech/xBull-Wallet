@@ -7,7 +7,7 @@ import { Networks } from 'soroban-client';
 import { ConnectService, EventType } from '~root/modules/connect/services/connect.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { box, randomBytes } from 'tweetnacl';
 import { decodeBase64, decodeUTF8, encodeBase64 } from 'tweetnacl-util';

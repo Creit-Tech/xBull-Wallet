@@ -7,7 +7,7 @@ import { SettingsQuery, WalletsQuery } from '~root/state';
 import { map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {merge, Subject, Subscription} from 'rxjs';
-import { PasswordModalComponent } from '~root/shared/modals/components/password-modal/password-modal.component';
+import { PasswordModalComponent } from '~root/shared/shared-modals/components/password-modal/password-modal.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { TranslateService } from '@ngx-translate/core';

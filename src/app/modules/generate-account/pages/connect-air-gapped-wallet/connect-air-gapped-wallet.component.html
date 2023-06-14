@@ -1,0 +1,66 @@
+<section class="h-full w-full flex flex-col px-4 py-8 justify-start items-center container max-w-md mx-auto">
+  <div class="w-full flex justify-center items-center mb-4">
+    <img src="/assets/icons/xbull-dark.svg" class="h-24" alt="xbull-logo">
+  </div>
+
+  <p class="font-semibold text-lg px-4 mb-8">
+    {{ 'CREATE_ACCOUNT.CONNECT_AIR_GAPPED' | translate }}
+  </p>
+
+  <div class="w-full mb-8">
+    <nz-card class="ant-card-no-padding p-4">
+      <div class="w-full text-center mb-4">
+        <p class="w-full">
+          Connect your Air-gapped wallet by selecting the protocol and add the addresses
+        </p>
+      </div>
+
+      <div *ngFor="let input of accountsInputs.controls; let i = index" class="w-full mb-4">
+        <nz-input-group [nzPrefix]="closer" [nzSuffix]="qrScan" nzSize="large">
+          <ng-template #closer>
+            <button *ngIf="i != 0" nz-button nzBlock
+                    (click)="removeAccount(i)"
+                    nzGhost nzDanger nzType="link"
+                    nzSize="small">
+              <i class="fa-solid fa-times"></i>
+            </button>
+          </ng-template>
+
+          <input class="w-full" type="text"
+                 nz-input nzSize="large"
+                 [formControl]="input"
+                 placeholder="Public key at m/44'/148'/{{ i }}'"/>
+
+          <ng-template #qrScan>
+            <button (click)="scanQr(i)" nz-button nzBlock>
+              <i class="fa-solid fa-qrcode"></i>
+            </button>
+          </ng-template>
+        </nz-input-group>
+      </div>
+
+      <div class="w-full flex justify-center">
+        <button nz-button
+                [disabled]="accountsInputs.invalid"
+                (click)="addNewAccount()"
+                nzType="primary">
+          Add extra account <i class="fa-solid fa-plus ml-2"></i>
+        </button>
+      </div>
+    </nz-card>
+  </div>
+
+  <div class="w-full text-center">
+    <button class="mb-4"
+            [disabled]="accountsInputs.invalid"
+            (click)="confirm()"
+            nz-button nzSize="large"
+            nzBlock nzType="primary">
+      Confirm
+    </button>
+
+    <button routerLink="/create-account" nz-button nzSize="large" nzBlock nzType="link" nzDanger>
+      Go back
+    </button>
+  </div>
+</section>

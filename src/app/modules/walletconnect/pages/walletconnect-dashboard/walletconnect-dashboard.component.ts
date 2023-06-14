@@ -12,7 +12,7 @@ import {
 } from '~root/modules/walletconnect/components/session-details/session-details.component';
 import { from } from 'rxjs';
 import QrScanner from 'qr-scanner';
-import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { IWalletConnectSessionModel } from '~root/state/walletconnect-sessions/walletconnect-session.model';
 

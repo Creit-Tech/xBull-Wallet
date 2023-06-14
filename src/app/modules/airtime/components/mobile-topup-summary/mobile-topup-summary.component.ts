@@ -15,7 +15,7 @@ import {
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { Networks } from 'soroban-client';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { ErrorParserService } from '~root/lib/error-parser/error-parser.service';
 import { AirtimeQuery } from '~root/modules/airtime/state/airtime.query';

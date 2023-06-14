@@ -473,6 +473,7 @@
     "CONFIRM_PHRASE": "Confirm Mnemonic phrase",
     "IMPORT_SECRET": "Import Secret Key",
     "CONNECT_HARDWARE_WALLET": "Connect Hardware Wallet",
+    "CONNECT_AIR_GAPPED": "Connect Air-gapped Wallet",
     "CONNECT_OPEN_APP": "Connect your wallet to your computer and open the Stellar App before continuing",
     "CONNECT_BEFORE_CONTINUE": "Connect your wallet to your computer before continuing",
     "THIS_YOUR_PHRASE": "This is your Mnemonic phrase",

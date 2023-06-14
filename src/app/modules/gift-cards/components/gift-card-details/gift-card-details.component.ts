@@ -26,7 +26,7 @@ import { Asset, MemoType } from 'stellar-sdk';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpErrorResponse } from '@angular/common/http';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { Networks } from 'soroban-client';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';

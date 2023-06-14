@@ -4,30 +4,35 @@ export interface IBaseWallet {
 }
 
 export interface IWalletWithMnemonicPhrase extends IBaseWallet {
-  type: 'mnemonic_phrase';
+  type: WalletType.mnemonic_phrase;
   mnemonicPhrase: string;
 }
 
 export interface IWalletWithSecretKey extends IBaseWallet {
-  type: 'secret_key';
+  type: WalletType.secret_key;
 }
 
 export interface IWalletWithLedger extends IBaseWallet {
-  type: 'ledger_wallet';
+  type: WalletType.ledger_wallet;
   productId: number;
   vendorId: number;
 }
 
 export interface IWalletWithTrezor extends IBaseWallet {
-  type: 'trezor_wallet';
+  type: WalletType.trezor_wallet;
 }
 
-export type IWallet = IWalletWithMnemonicPhrase | IWalletWithSecretKey | IWalletWithLedger | IWalletWithTrezor;
+export interface IWalletWithAirGapped extends IBaseWallet {
+  type: WalletType.air_gapped;
+  protocol: AirGappedWalletProtocol;
+}
+
+export type IWallet = IWalletWithMnemonicPhrase | IWalletWithSecretKey | IWalletWithLedger | IWalletWithTrezor | IWalletWithAirGapped;
 
 export function createWallet(params: IWallet): IWallet {
 
   switch (params.type) {
-    case 'mnemonic_phrase':
+    case WalletType.mnemonic_phrase:
       return {
         _id: params._id,
         name: params.name,
@@ -35,14 +40,14 @@ export function createWallet(params: IWallet): IWallet {
         mnemonicPhrase: params.mnemonicPhrase,
       };
 
-    case 'secret_key':
+    case WalletType.secret_key:
       return {
         _id: params._id,
         name: params.name,
         type: params.type,
       };
 
-    case 'ledger_wallet':
+    case WalletType.ledger_wallet:
       return {
         _id: params._id,
         name: params.name,
@@ -51,11 +56,31 @@ export function createWallet(params: IWallet): IWallet {
         productId: params.productId,
       };
 
-    case 'trezor_wallet':
+    case WalletType.trezor_wallet:
       return {
         _id: params._id,
         name: params.name,
         type: params.type,
       };
+
+    case WalletType.air_gapped:
+      return {
+        _id: params._id,
+        name: params.name,
+        type: params.type,
+        protocol: params.protocol,
+      };
   }
+}
+
+export enum WalletType {
+  mnemonic_phrase = 'mnemonic_phrase',
+  secret_key = 'secret_key',
+  ledger_wallet = 'ledger_wallet',
+  trezor_wallet = 'trezor_wallet',
+  air_gapped = 'air_gapped',
+}
+
+export enum AirGappedWalletProtocol {
+  LumenSigner = 'LumenSigner'
 }

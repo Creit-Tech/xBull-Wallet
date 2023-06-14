@@ -7,7 +7,7 @@ import { ImportXdrComponent } from './pages/import-xdr/import-xdr.component';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
-import { ModalsModule } from '~root/shared/modals/modals.module';
+import { ModalsModule } from '~root/shared/shared-modals/modals.module';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzInputModule } from 'ng-zorro-antd/input';

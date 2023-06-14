@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Str from '@ledgerhq/hw-app-str';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import TrezorConnect from 'trezor-connect';
+import TrezorConnect, { BundledResponse, StellarAddress } from 'trezor-connect';
 import { BehaviorSubject } from 'rxjs';
 import { Transaction } from 'stellar-base';
 import * as SorobanClient from 'soroban-client';
@@ -90,7 +90,7 @@ export class HardwareWalletsService {
       .toPromise();
   }
 
-  async getTrezorPublicKeys(range: { start: number; end: number }) {
+  async getTrezorPublicKeys(range: { start: number; end: number }): Promise<BundledResponse<StellarAddress>> {
     const bundle: Array<{ path: string; showOnTrezor: boolean }> = [];
     for (let i = range.start; i < range.end; i++) {
       bundle.push({

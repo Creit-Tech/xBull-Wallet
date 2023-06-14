@@ -1,16 +1,16 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import {UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { Subject, Subscription } from 'rxjs';
 import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { sameValueValidator } from '~root/shared/forms-validators/same-value.validator';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { WalletsQuery } from '~root/state';
+import { WalletsQuery, WalletType } from '~root/state';
 import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
-import {NzMessageService} from "ng-zorro-antd/message";
+import { NzMessageService } from "ng-zorro-antd/message";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -118,7 +118,7 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
     }
 
     await this.walletsService.generateNewWallet({
-      type: 'mnemonic_phrase',
+      type: WalletType.mnemonic_phrase,
       password: this.form.value.confirmPassword,
       mnemonicPhrase: this.form.value.confirmPhrase,
     });
