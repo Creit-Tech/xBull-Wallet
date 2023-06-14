@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.0] - 2023-06-14
+### Add
+- Support to air-gapped wallets (QR sharing protocols). The first protocol added is the one from LumenSigner (https://github.com/LumenSigner/lumensigner)
+
+### Changed
+- In order to make it easier to handle wallet types and account types in the future, all references to those fields were changed to an Enum
+
+
 ## [1.15.3] - 2023-04-29
 ### Changed
 - Bump Soroban Client package so the wallet can sign Soroban preview 9 transactions

@@ -29,7 +29,6 @@ import { ISelectOptions } from '~root/shared/forms-components/select/select.comp
 import BigNumber from 'bignumber.js';
 import { ENV, environment } from '~env';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { ModalsService } from '~root/shared/modals/modals.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
@@ -40,11 +39,11 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { Account, Asset, Operation, TransactionBuilder } from 'stellar-base';
 import { AccountResponse, Claimant, Memo } from 'stellar-sdk';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
 import QrScanner from 'qr-scanner';
-import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 
@@ -136,7 +135,6 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsAssetsService: WalletsAssetsService,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
-    private readonly modalsService: ModalsService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,

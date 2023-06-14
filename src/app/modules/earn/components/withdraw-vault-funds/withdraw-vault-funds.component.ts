@@ -11,7 +11,7 @@ import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.que
 import { EarnVaultsService, IConfirmVaultTransactionParams } from '~root/modules/earn/state/vaults/earn-vaults.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ErrorParserService } from '~root/lib/error-parser/error-parser.service';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({

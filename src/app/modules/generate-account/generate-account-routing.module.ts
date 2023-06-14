@@ -6,6 +6,9 @@ import { GeneratePasswordComponent } from './pages/generate-password/generate-pa
 import { ConfirmPhrasePasswordComponent } from './pages/confirm-phrase-password/confirm-phrase-password.component';
 import { ConfirmSecretPasswordComponent } from '~root/modules/generate-account/pages/confirm-secret-password/confirm-secret-password.component';
 import { ConnectHardwareWalletComponent } from '~root/modules/generate-account/pages/connect-hardware-wallet/connect-hardware-wallet.component';
+import {
+  ConnectAirGappedWalletComponent
+} from '~root/modules/generate-account/pages/connect-air-gapped-wallet/connect-air-gapped-wallet.component';
 
 const routes: Routes = [
   {
@@ -32,6 +35,10 @@ const routes: Routes = [
   {
     path: 'connect-hardware-wallet',
     component: ConnectHardwareWalletComponent,
+  },
+  {
+    path: 'connect-air-gapped-wallet',
+    component: ConnectAirGappedWalletComponent,
   },
   {
     path: 'import-and-export',

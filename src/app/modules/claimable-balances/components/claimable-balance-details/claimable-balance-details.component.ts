@@ -10,7 +10,7 @@ import { debounceTime, map, switchMap, take, takeUntil, withLatestFrom } from 'r
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { ClaimableBalancesService } from '~root/core/services/claimable-balances.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsOffersService } from '~root/core/wallets/services/wallets-offers.service';

@@ -23,7 +23,7 @@ import BigNumber from 'bignumber.js';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { ENV, environment } from '~env';

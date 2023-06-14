@@ -16,22 +16,26 @@ export interface IWalletsAccountBase  {
 }
 
 export interface IWalletsAccountWithSecretKey extends IWalletsAccountBase {
-  type: 'with_secret_key';
+  type: WalletAccountType.with_secret_key;
   secretKey: string;
 }
 
 export interface IWalletsAccountLedger extends IWalletsAccountBase {
-  type: 'with_ledger_wallet';
+  type: WalletAccountType.with_ledger_wallet;
   path: string;
 }
-
 
 export interface IWalletsAccountTrezor extends IWalletsAccountBase {
-  type: 'with_trezor_wallet';
+  type: WalletAccountType.with_trezor_wallet;
   path: string;
 }
 
-export type IWalletsAccount = IWalletsAccountWithSecretKey | IWalletsAccountLedger | IWalletsAccountTrezor;
+export interface IWalletsAccountAirGapped extends IWalletsAccountBase {
+  type: WalletAccountType.with_air_gapped;
+  path: string;
+}
+
+export type IWalletsAccount = IWalletsAccountWithSecretKey | IWalletsAccountLedger | IWalletsAccountTrezor | IWalletsAccountAirGapped;
 
 export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
   const base: IWalletsAccountBase = {
@@ -48,19 +52,27 @@ export function createWalletsAccount(params: IWalletsAccount): IWalletsAccount {
   };
 
   switch (params.type) {
-    case 'with_secret_key':
+    case WalletAccountType.with_secret_key:
       return {
         ...base,
         type: params.type,
         secretKey: params.secretKey,
       };
 
-    case 'with_ledger_wallet':
-    case 'with_trezor_wallet':
+    case WalletAccountType.with_ledger_wallet:
+    case WalletAccountType.with_trezor_wallet:
+    case WalletAccountType.with_air_gapped:
       return {
         ...base,
         type: params.type,
         path: params.path,
       };
   }
+}
+
+export enum WalletAccountType {
+  with_secret_key = 'with_secret_key',
+  with_ledger_wallet = 'with_ledger_wallet',
+  with_trezor_wallet = 'with_trezor_wallet',
+  with_air_gapped = 'with_air_gapped',
 }

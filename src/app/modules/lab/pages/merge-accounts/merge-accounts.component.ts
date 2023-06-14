@@ -4,13 +4,13 @@ import QrScanner from 'qr-scanner';
 import { ENV, environment } from '~env';
 import { WalletsAccountsQuery } from '~root/state';
 import { map, take, takeUntil } from 'rxjs/operators';
-import { QrScanModalComponent } from '~root/shared/modals/components/qr-scan-modal/qr-scan-modal.component';
+import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import * as StellarSDK from 'stellar-sdk';
 

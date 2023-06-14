@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BackgroundComponent } from './background.component';
-import { ModalsModule } from '~root/shared/modals/modals.module';
+import { ModalsModule } from '~root/shared/shared-modals/modals.module';
 import { SiteRequestComponent } from './components/site-request/site-request.component';
 import { TranslationModule } from '~root/translation.module';
 

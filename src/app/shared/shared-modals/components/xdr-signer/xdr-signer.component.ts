@@ -1,32 +1,38 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, merge, Observable, of, ReplaySubject, Subject, Subscription, throwError } from 'rxjs';
-import {WalletsService} from '~root/core/wallets/services/wallets.service';
-import { catchError, filter, map, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { filter, map, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { Transaction } from 'stellar-base';
 import * as SorobanClient from 'soroban-client';
 import BigNumber from 'bignumber.js';
 import {
-  HorizonApisQuery, IHorizonApi,
-  IWalletsAccount, IWalletsAccountLedger, IWalletsAccountTrezor,
-  IWalletsAccountWithSecretKey, SettingsQuery,
+  HorizonApisQuery,
+  IHorizonApi,
+  IWalletsAccount, IWalletsAccountAirGapped,
+  IWalletsAccountLedger,
+  IWalletsAccountTrezor,
+  IWalletsAccountWithSecretKey,
+  SettingsQuery,
+  WalletAccountType,
   WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import {StellarSdkService} from '~root/gateways/stellar/stellar-sdk.service';
-import {CryptoService} from '~root/core/crypto/services/crypto.service';
-import {ComponentCreatorService} from '~root/core/services/component-creator.service';
-import {HardwareWalletsService} from '~root/core/services/hardware-wallets.service';
-import {HorizonApisService} from '~root/core/services/horizon-apis.service';
-import {NzMessageService} from 'ng-zorro-antd/message';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import { CryptoService } from '~root/core/crypto/services/crypto.service';
+import { ComponentCreatorService } from '~root/core/services/component-creator.service';
+import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
+import { HorizonApisService } from '~root/core/services/horizon-apis.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
-import {NzDrawerRef, NzDrawerService} from 'ng-zorro-antd/drawer';
-import {PasswordModalComponent} from '~root/shared/modals/components/password-modal/password-modal.component';
-import {DeviceAuthService} from '~root/mobile/services/device-auth.service';
+import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { PasswordModalComponent } from '~root/shared/shared-modals/components/password-modal/password-modal.component';
+import { DeviceAuthService } from '~root/mobile/services/device-auth.service';
 import { fromUnixTime } from 'date-fns';
 import { SettingsService } from '~root/core/settings/services/settings.service';
 import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -171,6 +177,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     private readonly deviceAuthService: DeviceAuthService,
     private readonly settingsService: SettingsService,
     private readonly hostFunctionsService: HostFunctionsService,
+    private readonly airgappedWalletService: AirgappedWalletService,
   ) { }
 
   ngOnInit(): void {
@@ -190,7 +197,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
 
     switch (selectedAccount.type) {
-      case 'with_secret_key':
+      case WalletAccountType.with_secret_key:
         const passwordAuthTokenActive = await this.settingsQuery.passwordAuthTokenActive$
           .pipe(take(1))
           .toPromise();
@@ -202,12 +209,23 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         }
         break;
 
-      case 'with_ledger_wallet':
+      case WalletAccountType.with_ledger_wallet:
         await this.signWithLedger(selectedAccount);
         break;
 
-      case 'with_trezor_wallet':
+      case WalletAccountType.with_trezor_wallet:
         await this.signWithTrezor(selectedAccount);
+        break;
+
+      case WalletAccountType.with_air_gapped:
+        await this.signWithAirgappedWallet(selectedAccount);
+        break;
+
+      default:
+        this.nzMessageService.error(
+          `Incompatible type of account. Please contact support.`,
+          { nzDuration: 5000 }
+        );
         break;
     }
 
@@ -491,6 +509,49 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       this.nzMessageService.error(`Couldn't sign the transaction because there was an unexpected error, please contact support`, {
         nzDuration: 4000,
       });
+    }
+
+    this.signing$.next(false);
+  }
+
+  async signWithAirgappedWallet(account: IWalletsAccountAirGapped): Promise<void> {
+    this.signing$.next(true);
+    const xdr = await this.xdr$.pipe(take(1)).toPromise();
+    const networkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+
+    const transaction = this.stellarSdkService.createTransaction({
+      xdr,
+      networkPassphrase,
+    });
+
+    try {
+      const result = await this.airgappedWalletService.signTransaction({
+        path: account.path,
+        xdr: transaction.toXDR(),
+        network: networkPassphrase,
+      });
+
+      transaction.addSignature(account.publicKey, result.signature);
+
+      // DEPRECATED
+      this.emitData(transaction.toXDR());
+
+      this.emitSigningResults({
+        baseXDR: xdr,
+        transaction,
+        signedXDR: transaction.toXDR(),
+        signers: [{
+          publicKey: account.publicKey,
+          signature: result.signature,
+        }],
+      });
+    } catch (e: any) {
+      console.error(e);
+      this.signing$.next(false);
+      this.nzMessageService.error(
+        e?.message || `Couldn't sign the transaction because there was an unexpected error, please contact support`,
+        { nzDuration: 4000 }
+      );
     }
 
     this.signing$.next(false);

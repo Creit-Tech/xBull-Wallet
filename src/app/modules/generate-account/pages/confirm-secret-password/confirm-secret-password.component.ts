@@ -4,7 +4,7 @@ import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms
 import { GenerateAccountQuery } from '~root/modules/generate-account/state';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { WalletsQuery } from '~root/state';
+import { WalletsQuery, WalletType } from '~root/state';
 import { Router } from '@angular/router';
 import { ENV, environment } from '~env';
 import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
@@ -79,7 +79,7 @@ export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
     }
 
     await this.walletsService.generateNewWallet({
-      type: 'secret_key',
+      type: WalletType.secret_key,
       password: this.form.value.confirmPassword,
       secretKey: this.form.value.secretKey,
     });

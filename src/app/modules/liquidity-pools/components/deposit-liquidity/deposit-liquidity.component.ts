@@ -28,7 +28,7 @@ import BigNumber from 'bignumber.js';
 import { BehaviorSubject, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { AccountResponse, Asset, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { TranslateService } from '@ngx-translate/core';
 

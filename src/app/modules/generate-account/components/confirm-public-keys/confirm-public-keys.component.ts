@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SettingsQuery } from '~root/state';
+import { SettingsQuery, WalletType } from '~root/state';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
@@ -110,7 +110,7 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
     await this.walletsService.generateNewWallet({
       productId: this.transport.device.productId,
       vendorId: (this.transport.device.vendorId),
-      type: 'ledger_wallet',
+      type: WalletType.ledger_wallet,
       accounts: selectedAccounts,
     });
 

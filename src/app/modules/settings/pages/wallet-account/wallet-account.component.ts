@@ -15,7 +15,7 @@ import { WalletsAccountsService } from '~root/core/wallets/services/wallets-acco
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ClipboardService } from '~root/core/services/clipboard.service';
-import { PasswordModalComponent } from '~root/shared/modals/components/password-modal/password-modal.component';
+import { PasswordModalComponent } from '~root/shared/shared-modals/components/password-modal/password-modal.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';

@@ -5,7 +5,7 @@ import { filter, map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operat
 import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { EditWalletNameComponent } from '~root/modules/settings/components/edit-wallet-name/edit-wallet-name.component';
-import { HardConfirmComponent } from '~root/shared/modals/components/hard-confirm/hard-confirm.component';
+import { HardConfirmComponent } from '~root/shared/shared-modals/components/hard-confirm/hard-confirm.component';
 import { withTransaction } from '@datorama/akita';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';

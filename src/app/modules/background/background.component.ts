@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ModalsService } from '~root/shared/modals/modals.service';
 import {
   IConnectRequestPayload,
   IRuntimeConnectResponse,
@@ -19,7 +18,7 @@ import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
@@ -34,7 +33,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   runtimeEvent$: ReplaySubject<RuntimeMessage> = new ReplaySubject<RuntimeMessage>();
 
   constructor(
-    private readonly modalsService: ModalsService,
     private readonly componentCreatorService: ComponentCreatorService,
     private readonly sitesConnectionsService: SitesConnectionsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,

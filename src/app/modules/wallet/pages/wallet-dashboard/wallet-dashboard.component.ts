@@ -33,7 +33,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AssetDetailsComponent } from '~root/modules/wallet/components/asset-details/asset-details.component';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
