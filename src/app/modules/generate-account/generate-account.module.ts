@@ -11,7 +11,7 @@ import { GenerateAccountQuery, GenerateAccountService, GenerateAccountStore } fr
 import { ConfirmSecretPasswordComponent } from './pages/confirm-secret-password/confirm-secret-password.component';
 import { ConnectHardwareWalletComponent } from './pages/connect-hardware-wallet/connect-hardware-wallet.component';
 import { ConfirmPublicKeysComponent } from './components/confirm-public-keys/confirm-public-keys.component';
-import { ModalsModule } from '~root/shared/modals/modals.module';
+import { ModalsModule } from '~root/shared/shared-modals/modals.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { ConfirmTrezorKeysComponent } from './components/confirm-trezor-keys/confirm-trezor-keys.component';
 import {NzSelectModule} from "ng-zorro-antd/select";
@@ -22,6 +22,7 @@ import {NzCardModule} from "ng-zorro-antd/card";
 import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzTagModule} from "ng-zorro-antd/tag";
 import { TranslationModule } from '~root/translation.module';
+import { ConnectAirGappedWalletComponent } from './pages/connect-air-gapped-wallet/connect-air-gapped-wallet.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { TranslationModule } from '~root/translation.module';
     ConfirmSecretPasswordComponent,
     ConnectHardwareWalletComponent,
     ConfirmPublicKeysComponent,
-    ConfirmTrezorKeysComponent
+    ConfirmTrezorKeysComponent,
+    ConnectAirGappedWalletComponent
   ],
     imports: [
       CommonModule,

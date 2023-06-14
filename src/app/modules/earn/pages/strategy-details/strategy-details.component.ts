@@ -21,7 +21,7 @@ import { EarnVaultsService, IConfirmVaultCreationParams } from '~root/modules/ea
 import { EarnVaultsQuery } from '~root/modules/earn/state/vaults/earn-vaults.query';
 import { IEarnVault, VaultStatus } from '~root/modules/earn/state/vaults/earn-vault.model';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { distinctUntilArrayItemChanged } from '@datorama/akita';

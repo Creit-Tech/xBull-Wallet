@@ -17,7 +17,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { sequence } from '@angular/animations';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { XdrSignerComponent } from '~root/shared/modals/components/xdr-signer/xdr-signer.component';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 
 @Component({
   selector: 'app-lp-asset-item',

@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { ENV, environment } from '~env';
-import { ModalsModule } from '~root/shared/modals/modals.module';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundModule } from '~root/modules/background/background.module';
@@ -55,7 +54,6 @@ registerLocaleData(en);
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
-    ModalsModule.forRoot(),
     HttpClientModule,
     NgxMaskModule.forRoot(),
     BackgroundModule,

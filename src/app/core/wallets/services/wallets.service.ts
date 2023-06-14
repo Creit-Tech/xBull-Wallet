@@ -1,26 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Keypair, Memo, Operation } from 'stellar-base';
 import * as SorobanClient from 'soroban-client';
-import { randomBytes, createHash } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import {
+  AirGappedWalletProtocol,
   createWallet,
   createWalletsAccount,
   HorizonApisQuery,
   IHorizonApi,
   IWallet,
   IWalletsAccount,
-  IWalletsAccountLedger, IWalletsAccountTrezor,
-  IWalletsAccountWithSecretKey, SettingsStore, WalletsAccountsQuery,
+  IWalletsAccountAirGapped,
+  IWalletsAccountLedger,
+  IWalletsAccountTrezor,
+  IWalletsAccountWithSecretKey,
+  WalletAccountType,
+  WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsOperationsStore,
   WalletsStore,
+  WalletType,
 } from '~root/state';
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { transaction } from '@datorama/akita';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Horizon, ServerApi } from 'stellar-sdk';
+import { Horizon } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -61,37 +67,37 @@ export class WalletsService {
     };
 
     switch (params.type) {
-      case 'mnemonic_phrase':
+      case WalletType.mnemonic_phrase:
         keypair = await this.mnemonicPhraseService.getKeypairFromMnemonicPhrase(params.mnemonicPhrase, params.path);
         newWalletAccount = {
           ...baseAccount,
-          type: 'with_secret_key',
+          type: WalletAccountType.with_secret_key,
           publicKey: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
         } as IWalletsAccountWithSecretKey;
         break;
 
-      case 'secret_key':
+      case WalletType.secret_key:
         keypair = Keypair.fromSecret(params.secretKey);
         newWalletAccount = {
           ...baseAccount,
-          type: 'with_secret_key',
+          type: WalletAccountType.with_secret_key,
           publicKey: keypair.publicKey(),
           secretKey: this.cryptoService.encryptText(keypair.secret(), params.password),
         } as IWalletsAccountWithSecretKey;
         break;
 
-      case 'ledger_wallet':
+      case WalletType.ledger_wallet:
         keypair = Keypair.fromPublicKey(params.publicKey);
         newWalletAccount = {
           ...baseAccount,
-          type: 'with_ledger_wallet',
+          type: WalletAccountType.with_ledger_wallet,
           publicKey: keypair.publicKey(),
           path: params.path,
         } as IWalletsAccountLedger;
         break;
 
-      case 'trezor_wallet':
+      case WalletType.trezor_wallet:
         keypair = Keypair.fromPublicKey(params.publicKey);
         newWalletAccount = {
           ...baseAccount,
@@ -99,6 +105,16 @@ export class WalletsService {
           publicKey: keypair.publicKey(),
           path: params.path,
         } as IWalletsAccountTrezor;
+        break;
+
+      case WalletType.air_gapped:
+        keypair = Keypair.fromPublicKey(params.publicKey);
+        newWalletAccount = {
+          ...baseAccount,
+          publicKey: keypair.publicKey(),
+          type: WalletAccountType.with_air_gapped,
+          path: params.path,
+        } as IWalletsAccountAirGapped;
         break;
 
       default:
@@ -126,11 +142,11 @@ export class WalletsService {
     let keypairs: Keypair[];
 
     switch (params.type) {
-      case 'mnemonic_phrase':
+      case WalletType.mnemonic_phrase:
         newWalletId = randomBytes(4).toString('hex');
         newWallet = createWallet({
           _id: newWalletId,
-          type: 'mnemonic_phrase',
+          type: WalletType.mnemonic_phrase,
           name: newWalletId,
           mnemonicPhrase: this.cryptoService.encryptText(params.mnemonicPhrase, params.password),
         });
@@ -141,11 +157,11 @@ export class WalletsService {
         });
         break;
 
-      case 'secret_key':
+      case WalletType.secret_key:
         newWalletId = randomBytes(4).toString('hex');
         newWallet = createWallet({
           _id: newWalletId,
-          type: 'secret_key',
+          type: WalletType.secret_key,
           name: newWalletId,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
@@ -155,11 +171,11 @@ export class WalletsService {
         });
         break;
 
-      case 'ledger_wallet':
+      case WalletType.ledger_wallet:
         newWalletId = this.generateLedgerWalletId(params);
         newWallet = createWallet({
           _id: newWalletId,
-          type: 'ledger_wallet',
+          type: WalletType.ledger_wallet,
           name: newWalletId,
           vendorId: params.vendorId,
           productId: params.productId,
@@ -175,12 +191,31 @@ export class WalletsService {
         keypair = keypairs.shift() as Keypair;
         break;
 
-      case 'trezor_wallet':
+      case WalletType.trezor_wallet:
         newWalletId = params.walletId;
         newWallet = createWallet({
           _id: newWalletId,
-          type: 'trezor_wallet',
+          type: WalletType.trezor_wallet,
           name: newWalletId,
+        });
+        this.walletsStore.upsert(newWallet._id, newWallet);
+        keypairs = await Promise.all(params.accounts.map(account => {
+          return this.createNewAccount({
+            ...params,
+            ...account,
+            walletId: newWalletId,
+          });
+        }));
+        keypair = keypairs.shift() as Keypair;
+        break;
+
+      case WalletType.air_gapped:
+        newWalletId = randomBytes(4).toString('hex');
+        newWallet = createWallet({
+          _id: newWalletId,
+          name: newWalletId,
+          type: WalletType.air_gapped,
+          protocol: params.protocol,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
         keypairs = await Promise.all(params.accounts.map(account => {
@@ -275,10 +310,14 @@ export class WalletsService {
   }
 }
 
-export type INewAccountType = INewAccountMnemonicPhraseType | INewAccountSecretKeyType | INewAccountLedgerType | INewAccountTrezorType;
+export type INewAccountType = INewAccountMnemonicPhraseType
+  | INewAccountSecretKeyType
+  | INewAccountLedgerType
+  | INewAccountTrezorType
+  | INewAccountAirgappedType;
 
 export interface INewAccountMnemonicPhraseType {
-  type: 'mnemonic_phrase';
+  type: WalletType.mnemonic_phrase;
   mnemonicPhrase: string;
   path?: string;
   walletId: IWallet['_id'];
@@ -286,37 +325,49 @@ export interface INewAccountMnemonicPhraseType {
 }
 
 export interface INewAccountSecretKeyType {
-  type: 'secret_key';
+  type: WalletType.secret_key;
   secretKey: string;
   walletId: IWallet['_id'];
   password: string;
 }
 
 export interface INewAccountLedgerType {
-  type: 'ledger_wallet';
+  type: WalletType.ledger_wallet;
   path: string;
   publicKey: string;
   walletId: IWallet['_id'];
 }
 
 export interface INewAccountTrezorType {
-  type: 'trezor_wallet';
+  type: WalletType.trezor_wallet;
   path: string;
   publicKey: string;
   walletId: IWallet['_id'];
 }
 
-export type INewWalletType = INewWalletMnemonicPhraseType | INewWalletSecretKeyType | INewWalletLedgerType | INewWalletTrezorType;
+export interface INewAccountAirgappedType {
+  type: WalletType.air_gapped;
+  path: string;
+  publicKey: string;
+  walletId: IWallet['_id'];
+  protocol: string;
+}
+
+export type INewWalletType = INewWalletMnemonicPhraseType
+  | INewWalletSecretKeyType
+  | INewWalletLedgerType
+  | INewWalletTrezorType
+  | INewWalletAirgappedType;
 
 export interface INewWalletMnemonicPhraseType {
-  type: 'mnemonic_phrase';
+  type: WalletType.mnemonic_phrase;
   mnemonicPhrase: string;
   path?: string;
   password: string;
 }
 
 export interface INewWalletSecretKeyType {
-  type: 'secret_key';
+  type: WalletType.secret_key;
   secretKey: string;
   password: string;
 }
@@ -324,7 +375,7 @@ export interface INewWalletSecretKeyType {
 export interface INewWalletLedgerType {
   productId: number;
   vendorId: number;
-  type: 'ledger_wallet';
+  type: WalletType.ledger_wallet;
   accounts: Array<{
     publicKey: string;
     path: string;
@@ -333,7 +384,16 @@ export interface INewWalletLedgerType {
 
 export interface INewWalletTrezorType {
   walletId: string;
-  type: 'trezor_wallet';
+  type: WalletType.trezor_wallet;
+  accounts: Array<{
+    publicKey: string;
+    path: string;
+  }>;
+}
+
+export interface INewWalletAirgappedType {
+  protocol: AirGappedWalletProtocol;
+  type: WalletType.air_gapped;
   accounts: Array<{
     publicKey: string;
     path: string;

@@ -1,6 +1,14 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable, ReplaySubject, Subject } from 'rxjs';
-import { IWallet, IWalletsAccount, IWalletWithMnemonicPhrase, IWalletWithSecretKey, WalletsAccountsQuery, WalletsQuery } from '~root/state';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable, ReplaySubject } from 'rxjs';
+import {
+  IWallet,
+  IWalletsAccount,
+  IWalletWithMnemonicPhrase,
+  IWalletWithSecretKey,
+  WalletsAccountsQuery,
+  WalletsQuery,
+  WalletType
+} from '~root/state';
 import { UntypedFormControl, Validators } from '@angular/forms';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -87,7 +95,7 @@ export class AddAccountComponent implements OnInit {
   async onConfirmSecretKey(parentWallet: IWalletWithSecretKey): Promise<void> {
     try {
       await this.walletsService.createNewAccount({
-        type: 'secret_key',
+        type: WalletType.secret_key,
         secretKey: this.secretKey.value.trim(),
         password: this.password.value,
         walletId: parentWallet._id,
@@ -115,7 +123,7 @@ export class AddAccountComponent implements OnInit {
     try {
       await this.walletsService.createNewAccount({
         walletId: parentWallet._id,
-        type: 'mnemonic_phrase',
+        type: WalletType.mnemonic_phrase,
         mnemonicPhrase: decryptedPhrase,
         password: this.password.value,
         path:  `m/44'/148'/${walletAccounts.length}'`

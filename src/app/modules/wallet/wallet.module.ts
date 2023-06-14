@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { WalletRoutingModule } from './wallet-routing.module';
 import { SegmentModule } from '~root/shared/segment/segment.module';
-import { ModalsModule } from '~root/shared/modals/modals.module';
+import { ModalsModule } from '~root/shared/shared-modals/modals.module';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { AssetDetailsComponent } from './components/asset-details/asset-details.component';
 import { LoadingModule } from '~root/shared/loading/loading.module';

@@ -1,9 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import { UntypedFormArray, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { StellarAddress, Success, Unsuccessful } from 'trezor-connect';
-import { SettingsQuery } from '~root/state';
+import { SettingsQuery, WalletType } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
@@ -12,7 +12,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
   templateUrl: './confirm-trezor-keys.component.html',
   styleUrls: ['./confirm-trezor-keys.component.scss']
 })
-export class ConfirmTrezorKeysComponent implements OnInit {
+export class ConfirmTrezorKeysComponent implements OnInit, AfterViewInit {
   showModal = false;
   @Output() confirmed: EventEmitter<void> = new EventEmitter<void>();
   @Output() cancel: EventEmitter<void> = new EventEmitter<void>();
@@ -97,7 +97,7 @@ export class ConfirmTrezorKeysComponent implements OnInit {
     }
 
     await this.walletsService.generateNewWallet({
-      type: 'trezor_wallet',
+      type: WalletType.trezor_wallet,
       walletId: this.form.value.walletId,
       accounts: selectedAccounts,
     });

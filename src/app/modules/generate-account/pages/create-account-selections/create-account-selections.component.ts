@@ -66,4 +66,11 @@ export class CreateAccountSelectionsComponent implements OnInit {
     }
   }
 
+  connectAirGappedWallet(): void {
+    this.router.navigate(['connect-air-gapped-wallet'], {
+      relativeTo: this.route
+    })
+      .then();
+  }
+
 }

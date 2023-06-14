@@ -1,0 +1,59 @@
+<section class="w-full">
+  <nz-tabset nzCentered>
+    <nz-tab nzTitle="Show Unsigned">
+      <section class="text-center mb-4 pt-2">
+        <p>Scan these images with your wallet <br> and sign them</p>
+      </section>
+
+      <section class="w-full flex justify-center mb-4">
+        <div class="mx-auto rounded-2xl overflow-hidden">
+          <ng-container *ngIf="signRequestImages$ | async as signRequestImages">
+            <ng-container *ngFor="let image of signRequestImages; let i = index">
+              <img *ngIf="(((currentIndex$ | async) || 0) % signRequestImages.length) === i"
+                   class="mx-auto"
+                   style="width: 196px; height: 196px;"
+                   [src]="image"  alt="Tx {{ i }}/{{ signRequestImages.length }}"/>
+            </ng-container>
+          </ng-container>
+        </div>
+      </section>
+
+      <section class="w-full flex justify-center items-center mb-4">
+        <p class="mr-4">Auto-rotate</p>
+        <nz-switch [formControl]="autoChangeControl"></nz-switch>
+      </section>
+
+      <section class="w-full flex items-center justify-center pb-2">
+        <button nz-button
+                (click)="updateCurrentIndex('down')"
+                [disabled]="autoChangeControl.value">
+          <i class="fa-solid fa-caret-left mr-2"></i> Prev
+        </button>
+
+        <p class="m-0 mx-4 p-0">
+          {{ ((currentIndex$ | async) || 0) + 1 }}/{{ (signRequestImages$ | async)?.length }}
+        </p>
+
+        <button nz-button
+                (click)="updateCurrentIndex('up')"
+                [disabled]="autoChangeControl.value">
+          Next <i class="fa-solid fa-caret-right ml-2"></i>
+        </button>
+      </section>
+    </nz-tab>
+
+    <nz-tab nzTitle="Scan Signed">
+      <section class="text-center mb-4 pt-2">
+        <p style="max-width: 300px" class="mx-auto block">
+          After you have signed the transaction with your wallet, please scan the signed version of the transaction.
+        </p>
+      </section>
+
+      <section class="w-full flex justify-center items-center pb-2">
+        <button (click)="scanSignedTransaction()" nz-button nzType="primary" nzSize="large" class="mx-auto">
+          Scan transaction <i class="fa-solid fa-qrcode ml-2"></i>
+        </button>
+      </section>
+    </nz-tab>
+  </nz-tabset>
+</section>
