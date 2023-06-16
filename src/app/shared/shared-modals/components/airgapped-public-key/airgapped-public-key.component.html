@@ -1,0 +1,32 @@
+<section class="w-full">
+  <nz-tabset nzCentered>
+    <nz-tab nzTitle="Request Address">
+      <section class="text-center mb-4 pt-2">
+        <p>Scan this image with your wallet</p>
+      </section>
+
+      <section class="w-full flex justify-center mb-4">
+        <div class="mx-auto rounded-2xl overflow-hidden">
+          <img class="mx-auto"
+               style="width: 196px; height: 196px;"
+               [src]="image$ | async"
+               alt="Request public address"/>
+        </div>
+      </section>
+    </nz-tab>
+
+    <nz-tab nzTitle="Scan Address">
+      <section class="text-center mb-4 pt-2">
+        <p style="max-width: 300px" class="mx-auto block">
+          Once you have selected the public key on your device, please scan the QR code from the device.
+        </p>
+      </section>
+
+      <section class="w-full flex justify-center items-center pb-2">
+        <button (click)="scanPublicKey()" nz-button nzType="primary" nzSize="large" class="mx-auto">
+          Scan QR <i class="fa-solid fa-qrcode ml-2"></i>
+        </button>
+      </section>
+    </nz-tab>
+  </nz-tabset>
+</section>

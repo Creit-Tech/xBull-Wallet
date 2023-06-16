@@ -1,4 +1,4 @@
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModalContainerComponent } from './modal-container/modal-container.component';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
@@ -13,8 +13,8 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzMessageModule } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import {PasswordModalComponent} from "~root/shared/shared-modals/components/password-modal/password-modal.component";
-import {NzInputModule} from "ng-zorro-antd/input";
+import { PasswordModalComponent } from '~root/shared/shared-modals/components/password-modal/password-modal.component';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -26,6 +26,9 @@ import {
   AirgappedXdrSignerComponent
 } from '~root/shared/shared-modals/components/airgapped-xdr-signer/airgapped-xdr-signer.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import {
+  AirgappedPublicKeyComponent
+} from '~root/shared/shared-modals/components/airgapped-public-key/airgapped-public-key.component';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -36,6 +39,7 @@ const COMPONENTS = [
   PasswordModalComponent,
   QrScanModalComponent,
   AirgappedXdrSignerComponent,
+  AirgappedPublicKeyComponent,
 ];
 
 @NgModule({

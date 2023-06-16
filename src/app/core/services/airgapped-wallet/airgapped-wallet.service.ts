@@ -4,6 +4,9 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   AirgappedXdrSignerComponent
 } from '~root/shared/shared-modals/components/airgapped-xdr-signer/airgapped-xdr-signer.component';
+import {
+  AirgappedPublicKeyComponent
+} from '~root/shared/shared-modals/components/airgapped-public-key/airgapped-public-key.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,7 @@ export class AirgappedWalletService {
   decodeSignature(text: string): string {
     const parts = text.split(';');
     if (parts[0] !== 'signature') {
-      throw new Error('Invalid text structure');
+      throw new Error('Invalid QR type');
     }
 
     return parts[1];
@@ -27,7 +30,7 @@ export class AirgappedWalletService {
     const protocol = parts[0];
 
     if (protocol !== 'address') {
-      throw new Error('Invalid text structure');
+      throw new Error('Invalid QR type');
     }
 
     const path = parts[1];
@@ -41,6 +44,28 @@ export class AirgappedWalletService {
       path,
       publicKey,
     };
+  }
+
+  requestAddress(params: {
+    path: string;
+  }): Promise<{ address: string; }> {
+    return new Promise<{ address: string }>((resolve, reject) => {
+      const modal = this.nzModalService.create({
+        nzTitle: '',
+        nzContent: AirgappedPublicKeyComponent,
+        nzFooter: null,
+        nzOnCancel: _ => {
+          reject(new Error('Process rejected or closed'));
+        },
+        nzComponentParams: {
+          path: params.path,
+          requestResultHandler: (address: string) => {
+            resolve({ address });
+            modal.close();
+          }
+        }
+      });
+    });
   }
 
   signTransaction(params: {

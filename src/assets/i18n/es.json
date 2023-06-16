@@ -472,7 +472,7 @@
     "CONFIRM_PHRASE": "Confirmar frase Mnemotécnica",
     "IMPORT_SECRET": "Importar llave secreta",
     "CONNECT_HARDWARE_WALLET": "Conectar Hardware Wallet",
-    "CONNECT_AIR_GAPPED": "Conectar Air-gapped Wallet",
+    "CONNECT_AIR_GAPPED": "Air-gapped Wallet (LumenSigner)",
     "CONNECT_OPEN_APP": "Conecta tu wallet a la computadora y abre la app de Stellar antes de continuar",
     "CONNECT_BEFORE_CONTINUE": "Conecta la wallet a tu computadora antes de continuar",
     "THIS_YOUR_PHRASE": "Esta es tu frase Mnemotécnica",
