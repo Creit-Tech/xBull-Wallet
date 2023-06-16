@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray, FormControl, Validators } from '@angular/forms';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
-import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
@@ -39,31 +38,13 @@ export class ConnectAirGappedWalletComponent {
     this.accountsInputs.removeAt(i);
   }
 
-  scanQr(i: number): void {
-    const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
-      nzContent: QrScanModalComponent,
-      nzPlacement: 'bottom',
-      nzWrapClassName: 'ios-safe-y',
-      nzTitle: 'Scan QR',
-      nzHeight: '100%',
-      nzContentParams: {
-        handleQrScanned: text => {
-          try {
-            const addressResult = this.airgappedWalletService.decodeAddress(text);
-            const expectedPath = `m/44'/148'/${i}'`;
-            if (addressResult.path !== expectedPath) {
-              throw new Error(`Path ${addressResult.path} is invalid, path ${expectedPath} expected.`);
-            }
-            this.accountsInputs.at(i).patchValue(addressResult.publicKey);
-          } catch (e: any) {
-            this.nzMessageService.error(e.message, { nzDuration: 5000 });
-          }
-          drawerRef.close();
-        }
-      }
-    });
-
-    drawerRef.open();
+  async scanQr(i: number): Promise<void> {
+    try {
+      const { address } = await this.airgappedWalletService.requestAddress({ path: `m/44'/148'/${i}'` });
+      this.accountsInputs.at(i).patchValue(address);
+    } catch (e: any) {
+      this.nzMessageService.error(e.message, { nzDuration: 5000 });
+    }
   }
 
   async confirm(): Promise<void> {
