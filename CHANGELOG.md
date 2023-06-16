@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.16.1] - 2023-06-15
+### Add
+- Add a new modal component to make the request of the public key from an Air-gapped wallet easier.
+
+### Changed
+- Update the name of the option to create an Air-gapped wallet so it includes "LumenSigner" for now because is the only of its kind available on Stellar
+
 ## [1.16.0] - 2023-06-14
 ### Add
 - Support to air-gapped wallets (QR sharing protocols). The first protocol added is the one from LumenSigner (https://github.com/LumenSigner/lumensigner)
