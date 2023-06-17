@@ -1,0 +1,41 @@
+name: Deploy Chrome extension
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy-chrome:
+    name: Deploy Chrome extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Get Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create distribution zip file
+        run: |
+          npm run deploy:chrome
+          cd dist/extension/
+          zip -r ../../xbull-wallet-chrome.zip ./
+
+      - name: Publish the extension for Chrome
+        uses: trmcnvn/chrome-addon@3431bca72e30167ac2c2266100b8198615ef37e3
+        with:
+          extension: omajpeaffjgmlpmhbfdjepdejoemifpe
+          zip: xbull-wallet-chrome.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
