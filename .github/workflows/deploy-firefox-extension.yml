@@ -27,7 +27,7 @@ jobs:
 
       - name: Create distribution and src files
         run: |
-          npm run deploy:chrome
+          npm run deploy:firefox
           cd dist/extension/
           zip -r ../../xbull-wallet-firefox.zip ./
           cd -
