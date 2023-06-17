@@ -1,0 +1,44 @@
+name: Deploy Firefox extension
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy-firefox:
+    name: Deploy Firefox extension
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v3
+
+      - name: Get Node.js version from .nvmrc
+        run: echo "NODE_VERSION=$(cat .nvmrc)" >> $GITHUB_ENV
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '${{ env.NODE_VERSION }}'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create distribution and src files
+        run: |
+          npm run deploy:firefox
+          cd dist/extension/
+          zip -r ../../xbull-wallet-firefox.zip ./
+          cd -
+          zip -r ./xbull-wallet-src.zip ./src
+
+      - name: Publish the extension for Firefox
+        uses: yayuyokitano/firefox-addon@59bbc4f014e26caf48d2e977ec4ec56ecf529465
+        with:
+          api_key: ${{ secrets.FIREFOX_ISSUER }}
+          api_secret: ${{ secrets.FIREFOX_SECRET }}
+          guid: '{b0b3a899-e006-4b59-881b-22c7305bef51}'
+          xpi_path: xbull-wallet-firefox.zip
+          src_path: xbull-wallet-src.zip
+
