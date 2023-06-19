@@ -25,7 +25,7 @@ export const environment = {
     networkPassphrase: Networks.TESTNET,
     canRemove: false,
   }],
-  version: '1.16.2',
+  version: '1.16.3',
 };
 
 /*
