@@ -4,7 +4,9 @@ import { createAnchor, IAnchor } from './anchor.model';
 import { Networks } from 'soroban-client';
 import { BaseEntityStore } from '~root/state/base-entity.store';
 
-export interface AnchorsState extends EntityState<IAnchor> {}
+export interface AnchorsState extends EntityState<IAnchor> {
+  storeVersion: number;
+}
 
 @Injectable()
 @StoreConfig({
@@ -15,7 +17,9 @@ export interface AnchorsState extends EntityState<IAnchor> {}
 export class AnchorsStore extends BaseEntityStore<AnchorsState> {
 
   constructor() {
-    super({});
+    super({
+      storeVersion: 1,
+    });
     this.upsertMany(this.getDefaultAnchors());
   }
 
@@ -91,6 +95,30 @@ export class AnchorsStore extends BaseEntityStore<AnchorsState> {
         signingKey: 'GCUZ6YLL5RQBTYLTTQLPCM73C5XAIUGK2TIMWQH7HPSGWVS2KJ2F3CHS',
         webAuthEndpoint: 'https://testanchor.stellar.org/auth',
         transferServerSep24: 'https://testanchor.stellar.org/sep24',
+        canBeRemoved: false,
+      }),
+      createAnchor({
+        name: 'MYKOBO',
+        url: 'https://mykobo.co',
+        description: 'Send money fast...',
+        image: 'https://mykobo.co/img/eurc_icon_128.png',
+        email: 'hello@mykobo.co',
+        networkPassphrase: Networks.PUBLIC,
+        signingKey: 'GAHNDAOJ7IB6KKMGKBGI5JWJHCTFXOVGY4U2N57C2CUZPK3SPEPCLU76',
+        webAuthEndpoint: 'https://anchor.mykobo.co/auth',
+        transferServerSep24: 'https://anchor.mykobo.co/sep24',
+        canBeRemoved: false,
+      }),
+      createAnchor({
+        name: 'LINK',
+        url: 'https://www.ngnc.online',
+        description: 'LINK is building web3 Cross Border payments infrastructure for the next billion Africans, providing services in a Faster and Cheaper way',
+        image: 'https://uploads-ssl.webflow.com/60a70a1080cf2974d4b1595e/60b623a4d06b3b67a49c9e82_WEBCLIP.png',
+        email: 'support@linkio.africa',
+        networkPassphrase: Networks.PUBLIC,
+        signingKey: 'GBCQXM5GLKX4KZFIZ4P4MUEOUMCEMDVMLN6DAQZYUZSIRKULXS3VTPYD',
+        webAuthEndpoint: 'https://anchor.ngnc.online/auth',
+        transferServerSep24: 'https://anchor.ngnc.online/sep24',
         canBeRemoved: false,
       }),
     ];
