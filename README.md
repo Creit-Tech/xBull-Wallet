@@ -59,7 +59,7 @@ The Stellar Blockchain supports multiple kinds of transactions, xBull is designe
 
 
 # xBull "SDK"
-> We suggest using our library "Stellar Wallets Kit" because by using it you will be able to integrate xBull and all other wallets in your website/app using a single library. Check it out [here](https://https://github.com/Creit-Tech/Stellar-Wallets-Kit)
+> We suggest using our library "Stellar Wallets Kit" because by using it you will be able to integrate xBull and all other wallets in your website/app using a single library. Check it out [here](https://github.com/Creit-Tech/Stellar-Wallets-Kit)
 
 Our wallet is shipped with an internal "SDK" which helps website owners to interact with the wallet. You can read all the details in the site, the SDK helps you to talk with our wallet like this:
 
