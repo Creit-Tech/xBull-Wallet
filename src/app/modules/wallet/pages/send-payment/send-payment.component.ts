@@ -173,17 +173,41 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(take(1))
       .pipe(delay(10))
       .subscribe(params => {
-        if (params.assetId) {
-          this.form.controls.assetCode.setValue(params.assetId);
-        } else {
-          this.form.controls.assetCode.setValue('native');
-        }
+        this.getAndSetParams(params);
       });
   }
 
   ngOnDestroy(): void {
     this.componentDestroyed$.next();
     this.componentDestroyed$.complete();
+  }
+
+  getAndSetParams(params: any): void {
+    if (params.assetId) {
+      this.form.controls.assetCode.setValue(params.assetId);
+    } else {
+      this.form.controls.assetCode.setValue('native');
+    }
+
+    if (params.destination) {
+      this.form.controls.publicKey.setValue(params.destination);
+    }
+
+    if (params.amount) {
+      this.form.controls.amount.setValue(params.amount);
+    }
+
+    if (params.asset_code && params.asset_issuer) {
+      const assetId = this.walletsAssetsService.assetIdFromAssetString(
+        params.asset_code + ':' + params.asset_issuer
+      );
+
+      this.form.controls.assetCode.setValue(assetId);
+    }
+
+    if (params.memo) {
+      this.form.controls.memo.setValue(params.memo);
+    }
   }
 
   async onSubmit(): Promise<void> {
