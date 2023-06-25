@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.17.0] - 2023-06-24
+### Add
+- Add simple support to SEP-0007
+
+### Changed
+- Do not show the claimable balance options when sending a payment to the asset issuer.
+
 ## [1.16.3] - 2023-06-19
 ### Add
 - Mykobo and Link to the anchors default options
