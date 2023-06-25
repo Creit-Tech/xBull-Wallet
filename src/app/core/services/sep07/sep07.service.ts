@@ -5,6 +5,14 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Networks } from 'soroban-client';
 import { Router } from '@angular/router';
+import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
+import { HorizonApisQuery, IHorizonApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
+import { map, take } from 'rxjs/operators';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
+import BigNumber from 'bignumber.js';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +23,13 @@ export class Sep07Service {
     private readonly nzModalService: NzModalService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
+    private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly walletsAccountsQuery: WalletsAccountsQuery,
+    private readonly walletsService: WalletsService,
     private readonly router: Router,
+    private readonly httpClient: HttpClient,
+    private readonly stellarSdkService: StellarSdkService,
+    private readonly translateService: TranslateService,
   ) { }
 
   validateStellarURI(uri: string): boolean {
@@ -23,12 +37,11 @@ export class Sep07Service {
   }
 
   /**
-   * The pay operation doesn't allow the callback from the specification
    * The Message is not shown to the user, we believe that's something that can be exploited
-   * Callback is not done for the "Pay" operation, for such cases dapps should use the "Transaction" operation
-   * Signatures are not supported on any of the operations
+   * Signatures are not supported
+   * Chain value is not supported
    */
-  handlePay(url: URL): void {
+  async handlePay(url: URL): Promise<void> {
     const params: Sep07PayTransactionParams = {
       destination: url.searchParams.get('destination'),
       amount: url.searchParams.get('amount'),
@@ -36,8 +49,9 @@ export class Sep07Service {
       asset_issuer: url.searchParams.get('asset_issuer'),
       memo: url.searchParams.get('memo'),
       memo_type: url.searchParams.get('memo_type') as Sep07PayTransactionParams['memo_type'],
+      callback: url.searchParams.get('callback'),
       // msg: url.searchParams.get('msg'),
-      // network_passphrase: url.searchParams.get('network_passphrase') as Sep07PayTransactionParams['network_passphrase'],
+      network_passphrase: url.searchParams.get('network_passphrase') as (Sep07PayTransactionParams['network_passphrase'] | null),
 
       // Currently we don't support both origin_domain and signature even doe we capture them here
       // origin_domain: url.searchParams.get('origin_domain'),
@@ -52,10 +66,180 @@ export class Sep07Service {
       throw new Error('Currently the SEP7 integration only supports text type memo');
     }
 
-    this.router.navigate(['/wallet/payment'], {
-      queryParams: params,
-    })
-      .then();
+    if (params.callback) {
+      if (params.callback.startsWith('url:')) {
+        params.callback = params.callback.replace('url:', '');
+      } else {
+        throw new Error('Unsupported type of callback');
+      }
+    }
+
+    const selectedHorizonApi = await this.horizonApisQuery.getSelectedHorizonApi$
+      .pipe(take(1))
+      .toPromise();
+
+    const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
+      ? params.network_passphrase as IHorizonApi['networkPassphrase']
+      : selectedHorizonApi.networkPassphrase;
+
+    const pickedAccount = await this.walletsAccountsQuery.getSelectedAccount$
+      .pipe(take(1))
+      .toPromise();
+
+    const loadedAccount = await this.stellarSdkService.selectServer()
+      .loadAccount(pickedAccount.publicKey);
+
+    const tx = new this.stellarSdkService.SDK.TransactionBuilder(
+      loadedAccount,
+      {
+        fee: this.stellarSdkService.fee,
+        networkPassphrase: pickedNetworkPassphrase,
+        memo: params.memo ? this.stellarSdkService.SDK.Memo.text(params.memo) : undefined,
+      }
+    )
+      .setTimeout(this.stellarSdkService.defaultTimeout)
+      .addOperation(
+        this.stellarSdkService.SDK.Operation.payment({
+          asset: new this.stellarSdkService.SDK.Asset(
+            params.asset_code as string,
+            params.asset_issuer as string || undefined
+          ),
+          amount: new BigNumber(params.amount as string).toFixed(7),
+          destination: params.destination,
+        })
+      )
+      .build();
+
+    this.nzMessageService.warning(
+      `You're making a payment, review the transaction before confirming`,
+      { nzDuration: 5000 }
+    );
+
+    await this.handleSigning({
+      xdr: tx.toXDR(),
+      callback: params.callback,
+      pickedAccount,
+      pickedNetworkPassphrase
+    });
+  }
+
+  /**
+   * The Message is not shown to the user, we believe that's something that can be exploited
+   * Signatures are not supported
+   * Chain value is not supported
+   */
+  async handleTx(url: URL): Promise<void> {
+    const params: Sep07RegularTransactionParams = {
+      xdr: url.searchParams.get('xdr'),
+      pubkey: url.searchParams.get('pubkey'),
+      callback: url.searchParams.get('callback'),
+      network_passphrase: url.searchParams.get('network_passphrase') as (Networks | null),
+    };
+
+    if (!params.xdr) {
+      throw new Error('"xdr" parameter is required');
+    }
+
+    if (params.callback) {
+      if (params.callback.startsWith('url:')) {
+        params.callback = params.callback.replace('url:', '');
+      } else {
+        throw new Error('Unsupported type of callback');
+      }
+    }
+
+    const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
+      ? params.network_passphrase as IHorizonApi['networkPassphrase']
+      : await this.horizonApisQuery.getSelectedHorizonApi$
+        .pipe(map(horizonApi => horizonApi.networkPassphrase))
+        .pipe(take(1))
+        .toPromise();
+
+    let pickedAccount: IWalletsAccount;
+    if (params.pubkey) {
+      const accountId = this.walletsService.generateWalletAccountId({
+        network: pickedNetworkPassphrase,
+        publicKey: params.pubkey,
+      });
+      const searchedAccount = await this.walletsAccountsQuery.selectEntity(accountId)
+        .pipe(take(1))
+        .toPromise();
+
+      if (!searchedAccount) {
+        throw new Error('Public key is not registered in this wallet');
+      }
+
+      pickedAccount = searchedAccount;
+    } else {
+      pickedAccount = await this.walletsAccountsQuery.getSelectedAccount$
+        .pipe(take(1))
+        .toPromise();
+    }
+
+    await this.handleSigning({
+      xdr: params.xdr,
+      callback: params.callback,
+      pickedAccount,
+      pickedNetworkPassphrase
+    });
+  }
+
+  async handleSigning(params: {
+    xdr: string;
+    pickedAccount: IWalletsAccount;
+    pickedNetworkPassphrase: IHorizonApi['networkPassphrase'];
+    callback: string | null;
+  }): Promise<void> {
+    const ref = this.nzDrawerService.create<XdrSignerComponent>({
+      nzContent: XdrSignerComponent,
+      nzPlacement: 'right',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
+      nzContentParams: {
+        xdr: params.xdr,
+        pickedNetworkPassphrase: params.pickedNetworkPassphrase,
+        pickedAccount: params.pickedAccount,
+        signingResultsHandler: data => {
+          if (params.callback) {
+            this.handleCallback({ callback: params.callback, xdr: params.xdr });
+            this.nzMessageService.success(`Signed transaction sent`);
+          } else {
+            const messageId = this.nzMessageService
+              .loading('loading...', { nzDuration: 0 })
+              .messageId;
+
+            this.stellarSdkService.submit(data.transaction)
+              .then(_ => {
+                this.nzMessageService.remove(messageId);
+                this.nzMessageService.success(
+                  this.translateService.instant('SUCCESS_MESSAGE.OPERATION_COMPLETED')
+                );
+              })
+              .catch(err => {
+                this.nzMessageService.remove(messageId);
+                this.nzModalService.error({
+                  nzTitle: 'Oh oh!',
+                  nzContent: this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'),
+                });
+              });
+          }
+
+          ref.close();
+        }
+      }
+    });
+
+    ref.open();
+  }
+
+  async handleCallback(params: { callback: string; xdr: string }): Promise<void> {
+    this.httpClient.post(
+      params.callback,
+      'xdr=' + params.xdr,
+      {
+        headers: new HttpHeaders()
+          .set('Content-Type', 'application/x-www-form-urlencoded;'),
+      }
+    ).subscribe();
   }
 
   async scanURI(): Promise<void> {
@@ -66,7 +250,7 @@ export class Sep07Service {
       nzTitle: 'Scan QR',
       nzHeight: '100%',
       nzContentParams: {
-        handleQrScanned: uri => {
+        handleQrScanned: async uri => {
           try {
             if (!this.validateStellarURI(uri)) {
               this.nzMessageService.error('Invalid URI', { nzDuration: 5000 });
@@ -77,7 +261,11 @@ export class Sep07Service {
             const type = url.pathname;
             switch (url.pathname) {
               case Sep07TransactionTypes.Pay:
-                this.handlePay(url);
+                await this.handlePay(url);
+                break;
+
+              case Sep07TransactionTypes.Transaction:
+                await this.handleTx(url);
                 break;
 
               default:
@@ -108,8 +296,20 @@ export interface Sep07PayTransactionParams {
   asset_issuer: string | null;
   memo: string | null;
   memo_type: 'MEMO_TEXT' | 'MEMO_ID' | 'MEMO_HASH' | 'MEMO_RETURN' | null;
+  callback: string | null;
   // msg: string | null;
-  // network_passphrase: Networks | null;
+  network_passphrase: Networks | null;
+  // origin_domain: string | null;
+  // signature: string | null;
+}
+
+export interface Sep07RegularTransactionParams {
+  xdr: string | null;
+  callback: string | null;
+  pubkey: string | null;
+  // chain: string | null;
+  // msg: string | null;
+  network_passphrase: Networks | null;
   // origin_domain: string | null;
   // signature: string | null;
 }
