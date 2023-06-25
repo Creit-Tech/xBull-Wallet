@@ -9,10 +9,11 @@ import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-si
 import { HorizonApisQuery, IHorizonApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
 import { map, take } from 'rxjs/operators';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { TranslateService } from '@ngx-translate/core';
+import { StellarTomlResolver } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +37,46 @@ export class Sep07Service {
     return (uri.startsWith('web+stellar:tx') || uri.startsWith('web+stellar:pay'));
   }
 
+  async validateSignature(uri: URL): Promise<boolean> {
+    if (!uri.searchParams.get('origin_domain') && !uri.searchParams.get('signature')) {
+      return true;
+    }
+
+    if (!uri.searchParams.get('origin_domain') || !uri.searchParams.get('signature')) {
+      return false;
+    }
+
+    try {
+      const toml = await StellarTomlResolver.resolve(uri.searchParams.get('origin_domain') as string);
+      const signingKey = toml.URI_REQUEST_SIGNING_KEY;
+
+      if (!signingKey) {
+        return false;
+      }
+      const keypair = this.stellarSdkService.SDK.Keypair.fromPublicKey(signingKey);
+      const payload = this.createSignature(uri);
+      return keypair.verify(payload, Buffer.from(uri.searchParams.get('signature') as string, 'base64'));
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  private createSignature(uri: URL): Buffer {
+    const data = new URL(uri.toString());
+    if (!!uri.searchParams.get('signature')) {
+      data.searchParams.delete('signature');
+    }
+
+    return Buffer.concat([
+      Buffer.alloc(35),
+      Buffer.alloc(1, 4),
+      Buffer.from('stellar.sep.7 - URI Scheme' + data)
+    ]);
+  }
+
   /**
    * The Message is not shown to the user, we believe that's something that can be exploited
-   * Signatures are not supported
    * Chain value is not supported
    */
   async handlePay(url: URL): Promise<void> {
@@ -54,8 +92,8 @@ export class Sep07Service {
       network_passphrase: url.searchParams.get('network_passphrase') as (Sep07PayTransactionParams['network_passphrase'] | null),
 
       // Currently we don't support both origin_domain and signature even doe we capture them here
-      // origin_domain: url.searchParams.get('origin_domain'),
-      // signature: url.searchParams.get('signature'),
+      origin_domain: url.searchParams.get('origin_domain'),
+      signature: url.searchParams.get('signature'),
     };
 
     if (!params.destination) {
@@ -119,13 +157,13 @@ export class Sep07Service {
       xdr: tx.toXDR(),
       callback: params.callback,
       pickedAccount,
-      pickedNetworkPassphrase
+      pickedNetworkPassphrase,
+      uri: url,
     });
   }
 
   /**
    * The Message is not shown to the user, we believe that's something that can be exploited
-   * Signatures are not supported
    * Chain value is not supported
    */
   async handleTx(url: URL): Promise<void> {
@@ -134,6 +172,8 @@ export class Sep07Service {
       pubkey: url.searchParams.get('pubkey'),
       callback: url.searchParams.get('callback'),
       network_passphrase: url.searchParams.get('network_passphrase') as (Networks | null),
+      signature: url.searchParams.get('signature'),
+      origin_domain: url.searchParams.get('origin_domain'),
     };
 
     if (!params.xdr) {
@@ -180,7 +220,8 @@ export class Sep07Service {
       xdr: params.xdr,
       callback: params.callback,
       pickedAccount,
-      pickedNetworkPassphrase
+      pickedNetworkPassphrase,
+      uri: url,
     });
   }
 
@@ -189,6 +230,7 @@ export class Sep07Service {
     pickedAccount: IWalletsAccount;
     pickedNetworkPassphrase: IHorizonApi['networkPassphrase'];
     callback: string | null;
+    uri: URL;
   }): Promise<void> {
     const ref = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
@@ -234,11 +276,11 @@ export class Sep07Service {
   async handleCallback(params: { callback: string; xdr: string }): Promise<void> {
     this.httpClient.post(
       params.callback,
-      'xdr=' + params.xdr,
+      new HttpParams().set('xdr', encodeURIComponent(params.xdr)).toString(),
       {
-        headers: new HttpHeaders()
-          .set('Content-Type', 'application/x-www-form-urlencoded;'),
-      }
+        headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+        responseType: 'text',
+      },
     ).subscribe();
   }
 
@@ -253,11 +295,15 @@ export class Sep07Service {
         handleQrScanned: async uri => {
           try {
             if (!this.validateStellarURI(uri)) {
-              this.nzMessageService.error('Invalid URI', { nzDuration: 5000 });
-              return;
+              throw new Error('Invalid URI');
             }
 
             const url = new URL(uri);
+
+            if (!(await this.validateSignature(url))) {
+              throw new Error('Invalid signature, do not sign this transaction.');
+            }
+
             const type = url.pathname;
             switch (url.pathname) {
               case Sep07TransactionTypes.Pay:
@@ -299,8 +345,8 @@ export interface Sep07PayTransactionParams {
   callback: string | null;
   // msg: string | null;
   network_passphrase: Networks | null;
-  // origin_domain: string | null;
-  // signature: string | null;
+  origin_domain: string | null;
+  signature: string | null;
 }
 
 export interface Sep07RegularTransactionParams {
@@ -310,6 +356,6 @@ export interface Sep07RegularTransactionParams {
   // chain: string | null;
   // msg: string | null;
   network_passphrase: Networks | null;
-  // origin_domain: string | null;
-  // signature: string | null;
+  origin_domain: string | null;
+  signature: string | null;
 }
