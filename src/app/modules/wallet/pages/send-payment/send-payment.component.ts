@@ -261,7 +261,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           );
         });
 
-        if (hasTrustline) {
+        if (hasTrustline || selectedAsset.assetIssuer === this.form.value.publicKey) {
           transaction.addOperation(
             Operation.payment({
               asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
