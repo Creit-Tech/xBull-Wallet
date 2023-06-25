@@ -74,7 +74,7 @@
     </li>
   </ul>
 
-  <div class="col-span-12 row-span-1 grid grid-cols-2 grid-rows-1 gap-4 px-4 pb-4 sticky bottom-0 bg-gray">
+  <div class="col-span-12 row-span-1 grid [grid-template-columns:1fr_1fr_auto] grid-rows-1 gap-4 px-4 pb-4 sticky bottom-0 bg-gray">
     <div class="col-span-1 row-span-1">
       <button (click)="closeDrawer()"
               routerLink="/wallet/payment"
@@ -89,6 +89,11 @@
               nz-button nzBlock
               nzSize="large">
         {{ 'COMMON_WORDS.RECEIVE' | translate }}
+      </button>
+    </div>
+    <div class="row-span-1">
+      <button (click)="scanSep7URI()" nz-button class="col-span-1 row-span-1 h-full">
+        <i class="fa-solid fa-qrcode"></i>
       </button>
     </div>
   </div>
