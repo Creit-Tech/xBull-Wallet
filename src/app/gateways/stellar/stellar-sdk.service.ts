@@ -155,7 +155,8 @@ export class StellarSdkService {
   signTransaction(data: { xdr: string, secret: string, passphrase: string; }): string {
     const transaction = this.createTransaction({ xdr: data.xdr, networkPassphrase: data.passphrase });
     const keypair = this.keypairFromSecret({ transaction, secret: data.secret });
-    transaction.sign(keypair);
+    // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
+    transaction.sign(keypair as any);
     return transaction.toXDR();
   }
 

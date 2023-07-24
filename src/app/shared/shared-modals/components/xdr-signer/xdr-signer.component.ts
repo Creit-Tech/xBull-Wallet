@@ -272,9 +272,10 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
           networkPassphrase: selectedNetworkPassphrase
         });
         const keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
-        const keypairSignature = transaction.getKeypairSignature(keypair);
 
-        transaction.sign(keypair);
+        // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
+        const keypairSignature = transaction.getKeypairSignature(keypair as any);
+        transaction.sign(keypair as any);
 
         return {
           baseXDR: xdr,
@@ -349,9 +350,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
       const keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
 
-      const keypairSignature = transaction.getKeypairSignature(keypair);
-
-      transaction.sign(keypair);
+      // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
+      const keypairSignature = transaction.getKeypairSignature(keypair as any);
+      transaction.sign(keypair as any);
 
       const signedXDR = transaction.toXDR();
 

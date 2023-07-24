@@ -110,6 +110,7 @@ export class GiftCardsService {
       .pipe(switchMap(token => {
         return this.http.get<{ orders: IGiftCardOrder[] }>(this.env.xGCApi + '/orders', {
           headers: { authorization: 'Bearer ' + token },
+          params: { ordersType: 'GIFT_CARD' }
         })
           .pipe(catchError(this.removeAuthToken(token)));
       }))
