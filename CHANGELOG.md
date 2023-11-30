@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.17.1] - 2023-06-27
 ### Add
+- Add bump and restore operations to the valid list of operations
+- latest soroban client version
+
+## [1.17.1] - 2023-06-27
+### Add
 - Add localhost as a whitelisted option for unsecured pages (non HTTPS) when using the extension version
 
 ## [1.17.0] - 2023-06-24

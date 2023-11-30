@@ -48,7 +48,7 @@ export class StellarSdkService {
     'liquidityPoolDeposit',
     'liquidityPoolWithdraw',
   ];
-  private sorobanOperations: Array<string> = ['invokeHostFunction'];
+  private sorobanOperations: Array<string> = ['invokeHostFunction', 'restoreFootprint', 'bumpFootprintExpiration'];
   private handledOperations: Array<string> = [
     ...this.stellarOperations,
     ...this.sorobanOperations,
