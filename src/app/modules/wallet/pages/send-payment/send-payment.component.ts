@@ -37,8 +37,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
-import { Account, Asset, Operation, TransactionBuilder } from 'stellar-base';
-import { AccountResponse, Claimant, Memo } from 'stellar-sdk';
+import { AccountResponse } from 'stellar-sdk/lib/horizon';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -46,6 +45,7 @@ import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
+import { Account, Asset, Claimant, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
 
 @Component({
   selector: 'app-send-payment',

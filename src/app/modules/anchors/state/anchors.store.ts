@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { createAnchor, IAnchor } from './anchor.model';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { BaseEntityStore } from '~root/state/base-entity.store';
 
 export interface AnchorsState extends EntityState<IAnchor> {

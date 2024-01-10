@@ -5,7 +5,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { from, Observable, of, throwError } from 'rxjs';
 import { omitBy, isNil} from 'lodash';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { WalletsAccountsQuery } from '~root/state';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
 import { Sep10Service } from '~root/core/services/sep10/sep-10.service';

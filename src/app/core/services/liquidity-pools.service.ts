@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IHorizonApi, ILpAsset, ILpAssetLoaded, LpAssetsStore } from '~root/state';
-import { Server, Asset, Horizon, ServerApi } from 'stellar-sdk';
+import { Asset, Horizon } from 'stellar-sdk';
 import { from, Observable, throwError } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import { withTransaction } from '@datorama/akita';
@@ -19,7 +19,7 @@ export class LiquidityPoolsService {
   async getLiquidityPoolsData(params: {
     lpId: ILpAsset['_id'];
     horizonApi: IHorizonApi;
-  }): Promise<ServerApi.LiquidityPoolRecord> {
+  }): Promise<Horizon.ServerApi.LiquidityPoolRecord> {
     const record = await this.stellarSdkService.selectServer(params.horizonApi.url)
       .liquidityPools()
       .liquidityPoolId(params.lpId)
@@ -67,7 +67,7 @@ export class LiquidityPoolsService {
       }));
   }
 
-  depositLiquidity(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  depositLiquidity(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.lpAssetsStore.updateUIState({ depositingLiquidity: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {
@@ -80,7 +80,7 @@ export class LiquidityPoolsService {
       });
   }
 
-  withdrawLiquidity(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  withdrawLiquidity(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.lpAssetsStore.updateUIState({ withdrawingLiquidity: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {

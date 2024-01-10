@@ -5,7 +5,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { WalletsAccountsQuery } from '~root/state';
 import { map, take } from 'rxjs/operators';
 import { Horizon } from 'stellar-sdk';
-import BalanceLineAsset = Horizon.BalanceLineAsset;
+import BalanceLineAsset = Horizon.HorizonApi.BalanceLineAsset;
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';

@@ -1,4 +1,4 @@
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 export const XBULL_CONNECT = 'XBULL_CONNECT';
 export const XBULL_CONNECT_BACKGROUND = 'XBULL_CONNECT_BACKGROUND';

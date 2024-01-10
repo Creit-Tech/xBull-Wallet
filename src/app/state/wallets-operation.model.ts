@@ -1,6 +1,6 @@
-import { AssetType, ServerApi, Horizon } from 'stellar-sdk';
+import { AssetType, Horizon } from 'stellar-sdk';
 import { IWalletsAccount } from '~root/state/wallets-account.model';
-import OperationRecord = ServerApi.OperationRecord;
+import OperationRecord = Horizon.ServerApi.OperationRecord;
 
 interface ManageBuyOfferOperationResponse {
   id: string;
@@ -49,10 +49,10 @@ export interface IWalletsOperation {
   operationRecord: OperationRecord
     | ManageBuyOfferOperationResponse
     | SetTrustLineFlagsOperationResponse
-    | Horizon.DepositLiquidityOperationResponse
-    | Horizon.WithdrawLiquidityOperationResponse
-    | Horizon.ClawbackOperationResponse
-    | Horizon.ClawbackClaimableBalanceOperationResponse;
+    | Horizon.HorizonApi.DepositLiquidityOperationResponse
+    | Horizon.HorizonApi.WithdrawLiquidityOperationResponse
+    | Horizon.HorizonApi.ClawbackOperationResponse
+    | Horizon.HorizonApi.ClawbackClaimableBalanceOperationResponse;
 }
 
 export function createWalletsOperation(params: {

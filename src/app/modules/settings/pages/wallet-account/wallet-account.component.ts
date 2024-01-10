@@ -19,7 +19,7 @@ import { PasswordModalComponent } from '~root/shared/shared-modals/components/pa
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

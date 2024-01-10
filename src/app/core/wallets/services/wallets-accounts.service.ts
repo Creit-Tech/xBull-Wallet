@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Server, NotFoundError, Horizon, ServerApi } from 'stellar-sdk';
+import { NotFoundError, Horizon } from 'stellar-sdk';
 import { from, Observable, of, throwError } from 'rxjs';
 import {
   BalanceAssetType,
@@ -14,9 +14,9 @@ import { applyTransaction } from '@datorama/akita';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
-import BalanceLine = Horizon.BalanceLine;
+import BalanceLine = Horizon.HorizonApi.BalanceLine;
 import BigNumber from 'bignumber.js';
-import OperationRecord = ServerApi.OperationRecord;
+import OperationRecord = Horizon.ServerApi.OperationRecord;
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,7 @@ export class WalletsAccountsService {
     private readonly walletsOperationsStore: WalletsOperationsStore,
   ) { }
 
-  private saveAccountAndAssets(accountId: IWalletsAccount['_id'], accountRecord: ServerApi.AccountRecord | undefined): void {
+  private saveAccountAndAssets(accountId: IWalletsAccount['_id'], accountRecord: Horizon.ServerApi.AccountRecord | undefined): void {
     this.walletsAccountsStore.upsert(accountId, state => ({
       ...state,
       isCreated: !!accountRecord,

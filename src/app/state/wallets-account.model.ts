@@ -1,13 +1,13 @@
-import { ServerApi } from 'stellar-sdk';
+import { Horizon } from 'stellar-sdk';
 import { IWallet } from '~root/state/wallet.model';
 
-export const walletsAccountDocVersion = 1;
+export const walletsAccountDocVersion = 2;
 
 export interface IWalletsAccountBase  {
   _id: string; // this is a hashed string from the public key and the network passphrase
   publicKey: string;
   isCreated: boolean;
-  accountRecord?: ServerApi.AccountRecord;
+  accountRecord?: Horizon.ServerApi.AccountRecord;
   streamCreated: boolean;
   operationsStreamCreated: boolean;
   name: string;

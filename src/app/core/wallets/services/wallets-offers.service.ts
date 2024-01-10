@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletsAccount, WalletsOffersState, WalletsOffersStore } from '~root/state';
-import { Horizon, ServerApi } from 'stellar-sdk';
-import OfferRecord = ServerApi.OfferRecord;
+import { Horizon } from 'stellar-sdk';
+import OfferRecord = Horizon.ServerApi.OfferRecord;
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class WalletsOffersService {
     this.walletsOffersStore.remove(id);
   }
 
-  private submitAndUpdateStore(xdr: string, storeField: keyof WalletsOffersState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
+  private submitAndUpdateStore(xdr: string, storeField: keyof WalletsOffersState['UIState']): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.walletsOffersStore.updateUIState({ [storeField]: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {
@@ -41,23 +41,23 @@ export class WalletsOffersService {
       });
   }
 
-  sendPathPaymentStrictSend(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendPathPaymentStrictSend(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingPathPaymentStrictSend');
   }
 
-  sendPathPaymentStrictReceive(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendPathPaymentStrictReceive(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingPathPaymentStrictReceive');
   }
 
-  sendPathPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendPathPayment(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingPathPayment');
   }
 
-  sendManageBuyOffer(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendManageBuyOffer(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingOffer');
   }
 
-  sendManageSellOffer(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendManageSellOffer(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.submitAndUpdateStore(xdr, 'sendingOffer');
   }
 }

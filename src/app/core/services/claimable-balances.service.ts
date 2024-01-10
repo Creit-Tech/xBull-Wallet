@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { ClaimableBalancesStore, IWalletsAccount } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Horizon, ServerApi } from 'stellar-sdk';
+import { ServerApi } from 'stellar-sdk/lib/horizon';
 import CollectionPage = ServerApi.CollectionPage;
 import { applyTransaction } from '@datorama/akita';
 import { isAfter, isBefore } from 'date-fns';
 import { type } from 'os';
+import { Horizon } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +42,7 @@ export class ClaimableBalancesService {
     }
   }
 
-  async claimBalance(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  async claimBalance(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.claimableBalancesStore.updateUIState({ claimingBalance: true });
 
     try {

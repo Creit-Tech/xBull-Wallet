@@ -2,8 +2,6 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { filter, map, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { Transaction } from 'stellar-base';
-import * as SorobanClient from 'soroban-client';
 import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery,
@@ -33,6 +31,7 @@ import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
+import { Operation, Transaction } from 'stellar-sdk';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -150,7 +149,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(distinctUntilArrayItemChanged())
     .pipe(map((operations: any) => {
       return operations.filter(
-        (operation: SorobanClient.Operation) => operation.type === 'invokeHostFunction'
+        (operation: Operation) => operation.type === 'invokeHostFunction'
       );
     }))
     .pipe(map((operations: any[]) => {
@@ -592,7 +591,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
 
 export interface ISigningResults {
-  transaction: Transaction | SorobanClient.Transaction;
+  transaction: Transaction;
   baseXDR: string;
   signedXDR: string;
   signers: Array<{

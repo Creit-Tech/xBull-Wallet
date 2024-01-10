@@ -1,7 +1,7 @@
 // TODO: Probably we will need to refactor this
 
 import { Horizon } from 'stellar-sdk';
-import BalanceLine = Horizon.BalanceLine;
+import BalanceLine = Horizon.HorizonApi.BalanceLine;
 
 declare type AssetType = 'native' | 'issued';
 declare type AssetStatus = 'unloaded' | 'extra' | 'full';

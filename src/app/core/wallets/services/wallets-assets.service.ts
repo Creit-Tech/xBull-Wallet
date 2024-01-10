@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Horizon, Server, ServerApi, Asset, StellarTomlResolver } from 'stellar-sdk';
+import { ServerApi } from 'stellar-sdk/lib/horizon';
 import {
   BalanceAssetType,
   IHorizonApi,
@@ -17,11 +17,12 @@ import { from, merge, Observable, of, Subject, Subscription, throwError } from '
 import { catchError, filter, map, mergeMap, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { OfferAsset } from 'stellar-sdk/lib/types/offer';
 import { add, isAfter } from 'date-fns';
 import { createCuratedAsset, ICuratedAsset } from '~root/state/curated-assets/curated-asset.model';
 import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.store';
 import { applyTransaction } from '@datorama/akita';
+import { Asset, Horizon, StellarToml } from 'stellar-sdk';
+import { OfferAsset } from 'stellar-sdk/lib/horizon/types/offer';
 
 @Injectable({
   providedIn: 'root'
@@ -108,7 +109,7 @@ export class WalletsAssetsService {
     .subscribe();
 
 
-  private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.SubmitTransactionResponse> {
+  private simpleStateUpdateFlow(xdr: string, stateField: keyof WalletsAssetsState['UIState']): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.walletsAssetsStore.updateUIState({ [stateField]: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then((response) => {
@@ -167,7 +168,7 @@ export class WalletsAssetsService {
     return from(recordPromise)
       .pipe(filter(accountRecord => !!accountRecord))
       .pipe(switchMap(accountRecord => {
-        return from(StellarTomlResolver.resolve((accountRecord as any).home_domain))
+        return from(StellarToml.Resolver.resolve((accountRecord as any).home_domain))
           .pipe(withLatestFrom(of(accountRecord)));
       }))
       .pipe(switchMap(async ([parsedToml, accountRecord]) => {
@@ -236,18 +237,18 @@ export class WalletsAssetsService {
       .toPromise();
   }
 
-  addAssetToAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  addAssetToAccount(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.simpleStateUpdateFlow(xdr, 'addingAsset');
   }
 
-  removeAssetFromAccount(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  removeAssetFromAccount(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     return this.simpleStateUpdateFlow(xdr, 'removingAsset');
   }
 
   /*
   * This method helps to generate de _id we use to identify assets in the store
   * */
-  formatBalanceLineId(data: Horizon.BalanceLine | OfferAsset): IWalletAsset['_id'] {
+  formatBalanceLineId(data: Horizon.HorizonApi.BalanceLine | OfferAsset): IWalletAsset['_id'] {
     switch (data.asset_type) {
       case 'native':
         return 'native';
@@ -325,7 +326,7 @@ export class WalletsAssetsService {
   /*
   * This method is used to filter those balances we are not handling directly in the WalletAssetsStore
   * */
-  filterBalancesLines(balances: Horizon.BalanceLine[]): BalanceAssetType[] {
+  filterBalancesLines(balances: Horizon.HorizonApi.BalanceLine[]): BalanceAssetType[] {
     return balances
       .filter(balance =>
         balance.asset_type === 'native'

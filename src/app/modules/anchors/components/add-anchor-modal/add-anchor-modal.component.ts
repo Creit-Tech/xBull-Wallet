@@ -5,7 +5,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AnchorsService } from '~root/modules/anchors/services/anchors.service';
 import { createAnchor } from '~root/modules/anchors/state/anchor.model';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({
@@ -53,7 +53,7 @@ export class AddAnchorModalComponent implements OnInit {
 
     let toml: any;
     try {
-      toml = await this.stellarSdkService.SDK.StellarTomlResolver.resolve(this.urlControl.value);
+      toml = await this.stellarSdkService.SDK.StellarToml.Resolver.resolve(this.urlControl.value);
     } catch (e) {
       this.fetchingTomlData = false;
       this.nzMessageService.error('Not possible to get the .toml file from this domain');

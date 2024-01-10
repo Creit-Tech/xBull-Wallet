@@ -16,7 +16,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import { Horizon } from 'stellar-sdk';
-import BalanceLine = Horizon.BalanceLine;
+import BalanceLine = Horizon.HorizonApi.BalanceLine;
 import { LiquidityPoolsService } from '~root/core/services/liquidity-pools.service';
 import { NzMarks } from 'ng-zorro-antd/slider';
 import BigNumber from 'bignumber.js';

@@ -27,7 +27,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpErrorResponse } from '@angular/common/http';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
 import { TranslateService } from '@ngx-translate/core';

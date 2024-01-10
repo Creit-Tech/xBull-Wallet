@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createHorizonApi, HorizonApisStore, IHorizonApi } from '~root/state';
 import { randomBytes } from 'crypto';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -26,18 +26,14 @@ export class HorizonApisService {
   }
 
   setHorizonByNetwork(network: Networks): void {
-    switch (network) {
-      case Networks.PUBLIC:
-        this.selectHorizonApi('aa604e66a74ade3ef250f904ef28c92d');
-        break;
+    const state = this.horizonApisStore.getValue();
+    const target = Object.values(state.entities || {}).find(e => e.networkPassphrase === network);
 
-      case Networks.TESTNET:
-        this.selectHorizonApi('10a05029fe79fe9df15c33ee2e2d43bb');
-        break;
-
-      default:
-        throw new Error('This network does not exists in our records');
+    if (!target) {
+      throw new Error('This network does not exists in our records');
     }
+
+    this.selectHorizonApi(target._id);
   }
 
   userNetworkName(network: Networks): string {

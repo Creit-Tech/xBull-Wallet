@@ -3,7 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 // Included with Angular CLI.
 
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 export const ENV = 'ENVIRONMENT';
 

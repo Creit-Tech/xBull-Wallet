@@ -87,7 +87,7 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
       .pipe(filter<any>(Boolean))
       .pipe(map((reserves: ILpAssetLoaded['reserves']) => {
         const mappedData = reserves
-          .reduce((all: { [x: string]: Horizon.Reserve }, current: Horizon.Reserve) => {
+          .reduce((all: { [x: string]: Horizon.HorizonApi.Reserve }, current: Horizon.HorizonApi.Reserve) => {
             if (current.asset !== 'native' && !all[current.asset]) {
               all[current.asset] = current;
             }

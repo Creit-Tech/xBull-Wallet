@@ -4,7 +4,7 @@ import { distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/oper
 import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { IAnchor } from '~root/modules/anchors/state/anchor.model';
 import { AnchorsQuery } from '~root/modules/anchors/state/anchors.query';
-import { StellarTomlResolver } from 'stellar-sdk';
+import { StellarToml } from 'stellar-sdk';
 import { HttpClient } from '@angular/common/http';
 import { ISep24InfoResponse, Sep24Service } from '~root/core/services/sep24/sep24.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -76,7 +76,7 @@ export class AnchorDetailsComponent implements OnInit, OnDestroy {
         let parsedToml;
         const url = new URL(anchor.url);
         try {
-          parsedToml = await StellarTomlResolver.resolve(url.hostname);
+          parsedToml = await StellarToml.Resolver.resolve(url.hostname);
         } catch (e) {
           this.nzMessageService.error('We were not able to get the .toml file from the anchor');
           return;

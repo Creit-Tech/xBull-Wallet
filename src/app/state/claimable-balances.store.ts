@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { ServerApi } from 'stellar-sdk';
+import { Horizon } from 'stellar-sdk';
 
-export interface ClaimableBalancesState extends EntityState<ServerApi.ClaimableBalanceRecord & { accountId: string; _id: string }> {
+export interface ClaimableBalancesState extends EntityState<Horizon.ServerApi.ClaimableBalanceRecord & { accountId: string; _id: string }> {
   UIState: {
     gettingClaimableBalances: boolean;
     claimingBalance: boolean;

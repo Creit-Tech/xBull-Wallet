@@ -18,14 +18,14 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { AccountResponse, AssetType, Horizon } from 'stellar-sdk';
+import { AssetType, Horizon } from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
-import BalanceLineLiquidityPool = Horizon.BalanceLineLiquidityPool;
-import BalanceLine = Horizon.BalanceLine;
+import BalanceLineLiquidityPool = Horizon.HorizonApi.BalanceLineLiquidityPool;
+import BalanceLine = Horizon.HorizonApi.BalanceLine;
 import { UntypedFormControl, FormGroup } from '@angular/forms';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import BalanceLineNative = Horizon.BalanceLineNative;
+import BalanceLineNative = Horizon.HorizonApi.BalanceLineNative;
 import {
   LpAssetDetailsComponent
 } from '~root/modules/liquidity-pools/components/lp-asset-details/lp-asset-details.component';
@@ -195,7 +195,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  trackByBalanceline(index: number, item: Horizon.BalanceLine): string {
+  trackByBalanceline(index: number, item: Horizon.HorizonApi.BalanceLine): string {
     return item.balance;
   }
 
@@ -235,7 +235,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
       return;
     }
 
-    let loadedAccount: AccountResponse;
+    let loadedAccount: Horizon.AccountResponse;
     try {
       loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
     } catch (e) {
@@ -301,7 +301,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     });
   }
 
-  async assetDetails(balanceLine: Horizon.BalanceLine): Promise<void> {
+  async assetDetails(balanceLine: Horizon.HorizonApi.BalanceLine): Promise<void> {
     const drawerRef = this.nzDrawerService.create<AssetDetailsComponent>({
       nzContent: AssetDetailsComponent,
       nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.ASSET_DETAILS_TITLE'),
@@ -314,7 +314,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
     drawerRef.open();
   }
 
-  async lpAssetDetails(balanceLine: Horizon.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
+  async lpAssetDetails(balanceLine: Horizon.HorizonApi.BalanceLine<AssetType.liquidityPoolShares>): Promise<void> {
     const drawerRef = this.nzDrawerService.create<LpAssetDetailsComponent>({
       nzContent: LpAssetDetailsComponent,
       nzTitle: this.translateService.instant('WALLET.WALLET_DASHBOARD.LP_ASSET_DETAILS_TITLE'),

@@ -19,7 +19,7 @@ import {
 } from 'rxjs/operators';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {

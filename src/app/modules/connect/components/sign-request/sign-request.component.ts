@@ -3,7 +3,7 @@ import { ConnectQuery } from '~root/modules/connect/state/connect.query';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { map, pluck, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { ConnectService, EventType } from '~root/modules/connect/services/connect.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';

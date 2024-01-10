@@ -8,7 +8,7 @@ import { merge, Subject, throwError } from 'rxjs';
 import { mergeAll, switchMap, take } from 'rxjs/operators';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'

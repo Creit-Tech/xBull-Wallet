@@ -3,7 +3,7 @@ import { BehaviorSubject, combineLatest, from, Observable, of, Subject, Subscrip
 import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { debounceTime, delay, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { AccountResponse, ServerApi } from 'stellar-sdk';
+import { AccountResponse, ServerApi } from 'stellar-sdk/lib/horizon';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';

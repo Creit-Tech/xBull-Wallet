@@ -44,10 +44,6 @@ export interface SettingsState {
   // This is to use an asset as the base price
   // Default values are USDC on both testnet and pubnet
   counterAssetId: IWalletAssetModel['_id'];
-
-  // These values are related with soroban and its development
-  allowSorobanSigning: boolean;
-  enableSorobanDevelopment: boolean;
 }
 
 export function createInitialState(): SettingsState {
@@ -91,8 +87,6 @@ export function createInitialState(): SettingsState {
       'liquidity_pool_withdraw',
     ],
     counterAssetId: 'native',
-    allowSorobanSigning: false,
-    enableSorobanDevelopment: false,
   };
 }
 

@@ -30,10 +30,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   defaultFee$ = this.settingsQuery.defaultFee$;
 
-  enableSorobanDevelopment$ = this.settingsQuery.enableSorobanDevelopment$;
-  allowSorobanSigning$ = this.settingsQuery.allowSorobanSigning$;
-  allowSorobanContractsControl: FormControl<boolean | null> = new FormControl<boolean | null>(false);
-
   advanceMode$ = this.settingsQuery.advanceMode$;
   advanceModeControl: UntypedFormControl = new UntypedFormControl(false);
 
@@ -72,22 +68,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     private readonly nzModalService: NzModalService,
     private readonly walletsService: WalletsService,
   ) { }
-
-  allowSorobanSigningSubscription: Subscription = this.allowSorobanSigning$
-    .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(mode => {
-      this.allowSorobanContractsControl.patchValue(mode, {
-        emitEvent: false,
-      });
-    });
-
-  allowSorobanSigningUpdateSubscription: Subscription = this.allowSorobanContractsControl.valueChanges
-    .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(value => {
-      if (value !== null) {
-        this.settingsStore.updateState({ allowSorobanSigning: value });
-      }
-    });
 
   advanceModeStateSubscription: Subscription = this.advanceMode$
     .pipe(takeUntil(this.componentDestroyed$))
@@ -151,28 +131,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         },
       }
     });
-  }
-
-  async enableSorobanDevelopment(): Promise<void> {
-    const isEnabled = await this.enableSorobanDevelopment$.pipe(take(1)).toPromise();
-
-    if (isEnabled) {
-      return;
-    }
-
-    await this.nzModalService.create({
-      nzContent: `Both Soroban and this feature are still in early development, you should create a backup of your wallet by going to "Settings > Import & Backup > Export file" before enabling Soroban Development.<br/><br/>This mode can not be reverted.`,
-      nzTitle: 'Enable Soroban Development',
-      nzOnOk: () => {
-        applyTransaction(() => {
-          this.walletsService.addMissingAccountsForSoroban();
-          this.horizonApisService.addSorobanDevelopmentHorizons();
-          this.settingsStore.updateState({ enableSorobanDevelopment: true, allowSorobanSigning: true });
-        });
-      }
-    });
-
-
   }
 
 }

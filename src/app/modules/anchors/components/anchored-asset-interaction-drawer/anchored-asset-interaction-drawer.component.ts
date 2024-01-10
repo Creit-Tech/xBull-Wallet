@@ -9,7 +9,7 @@ import { IAnchor } from '~root/modules/anchors/state/anchor.model';
 import { IWalletsAccount } from '~root/state';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Memo } from 'stellar-base';
+import { Memo } from 'stellar-sdk';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { TranslateService } from '@ngx-translate/core';

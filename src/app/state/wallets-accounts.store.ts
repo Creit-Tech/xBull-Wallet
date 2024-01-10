@@ -8,7 +8,7 @@ export interface WalletsAccountsState extends EntityState<IWalletsAccount>, Acti
 
 function createInitialState(): Omit<WalletsAccountsState, 'active'> {
   return {
-    storeVersion: 1
+    storeVersion: 2
   };
 }
 

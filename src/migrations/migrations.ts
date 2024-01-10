@@ -3,6 +3,7 @@ import { walletsOperationsStoreMigration } from './2.wallets-operations.migratio
 import { walletsAccountsStoreMigration } from './3.wallets-accounts-type.migration';
 import { settingsStoreMigration } from './4.settings.migration';
 import { anchorsStoreMigration } from './5.anchors.migration';
+import { sorobanAccountsMigration } from './6.soroban.migration';
 
 export const migrationsHandler = (storeName: string, state: any, initialState: any) => {
 
@@ -18,6 +19,7 @@ export const migrationsHandler = (storeName: string, state: any, initialState: a
 
   if (storeName === 'wallets-accounts' && state.storeVersion !== initialState.storeVersion) {
     walletsAccountsStoreMigration(state);
+    sorobanAccountsMigration(state);
   }
 
   if (storeName === 'settings' && state.storeVersion !== initialState.storeVersion) {

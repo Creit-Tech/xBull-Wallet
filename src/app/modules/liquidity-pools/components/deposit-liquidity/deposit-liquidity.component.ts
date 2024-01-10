@@ -26,11 +26,12 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { BehaviorSubject, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { AccountResponse, Asset, Horizon, LiquidityPoolFeeV18, ServerApi, TransactionBuilder } from 'stellar-sdk';
+import { AccountResponse, ServerApi } from 'stellar-sdk/lib/horizon';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Asset, TransactionBuilder } from 'stellar-sdk';
 
 @Component({
   selector: 'app-deposit-liquidity',

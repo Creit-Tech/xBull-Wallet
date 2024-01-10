@@ -92,7 +92,7 @@ export class LpAssetDetailsComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  parseLpReserveCode(reserve: Horizon.Reserve): string {
+  parseLpReserveCode(reserve: Horizon.HorizonApi.Reserve): string {
     return reserve.asset.includes(':')
       ? reserve.asset.split(':')[0]
       : 'XLM';

@@ -10,7 +10,7 @@ import {
   XBULL_CONNECT,
   XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
 } from '../interfaces';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 class Sdk {
   isConnected = false;

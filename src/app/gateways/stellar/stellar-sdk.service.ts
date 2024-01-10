@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import * as SDK from 'stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { HorizonApisQuery, IHorizonApi, SettingsQuery, SettingsStore } from '~root/state';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { AccountResponse } from 'stellar-sdk';
-import * as SorobanClient from 'soroban-client';
-import { Operation } from 'stellar-base';
-import { Horizon } from 'stellar-sdk/lib/horizon_api';
-import { SorobanRpc } from 'soroban-client/lib/soroban_rpc';
-import * as StellarSDK from 'stellar-sdk';
+import * as SDK from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -47,15 +41,12 @@ export class StellarSdkService {
     'setTrustLineFlags',
     'liquidityPoolDeposit',
     'liquidityPoolWithdraw',
-  ];
-  private sorobanOperations: Array<string> = ['invokeHostFunction', 'restoreFootprint', 'bumpFootprintExpiration'];
-  private handledOperations: Array<string> = [
-    ...this.stellarOperations,
-    ...this.sorobanOperations,
+    'invokeHostFunction',
+    'restoreFootprint',
+    'bumpFootprintExpiration'
   ];
 
   SDK: typeof SDK = SDK;
-  SorobanSDK: typeof SorobanClient = SorobanClient;
 
   get networkPassphrase(): string {
     const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
@@ -81,66 +72,28 @@ export class StellarSdkService {
   ) { }
 
   // tslint:disable-next-line:typedef
-  keypairFromSecret(params: { transaction: SDK.Transaction | SorobanClient.Transaction, secret: string }) {
-    return params.transaction instanceof SorobanClient.Transaction
-      ? this.SorobanSDK.Keypair.fromSecret(params.secret)
-      : this.SDK.Keypair.fromSecret(params.secret);
+  keypairFromSecret(params: { transaction: SDK.Transaction, secret: string }) {
+    return this.SDK.Keypair.fromSecret(params.secret);
   }
 
-  selectServer(url?: string, options?: SDK.Server.Options): SDK.Server {
+  selectServer(url?: string, options?: SDK.Horizon.Server.Options): SDK.Horizon.Server {
     const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
-    const enableSorobanDevelopment = this.settingsStore.getValue()?.enableSorobanDevelopment;
-    return new this.SDK.Server(
+    return new this.SDK.Horizon.Server(
       url || activeValue.url,
-      options || { allowHttp: enableSorobanDevelopment }
+      options || { allowHttp: url?.includes('http://localhost') }
     );
   }
 
-  selectRpc(url?: string, options?: SorobanClient.Server.Options): SorobanClient.Server {
-    const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
-    const enableSorobanDevelopment = this.settingsStore.getValue()?.enableSorobanDevelopment;
-    return new this.SorobanSDK.Server(
-      url || activeValue.url,
-      options || { allowHttp: enableSorobanDevelopment }
-    );
-  }
-
-  submit(transaction: SDK.Transaction | SorobanClient.Transaction):
-    Promise<SorobanRpc.SendTransactionResponse | Horizon.SubmitTransactionResponse> {
-      return (transaction instanceof StellarSDK.Transaction)
-        ? this.selectServer().submitTransaction(transaction)
-        : this.selectRpc().sendTransaction(transaction);
+  submit(transaction: SDK.Transaction): Promise<SDK.Horizon.HorizonApi.SubmitTransactionResponse> {
+      return this.selectServer().submitTransaction(transaction);
   }
 
   // TODO: once soroban client is here to stay, refactor all the SDK logic
-  createTransaction(params: { xdr: string; networkPassphrase?: string; }): SDK.Transaction | SorobanClient.Transaction {
-    let tempT: any;
-    let err: any;
-    try {
-      tempT = new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
-    } catch (e) {
-      err = e;
-    }
-    try {
-      tempT = new this.SorobanSDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
-    } catch (e) {
-      err = e;
-    }
-
-    if (!tempT) {
-      console.error(err);
-      throw new Error('Transaction creation failed');
-    }
-
-    const includesSorobanOp = !!tempT.operations.find((o: any) => !!this.sorobanOperations.find(so => so === o.type));
-    const enableSorobanDevelopment = this.settingsStore.getValue()?.enableSorobanDevelopment;
-
-    return enableSorobanDevelopment && includesSorobanOp
-      ? new this.SorobanSDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase)
-      : new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
+  createTransaction(params: { xdr: string; networkPassphrase?: string; }): SDK.Transaction {
+    return new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
   }
 
-  loadAccount(account: string): Promise<AccountResponse> {
+  loadAccount(account: string): Promise<SDK.Horizon.AccountResponse> {
     if (this.SDK.StrKey.isValidMed25519PublicKey(account)) {
       const muxedAccount = this.SDK.MuxedAccount.fromAddress(account, '-1');
       return this.selectServer().loadAccount(muxedAccount.baseAccount().accountId());
@@ -163,7 +116,7 @@ export class StellarSdkService {
   /**
    * @Deprecated
    */
-  submitTransaction(xdr: string): Promise<SDK.Horizon.SubmitTransactionResponse> {
+  submitTransaction(xdr: string): Promise<SDK.Horizon.HorizonApi.SubmitTransactionResponse> {
     const transaction = new this.SDK.Transaction(
       xdr,
       this.networkPassphrase
@@ -173,8 +126,8 @@ export class StellarSdkService {
   }
 
   calculateAvailableBalance(data: {
-    balanceLine: SDK.Horizon.BalanceLine;
-    account: SDK.ServerApi.AccountRecord
+    balanceLine: SDK.Horizon.HorizonApi.BalanceLine;
+    account: SDK.Horizon.ServerApi.AccountRecord
   }): BigNumber {
     let finalAmount = new BigNumber(0);
 
@@ -220,6 +173,7 @@ export class StellarSdkService {
           .call();
       }))
       .pipe(map(({ records }) => {
+        // @ts-ignore
         const fees = records.map(record => new BigNumber(record.max_fee));
 
         const arrSort = fees.sort((a, b) => {
@@ -243,15 +197,14 @@ export class StellarSdkService {
     }
   }
 
-  checkIfAllOperationsAreHandled(operations: Operation[]): true {
+  checkIfAllOperationsAreHandled(operations: SDK.Operation[]): true {
     for (const operation of operations) {
-      if (this.handledOperations.indexOf(operation.type) === -1) {
+      if (this.stellarOperations.indexOf(operation.type) === -1) {
         throw new Error(`Operation type "${operation.type}" is not handled by this wallet yet.`);
       }
     }
 
     return true;
-
   }
 
 }

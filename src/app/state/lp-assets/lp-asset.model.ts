@@ -7,7 +7,7 @@ export interface ILpAssetBase {
 
 export interface ILpAssetLoaded {
   _id: string;
-  reserves: Horizon.Reserve[];
+  reserves: Horizon.HorizonApi.Reserve[];
   totalShares: string;
   totalTrustlines: string;
   dataLoaded: true;

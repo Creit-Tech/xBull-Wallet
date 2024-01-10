@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { ClaimableBalancesStore, ClaimableBalancesState } from './claimable-balances.store';
 import { IWalletsAccount } from '~root/state/wallets-account.model';
 import { Observable, of } from 'rxjs';
-import { ServerApi } from 'stellar-sdk';
+import { Horizon } from 'stellar-sdk';
 import { WalletsAccountsQuery } from '~root/state/wallets-accounts.query';
 import { distinctUntilKeyChanged, switchMap } from 'rxjs/operators';
 
@@ -12,7 +12,7 @@ export class ClaimableBalancesQuery extends QueryEntity<ClaimableBalancesState> 
   gettingClaimableBalances$ = this.select(state => state.UIState.gettingClaimableBalances);
   claimingBalance$ = this.select(state => state.UIState.claimingBalance);
 
-  selectedAccountClaimableBalances$: Observable<ServerApi.ClaimableBalanceRecord[]> = this.walletsAccountsQuery.getSelectedAccount$
+  selectedAccountClaimableBalances$: Observable<Horizon.ServerApi.ClaimableBalanceRecord[]> = this.walletsAccountsQuery.getSelectedAccount$
     .pipe(distinctUntilKeyChanged('_id'))
     .pipe(switchMap(selectedAccount => {
       if (!selectedAccount) {
@@ -31,7 +31,7 @@ export class ClaimableBalancesQuery extends QueryEntity<ClaimableBalancesState> 
     super(store);
   }
 
-  claimableBalancesForWalletAccount(accountId: IWalletsAccount['_id']): Observable<ServerApi.ClaimableBalanceRecord[]> {
+  claimableBalancesForWalletAccount(accountId: IWalletsAccount['_id']): Observable<Horizon.ServerApi.ClaimableBalanceRecord[]> {
     return this.selectAll({
       filterBy: entity => entity.accountId === accountId,
     });

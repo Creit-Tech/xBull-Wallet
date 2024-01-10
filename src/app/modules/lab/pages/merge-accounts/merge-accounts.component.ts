@@ -115,7 +115,7 @@ export class MergeAccountsComponent implements OnInit, OnDestroy {
       !this.form.value.destination
     ) { return; }
 
-    let loadedAccount: StellarSDK.AccountResponse;
+    let loadedAccount: StellarSDK.Horizon.AccountResponse;
     try {
       loadedAccount = await this.stellarSdkService
         .selectServer()

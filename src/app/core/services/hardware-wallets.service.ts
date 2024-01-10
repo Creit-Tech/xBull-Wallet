@@ -4,11 +4,10 @@ import Str from '@ledgerhq/hw-app-str';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import TrezorConnect, { BundledResponse, StellarAddress } from 'trezor-connect';
 import { BehaviorSubject } from 'rxjs';
-import { Transaction } from 'stellar-base';
-import * as SorobanClient from 'soroban-client';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
+import { Transaction } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -53,7 +52,7 @@ export class HardwareWalletsService {
   async signWithLedger(data: {
     accountPath: string,
     publicKey: string,
-    transaction: Transaction | SorobanClient.Transaction,
+    transaction: Transaction,
     transport: TransportWebUSB,
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
@@ -104,7 +103,7 @@ export class HardwareWalletsService {
 
   async signWithTrezor(params: {
     path: string;
-    transaction: Transaction | SorobanClient.Transaction;
+    transaction: Transaction;
     networkPassphrase: string;
   }): Promise<IHWSigningResult> {
     const trezorTransaction = transformTransaction(params.path, params.transaction);

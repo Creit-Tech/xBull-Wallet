@@ -1,9 +1,8 @@
 import { AnchorsState } from '~root/modules/anchors/state/anchors.store';
 import { createAnchor } from '~root/modules/anchors/state/anchor.model';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 export const anchorsStoreMigration = (state: AnchorsState) => {
-  // If store is less than version 1, add the type 'with_secret_key' because they were the only kind we were using
   if (!state.storeVersion || state.storeVersion < 1) {
     if (!!state.entities) {
       const mykoboAnchor = createAnchor({

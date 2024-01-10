@@ -3,7 +3,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { Router } from '@angular/router';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { HorizonApisQuery, IHorizonApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
@@ -13,7 +13,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { TranslateService } from '@ngx-translate/core';
-import { StellarTomlResolver } from 'stellar-sdk';
+import { StellarToml } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -47,7 +47,7 @@ export class Sep07Service {
     }
 
     try {
-      const toml = await StellarTomlResolver.resolve(uri.searchParams.get('origin_domain') as string);
+      const toml = await StellarToml.Resolver.resolve(uri.searchParams.get('origin_domain') as string);
       const signingKey = toml.URI_REQUEST_SIGNING_KEY;
 
       if (!signingKey) {

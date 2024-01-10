@@ -5,7 +5,7 @@ import { AirtimeStore } from '~root/modules/airtime/state/airtime.store';
 import { AirtimeQuery } from '~root/modules/airtime/state/airtime.query';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 import { IGiftCardOrder } from '~root/modules/gift-cards/services/gift-cards.service';
 import { Sep10Service } from '~root/core/services/sep10/sep-10.service';
 import { NzMessageService } from 'ng-zorro-antd/message';

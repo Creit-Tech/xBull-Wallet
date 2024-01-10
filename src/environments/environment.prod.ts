@@ -1,4 +1,4 @@
-import { Networks } from 'soroban-client';
+import { Networks } from 'stellar-sdk';
 
 export const ENV = 'ENVIRONMENT';
 

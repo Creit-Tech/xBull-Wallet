@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Keypair, Memo, Operation } from 'stellar-base';
-import * as SorobanClient from 'soroban-client';
 import { createHash, randomBytes } from 'crypto';
 
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -26,7 +24,7 @@ import {
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { transaction } from '@datorama/akita';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Horizon } from 'stellar-sdk';
+import { Horizon, Keypair, Memo, Networks, Operation } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -48,7 +46,7 @@ export class WalletsService {
     return `${params.productId}_${params.vendorId}`;
   }
 
-  generateWalletAccountId(params: { network: SorobanClient.Networks; publicKey: string }): string {
+  generateWalletAccountId(params: { network: Networks; publicKey: string }): string {
     return createHash('md5')
       .update(`${params.network}_${params.publicKey}`)
       .digest('hex');
@@ -121,7 +119,7 @@ export class WalletsService {
         throw new Error(`We can not handle the type: ${(params as any).type}`);
     }
 
-    const walletAccounts = Object.values(SorobanClient.Networks)
+    const walletAccounts = Object.values(Networks)
       .map(network =>
         createWalletsAccount({
           _id: this.generateWalletAccountId({ network, publicKey: keypair.publicKey() }),
@@ -277,7 +275,7 @@ export class WalletsService {
     return Buffer.from(memo.value).toString();
   }
 
-  sendPayment(xdr: string): Promise<Horizon.SubmitTransactionResponse> {
+  sendPayment(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
     this.walletsOperationsStore.updateUIState({ sendingPayment: true });
     return this.stellarSdkService.submitTransaction(xdr)
       .then(response => {
@@ -297,9 +295,9 @@ export class WalletsService {
   async addMissingAccountsForSoroban(): Promise<void> {
     const allAccounts = this.walletsAccountsQuery.getAll();
     for (const account of allAccounts) {
-      const futurenetId = this.generateWalletAccountId({ network: SorobanClient.Networks.FUTURENET, publicKey: account.publicKey });
-      const standaloneId = this.generateWalletAccountId({ network: SorobanClient.Networks.STANDALONE, publicKey: account.publicKey });
-      const sandboxId = this.generateWalletAccountId({ network: SorobanClient.Networks.SANDBOX, publicKey: account.publicKey });
+      const futurenetId = this.generateWalletAccountId({ network: Networks.FUTURENET, publicKey: account.publicKey });
+      const standaloneId = this.generateWalletAccountId({ network: Networks.STANDALONE, publicKey: account.publicKey });
+      const sandboxId = this.generateWalletAccountId({ network: Networks.SANDBOX, publicKey: account.publicKey });
       const { _id, ...rest } = account;
       this.walletsAccountsStore.upsertMany([
         { _id: futurenetId, ...rest },

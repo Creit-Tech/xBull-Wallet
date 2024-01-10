@@ -4,7 +4,8 @@ import {
   IWalletAssetModel, WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import { Account, Asset, Operation, Server, ServerApi, TransactionBuilder } from 'stellar-sdk';
+import { Account, Asset, Operation, TransactionBuilder } from 'stellar-sdk';
+import { ServerApi } from 'stellar-sdk/lib/horizon';
 import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';

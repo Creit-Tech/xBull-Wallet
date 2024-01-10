@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import * as SorobanClient from 'soroban-client';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
+import { xdr } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -234,7 +234,7 @@ export class HostFunctionsService {
   //   }];
   // }
 
-  parseHostFunctionIntoNodeTree(f: SorobanClient.xdr.HostFunction, preKey: number): NzTreeNodeOptions[] {
+  parseHostFunctionIntoNodeTree(f: xdr.HostFunction, preKey: number): NzTreeNodeOptions[] {
     return [];
 
     // return [{
