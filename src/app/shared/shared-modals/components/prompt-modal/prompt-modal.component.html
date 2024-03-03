@@ -1,0 +1,32 @@
+<section class="h-full mx-auto max-w-md w-full relative">
+  <div class="w-full text-center mb-4">
+    <h2 class="m-0 p-0 text-off-white font-bold text-xl">
+      {{ title }}
+    </h2>
+  </div>
+
+  <section class="mb-2">
+    <nz-input-group nzSize="large" nzAddOnBeforeIcon="search" class="w-full" nzSuffix=".xlm">
+      <input type="text"
+             (keydown.enter)="onConfirm()"
+             [placeholder]="'FORM_PLACEHOLDERS.WRITE_HERE' | translate"
+             [formControl]="controlField"
+             nz-input nzSize="large" />
+    </nz-input-group>
+  </section>
+
+  <div *ngIf="description" class="w-full text-center text-xs mb-7">
+    {{ description }}
+  </div>
+
+  <div class="w-full">
+    <button (click)="onConfirm()"
+            [disabled]="controlField.invalid"
+            class="w-full"
+            nz-button
+            nzSize="large"
+            nzType="primary">
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
+    </button>
+  </div>
+</section>

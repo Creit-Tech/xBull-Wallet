@@ -46,6 +46,9 @@ import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-s
 import { TranslateService } from '@ngx-translate/core';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 import { Account, Asset, Claimant, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
+import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
+import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
+import { Record } from '@creit.tech/sorobandomains-sdk';
 
 @Component({
   selector: 'app-send-payment',
@@ -147,6 +150,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private readonly translateService: TranslateService,
+    private readonly sorobandomainsService: SorobandomainsService,
   ) { }
 
   resetFormWhenSourceAccountChangesSubscription = this.selectedAccount$
@@ -419,6 +423,40 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   async setMax(): Promise<void> {
     const availableFunds = await this.availableFunds$.pipe(take(1)).toPromise();
     this.form.controls.amount.setValue(availableFunds);
+  }
+
+  async searchDomain(): Promise<void> {
+    this.nzDrawerService.create<PromptModalComponent>({
+      nzContent: PromptModalComponent,
+      nzPlacement: 'bottom',
+      nzTitle: '',
+      nzHeight: 'auto',
+      nzWrapClassName: 'ios-safe-y',
+      nzContentParams: {
+        title: 'Search a Soroban Domain',
+        description: 'Fetch the public by consulting the domain',
+        handleConfirmEvent: async (value: string) => {
+          if (!value) {
+            return;
+          }
+
+          const messageId: string = this.nzMessageService.loading('Searching...').messageId;
+
+          try {
+            const record: Record = await this.sorobandomainsService.sdk.searchDomain(
+              this.sorobandomainsService.domainParser(value)
+            );
+
+            this.form.controls.publicKey.patchValue(record.value.address);
+
+            this.nzMessageService.remove(messageId);
+          } catch (e: any) {
+            this.nzMessageService.remove(messageId);
+            this.nzMessageService.error(e.message || 'Domain invalid or doesn\'t exist');
+          }
+        }
+      },
+    });
   }
 
 }

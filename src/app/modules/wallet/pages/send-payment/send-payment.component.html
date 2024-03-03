@@ -36,7 +36,7 @@
 
               <section [formGroup]="form" class="w-full mb-6">
                 <div class="w-full mb-4">
-                  <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="qrPublicKey">
+                  <nz-input-group nzSize="large" [nzAddOnBefore]="keyIcon" [nzSuffix]="findPublicKey">
                     <input type="text" nz-input nzSize="large"
                            [placeholder]="'FORM_PLACEHOLDERS.PUBLIC_KEY' | translate"
                            formControlName="publicKey">
@@ -46,8 +46,11 @@
                     <i class="fa-solid fa-key"></i>
                   </ng-template>
 
-                  <ng-template #qrPublicKey>
-                    <i class="fa-solid fa-camera cursor-pointer"
+                  <ng-template #findPublicKey>
+                    <i class="fa-solid fa-search cursor-pointer"
+                       (click)="searchDomain()"></i>
+
+                    <i class="fa-solid fa-camera cursor-pointer ml-3"
                        (click)="scanPublicKey()"
                        *ngIf="hasCamera | async"></i>
                   </ng-template>

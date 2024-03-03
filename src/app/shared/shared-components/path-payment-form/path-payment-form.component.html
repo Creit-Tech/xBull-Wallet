@@ -22,6 +22,9 @@
           </ng-template>
 
           <ng-template #qrPublicKey>
+            <i class="fa-solid fa-search cursor-pointer"
+               (click)="searchDomain()"></i>
+
             <i class="fa-solid fa-camera cursor-pointer"
                (click)="scanPublicKey()"
                *ngIf="hasCamera | async"></i>

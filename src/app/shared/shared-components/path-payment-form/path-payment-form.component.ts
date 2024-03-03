@@ -17,6 +17,9 @@ import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-si
 import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
+import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
+import { Record } from '@creit.tech/sorobandomains-sdk';
+import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 
 @Component({
   selector: 'app-path-payment-form',
@@ -146,6 +149,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     private readonly route: ActivatedRoute,
     private readonly translateService: TranslateService,
     private readonly cdr: ChangeDetectorRef,
+    private readonly sorobandomainsService: SorobandomainsService,
   ) { }
 
   updatePathFromHorizonSubscription: Subscription = combineLatest([
@@ -485,6 +489,40 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     });
 
     drawerRef.open();
+  }
+
+  async searchDomain(): Promise<void> {
+    this.nzDrawerService.create<PromptModalComponent>({
+      nzContent: PromptModalComponent,
+      nzPlacement: 'bottom',
+      nzTitle: '',
+      nzHeight: 'auto',
+      nzWrapClassName: 'ios-safe-y',
+      nzContentParams: {
+        title: 'Search a Soroban Domain',
+        description: 'Fetch the public by consulting the domain',
+        handleConfirmEvent: async (value: string) => {
+          if (!value) {
+            return;
+          }
+
+          const messageId: string = this.nzMessageService.loading('Searching...').messageId;
+
+          try {
+            const record: Record = await this.sorobandomainsService.sdk.searchDomain(
+              this.sorobandomainsService.domainParser(value)
+            );
+
+            this.swapForm.controls.destination.patchValue(record.value.address);
+
+            this.nzMessageService.remove(messageId);
+          } catch (e: any) {
+            this.nzMessageService.remove(messageId);
+            this.nzMessageService.error(e.message || 'Domain invalid or doesn\'t exist');
+          }
+        }
+      },
+    });
   }
 
 }

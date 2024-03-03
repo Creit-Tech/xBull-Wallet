@@ -29,6 +29,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import {
   AirgappedPublicKeyComponent
 } from '~root/shared/shared-modals/components/airgapped-public-key/airgapped-public-key.component';
+import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -40,6 +41,7 @@ const COMPONENTS = [
   QrScanModalComponent,
   AirgappedXdrSignerComponent,
   AirgappedPublicKeyComponent,
+  PromptModalComponent,
 ];
 
 @NgModule({
