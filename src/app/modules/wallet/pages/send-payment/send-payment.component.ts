@@ -434,7 +434,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       nzWrapClassName: 'ios-safe-y',
       nzContentParams: {
         title: 'Search a Soroban Domain',
-        description: 'Fetch the public by consulting the domain',
+        description: 'Fetch the public key by consulting the domain',
         handleConfirmEvent: async (value: string) => {
           if (!value) {
             return;
