@@ -26,15 +26,15 @@
         <span *ngIf="!isCollapsed">{{ 'COMMON_WORDS.OPERATIONS' | translate }}</span>
       </li>
 
-      <li [class.justify-center]="isCollapsed"
-          [class.items-center]="isCollapsed"
-          routerLink="/gift-cards"
-          nzMatchRouter
-          nzMatchRouterExact
-          nz-menu-item class="flex">
-        <i class="fa-solid fa-gifts" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Gift Cards</span>
-      </li>
+<!--      <li [class.justify-center]="isCollapsed"-->
+<!--          [class.items-center]="isCollapsed"-->
+<!--          routerLink="/gift-cards"-->
+<!--          nzMatchRouter-->
+<!--          nzMatchRouterExact-->
+<!--          nz-menu-item class="flex">-->
+<!--        <i class="fa-solid fa-gifts" [class.mr-4]="!isCollapsed"></i>-->
+<!--        <span *ngIf="!isCollapsed">Gift Cards</span>-->
+<!--      </li>-->
 
       <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
@@ -92,15 +92,15 @@
         <span *ngIf="!isCollapsed">WalletConnect</span>
       </li>
 
-      <li [class.justify-center]="isCollapsed"
-          [class.items-center]="isCollapsed"
-          routerLink="/airtime"
-          nzMatchRouter
-          nzMatchRouterExact
-          nz-menu-item class="flex">
-        <i class="fa-solid fa-mobile-screen-button" [class.mr-4]="!isCollapsed"></i>
-        <span *ngIf="!isCollapsed">Airtime</span>
-      </li>
+<!--      <li [class.justify-center]="isCollapsed"-->
+<!--          [class.items-center]="isCollapsed"-->
+<!--          routerLink="/airtime"-->
+<!--          nzMatchRouter-->
+<!--          nzMatchRouterExact-->
+<!--          nz-menu-item class="flex">-->
+<!--        <i class="fa-solid fa-mobile-screen-button" [class.mr-4]="!isCollapsed"></i>-->
+<!--        <span *ngIf="!isCollapsed">Airtime</span>-->
+<!--      </li>-->
 
       <li [class.hidden]="!(advanceMode$ | async)"
           [class.justify-center]="isCollapsed"

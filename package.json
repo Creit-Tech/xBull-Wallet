@@ -1,6 +1,6 @@
 {
   "name": "xbull",
-  "version": "1.19.0",
+  "version": "1.19.2",
   "scripts": {
     "ng": "./node_modules/.bin/ng",
     "start": "./node_modules/.bin/ng serve",
@@ -56,7 +56,7 @@
     "@capacitor/keyboard": "^4.0.0",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "^4.0.0",
-    "@creit.tech/sorobandomains-sdk": "^0.1.1",
+    "@creit.tech/sorobandomains-sdk": "^0.1.2",
     "@datorama/akita": "^7.0.0",
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@ionic-native/android-fingerprint-auth": "^5.36.0",

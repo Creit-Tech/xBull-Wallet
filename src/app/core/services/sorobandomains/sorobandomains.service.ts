@@ -13,7 +13,7 @@ export class SorobandomainsService {
     defaultTimeout: 30,
     network: SDK.Networks.PUBLIC,
     simulationAccount: 'GDTW6WIS5SKEITK6KZMJSPD7FK7Z5B7WSGYCGMQD6K4YH7RIHQYQSXJB',
-    stellarSDK: SDK,
+    stellarSDK: SDK as any,
   });
 
   constructor() { }

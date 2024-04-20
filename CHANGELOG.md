@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.19.2] - 2024-03-24
+### Fixed
+- Fix searching domains in the latest version of the contract
+
+### Removed
+- Remove gift cards and airtime options from the menu
+
 ## [1.19.0] - 2024-03-03
 ### Add
 - Allow searching soroban domains when making a payment 
