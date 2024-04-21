@@ -31,7 +31,7 @@ import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
-import { Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
+import { buildInvocationTree, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
 import { ClipboardService } from '~root/core/services/clipboard.service';
 
 @Component({
@@ -154,9 +154,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       );
     }))
     .pipe(map((operations: any[]) => {
-      return operations.map((operation, i) => {
-        return this.hostFunctionsService.parseHostFunctionIntoNodeTree(operation.function, i);
-      });
+      return operations.map((operation: Operation.InvokeHostFunction, i) => {
+        return (operation.auth || []).map((auth) => {
+          return this.hostFunctionsService.parseHostFunctionIntoNodeTree(auth.rootInvocation(), i);
+        });
+      }).flat();
     }));
 
 

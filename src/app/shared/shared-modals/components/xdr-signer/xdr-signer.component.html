@@ -1,10 +1,6 @@
 <section class="w-full h-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
   <section class="col-span-1 text-center">
-    <h2 class="m-0 p-0 text-off-white font-bold text-xl mb-2">
-      {{ 'XDR_SIGNER.TITLE' | translate }}
-    </h2>
-
-    <p *ngIf="from !== 'wallet'" class="pt-4 text-xs ">
+    <p *ngIf="from !== 'wallet'" class="text-xs ">
       {{ 'COMMON_WORDS.FROM' | translate }}: <span class="opacity-80">{{ from }}</span>
     </p>
 
