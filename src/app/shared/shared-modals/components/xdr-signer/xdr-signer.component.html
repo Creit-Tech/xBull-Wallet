@@ -606,19 +606,38 @@
     </dl>
   </section>
 
-  <section class="col-span-1 flex">
-    <div class="flex-1 pr-2">
+  <section class="col-span-1 flex flex-wrap">
+    <div class="w-6/12 mb-[1rem] pr-2">
+      <button (click)="export()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzGhost nzBlock>
+        Copy XDR
+      </button>
+    </div>
+    <div class="w-6/12 mb-[1rem] pl-2">
+      <button (click)="signAndSport()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzGhost nzBlock>
+        Sign & Copy
+      </button>
+    </div>
+
+    <div class="w-6/12 flex-1 pr-2">
       <button (click)="onClose()"
               nz-button
               nzType="primary"
               nzSize="large"
-              nzBlock
-              nzDanger>
+              nzBlock nzDanger>
         {{ 'COMMON_WORDS.REJECT' | translate }}
       </button>
     </div>
-    <div class="flex-1 pl-2">
-      <button (click)="onAccepted()"
+
+    <div class="w-6/12 flex-1 pl-2">
+      <button (click)="signAndEmit()"
               nz-button
               nzType="primary"
               nzSize="large"
@@ -628,5 +647,3 @@
     </div>
   </section>
 </section>
-
-
