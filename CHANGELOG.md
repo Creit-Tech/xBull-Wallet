@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.20.0] - 2024-04-21
+### Add
+- Allow exporting an XDR that is going to be signed (or it was signed)
+- Show Soroban invocation details when signing (currently the Authentication entry)
+
 ## [1.19.2] - 2024-03-24
 ### Fixed
 - Fix searching domains in the latest version of the contract

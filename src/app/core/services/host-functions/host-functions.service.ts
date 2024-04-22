@@ -43,7 +43,7 @@ export class HostFunctionsService {
             children: (invocation.args as ExecuteInvocation).args.map(arg => ({
               isLeaf: true,
               key: crypto.randomUUID(),
-              title: arg,
+              title: typeof arg !== 'object' ? arg : JSON.stringify(arg),
               expanded: true,
             })),
           }, {
@@ -65,6 +65,7 @@ export class HostFunctionsService {
 
   parseHostFunctionIntoNodeTree(f: xdr.SorobanAuthorizedInvocation, preKey: number): NzTreeNodeOptions[] {
     const invocationTree: InvocationTree = buildInvocationTree(f);
+    console.log(invocationTree);
     return this.getNodeChildren([invocationTree]);
   }
 
