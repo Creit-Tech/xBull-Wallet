@@ -22,7 +22,7 @@ import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery } from '~ro
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { Asset, MemoType } from 'stellar-sdk';
+import { Asset, FeeBumpTransaction, MemoType } from 'stellar-sdk';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -205,7 +205,11 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
         xdr: newOrder.tx,
         pickedNetworkPassphrase: newOrder.network,
         signingResultsHandler: data => {
-          if (orderTransaction.memo.type !== 'text') {
+          const memoType: string = (orderTransaction instanceof FeeBumpTransaction)
+            ? orderTransaction.innerTransaction.memo.type
+            : orderTransaction.memo.type;
+
+          if (memoType !== 'text') {
             this.nzMessageService.error(
               this.translateService.instant('GIFT_CARDS.INVALID_ORDER_REQUEST')
             );
@@ -213,7 +217,9 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
           }
 
           this.giftCardsService.confirmOrder({
-            orderId: orderTransaction.memo.value as string,
+            orderId: (orderTransaction instanceof FeeBumpTransaction)
+              ? orderTransaction.innerTransaction.memo.value as string
+              : orderTransaction.memo.value as string,
             tx: newOrder.tx,
             signatures: data.signers,
           })

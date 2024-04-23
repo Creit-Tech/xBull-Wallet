@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
-import { Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, Transaction } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,7 @@ export class HardwareWalletsService {
   async signWithLedger(data: {
     accountPath: string,
     publicKey: string,
-    transaction: Transaction,
+    transaction: Transaction | FeeBumpTransaction,
     transport: TransportWebUSB,
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
@@ -103,7 +103,7 @@ export class HardwareWalletsService {
 
   async signWithTrezor(params: {
     path: string;
-    transaction: Transaction;
+    transaction: Transaction | FeeBumpTransaction;
     networkPassphrase: string;
   }): Promise<IHWSigningResult> {
     const trezorTransaction = transformTransaction(params.path, params.transaction);

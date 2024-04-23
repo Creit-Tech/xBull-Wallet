@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import { filter, map, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import {
   HorizonApisQuery,
@@ -31,7 +31,7 @@ import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
-import { buildInvocationTree, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
+import { buildInvocationTree, FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
 import { ClipboardService } from '~root/core/services/clipboard.service';
 
 @Component({
@@ -57,13 +57,15 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   // Example will be when getting a request from a website
   @Input() ignoreKeptPassword = false;
 
-  xdr$: ReplaySubject<string> = new ReplaySubject<string>();
-  xdrParsed$: ReplaySubject<Transaction> = new ReplaySubject<Transaction>();
+  xdr$: ReplaySubject<string> = new ReplaySubject<string>(0);
+  xdrParsed$: ReplaySubject<Transaction | FeeBumpTransaction> = new ReplaySubject<Transaction | FeeBumpTransaction>(0);
+  transactionType$: ReplaySubject<'Transaction' | 'Fee Bump Transaction'> = new ReplaySubject<'Transaction' | 'Fee Bump Transaction'>(0);
   @Input() set xdr(data: string) {
     try {
       const parsedXdr = this.stellarSdkService.createTransaction({ xdr: data });
       this.xdr$.next(data);
       this.xdrParsed$.next(parsedXdr as any);
+      this.transactionType$.next(parsedXdr instanceof FeeBumpTransaction ? 'Fee Bump Transaction' : 'Transaction');
     } catch (e) {
       console.error(e);
       this.nzMessageService.error('The transaction you are trying to sign is invalid');
@@ -109,7 +111,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(xdr => {
       try {
-        this.stellarSdkService.checkIfAllOperationsAreHandled(xdr.operations);
+          this.stellarSdkService.checkIfAllOperationsAreHandled(
+            xdr instanceof FeeBumpTransaction ? xdr.innerTransaction.operations : xdr.operations
+          );
       } catch (e: any) {
         this.nzMessageService.error(e.message);
         this.onClose();
@@ -118,11 +122,17 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   // TODO: Handle this and a better way for the compiler understand the different types of operations
   operations$: Observable<any> = this.xdrParsed$
-    .pipe(map(xdrParse => xdrParse?.operations || []));
+    .pipe(
+      map(xdrParse => {
+        return xdrParse instanceof FeeBumpTransaction
+          ? xdrParse.innerTransaction.operations || []
+          : xdrParse?.operations || [];
+      })
+    );
 
   fee$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(data => !!data))
-    .pipe(pluck<Transaction, string>('fee'))
+    .pipe(filter<Transaction | FeeBumpTransaction>(data => !!data))
+    .pipe(pluck<Transaction | FeeBumpTransaction, string>('fee'))
     .pipe(map(fee =>
       new BigNumber(fee)
         .dividedBy('10000000')
@@ -130,17 +140,23 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     ));
 
   memoText$: Observable<string | undefined> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
+    .pipe(filter<Transaction | FeeBumpTransaction>(Boolean))
     .pipe(map(transaction => {
-      return this.walletsService.parseMemo(transaction.memo);
+      return this.walletsService.parseMemo(
+        transaction instanceof FeeBumpTransaction ? transaction.innerTransaction.memo : transaction.memo
+      );
     }));
 
   sequenceNumber$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
-    .pipe(pluck('sequence'));
+    .pipe(filter<Transaction | FeeBumpTransaction>(Boolean))
+    .pipe(map(tx => {
+      return tx instanceof FeeBumpTransaction
+        ? tx.innerTransaction.sequence
+        : tx.sequence;
+    }));
 
   source$: Observable<string> = this.xdrParsed$
-    .pipe(filter<Transaction>(Boolean))
+    .pipe(filter<Transaction | FeeBumpTransaction>(Boolean))
     .pipe(pluck('source'));
 
   /**
@@ -291,11 +307,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       const xdr: string = await this.xdr$.pipe(take(1)).toPromise();
       const selectedNetworkPassphrase: Networks = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
       const secret: string = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
-      const transaction: Transaction = this.stellarSdkService.createTransaction({
+      const transaction: Transaction | FeeBumpTransaction = this.stellarSdkService.createTransaction({
         xdr,
         networkPassphrase: selectedNetworkPassphrase
       });
-      const keypair: Keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
+      const keypair: Keypair = this.stellarSdkService.keypairFromSecret({ secret });
 
       // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
       const keypairSignature = transaction.getKeypairSignature(keypair as any);
@@ -365,7 +381,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         networkPassphrase: selectedNetworkPassphrase
       });
 
-      const keypair = this.stellarSdkService.keypairFromSecret({ transaction, secret });
+      const keypair = this.stellarSdkService.keypairFromSecret({ secret });
 
       // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
       const keypairSignature = transaction.getKeypairSignature(keypair as any);
@@ -605,7 +621,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
 
 export interface ISigningResults {
-  transaction: Transaction;
+  transaction: Transaction | FeeBumpTransaction;
   baseXDR: string;
   signedXDR: string;
   signers: Array<{

@@ -19,6 +19,11 @@
 
   <section class="col-span-1 overflow-y-auto no-scrollbar">
     <dl>
+      <dt class="text-off-white text-base font-bold mb-1 w-full">Envelope type:</dt>
+      <dd class=" break-all text-sm mb-3 w-full">{{ transactionType$ | async }}</dd>
+    </dl>
+
+    <dl>
       <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'XDR_SIGNER.SEQUENCE_NUMBER' | translate }}:</dt>
       <dd class=" break-all text-sm mb-3 w-full">{{ sequenceNumber$ | async }}</dd>
 

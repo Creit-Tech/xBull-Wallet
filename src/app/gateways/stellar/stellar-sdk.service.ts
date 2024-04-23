@@ -72,7 +72,7 @@ export class StellarSdkService {
   ) { }
 
   // tslint:disable-next-line:typedef
-  keypairFromSecret(params: { transaction: SDK.Transaction, secret: string }) {
+  keypairFromSecret(params: { secret: string }) {
     return this.SDK.Keypair.fromSecret(params.secret);
   }
 
@@ -84,12 +84,18 @@ export class StellarSdkService {
     );
   }
 
-  submit(transaction: SDK.Transaction): Promise<SDK.Horizon.HorizonApi.SubmitTransactionResponse> {
+  submit(transaction: SDK.Transaction | SDK.FeeBumpTransaction): Promise<SDK.Horizon.HorizonApi.SubmitTransactionResponse> {
       return this.selectServer().submitTransaction(transaction);
   }
 
   // TODO: once soroban client is here to stay, refactor all the SDK logic
-  createTransaction(params: { xdr: string; networkPassphrase?: string; }): SDK.Transaction {
+  createTransaction(params: { xdr: string; networkPassphrase?: string; }): SDK.Transaction | SDK.FeeBumpTransaction {
+    try {
+      return new this.SDK.FeeBumpTransaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
+    } catch (e) {
+      console.error(e);
+    }
+
     return new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
   }
 
@@ -107,7 +113,7 @@ export class StellarSdkService {
    */
   signTransaction(data: { xdr: string, secret: string, passphrase: string; }): string {
     const transaction = this.createTransaction({ xdr: data.xdr, networkPassphrase: data.passphrase });
-    const keypair = this.keypairFromSecret({ transaction, secret: data.secret });
+    const keypair = this.keypairFromSecret({ secret: data.secret });
     // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
     transaction.sign(keypair as any);
     return transaction.toXDR();
