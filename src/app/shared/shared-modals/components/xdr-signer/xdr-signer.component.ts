@@ -47,7 +47,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(
       switchMap((xdr: string | undefined) => {
         return !xdr ? of(undefined) : QRCode.toDataURL(xdr);
-      })
+      }),
     );
 
   // Deprecated
@@ -64,7 +64,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   // Example will be when getting a request from a website
   @Input() ignoreKeptPassword = false;
 
-  xdr$: ReplaySubject<string> = new ReplaySubject<string>(0);
+  xdr$: ReplaySubject<string> = new ReplaySubject<string>();
   xdrParsed$: ReplaySubject<Transaction | FeeBumpTransaction> = new ReplaySubject<Transaction | FeeBumpTransaction>(0);
   transactionType$: ReplaySubject<'Transaction' | 'Fee Bump Transaction'> = new ReplaySubject<'Transaction' | 'Fee Bump Transaction'>(0);
   @Input() set xdr(data: string) {
@@ -620,10 +620,16 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     return fromUnixTime(epoch);
   }
 
-  copyToClipboard(value: string): void {
-    this.clipboardService.copyToClipboard(value);
-    this.nzMessageService.success('XDR copied to the clipboard');
-    this.exportXdr$.next(undefined);
+  copyToClipboard(): void {
+    const exportXdr = this.exportXdr$.getValue();
+    if (exportXdr) {
+      this.clipboardService.copyToClipboard(exportXdr);
+      this.nzMessageService.success('XDR copied to the clipboard');
+      this.exportXdr$.next(undefined);
+    } else {
+      this.nzMessageService.error('XDR is not available, contact support');
+      this.exportXdr$.next(undefined);
+    }
   }
 
 }

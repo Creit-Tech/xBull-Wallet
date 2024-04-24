@@ -43,7 +43,7 @@ export class HostFunctionsService {
             children: (invocation.args as ExecuteInvocation).args.map(arg => ({
               isLeaf: true,
               key: crypto.randomUUID(),
-              title: typeof arg !== 'object' ? arg : JSON.stringify(arg),
+              title: typeof arg !== 'object' ? arg : JSON.stringify(arg, (_, v) => typeof v === 'bigint' ? v.toString() : v, 2),
               expanded: true,
             })),
           }, {

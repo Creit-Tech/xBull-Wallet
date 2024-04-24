@@ -649,13 +649,16 @@
   </section>
 </section>
 
-<ng-container *ngIf="exportXdrQr$ | async as exportXdrQr">
-  <nz-modal nzCancelText="Cancel" nzOkText="Copy XDR"
-            (nzOnCancel)="exportXdr$.next(undefined)"
-            (nzOnOk)="copyToClipboard(exportXdr$.getValue()!)"
-            [nzVisible]="true">
-    <ng-container *nzModalContent>
-      <img class="mx-auto" [src]="exportXdrQr" alt="">
-    </ng-container>
-  </nz-modal>
-</ng-container>
+<nz-modal nzCancelText="Cancel" nzOkText="Copy XDR"
+          (nzOnCancel)="exportXdr$.next(undefined)"
+          (nzOnOk)="copyToClipboard()"
+          [nzVisible]="exportXdr$ | async">
+  <ng-container *nzModalContent>
+    <img *ngIf="exportXdrQr$ | async as exportXdrQr; else tooLongQr" class="mx-auto" [src]="exportXdrQr" alt="">
+    <ng-template #tooLongQr>
+      <h3 class="w-full text-center p-4">
+        XDR is too large for a QR, use the copy button to export the XDR manually
+      </h3>
+    </ng-template>
+  </ng-container>
+</nz-modal>
