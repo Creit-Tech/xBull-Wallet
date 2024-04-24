@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.21.0] - Not deployed
 ### Add
 - Allow signing Fee Bump transactions
+- Allow exporting and importing an XDR using QRs
 
 ## [1.20.0] - 2024-04-21
 ### Add

@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { UntypedFormControl, Validators } from '@angular/forms';
-import { BehaviorSubject, merge, Subject } from 'rxjs';
-import { switchMap, take, takeUntil } from 'rxjs/operators';
-import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { TranslateService } from '@ngx-translate/core';
+import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 
 @Component({
   selector: 'app-import-xdr',
@@ -24,7 +23,6 @@ export class ImportXdrComponent implements OnInit {
 
   constructor(
     private readonly router: Router,
-    private readonly componentCreatorService: ComponentCreatorService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly stellarSdkService: StellarSdkService,
     private readonly nzMessageService: NzMessageService,
@@ -75,6 +73,24 @@ export class ImportXdrComponent implements OnInit {
     }
 
     this.signedControl.reset();
+  }
+
+  async scanQR(): Promise<void> {
+    const drawerRef = this.nzDrawerService.create<QrScanModalComponent>({
+      nzContent: QrScanModalComponent,
+      nzPlacement: 'bottom',
+      nzWrapClassName: 'ios-safe-y',
+      nzTitle: this.translateService.instant('Scan XDR'),
+      nzHeight: '100%',
+      nzContentParams: {
+        handleQrScanned: text => {
+          this.signControl.patchValue(text);
+          drawerRef.close();
+        }
+      }
+    });
+
+    drawerRef.open();
   }
 
 }

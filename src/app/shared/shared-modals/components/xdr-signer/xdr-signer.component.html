@@ -614,7 +614,7 @@
               nzType="primary"
               nzSize="large"
               nzGhost nzBlock>
-        Copy XDR
+        Export XDR
       </button>
     </div>
     <div class="w-6/12 mb-[1rem] pl-2">
@@ -623,7 +623,7 @@
               nzType="primary"
               nzSize="large"
               nzGhost nzBlock>
-        Sign & Copy
+        Sign & Export
       </button>
     </div>
 
@@ -648,3 +648,14 @@
     </div>
   </section>
 </section>
+
+<ng-container *ngIf="exportXdrQr$ | async as exportXdrQr">
+  <nz-modal nzCancelText="Cancel" nzOkText="Copy XDR"
+            (nzOnCancel)="exportXdr$.next(undefined)"
+            (nzOnOk)="copyToClipboard(exportXdr$.getValue()!)"
+            [nzVisible]="true">
+    <ng-container *nzModalContent>
+      <img class="mx-auto" [src]="exportXdrQr" alt="">
+    </ng-container>
+  </nz-modal>
+</ng-container>

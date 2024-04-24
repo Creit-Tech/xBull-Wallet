@@ -13,11 +13,9 @@ import {
   SettingsQuery,
   WalletAccountType,
   WalletsAccountsQuery,
-  WalletsAssetsQuery
 } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
-import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { HardwareWalletsService } from '~root/core/services/hardware-wallets.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -31,8 +29,9 @@ import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
-import { buildInvocationTree, FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
 import { ClipboardService } from '~root/core/services/clipboard.service';
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -42,6 +41,14 @@ import { ClipboardService } from '~root/core/services/clipboard.service';
 export class XdrSignerComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   signing$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
+  exportXdr$: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  exportXdrQr$: Observable<string | undefined> = this.exportXdr$
+    .pipe(
+      switchMap((xdr: string | undefined) => {
+        return !xdr ? of(undefined) : QRCode.toDataURL(xdr);
+      })
+    );
 
   // Deprecated
   @Output() acceptHandler!: (result: string) => void;
@@ -179,11 +186,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly stellarSdkService: StellarSdkService,
     private readonly cryptoService: CryptoService,
     private readonly walletsAccountQuery: WalletsAccountsQuery,
-    private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
     private readonly hardwareWalletsService: HardwareWalletsService,
     private readonly horizonApisQuery: HorizonApisQuery,
@@ -261,14 +266,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   async export(): Promise<void> {
     const xdr: string = await this.xdr$.pipe(take(1)).toPromise();
-    this.clipboardService.copyToClipboard(xdr);
-    this.nzMessageService.success('XDR copied to the clipboard');
+    this.exportXdr$.next(xdr);
   }
 
   async signAndSport(): Promise<void> {
     const result: ISigningResults = await this.sign();
-    this.clipboardService.copyToClipboard(result.signedXDR);
-    this.nzMessageService.success('XDR copied to the clipboard');
+    this.exportXdr$.next(result.signedXDR);
   }
 
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<ISigningResults> {
@@ -615,6 +618,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   dateFromEpoch(epoch: number): Date {
     return fromUnixTime(epoch);
+  }
+
+  copyToClipboard(value: string): void {
+    this.clipboardService.copyToClipboard(value);
+    this.nzMessageService.success('XDR copied to the clipboard');
+    this.exportXdr$.next(undefined);
   }
 
 }
