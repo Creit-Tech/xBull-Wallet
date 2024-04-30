@@ -588,6 +588,19 @@
           </ng-container>
         </ng-container>
 
+        <ng-container *ngIf="operation.type === 'restoreFootprint'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.TYPE' | translate }}:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ 'RESTORE_LEDGER' | translate }}</dd>
+        </ng-container>
+
+        <ng-container *ngIf="operation.type === 'extendFootprintTtl'">
+          <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.TYPE' | translate }}:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ 'EXTEND_TO' | translate }}</dd>
+
+          <dt class="text-off-white text-base font-bold mb-1 w-full">TTL:</dt>
+          <dd class=" break-all text-sm mb-3 w-full">{{ operation.extendTo }}</dd>
+        </ng-container>
+
         <ng-container *ngIf="!!operation.source">
           <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.SOURCE' | translate }}:</dt>
           <dd appClipboard [textToCopy]="operation.source" class=" break-all text-sm mb-3 w-full">{{ operation.source | publicKey }}</dd>

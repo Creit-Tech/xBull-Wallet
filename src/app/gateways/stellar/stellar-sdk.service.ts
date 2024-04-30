@@ -43,7 +43,8 @@ export class StellarSdkService {
     'liquidityPoolWithdraw',
     'invokeHostFunction',
     'restoreFootprint',
-    'bumpFootprintExpiration'
+    'bumpFootprintExpiration',
+    'extendFootprintTtl'
   ];
 
   SDK: typeof SDK = SDK;

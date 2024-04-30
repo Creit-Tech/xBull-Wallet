@@ -476,6 +476,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         accountPath: selectedAccount.path,
         publicKey: selectedAccount.publicKey,
         transport,
+        blindTransaction: transaction instanceof FeeBumpTransaction
+          ? !!transaction.innerTransaction.operations.find(o => o.type === 'invokeHostFunction')
+          : !!transaction.operations.find(o => o.type === 'invokeHostFunction'),
       });
 
       transaction.addSignature(result.publicKey, result.signature);

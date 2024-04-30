@@ -1,4 +1,6 @@
 {
+  "EXTEND_TO": "Extend to",
+  "RESTORE_LEDGER": "Restore Ledger",
   "MAIN_LAYOUT": {
     "EDIT_SELECTED_WALLET": "Edit selected wallet",
     "NETWORK_NODE": "Network Node",
