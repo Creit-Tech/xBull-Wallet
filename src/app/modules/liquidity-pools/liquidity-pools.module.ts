@@ -17,7 +17,6 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { NgxMaskModule } from 'ngx-mask';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
@@ -29,6 +28,7 @@ import { WithdrawLiquidityComponent } from './components/withdraw-liquidity/with
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { SearchLiquidityPoolsComponent } from './components/search-liquidity-pools/search-liquidity-pools.component';
 import { TranslationModule } from '~root/translation.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 
 @NgModule({
@@ -58,7 +58,8 @@ import { TranslationModule } from '~root/translation.module';
     NzSelectModule,
     ReactiveFormsModule,
     NzInputModule,
-    NgxMaskModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     NzTagModule,
     NzEmptyModule,
     NzBadgeModule,
@@ -68,5 +69,8 @@ import { TranslationModule } from '~root/translation.module';
     NzSliderModule,
     TranslationModule.forChild(),
   ],
+  providers: [
+    provideEnvironmentNgxMask()
+  ]
 })
 export class LiquidityPoolsModule { }

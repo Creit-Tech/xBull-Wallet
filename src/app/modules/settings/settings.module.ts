@@ -39,13 +39,13 @@ import { LockingComponent } from './pages/locking/locking.component';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
-import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundImageComponent } from './pages/background-image/background-image.component';
 import { NzSliderModule } from 'ng-zorro-antd/slider';
 import { WalletAccountComponent } from './pages/wallet-account/wallet-account.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { TranslationModule } from '~root/translation.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 
 @NgModule({
@@ -93,11 +93,15 @@ import { TranslationModule } from '~root/translation.module';
     NzSwitchModule,
     NzSelectModule,
     NzSpinModule,
-    NgxMaskModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     NzSliderModule,
     NzCardModule,
     NzToolTipModule,
     TranslationModule.forChild(),
   ],
+  providers: [
+    provideEnvironmentNgxMask()
+  ]
 })
 export class SettingsModule { }

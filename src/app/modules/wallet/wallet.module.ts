@@ -8,7 +8,6 @@ import { FormsComponentsModule } from '~root/shared/forms-components/forms-compo
 import { AssetDetailsComponent } from './components/asset-details/asset-details.component';
 import { LoadingModule } from '~root/shared/loading/loading.module';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
-import { NgxMaskModule } from 'ngx-mask';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -38,6 +37,7 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 
 @NgModule({
@@ -62,7 +62,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     NzIconModule,
     NzInputModule,
     NzDrawerModule,
-    NgxMaskModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     NzAutocompleteModule,
     NzSelectModule,
     NzSpinModule,
@@ -83,5 +84,8 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
     SharedComponentsModule,
     NzToolTipModule,
   ],
+  providers: [
+    provideEnvironmentNgxMask(),
+  ]
 })
 export class WalletModule { }

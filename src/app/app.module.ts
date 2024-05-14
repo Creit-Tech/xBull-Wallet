@@ -7,7 +7,6 @@ import { AkitaNgDevtools } from '@datorama/akita-ngdevtools';
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
 import { ENV, environment } from '~env';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NgxMaskModule } from 'ngx-mask';
 import { BackgroundModule } from '~root/modules/background/background.module';
 import { FormsComponentsModule } from '~root/shared/forms-components/forms-components.module';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
@@ -34,6 +33,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { TranslationModule } from '~root/translation.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { AnchorsModule } from '~root/modules/anchors/anchors.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 registerLocaleData(en);
 
@@ -55,7 +55,8 @@ registerLocaleData(en);
     environment.production ? [] : AkitaNgDevtools.forRoot(),
     AkitaNgRouterStoreModule,
     HttpClientModule,
-    NgxMaskModule.forRoot(),
+    NgxMaskDirective,
+    NgxMaskPipe,
     BackgroundModule,
     FormsComponentsModule,
     SharedPipesModule,
@@ -83,7 +84,8 @@ registerLocaleData(en);
       provide: ENV,
       useValue: environment,
     },
-    { provide: NZ_I18N, useValue: en_US }
+    { provide: NZ_I18N, useValue: en_US },
+    provideEnvironmentNgxMask()
   ],
   bootstrap: [AppComponent]
 })
