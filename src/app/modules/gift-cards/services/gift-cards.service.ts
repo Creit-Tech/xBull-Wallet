@@ -3,7 +3,7 @@ import { GiftCardAccountToken, GiftCardsStore } from '~root/modules/gift-cards/s
 import { ENV, environment } from '~env';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
-import { from, Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import { omitBy, isNil} from 'lodash';
 import { Networks } from 'stellar-sdk';
 import { WalletsAccountsQuery } from '~root/state';
@@ -30,13 +30,9 @@ export class GiftCardsService {
 
   // TODO: We should make the generation of the token and remove from the store in an http middleware
   async getAuthToken(): Promise<string> {
-    const selectedAccount = await this.walletsAccountsQuery.getSelectedAccount$
-      .pipe(take(1))
-      .toPromise();
+    const selectedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
 
-    let accountToken = await this.giftCardsQuery.getWalletAccountToken(selectedAccount._id)
-      .pipe(take(1))
-      .toPromise();
+    let accountToken = await firstValueFrom(this.giftCardsQuery.getWalletAccountToken(selectedAccount._id));
 
     if (!accountToken) {
       this.nzMessageService.info('You need to authenticate with the service', {

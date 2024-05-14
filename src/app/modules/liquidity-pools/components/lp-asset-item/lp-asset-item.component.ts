@@ -83,7 +83,7 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
     this.lpAsset$
       .pipe(filter<any>(Boolean))
       .pipe(take(1))
-      .pipe(pluck<ILpAssetLoaded, ILpAssetLoaded['reserves']>('reserves'))
+      .pipe(map<ILpAssetLoaded, ILpAssetLoaded['reserves']>(asset => asset.reserves))
       .pipe(filter<any>(Boolean))
       .pipe(map((reserves: ILpAssetLoaded['reserves']) => {
         const mappedData = reserves

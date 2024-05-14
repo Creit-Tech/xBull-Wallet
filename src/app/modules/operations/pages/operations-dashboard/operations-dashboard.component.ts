@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery,
   IWalletsOperation,
@@ -113,11 +113,9 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
   }
 
   async checkOnBlockchain(): Promise<void> {
-    const selectedHorizonApi = await this.horizonApisQuery.getSelectedHorizonApi$.pipe(take(1))
-      .toPromise();
+    const selectedHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
-    const selectedAccount = await this.selectedAccount$.pipe(take(1))
-      .toPromise();
+    const selectedAccount = await firstValueFrom(this.selectedAccount$);
 
     const network = selectedHorizonApi.networkPassphrase === Networks.PUBLIC
       ? 'public'

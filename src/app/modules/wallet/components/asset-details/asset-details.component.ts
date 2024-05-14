@@ -7,7 +7,7 @@ import {
   WalletsAccountsQuery,
   WalletsAssetsQuery,
 } from '~root/state';
-import { merge, Observable, ReplaySubject, Subject } from 'rxjs';
+import { firstValueFrom, merge, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -26,7 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
   styleUrls: ['./asset-details.component.scss']
 })
 export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
-  componentDestroyed$: Subject<boolean> = new Subject<boolean>();
+  componentDestroyed$: Subject<void> = new Subject<void>();
   assetId$: ReplaySubject<IWalletAsset['_id']> = new ReplaySubject<IWalletAsset['_id']>();
   @Input() set assetId(data: IWalletAsset['_id']) {
     this.assetId$.next(data);
@@ -94,11 +94,9 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       selectedAccount,
       asset,
     ] = await Promise.all([
-      this.horizonApisQuery.getSelectedHorizonApi$
-        .pipe(take(1))
-        .toPromise(),
-      this.walletsAccountsQuery.getSelectedAccount$.pipe(take(1)).toPromise(),
-      this.asset$.pipe(take(1)).toPromise() as Promise<IWalletAsset<'issued'>>,
+      firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$),
+      firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$),
+      firstValueFrom(this.asset$),
     ]);
 
     if (!selectedAccount || !asset) {

@@ -3,7 +3,7 @@ import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import Str from '@ledgerhq/hw-app-str';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import TrezorConnect, { BundledResponse, StellarAddress } from 'trezor-connect';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
@@ -84,10 +84,8 @@ export class HardwareWalletsService {
 
   // This method only completes when Trezor connection is ready
   async waitUntilTrezorIsInitiated(): Promise<boolean> {
-    return this.trezorInitiated$
-      .pipe(filter(value => value))
-      .pipe(take(1))
-      .toPromise();
+    return firstValueFrom(this.trezorInitiated$
+      .pipe(filter(value => value)));
   }
 
   async getTrezorPublicKeys(range: { start: number; end: number }): Promise<BundledResponse<StellarAddress>> {

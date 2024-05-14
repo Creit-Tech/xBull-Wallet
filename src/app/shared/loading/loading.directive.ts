@@ -19,7 +19,7 @@ import { PulseLoadingComponent } from '~root/shared/loading/pulse-loading/pulse-
   selector: '[appLoading]'
 })
 export class LoadingDirective implements AfterViewInit, OnDestroy {
-  componentDestroyed$: Subject<boolean> = new Subject<boolean>();
+  componentDestroyed$: Subject<void> = new Subject<void>();
 
   appLoading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   @Input() set appLoading(status: boolean | null) {

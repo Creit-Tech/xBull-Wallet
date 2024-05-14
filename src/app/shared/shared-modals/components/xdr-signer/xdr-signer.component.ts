@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
@@ -64,7 +64,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   // Example will be when getting a request from a website
   @Input() ignoreKeptPassword = false;
 
-  xdr$: ReplaySubject<string> = new ReplaySubject<string>();
+  xdr$: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   xdrParsed$: ReplaySubject<Transaction | FeeBumpTransaction> = new ReplaySubject<Transaction | FeeBumpTransaction>(0);
   transactionType$: ReplaySubject<'Transaction' | 'Fee Bump Transaction'> = new ReplaySubject<'Transaction' | 'Fee Bump Transaction'>(0);
   @Input() set xdr(data: string) {
@@ -139,7 +139,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   fee$: Observable<string> = this.xdrParsed$
     .pipe(filter<Transaction | FeeBumpTransaction>(data => !!data))
-    .pipe(pluck<Transaction | FeeBumpTransaction, string>('fee'))
+    .pipe(map<Transaction | FeeBumpTransaction, string>(tx => {
+      return tx instanceof Transaction
+        ? tx.source
+        : tx.innerTransaction.source
+    }))
     .pipe(map(fee =>
       new BigNumber(fee)
         .dividedBy('10000000')
@@ -164,7 +168,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   source$: Observable<string> = this.xdrParsed$
     .pipe(filter<Transaction | FeeBumpTransaction>(Boolean))
-    .pipe(pluck('source'));
+    .pipe(map(tx => {
+      return tx instanceof Transaction ? tx.source : tx.innerTransaction.source;
+    }));
 
   /**
    * This observable includes all possible invoke functions from the tx and tries to parse them
@@ -265,7 +271,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   }
 
   async export(): Promise<void> {
-    const xdr: string = await this.xdr$.pipe(take(1)).toPromise();
+    const xdr: string | undefined = this.xdr$.getValue();
+
+    if (!xdr) {
+      throw new Error('XDR is undefined, please contact support');
+    }
+
     this.exportXdr$.next(xdr);
   }
 
@@ -307,8 +318,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     }
 
     try {
-      const xdr: string = await this.xdr$.pipe(take(1)).toPromise();
-      const selectedNetworkPassphrase: Networks = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+      const xdr: string | undefined = this.xdr$.getValue();
+
+      if (!xdr) {
+        throw new Error('XDR is undefined, please contact support');
+      }
+
+      const selectedNetworkPassphrase: Networks = await firstValueFrom(this.selectedNetworkPassphrase$);
       const secret: string = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
       const transaction: Transaction | FeeBumpTransaction = this.stellarSdkService.createTransaction({
         xdr,
@@ -362,9 +378,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         throw new Error('Unexpected error, contact support code: 9998');
       }
 
-      password = await componentRef.password
-        .pipe(take(1))
-        .toPromise();
+      password = await firstValueFrom(componentRef.password);
 
       drawerRef.close();
     } else {
@@ -376,7 +390,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     try {
       const secret = this.cryptoService.decryptText(selectedAccount.secretKey, password);
 
-      const xdr = await this.xdr$.pipe(take(1)).toPromise();
+      const xdr = this.xdr$.getValue();
+
+      if (!xdr) {
+        throw new Error('XDR is undefined, please contact support');
+      }
+
       const selectedNetworkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
       const transaction = this.stellarSdkService.createTransaction({
@@ -429,7 +448,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   async signWithLedger(selectedAccount: IWalletsAccountLedger): Promise<ISigningResults> {
     this.signing$.next(true);
-    const xdr = await this.xdr$.pipe(take(1)).toPromise();
+    const xdr = this.xdr$.getValue();
+
+    if (!xdr) {
+      throw new Error('XDR is undefined, please contact support');
+    }
+
     let transport: TransportWebUSB;
     let targetDevice: USBDevice | undefined;
 
@@ -507,8 +531,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   async signWithTrezor(selectedAccount: IWalletsAccountTrezor): Promise<ISigningResults> {
     this.signing$.next(true);
-    const xdr = await this.xdr$.pipe(take(1)).toPromise();
-    const networkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+    const xdr = this.xdr$.getValue();
+
+    if (!xdr) {
+      throw new Error('XDR is undefined, please contact support');
+    }
+
+    const networkPassphrase = await firstValueFrom(this.selectedNetworkPassphrase$);
 
     const transaction = this.stellarSdkService.createTransaction({
       xdr,
@@ -554,8 +583,13 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   async signWithAirgappedWallet(account: IWalletsAccountAirGapped): Promise<ISigningResults> {
     this.signing$.next(true);
-    const xdr = await this.xdr$.pipe(take(1)).toPromise();
-    const networkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+    const xdr = this.xdr$.getValue();
+
+    if (!xdr) {
+      throw new Error('XDR is undefined, please contact support');
+    }
+
+    const networkPassphrase = await firstValueFrom(this.selectedNetworkPassphrase$);
 
     const transaction = this.stellarSdkService.createTransaction({
       xdr,

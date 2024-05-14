@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
+import { firstValueFrom, ReplaySubject, Subject } from 'rxjs';
 import { ISiteConnection } from '~root/state';
 import { take } from 'rxjs/operators';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
@@ -24,10 +24,7 @@ export class ConnectedSiteDetailsComponent {
   ) { }
 
   async removeSiteRecords(): Promise<void> {
-    const records = await this.connectedSite$
-      .asObservable()
-      .pipe(take(1))
-      .toPromise();
+    const records = await firstValueFrom(this.connectedSite$);
 
     this.sitesConnectionsService.removeSiteConnection(records._id);
     this.nzDrawerRef.close();

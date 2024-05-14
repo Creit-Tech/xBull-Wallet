@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
-import { merge, Subject, throwError } from 'rxjs';
+import { firstValueFrom, merge, Subject, throwError } from 'rxjs';
 import { mergeAll, switchMap, take } from 'rxjs/operators';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
@@ -29,9 +29,9 @@ export class Sep10Service {
     params: { account: string; memo?: string; home_domain?: string; client_domain?: string }
   ): Promise<string> {
     let signedXdr;
-    const challenge = await this.http.get<{ transaction: string; network_passphrase: Networks; }>(url, {
+    const challenge = await firstValueFrom(this.http.get<{ transaction: string; network_passphrase: Networks; }>(url, {
       params
-    }).toPromise();
+    }));
 
     const walletAccountId = this.walletsService.generateWalletAccountId({
       publicKey: params.account,
@@ -58,9 +58,9 @@ export class Sep10Service {
       throw new Error('Authentication failed');
     }
 
-    const tokenResponse = await this.http.post<{ token: string }>(url, {
+    const tokenResponse = await firstValueFrom(this.http.post<{ token: string }>(url, {
       transaction: signedXdr,
-    }).toPromise();
+    }));
 
     return tokenResponse.token;
   }

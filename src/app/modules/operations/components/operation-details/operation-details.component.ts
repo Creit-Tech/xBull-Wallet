@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
 import { Networks } from 'stellar-sdk';
-import { ReplaySubject } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { HorizonApisQuery, IWalletsOperation } from '~root/state';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
@@ -27,10 +27,9 @@ export class OperationDetailsComponent implements OnInit {
   }
 
   async checkOnBlockchain(): Promise<void> {
-    const selectedHorizonApi = await this.horizonApisQuery.getSelectedHorizonApi$.pipe(take(1))
-      .toPromise();
+    const selectedHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
-    const operation = await this.operation$.pipe(take(1)).toPromise();
+    const operation = await firstValueFrom(this.operation$);
 
     const url = new URL(selectedHorizonApi.url);
     url.pathname = `operations/${operation.operationRecord.id}`;

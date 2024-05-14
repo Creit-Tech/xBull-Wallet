@@ -13,7 +13,7 @@ import { filter, takeUntil } from 'rxjs/operators';
   styleUrls: ['./earn-dashboard.component.scss']
 })
 export class EarnDashboardComponent implements OnInit, OnDestroy {
-  componentDestroyed$ = new Subject();
+  componentDestroyed$: Subject<void> = new Subject<void>();
   requestingStrategies$ = this.earnStrategiesQuery.requestingStrategies$;
   earnStrategies$ = this.earnStrategiesQuery.selectAll();
 

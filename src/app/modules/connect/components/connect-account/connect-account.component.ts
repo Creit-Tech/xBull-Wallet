@@ -8,7 +8,7 @@ import {
 } from '~root/state';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ConnectQuery } from '~root/modules/connect/state/connect.query';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable } from 'rxjs';
 import { filter, map, switchMap, take } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { UntypedFormControl, Validators } from '@angular/forms';
@@ -156,8 +156,8 @@ export class ConnectAccountComponent implements OnInit {
       openerPublicKey,
       keypair,
     ] = await Promise.all([
-      this.openerPublicKey$.pipe(take(1)).toPromise(),
-      this.keypair$.pipe(take(1)).toPromise(),
+      firstValueFrom(this.openerPublicKey$),
+      firstValueFrom(this.keypair$),
     ]);
 
     if (!openerPublicKey) {

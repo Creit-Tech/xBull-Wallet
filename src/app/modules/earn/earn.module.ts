@@ -18,7 +18,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { EarnAuthenticationComponent } from './pages/earn-authentication/earn-authentication.component';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
@@ -43,6 +42,7 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 
 @NgModule({
@@ -70,7 +70,8 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
     NzButtonModule,
     SharedPipesModule,
     ReactiveFormsModule,
-    NgxMaskModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     NzInputNumberModule,
     SharedComponentsModule,
     NzTableModule,
@@ -101,6 +102,7 @@ import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
     EarnStrategiesStore,
     EarnStrategiesQuery,
     EarnAuthenticatedGuard,
+    provideEnvironmentNgxMask()
   ]
 })
 export class EarnModule { }

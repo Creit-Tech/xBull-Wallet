@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SessionTypes } from '@walletconnect/types';
-import { ReplaySubject } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { WalletConnectService } from '~root/modules/walletconnect/services/walletconnect.service';
 import { take } from 'rxjs/operators';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
@@ -45,7 +45,7 @@ export class SessionDetailsComponent implements OnInit {
 
   async deleteSession(): Promise<void> {
     this.loading = true;
-    const session = await this.session$.pipe(take(1)).toPromise();
+    const session = await firstValueFrom(this.session$);
     try {
       await this.walletConnectService.disconnectSession({
         topic: session.topic,

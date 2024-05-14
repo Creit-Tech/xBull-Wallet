@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/operators';
-import { BehaviorSubject, combineLatest, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import { IAnchor } from '~root/modules/anchors/state/anchor.model';
 import { AnchorsQuery } from '~root/modules/anchors/state/anchors.query';
 import { StellarToml } from 'stellar-sdk';
@@ -27,7 +27,7 @@ import { createAnchorsAuthTokenId } from '~root/modules/anchors/state/anchors-au
   styleUrls: ['./anchor-details.component.scss']
 })
 export class AnchorDetailsComponent implements OnInit, OnDestroy {
-  componentDestroyed$ = new Subject();
+  componentDestroyed$: Subject<void> = new Subject<void>();
 
   anchorId$: Observable<IAnchor['_id']> = this.route.params.pipe(map(params => params.anchorId));
   anchor$: Observable<IAnchor | undefined> = this.anchorId$
@@ -98,7 +98,7 @@ export class AnchorDetailsComponent implements OnInit, OnDestroy {
   async updateAnchorCurrencies(anchor: IAnchor, parsedToml: any): Promise<void> {
     let serverInfo: ISep24InfoResponse;
     try {
-      serverInfo = await this.sep24Service.getInfo(anchor.transferServerSep24).toPromise();
+      serverInfo = await firstValueFrom(this.sep24Service.getInfo(anchor.transferServerSep24));
     } catch (e) {
       this.nzMessageService.error('We were not able to get updated info data from the Anchor');
       return;

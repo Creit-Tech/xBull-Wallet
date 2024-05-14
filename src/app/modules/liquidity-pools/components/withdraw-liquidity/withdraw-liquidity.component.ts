@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, merge, Observable, Subject, Subscription } from 'rxjs';
 import {
   HorizonApisQuery, ILpAsset,
   ILpAssetLoaded,
@@ -219,10 +219,9 @@ export class WithdrawLiquidityComponent implements OnInit, OnDestroy {
       selectedAccount,
       horizonApi
     ] = await Promise.all([
-      this.selectedLiquidityPool$
-        .pipe(take(1)).toPromise(),
-      this.selectedAccount$.pipe(take(1)).toPromise(),
-      this.horizonApiQuery.getSelectedHorizonApi$.pipe(take(1)).toPromise()
+      firstValueFrom(this.selectedLiquidityPool$),
+      firstValueFrom(this.selectedAccount$),
+      firstValueFrom(this.horizonApiQuery.getSelectedHorizonApi$)
     ]);
 
     if (!selectedLiquidityPool || !selectedAccount) {

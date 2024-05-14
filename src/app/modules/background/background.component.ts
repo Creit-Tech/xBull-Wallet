@@ -11,7 +11,7 @@ import {
 } from '../../../extension/interfaces';
 import { SiteRequestComponent } from '~root/modules/background/components/site-request/site-request.component';
 import { catchError, delay, filter, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
-import { merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { firstValueFrom, merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
@@ -210,9 +210,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
     drawerRef.open();
 
-    return resultSubject
-      .pipe(take(1))
-      .toPromise();
+    return firstValueFrom(resultSubject);
   }
 
 }

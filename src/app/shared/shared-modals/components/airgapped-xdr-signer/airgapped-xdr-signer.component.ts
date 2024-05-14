@@ -1,5 +1,15 @@
 import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  Observable,
+  of,
+  ReplaySubject,
+  Subject,
+  Subscription,
+  timer
+} from 'rxjs';
 import { map, switchMap, take, withLatestFrom } from 'rxjs/operators';
 import QRCode from 'qrcode';
 import { FormControl } from '@angular/forms';
@@ -88,7 +98,7 @@ export class AirgappedXdrSignerComponent implements AfterViewInit, OnDestroy {
 
   async updateCurrentIndex(action: 'up' | 'down'): Promise<void> {
     const currentIndex = this.currentIndex$.getValue();
-    const signRequestImages = await this.signRequestImages$.pipe(take(1)).toPromise();
+    const signRequestImages = await firstValueFrom(this.signRequestImages$);
 
     if (action === 'up') {
       if (signRequestImages.length - 1 > currentIndex) {

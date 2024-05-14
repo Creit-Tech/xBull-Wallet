@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, from, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of, Subject, Subscription } from 'rxjs';
 import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { debounceTime, delay, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -343,7 +343,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   async confirmSwap(): Promise<void> {
-    const selectedAccount = await this.walletAccountsQuery.getSelectedAccount$.pipe(take(1)).toPromise();
+    const selectedAccount = await firstValueFrom(this.walletAccountsQuery.getSelectedAccount$);
     const updatedPath = this.pathValue;
 
     const fromAsset: IWalletAssetModel = this.swapForm.value.fromAsset.asset;

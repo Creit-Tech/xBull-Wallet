@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConnectQuery } from '~root/modules/connect/state/connect.query';
 import { HorizonApisQuery, WalletsAccountsQuery } from '~root/state';
 import { map, pluck, switchMap, take, withLatestFrom } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
 import { Networks } from 'stellar-sdk';
 import { ConnectService, EventType } from '~root/modules/connect/services/connect.service';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
@@ -67,8 +67,8 @@ export class SignRequestComponent implements OnInit {
       openerPublicKey,
       keypair,
     ] = await Promise.all([
-      this.openerPublicKey$.pipe(take(1)).toPromise(),
-      this.keypair$.pipe(take(1)).toPromise(),
+      firstValueFrom(this.openerPublicKey$),
+      firstValueFrom(this.keypair$),
     ]);
 
     if (!openerPublicKey) {
@@ -76,7 +76,7 @@ export class SignRequestComponent implements OnInit {
       return;
     }
 
-    const xdr = await this.xdr$.pipe(take(1)).toPromise();
+    const xdr = await firstValueFrom(this.xdr$);
     if (!xdr) {
       this.nzMessageService.error('There was no XDR provided.');
       return;

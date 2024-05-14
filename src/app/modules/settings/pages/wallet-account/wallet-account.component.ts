@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, firstValueFrom, merge, Observable, Subject } from 'rxjs';
 import { map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import {
   HorizonApisQuery,
   IWallet,
   IWalletsAccount,
-  IWalletsAccountWithSecretKey,
+  WalletAccountType,
   WalletsAccountsQuery,
   WalletsQuery
 } from '~root/state';
@@ -80,7 +80,7 @@ export class WalletAccountComponent implements OnInit {
       return;
     }
 
-    const account = await this.account$.pipe(take(1)).toPromise();
+    const account = await firstValueFrom(this.account$);
 
     try {
       await this.walletsAccountsService.setAccountName({
@@ -96,12 +96,16 @@ export class WalletAccountComponent implements OnInit {
   }
 
   async copyPrivateKey(): Promise<any> {
-    await this.nzModalService.confirm({
+    this.nzModalService.confirm({
       nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.COPY_PRIVATE_KEY_TITLE'),
       nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.COPY_PRIVATE_KEY_CONTENT'),
       nzOnOk: async () => {
-        const account = await this.account$.pipe(take(1))
-          .toPromise() as IWalletsAccountWithSecretKey;
+        const account = await firstValueFrom(this.account$);
+
+        if (account.type !== WalletAccountType.with_secret_key) {
+          // TODO: toast this
+          throw new Error('Selected account is not a private key based account');
+        }
 
         const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
           nzContent: PasswordModalComponent,
@@ -113,7 +117,7 @@ export class WalletAccountComponent implements OnInit {
 
         drawerRef.open();
 
-        await drawerRef.afterOpen.pipe(take(1)).toPromise();
+        await firstValueFrom(drawerRef.afterOpen);
 
         const componentRef = drawerRef.getContentComponent();
 
@@ -147,16 +151,15 @@ export class WalletAccountComponent implements OnInit {
   }
 
   async removeAccount(): Promise<any> {
-    await this.nzModalService.confirm({
+    this.nzModalService.confirm({
       nzTitle: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.REMOVE_ACCOUNT_TITLE'),
       nzContent: this.translateService.instant('SETTINGS.WALLET_ACCOUNT.REMOVE_ACCOUNT_CONTENT'),
       nzOnOk: async () => {
         const walletId = await this.walletId$.pipe(take(1)).toPromise();
         const publicKey = await this.publicKey.pipe(take(1)).toPromise();
-        const accounts = await this.walletsAccountsQuery.selectAll({
+        const accounts = await firstValueFrom(this.walletsAccountsQuery.selectAll({
           filterBy: entity => entity.publicKey === publicKey && walletId === entity.walletId,
-        }).pipe(take(1))
-          .toPromise();
+        }));
 
         this.router.navigate(['/settings/wallets', walletId])
           .then(() => {
