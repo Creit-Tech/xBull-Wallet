@@ -57,7 +57,7 @@ export class AirgappedWalletService {
         nzOnCancel: _ => {
           reject(new Error('Process rejected or closed'));
         },
-        nzComponentParams: {
+        nzData: {
           path: params.path,
           requestResultHandler: (address: string) => {
             resolve({ address });
@@ -81,7 +81,7 @@ export class AirgappedWalletService {
         nzOnCancel: _ => {
           reject(new Error('Transaction rejected or closed'));
         },
-        nzComponentParams: {
+        nzData: {
           xdr: params.xdr,
           network: params.network,
           path: params.path,
