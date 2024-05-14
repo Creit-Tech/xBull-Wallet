@@ -57,7 +57,7 @@
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/status-bar": "^4.0.0",
     "@creit.tech/sorobandomains-sdk": "^0.1.2",
-    "@datorama/akita": "^7.0.0",
+    "@datorama/akita": "^8.0.1",
     "@datorama/akita-ng-router-store": "^7.0.0",
     "@ionic-native/android-fingerprint-auth": "^5.36.0",
     "@ionic-native/core": "^5.36.0",
