@@ -84,7 +84,7 @@
     "ng-zorro-antd": "15.0.3",
     "ngx-file-drop": "^13.0.0",
     "ngx-markdown": "^16.0.0",
-    "ngx-mask": "^11.1.5",
+    "ngx-mask": "^16.2.9",
     "path-browserify": "^1.0.1",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.0",
