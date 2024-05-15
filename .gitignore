@@ -1,5 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+.idea
+
 # Random files
 xbull-wallet-chrome.zip
 xbull-wallet-firefox.zip

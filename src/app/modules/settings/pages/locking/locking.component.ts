@@ -122,7 +122,6 @@ export class LockingComponent implements OnInit, OnDestroy {
         )))
         .subscribe(encryptResult => {
           this.settingsService.addDeviceAuthToken({
-            passwordAuthToken: encryptResult.token,
             passwordAuthTokenIdentifier: encryptResult.identifier,
             passwordAuthKey: encryptResult.key,
           });

@@ -24,6 +24,9 @@ export interface SettingsState {
 
   // This is a token which is used to decode an encrypted password in mobile devices
   passwordAuthTokenActive: boolean;
+  /**
+   *  @deprecated
+   */
   passwordAuthToken?: string;
   passwordAuthKey?: string;
   passwordAuthTokenIdentifier?: string;

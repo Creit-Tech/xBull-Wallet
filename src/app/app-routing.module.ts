@@ -4,8 +4,6 @@ import { IsThereWalletsGuard } from '~root/core/wallets/guards/is-there-wallets.
 import { LabComponent } from '~root/modules/lab/lab.component';
 import {BackgroundComponent} from "~root/modules/background/background.component";
 import {environment} from "~env";
-import { IosViewRestrictionGuard } from '~root/core/guards/ios-view-restriction.guard';
-import { IosBlockPageComponent } from '~root/mobile/components/ios-block-page/ios-block-page.component';
 import { MainLayoutV1Component } from '~root/core/layouts/main-layout-v1/main-layout-v1.component';
 
 const routes: Routes = [
@@ -17,10 +15,6 @@ const routes: Routes = [
   {
     path: 'sign-from-background',
     component: BackgroundComponent,
-  },
-  {
-    path: 'ios-block-message',
-    component: IosBlockPageComponent
   },
   {
     path: 'connect',

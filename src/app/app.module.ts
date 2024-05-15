@@ -16,7 +16,6 @@ import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IonicModule } from '@ionic/angular';
 import { MobileModule } from '~root/mobile/mobile.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -47,9 +46,6 @@ registerLocaleData(en);
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot({
-      hardwareBackButton: false,
-    }),
     BrowserAnimationsModule,
     AppRoutingModule,
     environment.production ? [] : AkitaNgDevtools.forRoot(),

@@ -142,7 +142,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(map<Transaction | FeeBumpTransaction, string>(tx => {
       return tx instanceof Transaction
         ? tx.source
-        : tx.innerTransaction.source
+        : tx.innerTransaction.source;
     }))
     .pipe(map(fee =>
       new BigNumber(fee)
@@ -287,13 +287,11 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<ISigningResults> {
     const [
-      passwordAuthToken,
       passwordAuthKey,
       passwordAuthTokenIdentifier
     ] = await Promise.all([
-      this.settingsQuery.passwordAuthToken$.pipe(take(1)).toPromise(),
-      this.settingsQuery.passwordAuthKey$.pipe(take(1)).toPromise(),
-      this.settingsQuery.passwordAuthTokenIdentifier$.pipe(take(1)).toPromise(),
+      firstValueFrom(this.settingsQuery.passwordAuthKey$),
+      firstValueFrom(this.settingsQuery.passwordAuthTokenIdentifier$),
     ]);
 
     if (!passwordAuthKey || !passwordAuthTokenIdentifier) {
@@ -306,7 +304,6 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     let decryptedPassword: string;
     try {
       decryptedPassword = await this.deviceAuthService.decryptWithDevice({
-        token: passwordAuthToken,
         identifier: passwordAuthTokenIdentifier,
         key: passwordAuthKey,
       });

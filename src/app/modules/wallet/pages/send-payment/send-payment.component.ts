@@ -36,7 +36,6 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { QrScannerService } from '~root/mobile/services/qr-scanner.service';
 import { AccountResponse } from 'stellar-sdk/lib/horizon';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
@@ -146,7 +145,6 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
     private readonly nzModalService: NzModalService,
-    private readonly qrScannerService: QrScannerService,
     private readonly route: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
     private readonly translateService: TranslateService,
@@ -371,16 +369,6 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
 
     drawerRef.open();
 
-  }
-
-  scanQr(): void {
-    this.qrScannerService.scan()
-      .then(value => {
-        if (value.completed && value.text) {
-          this.form.controls.publicKey.patchValue(value.text);
-        }
-      })
-      .catch(console.error);
   }
 
   scanPublicKey(): void {

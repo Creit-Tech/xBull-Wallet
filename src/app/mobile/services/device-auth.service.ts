@@ -1,116 +1,88 @@
-import { Inject, Injectable } from '@angular/core';
-import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
-import { Platform } from '@ionic/angular';
+import { Injectable } from '@angular/core';
 import { randomBytes } from 'crypto';
 import { AES, enc } from 'crypto-js';
-import { TouchID } from '@awesome-cordova-plugins/touch-id';
-import { Keychain } from '@awesome-cordova-plugins/keychain';
+import { BiometricAuth, BiometryErrorType } from '@aparajita/capacitor-biometric-auth';
+import { DataType, SecureStorage } from '@aparajita/capacitor-secure-storage';
 
 @Injectable()
 export class DeviceAuthService {
-
-  constructor(
-    private androidFingerprintAuth: AndroidFingerprintAuth,
-    @Inject('TouchID')
-    private touchId: typeof TouchID,
-    @Inject('Keychain')
-    private keychain: typeof Keychain,
-    private platform: Platform,
-  ) { }
-
-  async encryptWithDevice(text: string): Promise<{ token?: string; identifier: string; key: string; }> {
-    const identifier = 'xBull:' + randomBytes(32).toString('hex');
-    const key = randomBytes(32).toString('hex');
-    const encryptedText = AES.encrypt(text, key).toString();
-    if (this.platform.is('android')) {
-      const results = await this.androidFingerprintAuth.isAvailable();
-      if (results.isAvailable) {
-        try {
-          const result = await this.androidFingerprintAuth.encrypt({
-            clientId: identifier,
-            password: encryptedText,
-            disableBackup: true,
-            dialogTitle: 'Auth with device',
-          });
-
-          return {
-            token: result.token,
-            identifier,
-            key,
-          };
-        } catch (e: any) {
-          throw new Error(`We were not able to encrypt with the device, try again or contact support.`);
-        }
-      } else {
-        throw new Error('Device auth method or password required to continue');
-      }
+  async isAvailable(): Promise<{ access: boolean; message?: BiometryErrorType }> {
+    try {
+      const result = await BiometricAuth.checkBiometry();
+      return { access: result.isAvailable };
+    } catch (e: unknown) {
+      return { access: false, message: e as BiometryErrorType };
     }
-
-    else if (this.platform.is('ios')) {
-      try {
-        await this.touchId.isAvailable();
-      } catch (e: any) {
-        console.error(e);
-        throw new Error(`Touch/Face ID is not available.`);
-      }
-
-      try {
-        await this.touchId.verifyFingerprint('Scan your fingerprint/face please');
-      } catch (e: any) {
-        console.error(e);
-        throw new Error(`Authentication failed`);
-      }
-
-      try {
-        await this.keychain.set(identifier, encryptedText, true);
-      } catch (e: any) {
-        console.error(e);
-        throw new Error(`We couldn't save the value in the secured storage`);
-      }
-
-      return {
-        identifier,
-        key,
-      };
-    }
-
-    throw new Error('Platform not supported');
   }
 
-  async decryptWithDevice(params: { token?: string, identifier: string; key: string }): Promise<string> {
-    if (this.platform.is('android')) {
-      if (!params.token) {
-        throw new Error(`Token is not available in the device, please reset the auth integration in the settings page`);
-      }
+  async encryptWithDevice(text: string): Promise<{ identifier: string; key: string; }> {
+    const identifier = randomBytes(32).toString('hex');
+    const key = randomBytes(32).toString('hex');
+    const encryptedText = AES.encrypt(text, key).toString();
 
-      const results = await this.androidFingerprintAuth.isAvailable();
-      if (results.isAvailable) {
-        try {
-          const result = await this.androidFingerprintAuth.decrypt({
-            clientId: params.identifier,
-            token: params.token,
-          });
-
-          return AES.decrypt(result.password, params.key).toString(enc.Utf8);
-        } catch (e: any) {
-          throw new Error(`Unauthorized, try again or contact support.`);
-        }
-      } else {
-        throw new Error('Device auth method or password is not available');
-      }
+    const { access } = await this.isAvailable();
+    if (!access) {
+      throw new Error('Device authentication not supported');
     }
 
-    else if (this.platform.is('ios')) {
-      try {
-        return this.keychain.get(params.identifier, 'Confirm with Touch/Face ID to continue')
-          .then(text => AES.decrypt(text, params.key).toString(enc.Utf8));
-      } catch (e: any) {
-        console.error(e);
-        throw new Error(`We couldn't get the key from the secured storage.`);
-      }
+    try {
+      await BiometricAuth.authenticate({
+        allowDeviceCredential: false,
+      });
+    } catch (e: any) {
+      console.error(e.message);
+      throw new Error(e.message);
     }
 
-    throw new Error('Platform not supported');
+    try {
+      await SecureStorage.set(
+        identifier,
+        encryptedText,
+        false,
+        false,
+      );
+    } catch (e: any) {
+      console.error(e.message);
+      throw new Error(e.message);
+    }
+
+    return {
+      identifier,
+      key,
+    };
+  }
+
+  async decryptWithDevice(params: { identifier: string; key: string }): Promise<string> {
+    const { access } = await this.isAvailable();
+    if (!access) {
+      throw new Error('Device authentication not supported');
+    }
+
+    try {
+      await BiometricAuth.authenticate({
+        allowDeviceCredential: false,
+      });
+    } catch (e: any) {
+      console.error(e.message);
+      throw new Error(e.message);
+    }
+
+    let encryptedText: DataType | null;
+    try {
+      encryptedText = await SecureStorage.get(
+        params.identifier,
+        false,
+        false,
+      );
+      if (!encryptedText || typeof encryptedText !== 'string') {
+        throw new Error('Device data identifier is invalid, please re-register your authentication device.');
+      }
+    } catch (e: any) {
+      console.error(e.message);
+      throw new Error(e.message);
+    }
+
+    return AES.decrypt(encryptedText, params.key).toString(enc.Utf8);
   }
 
 
