@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
+import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { GiftCardsService, IGiftCardOrder } from '~root/modules/gift-cards/services/gift-cards.service';
 import { take } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -31,7 +31,7 @@ export class GiftCardOrderDetailsComponent implements OnInit {
   }
 
   async getCodes(): Promise<void> {
-    const order = await this.order$.pipe(take(1)).toPromise();
+    const order = await firstValueFrom(this.order$);
     this.giftCardsService.getRedeemCode(order._id)
       .subscribe({
         next: data => {

@@ -1,5 +1,5 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
-import { combineLatest, ReplaySubject } from 'rxjs';
+import { combineLatest, firstValueFrom, ReplaySubject } from 'rxjs';
 import { IEarnStrategy } from '~root/modules/earn/state/strategies/earn-strategy.model';
 import { IEarnVault, IEarnVaultTransaction } from '~root/modules/earn/state/vaults/earn-vault.model';
 import { NzMarks } from 'ng-zorro-antd/slider';
@@ -74,9 +74,9 @@ export class WithdrawVaultFundsComponent implements OnInit {
 
     let newVaultTransaction: IEarnVaultTransaction;
     try {
-      newVaultTransaction = await this.earnVaultsService.createVaultWithdrawalTransaction({
+      newVaultTransaction = await firstValueFrom(this.earnVaultsService.createVaultWithdrawalTransaction({
         vaultId: vault._id,
-      }).pipe(take(1)).toPromise();
+      }));
     } catch (e) {
       this.nzMessageService.error(
         this.errorParserService.parseCTApiResponse(e),

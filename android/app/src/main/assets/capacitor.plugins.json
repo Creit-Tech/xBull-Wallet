@@ -1,7 +1,19 @@
 [
 	{
+		"pkg": "@aparajita/capacitor-biometric-auth",
+		"classpath": "com.aparajita.capacitor.biometricauth.BiometricAuthNative"
+	},
+	{
+		"pkg": "@aparajita/capacitor-secure-storage",
+		"classpath": "com.aparajita.capacitor.securestorage.SecureStorage"
+	},
+	{
 		"pkg": "@capacitor/app",
 		"classpath": "com.capacitorjs.plugins.app.AppPlugin"
+	},
+	{
+		"pkg": "@capacitor/device",
+		"classpath": "com.capacitorjs.plugins.device.DevicePlugin"
 	},
 	{
 		"pkg": "@capacitor/filesystem",

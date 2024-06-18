@@ -4,7 +4,16 @@ import {
   AnchorsService, IAnchorCurrency, IAnchorDepositTransaction, IAnchorTransaction, IAnchorWithdrawTransaction,
   IGetAnchorTransactionsResponse, IStartInteractiveResponse,
 } from '~root/modules/anchors/services/anchors.service';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject, Subject, Subscription, timer } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  Observable,
+  ReplaySubject,
+  Subject,
+  Subscription,
+  timer
+} from 'rxjs';
 import { IAnchor } from '~root/modules/anchors/state/anchor.model';
 import { IWalletsAccount } from '~root/state';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -22,7 +31,7 @@ import BigNumber from 'bignumber.js';
   styleUrls: ['./anchored-asset-interaction-drawer.component.scss']
 })
 export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestroy {
-  componentDestroyed$ = new Subject();
+  componentDestroyed$: Subject<void> = new Subject<void>();
   anchor$: ReplaySubject<IAnchor> = new ReplaySubject<IAnchor>();
   set anchor(data: IAnchor) {
     this.anchor$.next(data);
@@ -61,7 +70,7 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
 
   openedWindow?: Window | null;
 
-  currentWithdrawId$: ReplaySubject<string> = new ReplaySubject<string>();
+  currentWithdrawId$: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
 
   amountControl: FormControl<number | null> = new FormControl<number | null>(0);
 
@@ -226,14 +235,14 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
 
     let interactiveDepositResponse: IStartInteractiveResponse;
     try {
-      interactiveDepositResponse = await this.anchorsService.startInteractiveDeposit({
+      interactiveDepositResponse = await firstValueFrom(this.anchorsService.startInteractiveDeposit({
         token: authToken,
         amount: this.amountControl.value || 0,
         assetCode: currency.code,
         assetIssuer: currency.issuer,
         url: anchor.transferServerSep24,
         account: selectedAccount.publicKey,
-      }).pipe(take(1)).toPromise();
+      }));
     } catch (e) {
       this.nzMessageService.error('Anchor rejected the transaction');
       this.loadingDeposit = false;
@@ -288,14 +297,14 @@ export class AnchoredAssetInteractionDrawerComponent implements OnInit, OnDestro
 
     let interactiveWithdrawResponse: IStartInteractiveResponse;
     try {
-      interactiveWithdrawResponse = await this.anchorsService.startInteractiveWithdraw({
+      interactiveWithdrawResponse = await firstValueFrom(this.anchorsService.startInteractiveWithdraw({
         token: authToken,
         amount: this.amountControl.value || 0,
         assetCode: currency.code,
         assetIssuer: currency.issuer,
         url: anchor.transferServerSep24,
         account: selectedAccount.publicKey,
-      }).pipe(take(1)).toPromise();
+      }));
     } catch (e) {
       this.nzMessageService.error('Anchor rejected the transaction');
       this.loadingWithdraw = false;

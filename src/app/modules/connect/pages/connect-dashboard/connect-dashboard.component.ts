@@ -4,7 +4,7 @@ import { map, take, takeUntil } from 'rxjs/operators';
 import { box, randomBytes } from 'tweetnacl';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { decodeBase64, decodeUTF8, encodeBase64, encodeUTF8 } from 'tweetnacl-util';
-import { Subject, Subscription } from 'rxjs';
+import { firstValueFrom, Subject, Subscription } from 'rxjs';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ConnectQuery } from '~root/modules/connect/state/connect.query';
 import { ConnectStateFlow } from '~root/modules/connect/state/connect.store';
@@ -89,10 +89,17 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   async generateAndSendConnectionId(): Promise<void> {
-    const openerPublicKey = await this.openerPublicKey$.pipe(take(1)).toPromise();
-    const openerSession = await this.openerSession$.pipe(take(1)).toPromise();
-    const localSession = await this.localSession$.pipe(take(1)).toPromise();
-    const keypair = await this.keypair$.pipe(take(1)).toPromise();
+    const [
+      openerPublicKey,
+      openerSession,
+      localSession,
+      keypair
+    ] = await Promise.all([
+      firstValueFrom(this.openerPublicKey$),
+      firstValueFrom(this.openerSession$),
+      firstValueFrom(this.localSession$),
+      firstValueFrom(this.keypair$),
+    ])
 
     if (!openerPublicKey) {
       this.nzMessageService.error('Public key from opener was not provided');
@@ -172,8 +179,8 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
   }
 
   async decryptEventMessage(event: MessageEvent<IEventData>): Promise<any> {
-    const pk = await this.openerPublicKey$.pipe(take(1)).toPromise();
-    const keypair = await this.keypair$.pipe(take(1)).toPromise();
+    const pk = await firstValueFrom(this.openerPublicKey$);
+    const keypair = await firstValueFrom(this.keypair$);
 
     if (!pk) {
       this.nzMessageService.error(`Data sent from the website is not valid`);

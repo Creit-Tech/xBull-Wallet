@@ -10,7 +10,7 @@ import {
   takeUntil,
   withLatestFrom
 } from 'rxjs/operators';
-import { combineLatest, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import {
   GiftCardsService,
   IGiftCardDetails,
@@ -177,11 +177,11 @@ export class GiftCardDetailsComponent implements OnInit, OnDestroy {
 
     let newOrder: { tx: string; network: Networks };
     try {
-      newOrder = await this.giftCardsService.generateOrder({
+      newOrder = await firstValueFrom(this.giftCardsService.generateOrder({
         productId,
         payingWith,
         amount: this.cardAmountControl.value,
-      }).toPromise();
+      }));
     } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(

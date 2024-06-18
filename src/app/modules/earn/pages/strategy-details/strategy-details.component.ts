@@ -13,7 +13,17 @@ import {
   takeUntil, tap
 } from 'rxjs/operators';
 import { EarnStrategiesService } from '~root/modules/earn/services/earn-strategies.service';
-import { asapScheduler, BehaviorSubject, combineLatest, of, scheduled, Subject, Subscription, timer } from 'rxjs';
+import {
+  asapScheduler,
+  BehaviorSubject,
+  combineLatest,
+  firstValueFrom,
+  of,
+  scheduled,
+  Subject,
+  Subscription,
+  timer
+} from 'rxjs';
 import BigNumber from 'bignumber.js';
 import { WalletsAccountsQuery } from '~root/state';
 import { FormControl, Validators } from '@angular/forms';
@@ -219,14 +229,14 @@ export class StrategyDetailsComponent implements OnInit, OnDestroy {
   async createOrConfirmVault(): Promise<void> {
     let baseXDR: string;
     let vaultId: IEarnVault['_id'];
-    const strategy = await this.strategy$.pipe(take(1)).toPromise();
-    const vault = await this.vault$.pipe(take(1)).toPromise();
+    const strategy = await firstValueFrom(this.strategy$);
+    const vault = await firstValueFrom(this.vault$);
 
     if (!vault || vault.status === VaultStatus.CANCELLED) {
       try {
-        const response = await this.earnVaultsService.createVault(
+        const response = await firstValueFrom(this.earnVaultsService.createVault(
           strategy._id,
-        ).pipe(take(1)).toPromise();
+        ));
 
         baseXDR = response.creationXDR;
         vaultId = response._id;

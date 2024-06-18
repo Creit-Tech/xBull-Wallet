@@ -146,15 +146,14 @@ export class SettingsService {
     });
   }
 
-  // timeout is messured in minutes IE 5, 15 or 30
+  // timeout is measured in minutes IE 5, 15 or 30
   setKeptPasswordTimeout(timeout: number): void {
     this.settingsStore.updateState({ timeoutPasswordSaved: timeout });
     this.removeLocallySavedPasswordTrigger$.next();
   }
 
-  addDeviceAuthToken(data: { passwordAuthToken?: string; passwordAuthTokenIdentifier: string; passwordAuthKey: string; }): void {
+  addDeviceAuthToken(data: { passwordAuthTokenIdentifier: string; passwordAuthKey: string; }): void {
     this.settingsStore.updateState({
-      passwordAuthToken: data.passwordAuthToken,
       passwordAuthTokenIdentifier: data.passwordAuthTokenIdentifier,
       passwordAuthTokenActive: true,
       passwordAuthKey: data.passwordAuthKey,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NotFoundError, Horizon } from 'stellar-sdk';
-import { from, Observable, of, throwError } from 'rxjs';
+import { firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import {
   BalanceAssetType,
   createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
@@ -243,19 +243,17 @@ export class WalletsAccountsService {
   }
 
   async setAccountName(data: { publicKey: IWalletsAccount['publicKey']; name: IWalletsAccount['name'] }): Promise<void> {
-    const sameNameAccount = await this.walletsAccountsQuery.selectAll({
+    const sameNameAccount = await firstValueFrom(this.walletsAccountsQuery.selectAll({
       filterBy: entity => entity.name === data.name,
-    }).pipe(take(1))
-      .toPromise();
+    }));
 
     if (sameNameAccount.length > 0) {
       throw new Error('Name is being used by another account.');
     }
 
-    const accounts = await this.walletsAccountsQuery.selectAll({
+    const accounts = await firstValueFrom(this.walletsAccountsQuery.selectAll({
       filterBy: entity => entity.publicKey === data.publicKey,
-    }).pipe(take(1))
-      .toPromise();
+    }));
 
     this.walletsAccountsStore.upsert(accounts.map(a => a._id), {
       name: data.name,

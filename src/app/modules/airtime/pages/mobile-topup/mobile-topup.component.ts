@@ -120,7 +120,7 @@ export class MobileTopupComponent implements OnInit, AfterViewInit {
 
     this.nzModalService.create<MobileTopupSummaryComponent>({
       nzContent: MobileTopupSummaryComponent,
-      nzComponentParams: {
+      nzData: {
         amount: this.form.value.amount,
         operator: this.selectedOperator,
         phone: this.form.value.phoneAreaCode + this.form.value.phone,

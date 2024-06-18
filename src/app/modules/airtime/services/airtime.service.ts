@@ -3,7 +3,7 @@ import { ENV, environment } from '~env';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AirtimeStore } from '~root/modules/airtime/state/airtime.store';
 import { AirtimeQuery } from '~root/modules/airtime/state/airtime.query';
-import { from, Observable, throwError } from 'rxjs';
+import { firstValueFrom, from, Observable, throwError } from 'rxjs';
 import { catchError, map, switchMap, take } from 'rxjs/operators';
 import { Networks } from 'stellar-sdk';
 import { IGiftCardOrder } from '~root/modules/gift-cards/services/gift-cards.service';
@@ -30,13 +30,9 @@ export class AirtimeService {
 
   // TODO: We should make the generation of the token and remove from the store in an http middleware
   async getAuthToken(): Promise<string> {
-    const selectedAccount = await this.walletsAccountsQuery.getSelectedAccount$
-      .pipe(take(1))
-      .toPromise();
+    const selectedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
 
-    let accountToken = await this.airtimeQuery.getWalletAccountToken(selectedAccount._id)
-      .pipe(take(1))
-      .toPromise();
+    let accountToken = await firstValueFrom(this.airtimeQuery.getWalletAccountToken(selectedAccount._id));
 
     if (!accountToken) {
       this.nzMessageService.info('You need to authenticate with the service', {

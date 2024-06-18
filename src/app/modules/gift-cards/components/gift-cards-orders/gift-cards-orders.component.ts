@@ -48,7 +48,7 @@ export class GiftCardsOrdersComponent implements OnInit, AfterViewInit {
     this.nzModalService.create({
       nzTitle: `${this.translateService.instant('COMMON_WORDS.ORDER')}:`,
       nzContent: GiftCardOrderDetailsComponent,
-      nzComponentParams: { order },
+      nzData: { order },
       nzFooter: null
     });
   }

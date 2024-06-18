@@ -5,7 +5,7 @@ import { TranslationModule } from '~root/translation.module';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzCardModule } from 'ng-zorro-antd/card';
-import { NgxMaskModule } from 'ngx-mask';
+import { provideEnvironmentNgxMask, NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
@@ -33,7 +33,6 @@ const COMPONENTS = [
     NzListModule,
     NzSpinModule,
     NzCardModule,
-    NgxMaskModule,
     NzInputModule,
     ReactiveFormsModule,
     NzFormModule,
@@ -41,6 +40,11 @@ const COMPONENTS = [
     SharedPipesModule,
     NzRadioModule,
     NzToolTipModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+  ],
+  providers: [
+    provideEnvironmentNgxMask(),
   ]
 })
 export class SharedComponentsModule { }

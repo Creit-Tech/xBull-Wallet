@@ -8,7 +8,6 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzFormModule } from 'ng-zorro-antd/form';
-import { NgxMaskModule } from 'ngx-mask';
 import { AssetSearcherModule } from '~root/shared/asset-searcher/asset-searcher.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
@@ -19,6 +18,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { TranslationModule } from '~root/translation.module';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 
 
 @NgModule({
@@ -33,7 +33,8 @@ import { SharedComponentsModule } from '~root/shared/shared-components/shared-co
     NzSelectModule,
     NzButtonModule,
     NzFormModule,
-    NgxMaskModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
     AssetSearcherModule,
     ReactiveFormsModule,
     SharedPipesModule,
@@ -44,6 +45,9 @@ import { SharedComponentsModule } from '~root/shared/shared-components/shared-co
     NzBreadCrumbModule,
     TranslationModule.forChild(),
     SharedComponentsModule,
+  ],
+  providers: [
+    provideEnvironmentNgxMask()
   ]
 })
 export class SwapsModule { }

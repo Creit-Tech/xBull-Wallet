@@ -47,7 +47,7 @@ export class AirtimeOrdersComponent implements OnInit {
     this.nzModalService.create({
       nzTitle: `${this.translateService.instant('COMMON_WORDS.ORDER')}:`,
       nzContent: AirtimeOrderDetailsComponent,
-      nzComponentParams: { order },
+      nzData: { order },
       nzFooter: null,
     });
   }

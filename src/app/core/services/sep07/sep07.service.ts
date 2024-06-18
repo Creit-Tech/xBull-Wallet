@@ -14,6 +14,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { TranslateService } from '@ngx-translate/core';
 import { StellarToml } from 'stellar-sdk';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -112,17 +113,13 @@ export class Sep07Service {
       }
     }
 
-    const selectedHorizonApi = await this.horizonApisQuery.getSelectedHorizonApi$
-      .pipe(take(1))
-      .toPromise();
+    const selectedHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
     const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
       ? params.network_passphrase as IHorizonApi['networkPassphrase']
       : selectedHorizonApi.networkPassphrase;
 
-    const pickedAccount = await this.walletsAccountsQuery.getSelectedAccount$
-      .pipe(take(1))
-      .toPromise();
+    const pickedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
 
     const loadedAccount = await this.stellarSdkService.selectServer()
       .loadAccount(pickedAccount.publicKey);
@@ -190,10 +187,8 @@ export class Sep07Service {
 
     const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
       ? params.network_passphrase as IHorizonApi['networkPassphrase']
-      : await this.horizonApisQuery.getSelectedHorizonApi$
-        .pipe(map(horizonApi => horizonApi.networkPassphrase))
-        .pipe(take(1))
-        .toPromise();
+      : await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$
+        .pipe(map(horizonApi => horizonApi.networkPassphrase)));
 
     let pickedAccount: IWalletsAccount;
     if (params.pubkey) {
@@ -211,9 +206,7 @@ export class Sep07Service {
 
       pickedAccount = searchedAccount;
     } else {
-      pickedAccount = await this.walletsAccountsQuery.getSelectedAccount$
-        .pipe(take(1))
-        .toPromise();
+      pickedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
     }
 
     await this.handleSigning({

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, Observable, Subject } from 'rxjs';
 import {
   HorizonApisQuery, IWalletAssetModel,
   IWalletsAccount,
@@ -283,8 +283,7 @@ export class WalletDashboardComponent implements OnInit, OnDestroy {
             return;
           }
 
-          const horizonApi = await this.horizonApisQuery.getSelectedHorizonApi$
-            .pipe(take(1)).toPromise();
+          const horizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
           this.walletsAssetsService.requestAssetInformation$.next({
             asset: {

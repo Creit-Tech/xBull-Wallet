@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { firstValueFrom, Observable, ReplaySubject } from 'rxjs';
 import {
   IWallet,
   IWalletsAccount,
@@ -71,7 +71,7 @@ export class AddAccountComponent implements OnInit {
       return;
     }
 
-    const parentWallet = await this.parentWallet$.pipe(take(1)).toPromise();
+    const parentWallet = await firstValueFrom(this.parentWallet$);
 
     switch (parentWallet.type) {
       case 'mnemonic_phrase':
@@ -118,7 +118,7 @@ export class AddAccountComponent implements OnInit {
       throw e;
     }
 
-    const walletAccounts = await this.groupedWalletAccounts$.pipe(take(1)).toPromise();
+    const walletAccounts = await firstValueFrom(this.groupedWalletAccounts$);
 
     try {
       await this.walletsService.createNewAccount({

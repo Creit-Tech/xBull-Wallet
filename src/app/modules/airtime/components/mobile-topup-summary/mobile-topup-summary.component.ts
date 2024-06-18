@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { switchMap, take } from 'rxjs/operators';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
-import { Observable, of } from 'rxjs';
+import { firstValueFrom, Observable, of } from 'rxjs';
 import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery } from '~root/state';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
@@ -111,13 +111,13 @@ export class MobileTopupSummaryComponent implements OnInit {
 
     let newOrder: { tx: string; network: Networks };
     try {
-      newOrder = await this.airtimeService.generateOrder({
+      newOrder = await firstValueFrom(this.airtimeService.generateOrder({
         amount: this.amount,
         countryCode: this.country.isoName,
         operatorId: this.operator.id.toString(),
         recipientPhone: this.phone,
         payingWith,
-      }).toPromise();
+      }));
     } catch (e: any) {
       console.error(e);
       this.nzMessageService.error(

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IEarnStrategy } from '~root/modules/earn/state/strategies/earn-strategy.model';
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, ReplaySubject } from 'rxjs';
 import { FormControl, Validators } from '@angular/forms';
 import { WalletsAccountsQuery } from '~root/state';
 import { map, take } from 'rxjs/operators';
@@ -95,10 +95,10 @@ export class DepositVaultFundsComponent implements OnInit {
 
     let newVaultTransaction: IEarnVaultTransaction;
     try {
-      newVaultTransaction = await this.earnVaultsService.createVaultDepositTransaction({
+      newVaultTransaction = await firstValueFrom(this.earnVaultsService.createVaultDepositTransaction({
         vaultId: vault._id,
         amount: this.depositAmountControl.value,
-      }).pipe(take(1)).toPromise();
+      }));
     } catch (e) {
       this.nzMessageService.error(
         this.errorParserService.parseCTApiResponse(e),

@@ -25,7 +25,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
-import { BehaviorSubject, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
 import { AccountResponse, ServerApi } from 'stellar-sdk/lib/horizon';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
@@ -386,7 +386,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
   }
 
   async getLiquidityPool(): Promise<void> {
-    const horizonApi = await this.horizonApisQuery.getSelectedHorizonApi$.pipe(take(1)).toPromise();
+    const horizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
     if (!this.depositForm.value.assetBBalanceLine || !this.depositForm.value.assetABalanceLine) {
       this.selectedLiquidityPool$.next(undefined);

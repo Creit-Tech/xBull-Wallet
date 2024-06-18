@@ -15,7 +15,7 @@ import { sameValueValidator } from '~root/shared/forms-validators/same-value.val
   templateUrl: './confirm-secret-password.component.html',
   styleUrls: ['./confirm-secret-password.component.scss']
 })
-export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
+export class ConfirmSecretPasswordComponent implements OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
   form: UntypedFormGroup = new UntypedFormGroup({
@@ -85,7 +85,9 @@ export class ConfirmSecretPasswordComponent implements OnInit, OnDestroy {
     });
 
     // TODO: filter if password is already saved
-    this.walletsService.savePasswordHash(this.form.value.confirmPassword);
+    if (!this.walletsQuery.getValue()?.globalPasswordHash) {
+      this.walletsService.savePasswordHash(this.form.value.confirmPassword);
+    }
 
     await this.router.navigate(['/wallet', 'assets']);
   }

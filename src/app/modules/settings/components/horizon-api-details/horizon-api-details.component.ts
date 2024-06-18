@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { HorizonApisQuery, IHorizonApi } from '~root/state';
-import { Observable, ReplaySubject } from 'rxjs';
+import { firstValueFrom, Observable, ReplaySubject } from 'rxjs';
 import { pluck, take } from 'rxjs/operators';
 import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
@@ -28,13 +28,9 @@ export class HorizonApiDetailsComponent implements OnInit {
   }
 
   async onRemove(): Promise<void> {
-    const horizonApiId = await this.horizonApi$
-      .asObservable()
-      .pipe(take(1))
-      .pipe(pluck('_id'))
-      .toPromise();
+    const horizonApi = await firstValueFrom(this.horizonApi$);
 
-    this.horizonApisService.removeHorizonApi(horizonApiId);
+    this.horizonApisService.removeHorizonApi(horizonApi._id);
     this.nzDrawerRef.close();
   }
 

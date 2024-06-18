@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { TextareaComponent } from './textarea/textarea.component';
 import { InputComponent } from './input/input.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
 import { SelectComponent } from './select/select.component';
 import { ToggleComponent } from './toggle/toggle.component';
 
@@ -24,7 +24,11 @@ import { ToggleComponent } from './toggle/toggle.component';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    NgxMaskModule.forChild(),
+    NgxMaskDirective,
+    NgxMaskPipe
   ],
+  providers: [
+    provideEnvironmentNgxMask()
+  ]
 })
 export class FormsComponentsModule { }

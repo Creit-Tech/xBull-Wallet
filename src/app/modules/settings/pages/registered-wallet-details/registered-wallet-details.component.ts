@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, merge, Observable, pipe, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, merge, Observable, pipe, Subject } from 'rxjs';
 import { filter, map, pluck, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { IWallet, IWalletsAccount, WalletsAccountsQuery, WalletsQuery } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
@@ -114,9 +114,9 @@ export class RegisteredWalletDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const walletsAccounts = await this.walletsAccountsQuery.selectAll({
+    const walletsAccounts = await firstValueFrom(this.walletsAccountsQuery.selectAll({
       filterBy: state => state.walletId === wallet._id
-    }).pipe(take(1)).toPromise();
+    }));
 
     const drawerRef = this.nzDrawerService.create<HardConfirmComponent>({
       nzContent: HardConfirmComponent,
