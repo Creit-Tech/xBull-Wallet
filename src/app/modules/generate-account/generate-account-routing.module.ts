@@ -9,6 +9,9 @@ import { ConnectHardwareWalletComponent } from '~root/modules/generate-account/p
 import {
   ConnectAirGappedWalletComponent
 } from '~root/modules/generate-account/pages/connect-air-gapped-wallet/connect-air-gapped-wallet.component';
+import {
+  ConnectKeystoneComponent
+} from '~root/modules/generate-account/pages/connect-keystone/connect-keystone.component';
 
 const routes: Routes = [
   {
@@ -39,6 +42,10 @@ const routes: Routes = [
   {
     path: 'connect-air-gapped-wallet',
     component: ConnectAirGappedWalletComponent,
+  },
+  {
+    path: 'connect-keystone',
+    component: ConnectKeystoneComponent,
   },
   {
     path: 'import-and-export',

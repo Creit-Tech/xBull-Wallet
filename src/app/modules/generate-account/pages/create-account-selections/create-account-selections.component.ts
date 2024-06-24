@@ -73,4 +73,8 @@ export class CreateAccountSelectionsComponent implements OnInit {
       .then();
   }
 
+  connectKeyStone(): void {
+    this.router.navigate(['connect-keystone'], { relativeTo: this.route }).then();
+  }
+
 }

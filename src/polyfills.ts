@@ -56,4 +56,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
 (window as any).process = {
   version: '',
   nextTick: require('next-tick'), // This is because Stellar SDKs needs it
+  env: {
+    NODE_DEBUG: ''
+  }
 };

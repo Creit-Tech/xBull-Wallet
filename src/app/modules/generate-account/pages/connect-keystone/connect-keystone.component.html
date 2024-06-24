@@ -1,0 +1,42 @@
+<section class="h-full w-full flex flex-col px-4 py-8 justify-start items-center container max-w-md mx-auto">
+  <div class="w-full flex justify-center items-center mb-4">
+    <img src="/assets/icons/xbull-dark.svg" class="h-24" alt="xbull-logo">
+  </div>
+
+  <p class="font-semibold text-lg px-4 mb-8">
+    Connect your KeyStone Wallet
+  </p>
+
+  <div class="w-full mb-8">
+    <nz-card class="ant-card-no-padding p-4">
+      <div class="w-full text-center mb-4">
+        <p class="w-full">
+          To connect your KeyStone wallet unlock your device and click on the three dots at the top-right of the screen, then select "Connect Software Wallet" and there look for xBull. Once the device is showing the QR click on the scan button below this message.
+        </p>
+      </div>
+
+      <div class="w-full flex justify-center">
+        <button nz-button
+                (click)="scanQr()"
+                nzType="primary">
+          Scan QR <i class="fa-solid fa-qrcode ml-2"></i>
+        </button>
+      </div>
+    </nz-card>
+  </div>
+
+  <div class="w-full text-center">
+    <button routerLink="/create-account" nz-button nzSize="large" nzBlock nzType="link" nzDanger>
+      Go back
+    </button>
+  </div>
+</section>
+
+<ng-template #videoTemplate let-params>
+  <video id="connectVideoElement" class="w-full blur-[0.625rem]"></video>
+  <div class="w-full h-[1rem]"></div>
+  <nz-progress class="w-full" [nzPercent]="params.progress$ | async"></nz-progress>
+  <div class="w-full flex justify-center">
+    <small class="text-center inline-block mx-auto">Video is blurred on purpose. <br> This doesn't affect the camera</small>
+  </div>
+</ng-template>

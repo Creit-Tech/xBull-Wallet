@@ -23,6 +23,9 @@ import {NzAutocompleteModule} from "ng-zorro-antd/auto-complete";
 import {NzTagModule} from "ng-zorro-antd/tag";
 import { TranslationModule } from '~root/translation.module';
 import { ConnectAirGappedWalletComponent } from './pages/connect-air-gapped-wallet/connect-air-gapped-wallet.component';
+import { ConnectKeystoneComponent } from './pages/connect-keystone/connect-keystone.component';
+import { NzModalComponent, NzModalContentDirective } from 'ng-zorro-antd/modal';
+import { NzProgressComponent } from 'ng-zorro-antd/progress';
 
 
 @NgModule({
@@ -35,23 +38,27 @@ import { ConnectAirGappedWalletComponent } from './pages/connect-air-gapped-wall
     ConnectHardwareWalletComponent,
     ConfirmPublicKeysComponent,
     ConfirmTrezorKeysComponent,
-    ConnectAirGappedWalletComponent
+    ConnectAirGappedWalletComponent,
+    ConnectKeystoneComponent
   ],
-    imports: [
-      CommonModule,
-      GenerateAccountRoutingModule,
-      FormsComponentsModule,
-      ModalsModule,
-      SharedPipesModule,
-      NzSelectModule,
-      NzInputModule,
-      NzButtonModule,
-      ClipboardModule,
-      NzCardModule,
-      NzAutocompleteModule,
-      NzTagModule,
-      TranslationModule.forChild(),
-    ],
+  imports: [
+    CommonModule,
+    GenerateAccountRoutingModule,
+    FormsComponentsModule,
+    ModalsModule,
+    SharedPipesModule,
+    NzSelectModule,
+    NzInputModule,
+    NzButtonModule,
+    ClipboardModule,
+    NzCardModule,
+    NzAutocompleteModule,
+    NzTagModule,
+    TranslationModule.forChild(),
+    NzModalComponent,
+    NzModalContentDirective,
+    NzProgressComponent,
+  ],
   providers: [
     GenerateAccountStore,
     GenerateAccountQuery,

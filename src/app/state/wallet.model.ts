@@ -25,6 +25,7 @@ export interface IWalletWithTrezor extends IBaseWallet {
 export interface IWalletWithAirGapped extends IBaseWallet {
   type: WalletType.air_gapped;
   protocol: AirGappedWalletProtocol;
+  deviceId?: string;
 }
 
 export type IWallet = IWalletWithMnemonicPhrase | IWalletWithSecretKey | IWalletWithLedger | IWalletWithTrezor | IWalletWithAirGapped;
@@ -69,6 +70,7 @@ export function createWallet(params: IWallet): IWallet {
         name: params.name,
         type: params.type,
         protocol: params.protocol,
+        deviceId: params.deviceId,
       };
   }
 }
@@ -82,5 +84,6 @@ export enum WalletType {
 }
 
 export enum AirGappedWalletProtocol {
-  LumenSigner = 'LumenSigner'
+  LumenSigner = 'LumenSigner',
+  KeyStone = 'KeyStone',
 }

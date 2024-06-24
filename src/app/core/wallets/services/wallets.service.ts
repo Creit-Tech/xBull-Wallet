@@ -214,6 +214,7 @@ export class WalletsService {
           name: newWalletId,
           type: WalletType.air_gapped,
           protocol: params.protocol,
+          deviceId: params.deviceId,
         });
         this.walletsStore.upsert(newWallet._id, newWallet);
         keypairs = await Promise.all(params.accounts.map(account => {
@@ -392,6 +393,10 @@ export interface INewWalletTrezorType {
 export interface INewWalletAirgappedType {
   protocol: AirGappedWalletProtocol;
   type: WalletType.air_gapped;
+
+  // The device id is the fingerprint used in KeyStone devices
+  deviceId?: string;
+
   accounts: Array<{
     publicKey: string;
     path: string;

@@ -30,6 +30,10 @@ import {
   AirgappedPublicKeyComponent
 } from '~root/shared/shared-modals/components/airgapped-public-key/airgapped-public-key.component';
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
+import {
+  KeystoneXdrSignerComponent
+} from '~root/shared/shared-modals/components/keystone-xdr-signer/keystone-xdr-signer.component';
+import { NzProgressComponent } from 'ng-zorro-antd/progress';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -42,6 +46,7 @@ const COMPONENTS = [
   AirgappedXdrSignerComponent,
   AirgappedPublicKeyComponent,
   PromptModalComponent,
+  KeystoneXdrSignerComponent,
 ];
 
 @NgModule({
@@ -65,6 +70,7 @@ const COMPONENTS = [
     NzTreeModule,
     NzTabsModule,
     NzSwitchModule,
+    NzProgressComponent,
   ],
 })
 export class ModalsModule {}

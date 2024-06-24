@@ -1,0 +1,30 @@
+<section class="w-full">
+  <section class="text-center mb-4 pt-2">
+    <p>Scan and sign this with your wallet</p>
+</section>
+
+  <section class="w-full flex flex-col justify-center mb-4">
+    <div class="mx-auto rounded-2xl overflow-hidden">
+      <!--          <ng-container *ngIf="signRequestImages$ | async as signRequestImages">-->
+      <!--            <ng-container *ngFor="let image of signRequestImages; let i = index">-->
+      <img class="mx-auto mb-[1rem]" style="width: 196px; height: 196px;" [src]="qrDataUrl$ | async"/>
+      <!--            </ng-container>-->
+      <!--          </ng-container>-->
+    </div>
+
+    <small class="text-center max-w-[15rem] mx-auto inline-block break-all mb-[2rem]">{{ hash }}</small>
+
+    <button (click)="scanQr()" nz-button nzType="primary" nzSize="large" class="mx-auto">
+      Scan transaction <i class="fa-solid fa-qrcode ml-2"></i>
+    </button>
+  </section>
+</section>
+
+<ng-template #videoTemplate let-params>
+  <video id="connectVideoElement" class="w-full blur-[0.625rem]"></video>
+  <div class="w-full h-[1rem]"></div>
+  <nz-progress class="w-full" [nzPercent]="params.progress$ | async"></nz-progress>
+  <div class="w-full flex justify-center">
+    <small class="text-center inline-block mx-auto">Video is blurred on purpose. <br> This doesn't affect the camera</small>
+  </div>
+</ng-template>

@@ -1,6 +1,6 @@
 <section class="min-h-full w-full flex flex-col px-4 py-8 container max-w-md mx-auto">
   <div class="w-full flex justify-center items-center mb-2">
-    <img src="/assets/icons/xbull-dark.svg" class="h-28" alt="xbull-logo">
+    <img src="/assets/icons/xbull-dark.svg" class="h-[5rem]" alt="xbull-logo">
   </div>
 
   <div class="w-full flex flex-wrap my-auto">
@@ -35,9 +35,16 @@
 
     <button nz-button
             nzSize="large"
+            (click)="connectKeyStone()"
+            class="w-full mb-4">
+      {{ 'CREATE_ACCOUNT.CONNECT_KEYSTONE' | translate }}
+    </button>
+
+    <button nz-button
+            nzSize="large"
             (click)="connectAirGappedWallet()"
             class="w-full mb-4">
-      {{ 'CREATE_ACCOUNT.CONNECT_AIR_GAPPED' | translate }}
+      {{ 'CREATE_ACCOUNT.CONNECT_LUMENSIGNER' | translate }}
     </button>
 
     <button nz-button

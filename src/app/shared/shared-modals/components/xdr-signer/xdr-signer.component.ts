@@ -4,15 +4,19 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { filter, map, pluck, switchMap, take, takeUntil } from 'rxjs/operators';
 import BigNumber from 'bignumber.js';
 import {
+  AirGappedWalletProtocol,
   HorizonApisQuery,
   IHorizonApi,
-  IWalletsAccount, IWalletsAccountAirGapped,
+  IWalletsAccount,
+  IWalletsAccountAirGapped,
   IWalletsAccountLedger,
   IWalletsAccountTrezor,
   IWalletsAccountWithSecretKey,
+  IWalletWithAirGapped,
   SettingsQuery,
   WalletAccountType,
   WalletsAccountsQuery,
+  WalletsQuery,
 } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
@@ -141,8 +145,8 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     .pipe(filter<Transaction | FeeBumpTransaction>(data => !!data))
     .pipe(map<Transaction | FeeBumpTransaction, string>(tx => {
       return tx instanceof Transaction
-        ? tx.source
-        : tx.innerTransaction.source;
+        ? tx.fee
+        : tx.innerTransaction.fee;
     }))
     .pipe(map(fee =>
       new BigNumber(fee)
@@ -208,6 +212,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     private readonly hostFunctionsService: HostFunctionsService,
     private readonly airgappedWalletService: AirgappedWalletService,
     private readonly clipboardService: ClipboardService,
+    private readonly walletsQuery: WalletsQuery,
   ) { }
 
   ngOnInit(): void {
@@ -593,12 +598,33 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       networkPassphrase,
     });
 
+    const wallet: IWalletWithAirGapped | undefined = this.walletsQuery.getEntity(account.walletId) as IWalletWithAirGapped | undefined;
+
     try {
-      const result = await this.airgappedWalletService.signTransaction({
-        path: account.path,
-        xdr: transaction.toXDR(),
-        network: networkPassphrase,
-      });
+      let result: { signature: string };
+      switch (wallet?.protocol) {
+        case AirGappedWalletProtocol.KeyStone:
+          if (!wallet.deviceId) {
+            throw new Error('Device id is undefined, please contact support.');
+          }
+          result = await this.airgappedWalletService.signWithKeystone({
+            path: account.path,
+            tx: transaction,
+            deviceId: wallet.deviceId,
+          });
+          break;
+
+        case AirGappedWalletProtocol.LumenSigner:
+          result = await this.airgappedWalletService.signTransaction({
+            path: account.path,
+            xdr: transaction.toXDR(),
+            network: networkPassphrase,
+          });
+          break;
+
+        default:
+          throw new Error(`Protocol ${wallet?.protocol} is not supported`);
+      }
 
       transaction.addSignature(account.publicKey, result.signature);
 
