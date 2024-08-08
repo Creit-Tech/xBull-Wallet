@@ -1,4 +1,4 @@
-import { SitesConnectionsState, WalletsAccountsState } from '~root/state';
+import { HorizonApisState, IHorizonApi, SitesConnectionsState, WalletsAccountsState } from '~root/state';
 import { ISitePermissions } from '~extension/interfaces';
 
 export const getWindowId = () => new Promise<number | undefined>((resolve, reject) => {
@@ -22,8 +22,9 @@ export const setWindowId = (windowId: number | undefined) => new Promise((resolv
 });
 
 const getStore = () => new Promise<{
-  'sites-connections': SitesConnectionsState,
-  'wallets-accounts': WalletsAccountsState
+  'sites-connections': SitesConnectionsState;
+  'wallets-accounts': WalletsAccountsState;
+  'horizon-apis': HorizonApisState;
 }>((resolve, reject) => {
   chrome.storage.local.get(['AkitaStores'], (items: { [key: string]: any }) => {
     if (chrome.runtime.lastError) {
@@ -60,11 +61,28 @@ export const getActiveAccount = async () => {
     throw new Error('There are no active account');
   }
 
-  const activeAccount = walletsAccounts.entities && walletsAccounts.entities[walletsAccounts.active]
+  const activeAccount = walletsAccounts.entities && walletsAccounts.entities[walletsAccounts.active];
 
   if (!activeAccount) {
     throw new Error('There are no active account');
   } else {
     return activeAccount;
+  }
+};
+
+export const getActiveApi = async () => {
+  const store = await getStore();
+  const apisState: HorizonApisState = store['horizon-apis'];
+
+  if (apisState.active === null) {
+    throw new Error('There are no active network');
+  }
+
+  const activeApi: IHorizonApi | undefined = apisState.entities && apisState.entities[apisState.active];
+
+  if (!activeApi) {
+    throw new Error('There are no active network');
+  } else {
+    return activeApi;
   }
 };

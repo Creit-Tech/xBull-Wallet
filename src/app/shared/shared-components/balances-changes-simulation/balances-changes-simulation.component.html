@@ -1,0 +1,33 @@
+@if (show$ | async) {
+  <nz-card nzTitle="Balances changes" nzSize="small">
+    @for (change of changesEntries$ | async; track change.asset) {
+      <div class="w-full flex justify-between">
+        <div class="w-6/12 flex items-center h-auto py-2 justify-start">
+          <div *ngIf="change.walletAsset?.image as image" class="w-5 h-5 bg-white p-1 rounded-full mr-2">
+            <img [src]="image" class="w-full h-full rounded-full" alt="">
+          </div>
+
+          <p class="text-xs m-0">
+            {{ change.walletAsset?.assetCode }}
+            <br>
+            <small class="opacity-50">
+              {{ (change.walletAsset?.assetIssuer | publicKey) || 'native' }}
+            </small>
+          </p>
+        </div>
+        <div class="w-6/12 justify-center flex flex-col">
+          <small><b>From:</b> {{ change.before | number: '0.0-7' }}</small>
+          <small><b>To:</b> {{ change.after | number: '0.0-7' }}</small>
+        </div>
+      </div>
+    }
+
+    <nz-divider class="m-0 mb-[0.125rem]"></nz-divider>
+
+    <div class="w-full text-center">
+      <small class="opacity-70">
+        This is just a simulation of the end result <i class="fa fa-circle-question ml-[0.125rem]" nz-tooltip nzTooltipTitle="This is a simulation, use it just as an example because the end result could change based on the contract state. This simulation doesn't show balance updates from assets that are not trustlines in your account"></i>
+      </small>
+    </div>
+  </nz-card>
+}

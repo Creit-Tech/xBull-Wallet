@@ -17,11 +17,17 @@ import { ScamAlertIconComponent } from '~root/shared/shared-components/scam-aler
 import {
   SepTenAuthenticationCardComponent
 } from '~root/shared/shared-components/sep-ten-authentication-card/sep-ten-authentication-card.component';
+import {
+  BalancesChangesSimulationComponent
+} from '~root/shared/shared-components/balances-changes-simulation/balances-changes-simulation.component';
+import { NzCollapseComponent, NzCollapsePanelComponent } from 'ng-zorro-antd/collapse';
+import { NzDividerComponent } from 'ng-zorro-antd/divider';
 
 const COMPONENTS = [
   PathPaymentFormComponent,
   ScamAlertIconComponent,
   SepTenAuthenticationCardComponent,
+  BalancesChangesSimulationComponent,
 ];
 
 @NgModule({
@@ -42,6 +48,9 @@ const COMPONENTS = [
     NzToolTipModule,
     NgxMaskDirective,
     NgxMaskPipe,
+    NzCollapseComponent,
+    NzCollapsePanelComponent,
+    NzDividerComponent,
   ],
   providers: [
     provideEnvironmentNgxMask(),

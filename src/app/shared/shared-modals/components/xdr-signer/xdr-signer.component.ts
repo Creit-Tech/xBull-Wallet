@@ -36,6 +36,7 @@ import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/air
 import { FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
 import { ClipboardService } from '~root/core/services/clipboard.service';
 import QRCode from 'qrcode';
+import { SigningService } from '~root/core/services/signing/signing.service';
 
 @Component({
   selector: 'app-xdr-signer',
@@ -176,6 +177,14 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       return tx instanceof Transaction ? tx.source : tx.innerTransaction.source;
     }));
 
+  hasInvokeFunction$: Observable<boolean> = this.operations$
+    .pipe(distinctUntilArrayItemChanged())
+    .pipe(map((operations: any) => {
+      return operations.filter(
+        (operation: Operation) => operation.type === 'invokeHostFunction'
+      ).length > 0;
+    }));
+
   /**
    * This observable includes all possible invoke functions from the tx and tries to parse them
    */
@@ -197,22 +206,16 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly stellarSdkService: StellarSdkService,
-    private readonly cryptoService: CryptoService,
     private readonly walletsAccountQuery: WalletsAccountsQuery,
     private readonly walletsService: WalletsService,
-    private readonly hardwareWalletsService: HardwareWalletsService,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly horizonApisService: HorizonApisService,
     private readonly nzMessageService: NzMessageService,
-    private readonly nzDrawerService: NzDrawerService,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly settingsQuery: SettingsQuery,
-    private readonly deviceAuthService: DeviceAuthService,
-    private readonly settingsService: SettingsService,
     private readonly hostFunctionsService: HostFunctionsService,
-    private readonly airgappedWalletService: AirgappedWalletService,
     private readonly clipboardService: ClipboardService,
-    private readonly walletsQuery: WalletsQuery,
+    private readonly signingService: SigningService,
   ) { }
 
   ngOnInit(): void {
@@ -291,62 +294,29 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   }
 
   async signWithDeviceAuthToken(selectedAccount: IWalletsAccountWithSecretKey): Promise<ISigningResults> {
-    const [
-      passwordAuthKey,
-      passwordAuthTokenIdentifier
-    ] = await Promise.all([
-      firstValueFrom(this.settingsQuery.passwordAuthKey$),
-      firstValueFrom(this.settingsQuery.passwordAuthTokenIdentifier$),
-    ]);
-
-    if (!passwordAuthKey || !passwordAuthTokenIdentifier) {
-      this.nzMessageService.error(
-        `There was an error with the device authentication, please configure it again from the settings view.`
-      );
-      throw new Error('There was an error with the device authentication, please configure it again from the settings view.');
-    }
-
-    let decryptedPassword: string;
-    try {
-      decryptedPassword = await this.deviceAuthService.decryptWithDevice({
-        identifier: passwordAuthTokenIdentifier,
-        key: passwordAuthKey,
-      });
-    } catch (e: any) {
-      this.nzMessageService.error(
-        e.message || `We were not able to decrypt the password with this device`
-      );
-      throw e;
-    }
-
     try {
       const xdr: string | undefined = this.xdr$.getValue();
-
       if (!xdr) {
         throw new Error('XDR is undefined, please contact support');
       }
-
       const selectedNetworkPassphrase: Networks = await firstValueFrom(this.selectedNetworkPassphrase$);
-      const secret: string = this.cryptoService.decryptText(selectedAccount.secretKey, decryptedPassword);
       const transaction: Transaction | FeeBumpTransaction = this.stellarSdkService.createTransaction({
         xdr,
         networkPassphrase: selectedNetworkPassphrase
       });
-      const keypair: Keypair = this.stellarSdkService.keypairFromSecret({ secret });
 
-      // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
-      const keypairSignature = transaction.getKeypairSignature(keypair as any);
-      transaction.sign(keypair as any);
+      const result = await this.signingService.signWithDeviceAuthToken({
+        target: transaction,
+        network: selectedNetworkPassphrase,
+        selectedAccount,
+      });
 
       this.signing$.next(false);
       return {
         baseXDR: xdr,
-        signedXDR: transaction.toXDR(),
+        signedXDR: result.signedXDR,
         transaction,
-        signers: [{
-          publicKey: keypair.publicKey(),
-          signature: keypairSignature,
-        }],
+        signers: result.signers,
       };
     } catch (e) {
       console.log(e);
@@ -357,41 +327,9 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
   }
 
   async signWithPassword(selectedAccount: IWalletsAccountWithSecretKey): Promise<ISigningResults> {
-    let password: string;
-
-    const isKeptPasswordActive = await this.settingsQuery.keepPasswordActive$.pipe(take(1)).toPromise();
-    let savedPassword = this.settingsService.getKeptPassword();
-    if (this.ignoreKeptPassword || !isKeptPasswordActive || !savedPassword) {
-      const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
-        nzContent: PasswordModalComponent,
-        nzPlacement: 'bottom',
-        nzTitle: '',
-        nzHeight: 'auto',
-        nzWrapClassName: 'ios-safe-y'
-      });
-
-      drawerRef.open();
-
-      await drawerRef.afterOpen.pipe(take(1)).toPromise();
-
-      const componentRef = drawerRef.getContentComponent();
-
-      if (!componentRef) {
-        throw new Error('Unexpected error, contact support code: 9998');
-      }
-
-      password = await firstValueFrom(componentRef.password);
-
-      drawerRef.close();
-    } else {
-      password = savedPassword;
-    }
-
     this.signing$.next(true);
 
     try {
-      const secret = this.cryptoService.decryptText(selectedAccount.secretKey, password);
-
       const xdr = this.xdr$.getValue();
 
       if (!xdr) {
@@ -400,47 +338,30 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
 
       const selectedNetworkPassphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
 
+      if (!selectedNetworkPassphrase) {
+        throw new Error('No networks has been selected');
+      }
+
       const transaction = this.stellarSdkService.createTransaction({
         xdr,
         networkPassphrase: selectedNetworkPassphrase
       });
 
-      const keypair = this.stellarSdkService.keypairFromSecret({ secret });
-
-      // TODO: Once we merge soroban and stellar sdk, we should rethink this "as any"
-      const keypairSignature = transaction.getKeypairSignature(keypair as any);
-      transaction.sign(keypair as any);
-
-      const signedXDR = transaction.toXDR();
+      const result = await this.signingService.signWithPassword({
+        selectedAccount,
+        network: selectedNetworkPassphrase,
+        target: transaction,
+        ignoreKeptPassword: false,
+      });
 
       this.signing$.next(false);
-
-      if (isKeptPasswordActive) {
-        this.settingsService.setKeptPassword(password);
-      }
-
-
-      // We use ts-ignore here to tell the compiler to skip these lines, we set them as null to clear them before is garbage collected
-      // @ts-ignore
-      password = null;
-      // @ts-ignore
-      savedPassword = null;
-
       return {
         baseXDR: xdr,
-        signedXDR,
+        signedXDR: result.signedXDR,
         transaction,
-        signers: [{
-          publicKey: keypair.publicKey(),
-          signature: keypairSignature
-        }]
+        signers: result.signers,
       };
     } catch (error) {
-      // We use ts-ignore here to tell the compiler to skip these lines, we set them as null to clear them before is garbage collected
-      // @ts-ignore
-      password = null;
-      // @ts-ignore
-      savedPassword = null;
       console.log(error);
       this.nzMessageService.error(`We couldn't sign the transaction, please check your password is correct`);
       this.signing$.next(false);
@@ -453,74 +374,36 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     const xdr = this.xdr$.getValue();
 
     if (!xdr) {
+      this.signing$.next(false);
       throw new Error('XDR is undefined, please contact support');
     }
 
-    let transport: TransportWebUSB;
-    let targetDevice: USBDevice | undefined;
-
     try {
-      const connectedDevices = await this.hardwareWalletsService.getConnectedLedgers();
-      targetDevice = connectedDevices.find(device => this.walletsService.generateLedgerWalletId(device) === selectedAccount.walletId);
-
-      if (!targetDevice) {
-        throw new Error('Target not found');
-      }
-    } catch (e: any) {
-      console.error(e);
-      this.nzMessageService.error(`Device not found, please make sure you are using the correct device.`, {
-        nzDuration: 4000,
-      });
-      this.signing$.next(false);
-      throw e;
-    }
-
-    try {
-      transport = await this.hardwareWalletsService.openLedgerConnection(targetDevice);
-    } catch (e: any) {
-      this.signing$.next(false);
-      this.nzMessageService.error(`Can\'t connect with the wallet, please make sure your wallet is unlocked and using the Stellar App.`, {
-        nzDuration: 4000,
-      });
-      throw e;
-    }
-
-    try {
-      this.nzMessageService.info('Check your Ledger and please confirm or cancel the transaction in your device.', {
-        nzDuration: 4000,
-      });
-
       const passphrase = await this.selectedNetworkPassphrase$.pipe(take(1)).toPromise();
+
+      if (!passphrase) {
+        throw new Error('No networks has been selected');
+      }
 
       const transaction = this.stellarSdkService.createTransaction({
         xdr,
         networkPassphrase: passphrase,
       });
 
-      const result = await this.hardwareWalletsService.signWithLedger({
-        transaction,
-        accountPath: selectedAccount.path,
-        publicKey: selectedAccount.publicKey,
-        transport,
-        blindTransaction: transaction instanceof FeeBumpTransaction
-          ? !!transaction.innerTransaction.operations.find(o => o.type === 'invokeHostFunction')
-          : !!transaction.operations.find(o => o.type === 'invokeHostFunction'),
+      const result = await this.signingService.signWithLedger({
+        target: transaction,
+        network: passphrase,
+        selectedAccount,
       });
-
-      transaction.addSignature(result.publicKey, result.signature);
-      const signedXDR = transaction.toXDR();
 
       this.signing$.next(false);
 
       // DEPRECATED
       return {
         baseXDR: xdr,
-        signedXDR,
+        signedXDR: result.signedXDR,
         transaction,
-        signers: [{
-          publicKey: result.publicKey,
-          signature: result.signature,
-        }],
+        signers: result.signers,
       };
     } catch (e: any) {
       this.signing$.next(false);
@@ -536,6 +419,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     const xdr = this.xdr$.getValue();
 
     if (!xdr) {
+      this.signing$.next(false);
       throw new Error('XDR is undefined, please contact support');
     }
 
@@ -546,32 +430,20 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       networkPassphrase,
     });
 
-    await this.hardwareWalletsService.waitUntilTrezorIsInitiated();
 
     try {
-      const result = await this.hardwareWalletsService.signWithTrezor({
-        path: selectedAccount.path,
-        transaction,
-        networkPassphrase,
+      const result = await this.signingService.signWithTrezor({
+        selectedAccount,
+        network: networkPassphrase,
+        target: transaction,
       });
-
-      const publicKeyBytes = Buffer.from(result.publicKey, 'hex');
-      const encodedPublicKey = this.stellarSdkService.SDK.StrKey.encodeEd25519PublicKey(publicKeyBytes);
-
-      transaction.addSignature(
-        encodedPublicKey,
-        Buffer.from(result.signature, 'hex').toString('base64')
-      );
 
       this.signing$.next(false);
       return {
         baseXDR: xdr,
         transaction,
-        signedXDR: transaction.toXDR(),
-        signers: [{
-          publicKey: result.publicKey,
-          signature: result.signature,
-        }],
+        signedXDR: result.signedXDR,
+        signers: result.signers,
       };
     } catch (e: any) {
       console.error(e);
@@ -588,6 +460,7 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
     const xdr = this.xdr$.getValue();
 
     if (!xdr) {
+      this.signing$.next(false);
       throw new Error('XDR is undefined, please contact support');
     }
 
@@ -598,46 +471,20 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
       networkPassphrase,
     });
 
-    const wallet: IWalletWithAirGapped | undefined = this.walletsQuery.getEntity(account.walletId) as IWalletWithAirGapped | undefined;
-
     try {
-      let result: { signature: string };
-      switch (wallet?.protocol) {
-        case AirGappedWalletProtocol.KeyStone:
-          if (!wallet.deviceId) {
-            throw new Error('Device id is undefined, please contact support.');
-          }
-          result = await this.airgappedWalletService.signWithKeystone({
-            path: account.path,
-            tx: transaction,
-            deviceId: wallet.deviceId,
-          });
-          break;
-
-        case AirGappedWalletProtocol.LumenSigner:
-          result = await this.airgappedWalletService.signTransaction({
-            path: account.path,
-            xdr: transaction.toXDR(),
-            network: networkPassphrase,
-          });
-          break;
-
-        default:
-          throw new Error(`Protocol ${wallet?.protocol} is not supported`);
-      }
-
-      transaction.addSignature(account.publicKey, result.signature);
+      const result = await this.signingService.signWithAirgappedWallet({
+        target: transaction,
+        network: networkPassphrase,
+        account,
+      });
 
       this.signing$.next(false);
 
       return {
         baseXDR: xdr,
         transaction,
-        signedXDR: transaction.toXDR(),
-        signers: [{
-          publicKey: account.publicKey,
-          signature: result.signature,
-        }],
+        signedXDR: result.signedXDR,
+        signers: result.signers,
       };
     } catch (e: any) {
       console.error(e);

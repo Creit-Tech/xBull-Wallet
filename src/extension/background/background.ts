@@ -3,7 +3,7 @@ import browser from 'webextension-polyfill';
 import {
   RuntimeMessage,
   RuntimeResponse,
-  XBULL_CONNECT_BACKGROUND,
+  XBULL_CONNECT_BACKGROUND, XBULL_GET_NETWORK_BACKGROUND,
   XBULL_GET_PUBLIC_KEY_BACKGROUND,
   XBULL_SIGN_XDR_BACKGROUND,
 } from '../interfaces';
@@ -11,6 +11,7 @@ import { requestConnection } from '~extension/background/connection.background';
 import { requestPublicKey } from '~extension/background/public-key.background';
 import { requestSignXDR } from '~extension/background/sign-transaction.background';
 import { getWindowId, setWindowId } from '~extension/background/state.background';
+import { requestNetwork } from '~extension/background/get-network.background';
 
 (browser?.action || browser?.browserAction).onClicked.addListener(async () => {
   let windowId: number | undefined;
@@ -90,6 +91,10 @@ browser.runtime.onMessage.addListener(async (message: RuntimeMessage, sender): P
 
     case XBULL_SIGN_XDR_BACKGROUND:
       return requestSignXDR(message)
+        .catch(catchError);
+
+    case XBULL_GET_NETWORK_BACKGROUND:
+      return requestNetwork()
         .catch(catchError);
 
     default:

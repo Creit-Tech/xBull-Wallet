@@ -18,6 +18,12 @@
   </section>
 
   <section class="col-span-1 overflow-y-auto no-scrollbar">
+    @if (hasInvokeFunction$ | async) {
+      <section class="w-full mb-[1rem]">
+        <app-balances-changes-simulation [transaction]="xdrParsed$ | async"></app-balances-changes-simulation>
+      </section>
+    }
+
     <dl>
       <dt class="text-off-white text-base font-bold mb-1 w-full">Envelope type:</dt>
       <dd class=" break-all text-sm mb-3 w-full">{{ transactionType$ | async }}</dd>

@@ -90,7 +90,7 @@
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.0",
     "rxjs": "^7.8.1",
-    "stellar-sdk": "^12.1.0",
+    "stellar-sdk": "^12.2.0",
     "stream-http": "^3.2.0",
     "trezor-connect": "8.2.6-extended",
     "tslib": "^2.4.0",

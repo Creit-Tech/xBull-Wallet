@@ -34,6 +34,7 @@ import {
   KeystoneXdrSignerComponent
 } from '~root/shared/shared-modals/components/keystone-xdr-signer/keystone-xdr-signer.component';
 import { NzProgressComponent } from 'ng-zorro-antd/progress';
+import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -71,6 +72,7 @@ const COMPONENTS = [
     NzTabsModule,
     NzSwitchModule,
     NzProgressComponent,
+    SharedComponentsModule,
   ],
 })
 export class ModalsModule {}

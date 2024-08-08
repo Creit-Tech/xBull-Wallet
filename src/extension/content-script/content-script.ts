@@ -1,10 +1,21 @@
 import {
   EventTypes,
-  IConnectRequestPayload, IGetPublicKeyRequestPayload,
-  IRuntimeConnectResponse, IRuntimeGetPublicKeyResponse, IRuntimeSignXDRResponse, ISignXDRRequestPayload,
+  IConnectRequestPayload,
+  IGetNetworkRequestPayload,
+  IGetPublicKeyRequestPayload,
+  IRuntimeConnectResponse,
+  IRuntimeGetNetworkResponse,
+  IRuntimeGetPublicKeyResponse,
+  IRuntimeSignXDRResponse,
+  ISignXDRRequestPayload,
   XBULL_CONNECT,
   XBULL_CONNECT_BACKGROUND,
-  XBULL_GET_PUBLIC_KEY, XBULL_GET_PUBLIC_KEY_BACKGROUND, XBULL_SIGN_XDR, XBULL_SIGN_XDR_BACKGROUND,
+  XBULL_GET_NETWORK,
+  XBULL_GET_NETWORK_BACKGROUND,
+  XBULL_GET_PUBLIC_KEY,
+  XBULL_GET_PUBLIC_KEY_BACKGROUND,
+  XBULL_SIGN_XDR,
+  XBULL_SIGN_XDR_BACKGROUND,
 } from '../interfaces';
 
 // message
@@ -69,6 +80,20 @@ window.addEventListener('message', (event: any) => {
           }, '*');
         });
       }
+      break;
+
+    case XBULL_GET_NETWORK:
+      payload = detail as IGetNetworkRequestPayload;
+      chrome.runtime.sendMessage({
+        event: XBULL_GET_NETWORK_BACKGROUND,
+        payload,
+      }, (response: IRuntimeGetNetworkResponse) => {
+        window.postMessage({
+          returnFromCS: true,
+          detail: response,
+          eventId,
+        }, '*');
+      });
       break;
   }
 });

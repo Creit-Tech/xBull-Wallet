@@ -14,11 +14,20 @@ import { catchError, delay, filter, pluck, switchMap, take, takeUntil, withLates
 import { firstValueFrom, merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
-import { createSiteConnection, WalletsAccountsQuery } from '~root/state';
+import {
+  createSiteConnection,
+  HorizonApisQuery,
+  IHorizonApi,
+  IWalletsAccount,
+  WalletsAccountsQuery
+} from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import {HorizonApisService} from '~root/core/services/horizon-apis.service';
-import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
+import {
+  ISigningResults,
+  XdrSignerComponent
+} from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
@@ -40,6 +49,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private readonly walletsService: WalletsService,
     private readonly horizonApisService: HorizonApisService,
     private readonly nzDrawerService: NzDrawerService,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   connectHandler$ = this.runtimeEvent$.asObservable()
@@ -150,7 +160,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {
-    if (!!params.network && !!params.publicKey) {
+    if (!!params.network) {
       try {
         this.horizonApisService.setHorizonByNetwork(params.network);
       } catch (e: any) {
@@ -159,16 +169,19 @@ export class BackgroundComponent implements OnInit, OnDestroy {
           errorMessage: e.name,
         };
       }
+    }
 
-      const accountId = this.walletsService.generateWalletAccountId({
-        network: params.network,
+    if (!!params.publicKey) {
+      const selectedApi: IHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+      const accountId: string = this.walletsService.generateWalletAccountId({
+        network: params.network || selectedApi.networkPassphrase,
         publicKey: params.publicKey,
       });
 
       const account = await this.walletsAccountsQuery.selectEntity(accountId).pipe(take(1)).toPromise();
 
       if (!!account) {
-        await this.walletsService.selectAccount({
+        this.walletsService.selectAccount({
           walletId: account.walletId,
           publicKey: account.publicKey,
         });
@@ -187,10 +200,14 @@ export class BackgroundComponent implements OnInit, OnDestroy {
       nzContentParams: {
         xdr: params.xdr,
         from: params.host,
-        signingResultsHandler: data => {
+        signingResultsHandler: async (data: ISigningResults): Promise<void> => {
+          const selectedAccount: IWalletsAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
           resultSubject.next({
             error: false,
-            payload: data.signedXDR,
+            payload: {
+              signedXdr: data.signedXDR,
+              signerAddress: selectedAccount.publicKey,
+            },
           });
           drawerRef.close();
         },

@@ -94,7 +94,7 @@ export class StellarSdkService {
     try {
       return new this.SDK.FeeBumpTransaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
     } catch (e) {
-      console.error(e);
+      // console.error(e);
     }
 
     return new this.SDK.Transaction(params.xdr, params.networkPassphrase || this.networkPassphrase);
