@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.24.0] - 2024-08-07
+### Add
+- Upgrade Stellar SDK to 12.2.0
+- Start the SEP-0043 support, still missing the signAuthEntry logic
+- Show a simulation of the balance changes when interacting with Smart Contracts (only showing native and trustlines balances updates)
+
 ## [1.23.0] - 2024-06-24
 ### Add
 - Add support to KeyStone wallets, currently only handling hash signing.
