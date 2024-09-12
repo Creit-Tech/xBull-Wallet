@@ -525,6 +525,13 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     });
   }
 
+  async switchAssets(): Promise<void> {
+    const { fromAsset, toAsset } = this.swapForm.value;
+    this.swapForm.get(['fromAsset', 'asset'])?.setValue(toAsset.asset);
+    this.swapForm.get(['toAsset', 'asset'])?.setValue(fromAsset.asset);
+    await this.updatePaymentPath();
+  }
+
 }
 
 interface IAssetFormField {
