@@ -2,5 +2,16 @@
 	"appId": "app.xbull.mobile",
 	"appName": "xBull Wallet",
 	"webDir": "dist/mobile",
-	"bundledWebRuntime": false
+	"packageClassList": [
+		"BiometricAuthNative",
+		"SecureStorage",
+		"AppPlugin",
+		"DevicePlugin",
+		"FilesystemPlugin",
+		"HapticsPlugin",
+		"KeyboardPlugin",
+		"PreferencesPlugin",
+		"StatusBarPlugin",
+		"CDVPlugin"
+	]
 }

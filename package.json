@@ -107,7 +107,7 @@
     "@angular-devkit/core": "^17.3.7",
     "@angular/cli": "^17.3.7",
     "@angular/compiler-cli": "^17.3.8",
-    "@capacitor/cli": "^4.0.0",
+    "@capacitor/cli": "^6.1.2",
     "@datorama/akita-ngdevtools": "^7.0.0",
     "@types/chrome": "^0.0.212",
     "@types/crypto-js": "^4.1.1",
