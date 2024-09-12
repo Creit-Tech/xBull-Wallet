@@ -20,7 +20,6 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { LiquidityPoolsModule } from '~root/modules/liquidity-pools/liquidity-pools.module';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { WalletDashboardComponent } from './pages/wallet-dashboard/wallet-dashboard.component';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -70,7 +69,6 @@ import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-ma
     NzModalModule,
     LiquidityPoolsModule,
     NzListModule,
-    ScrollingModule,
     NzCardModule,
     NzTableModule,
     NzDropDownModule,

@@ -45,9 +45,6 @@
               "src/theme/zorro-theme.less",
               "src/styles.scss"
             ],
-            "scripts": [
-              "node_modules/marked/marked.min.js"
-            ],
             "vendorChunk": true,
             "extractLicenses": false,
             "buildOptimizer": false,
