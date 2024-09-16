@@ -1,36 +1,39 @@
-<app-modal-wrapper [showModal]="showModal" (close)="onClose()">
-  <section class="relative w-full h-full">
-    <div class="w-full text-center mb-4">
-      <h2 class="m-0 p-0 text-off-black font-bold text-xl">
-        {{ 'SITES_PERMISSIONS.SITE_CONNECTION' | translate }}
-      </h2>
-    </div>
+<section class="w-full h-full flex flex-col gap-4">
+  <dl class="w-full">
+    <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.ORIGIN' | translate }}:</dt>
+    <dd class=" break-all text-sm mb-3 w-full">{{ origin }}</dd>
 
-    <section class="w-full mb-16">
-      <dl>
-        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.ORIGIN' | translate }}:</dt>
-        <dd class="text-label text-sm mb-3">{{ origin }}</dd>
+    <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.HOST' | translate }}:</dt>
+    <dd class=" break-all text-sm mb-3 w-full">{{ host }}</dd>
 
-        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.HOST' | translate }}:</dt>
-        <dd class="text-label text-sm mb-3">{{ host }}</dd>
+    <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'COMMON_WORDS.DATE' | translate }}:</dt>
+    <dd class=" break-all text-sm mb-3 w-full">{{ now | date: 'short' }}</dd>
 
-        <dt class="text-off-black text-base font-bold mb-1">{{ 'COMMON_WORDS.DATE' | translate }}:</dt>
-        <dd class="text-label text-sm mb-3">{{ now | date: 'short' }}</dd>
+    <dt class="text-off-white text-base font-bold mb-1 w-full">{{ 'SITES_PERMISSIONS.ASKING_FOR' | translate }}:</dt>
+    <dd class=" break-all text-sm mb-3 w-full">{{ 'SITES_PERMISSIONS.ASK_TO_SIGN' | translate }}</dd>
+    <dd class=" break-all text-sm mb-3 w-full">{{ 'SITES_PERMISSIONS.GET_PUBLIC_KEY' | translate }}</dd>
+  </dl>
 
-        <dt class="text-off-black text-base font-bold mb-1">{{ 'SITES_PERMISSIONS.ASKING_FOR' | translate }}:</dt>
-        <dd *ngIf="permissions?.canRequestSign" class="text-label text-sm mb-3">
-          {{ 'SITES_PERMISSIONS.ASK_TO_SIGN' | translate }}
-        </dd>
-        <dd *ngIf="permissions?.canRequestPublicKey" class="text-label text-sm mb-3">
-          {{ 'SITES_PERMISSIONS.GET_PUBLIC_KEY' | translate }}
-        </dd>
-      </dl>
-    </section>
+  <div class="w-full mt-auto text-center">
+    <small class="opacity-70 max-w-xs mx-auto">Only accept connections from sites you trust</small>
+  </div>
 
-    <section class="w-full flex">
-      <div class="flex-1 pl-2">
-        <button (click)="onAccept()" class="w-full btn btn--small btn-off-black">{{ 'COMMON_WORDS.ACCEPT' | translate }}</button>
-      </div>
-    </section>
-  </section>
-</app-modal-wrapper>
+  <div class="w-full flex gap-[1rem]">
+    <button (click)="onClose()"
+            class="w-full"
+            nz-button
+            nzDanger
+            nzSize="large"
+            nzType="primary">
+      {{ 'COMMON_WORDS.REJECT' | translate }}
+    </button>
+
+    <button (click)="onAccept()"
+            class="w-full"
+            nz-button
+            nzSize="large"
+            nzType="primary">
+      {{ 'COMMON_WORDS.CONFIRM' | translate }}
+    </button>
+  </div>
+</section>

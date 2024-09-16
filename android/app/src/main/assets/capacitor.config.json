@@ -1,5 +1,8 @@
 {
 	"appId": "app.xbull.mobile",
 	"appName": "xBull Wallet",
-	"webDir": "dist/mobile"
+	"webDir": "dist/mobile",
+	"server": {
+		"androidScheme": "https"
+	}
 }

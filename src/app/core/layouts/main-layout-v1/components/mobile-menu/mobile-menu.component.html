@@ -5,6 +5,11 @@
       <span>{{ 'COMMON_WORDS.WALLET' | translate }}</span>
     </li>
 
+    <li *ngIf="isMobile" (click)="closeDrawer()" routerLink="/dapps" nzMatchRouter nz-menu-item class="flex">
+      <i class="mr-4 fa-solid fa-globe"></i>
+      <span>Dapps</span>
+    </li>
+
     <li (click)="closeDrawer()" routerLink="/operations" nzMatchRouter nz-menu-item class="flex">
       <i class="mr-4 fa-solid fa-list-ul"></i>
       <span>{{ 'COMMON_WORDS.OPERATIONS' | translate }}</span>

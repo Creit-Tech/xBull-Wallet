@@ -42,8 +42,11 @@ importers:
         specifier: ^6.0.0
         version: 6.0.1
       '@awesome-cordova-plugins/core':
-        specifier: ^6.3.0
+        specifier: ^6.8.0
         version: 6.8.0(rxjs@7.8.1)
+      '@awesome-cordova-plugins/in-app-browser':
+        specifier: ^6.8.0
+        version: 6.8.0(@awesome-cordova-plugins/core@6.8.0(rxjs@7.8.1))(rxjs@7.8.1)
       '@awesome-cordova-plugins/social-sharing':
         specifier: ^6.3.0
         version: 6.8.0(@awesome-cordova-plugins/core@6.8.0(rxjs@7.8.1))(rxjs@7.8.1)
@@ -128,6 +131,9 @@ importers:
       buffer:
         specifier: ^6.0.3
         version: 6.0.3
+      cordova-plugin-inappbrowser:
+        specifier: ^6.0.0
+        version: 6.0.0
       crypto-browserify:
         specifier: ^3.12.0
         version: 3.12.0
@@ -517,6 +523,12 @@ packages:
   '@awesome-cordova-plugins/core@6.8.0':
     resolution: {integrity: sha512-++catmWWdZQ8/oTCt4yBrpdtJqZ3D7xFRrjQozLcEmtSb7FMaYoBGkn6FmZa+LYsNuzTaW84gdir5I+cllS+xA==}
     peerDependencies:
+      rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
+
+  '@awesome-cordova-plugins/in-app-browser@6.8.0':
+    resolution: {integrity: sha512-jkZLhn5t0HY2rcQ61PyZWKDmYnhxgzbd6HqvYlaHMeIHDQhOQQarHk6BXpRr/6HWlCLF9L8q7mE8sqPoQxsXiw==}
+    peerDependencies:
+      '@awesome-cordova-plugins/core': ^6.0.1
       rxjs: ^5.5.0 || ^6.5.0 || ^7.3.0
 
   '@awesome-cordova-plugins/social-sharing@6.8.0':
@@ -3062,6 +3074,10 @@ packages:
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.1.0
+
+  cordova-plugin-inappbrowser@6.0.0:
+    resolution: {integrity: sha512-nMJ67YQZwkx1WMfA4tKFdVdTg6FNkh/nQflP1uMw0RVe/cP2kfDrO3SbpUr8yKahpWdSQl1Lmd8D3KKzuAjucA==}
+    engines: {cordovaDependencies: {0.2.3: {cordova: '>=3.1.0'}, 4.0.0: {cordova: '>=3.1.0', cordova-ios: '>=4.0.0'}, 5.0.0: {cordova: '>=9.0.0', cordova-android: '>=9.0.0', cordova-ios: '>=6.0.0'}, 6.0.0: {cordova: '>=9.0.0', cordova-android: '>=10.0.0', cordova-ios: '>=6.0.0'}, 7.0.0: {cordova: '>100'}}}
 
   cordova-res@0.15.4:
     resolution: {integrity: sha512-TjFZhjUtK8qq4DVrgR+KI7tKcUL704cnkTPRhHbKlCPzefHoz1tBOX93wc76dOMmOWKTsbJz83DIm6mqdp5Pmg==}
@@ -7182,6 +7198,12 @@ snapshots:
       '@types/cordova': 11.0.3
       rxjs: 7.8.1
 
+  '@awesome-cordova-plugins/in-app-browser@6.8.0(@awesome-cordova-plugins/core@6.8.0(rxjs@7.8.1))(rxjs@7.8.1)':
+    dependencies:
+      '@awesome-cordova-plugins/core': 6.8.0(rxjs@7.8.1)
+      '@types/cordova': 11.0.3
+      rxjs: 7.8.1
+
   '@awesome-cordova-plugins/social-sharing@6.8.0(@awesome-cordova-plugins/core@6.8.0(rxjs@7.8.1))(rxjs@7.8.1)':
     dependencies:
       '@awesome-cordova-plugins/core': 6.8.0(rxjs@7.8.1)
@@ -10322,6 +10344,8 @@ snapshots:
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       webpack: 5.94.0(esbuild@0.20.1)(webpack-cli@4.10.0(webpack-dev-server@4.15.1)(webpack@5.94.0))
+
+  cordova-plugin-inappbrowser@6.0.0: {}
 
   cordova-res@0.15.4:
     dependencies:

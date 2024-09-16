@@ -6,10 +6,9 @@ import { ISiteConnection } from '~root/state';
   templateUrl: './site-request.component.html',
   styleUrls: ['./site-request.component.scss']
 })
-export class SiteRequestComponent implements OnInit, AfterViewInit {
-  showModal = false;
-  @Output() deny: EventEmitter<void> = new EventEmitter<void>();
-  @Output() accept: EventEmitter<void> = new EventEmitter<void>();
+export class SiteRequestComponent {
+  @Input() deny!: () => void;
+  @Input() accept!: () => void;
 
   @Input() host!: string;
   @Input() origin!: string;
@@ -18,22 +17,12 @@ export class SiteRequestComponent implements OnInit, AfterViewInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 100)); // hack because for some reason Angular is not working as we want
-    this.showModal = true;
-  }
-
   onAccept(): void {
-    this.accept.emit();
+    this.accept();
   }
 
   async onClose(): Promise<void> {
-    this.showModal = false;
-    await new Promise(resolve => setTimeout(resolve, 300)); // This is to wait until the animation is done
-    this.deny.emit();
+    this.deny();
   }
 
 }

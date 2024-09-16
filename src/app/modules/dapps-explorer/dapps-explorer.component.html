@@ -1,0 +1,35 @@
+<section class="w-full grid grid-cols-1 grid-rows-[auto_1fr] p-[1rem]">
+  <div class="col-span-1">
+    <nz-card class="w-full" nzSize="small">
+      <div class="w-full text-center mb-[1rem]">
+        <h1 class="text-lg opacity-80">Open a dApp by its domain</h1>
+      </div>
+
+      <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
+        <input #searchBar (keydown.enter)="search(searchBar.value)" type="text" nz-input placeholder="Write the domain here" />
+      </nz-input-group>
+      <ng-template #suffixButton>
+        <button (click)="search(searchBar.value)" nz-button nzType="primary" nzSize="large" nzSearch>Go</button>
+      </ng-template>
+    </nz-card>
+  </div>
+
+  <nz-divider nzText="Popular Stellar dApps"></nz-divider>
+
+  <div class="col-span-1 flex flex-col gap-[1rem]">
+    @for(item of dapps$ | async; track item.url) {
+      <nz-card (click)="search(item.url)">
+        <section class="w-full flex items-center">
+          <img class="w-[2rem] h-[2rem] overflow-hidden rounded-full mr-[1rem]"
+               [alt]="'image_' + item.name"
+               [src]="item.image">
+
+          <div class="w-auto flex flex-col">
+            <h3 class="mb-[0.25rem]">{{ item.name }}</h3>
+            <small class="opacity-70">{{ item.description }}</small>
+          </div>
+        </section>
+      </nz-card>
+    }
+  </div>
+</section>

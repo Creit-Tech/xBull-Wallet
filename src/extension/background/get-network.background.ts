@@ -8,16 +8,16 @@ import { Networks } from 'stellar-sdk';
 
 export const requestNetwork = async (): Promise<IRuntimeGetNetworkResponse | IRuntimeErrorResponse> => {
   try {
-    const savedPermissions: IHorizonApi = await getActiveApi();
+    const savedApi: IHorizonApi = await getActiveApi();
 
     const index: number = Object.values(Networks)
-      .findIndex((n: Networks): boolean => n === savedPermissions.networkPassphrase);
+      .findIndex((n: Networks): boolean => n === savedApi.networkPassphrase);
 
     return {
       error: false,
       payload: {
         network: Object.keys(Networks)[index],
-        networkPassphrase: savedPermissions.networkPassphrase,
+        networkPassphrase: savedApi.networkPassphrase,
       },
     };
   } catch (e: any) {

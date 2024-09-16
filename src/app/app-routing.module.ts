@@ -42,6 +42,11 @@ const routes: Routes = [
           .then(m => m.WalletModule),
       },
       {
+        path: 'dapps',
+        loadComponent: () => import('./modules/dapps-explorer/dapps-explorer.component')
+          .then(c => c.DappsExplorerComponent),
+      },
+      {
         path: 'operations',
         loadChildren: () => import('./modules/operations/operations.module')
           .then(m => m.OperationsModule)

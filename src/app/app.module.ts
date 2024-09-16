@@ -33,6 +33,7 @@ import { TranslationModule } from '~root/translation.module';
 import { MarkdownModule } from 'ngx-markdown';
 import { AnchorsModule } from '~root/modules/anchors/anchors.module';
 import { NgxMaskDirective, NgxMaskPipe, provideEnvironmentNgxMask } from 'ngx-mask';
+import { InAppBrowser } from '@awesome-cordova-plugins/in-app-browser/ngx';
 
 registerLocaleData(en);
 
@@ -81,7 +82,8 @@ registerLocaleData(en);
       useValue: environment,
     },
     { provide: NZ_I18N, useValue: en_US },
-    provideEnvironmentNgxMask()
+    provideEnvironmentNgxMask(),
+    InAppBrowser,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

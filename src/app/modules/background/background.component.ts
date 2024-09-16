@@ -29,6 +29,7 @@ import {
   XdrSignerComponent
 } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-background',
@@ -42,7 +43,6 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   runtimeEvent$: ReplaySubject<RuntimeMessage> = new ReplaySubject<RuntimeMessage>();
 
   constructor(
-    private readonly componentCreatorService: ComponentCreatorService,
     private readonly sitesConnectionsService: SitesConnectionsService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly walletsAccountsService: WalletsAccountsService,
@@ -50,6 +50,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     private readonly horizonApisService: HorizonApisService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly horizonApisQuery: HorizonApisQuery,
+    private readonly translateService: TranslateService,
   ) { }
 
   connectHandler$ = this.runtimeEvent$.asObservable()
@@ -111,32 +112,26 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async connectHandler(params: IConnectRequestPayload): Promise<IRuntimeConnectResponse | IRuntimeErrorResponse> {
-    const ref = await this.componentCreatorService.createOnBody<SiteRequestComponent>(SiteRequestComponent);
-    ref.component.instance.host = params.host;
-    ref.component.instance.origin = params.origin;
-    ref.component.instance.permissions = params.permissions;
 
-    ref.open();
+    const resultSubject: Subject<IRuntimeConnectResponse | IRuntimeErrorResponse> =
+      new Subject<IRuntimeConnectResponse | IRuntimeErrorResponse>();
 
-    return new Promise(resolve => {
-      ref.component.instance.deny
-        .asObservable()
-        .pipe(take(1))
-        .pipe(takeUntil(this.componentDestroyed$))
-        .subscribe(() => {
-          resolve({
+    this.nzDrawerService.create<SiteRequestComponent>({
+      nzTitle: this.translateService.instant('SITES_PERMISSIONS.SITE_CONNECTION'),
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
+      nzContent: SiteRequestComponent,
+      nzClosable: false,
+      nzData: {
+        host: params.host,
+        origin: params.origin,
+        permissions: params.permissions,
+        deny: () => {
+          resultSubject.next({
             error: true,
             errorMessage: 'Connection denied'
           });
-          ref.component.instance.onClose()
-            .then(() => ref.close());
-        });
-
-      ref.component.instance.accept
-        .asObservable()
-        .pipe(take(1))
-        .pipe(takeUntil(this.componentDestroyed$))
-        .subscribe(() => {
+        },
+        accept: () => {
           this.sitesConnectionsService.saveSiteConnection(createSiteConnection({
             _id: params.origin + '_' + params.host,
             host: params.host,
@@ -145,18 +140,19 @@ export class BackgroundComponent implements OnInit, OnDestroy {
             canRequestPublicKey: params.permissions.canRequestPublicKey,
             createdAt: new Date().getTime(),
           }));
-
-          resolve({
+          resultSubject.next({
             error: false,
             payload: {
               canRequestPublicKey: params.permissions.canRequestPublicKey,
               canRequestSign: params.permissions.canRequestSign,
             },
           });
-          ref.component.instance.onClose()
-            .then(() => ref.close());
-        });
+        }
+      }
     });
+
+    return firstValueFrom(resultSubject);
+
   }
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {

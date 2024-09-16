@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { SettingsQuery } from '~root/state';
 import { Sep07Service } from '~root/core/services/sep07/sep07.service';
+import { ENV, environment } from '~env';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -10,8 +11,11 @@ import { Sep07Service } from '~root/core/services/sep07/sep07.service';
 })
 export class MobileMenuComponent implements OnInit {
   advanceMode$ = this.settingsQuery.advanceMode$;
+  isMobile: boolean = this.env.platform === 'mobile';
 
   constructor(
+    @Inject(ENV)
+    private readonly env: typeof environment,
     private readonly nzDrawerRef: NzDrawerRef,
     private readonly settingsQuery: SettingsQuery,
     private readonly sep07Service: Sep07Service,
