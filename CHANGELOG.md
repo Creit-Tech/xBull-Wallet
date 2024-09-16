@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.30.0] - 2024-09-16
+### Add
+- Add a switch to the path payment component so it's easy to exchange the `fromAsset` with `toAsset`
+- Add support to latest version of Android and upgrade Android dependencies
+
+### Change
+- Move from NPM to PNPM
+- Change the Background component so it uses the new design (ready to move away from old system to create modals)
+
 ## [1.24.0] - 2024-08-07
 ### Add
 - Upgrade Stellar SDK to 12.2.0
