@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Add
 - Add a switch to the path payment component so it's easy to exchange the `fromAsset` with `toAsset`
 - Add support to latest version of Android and upgrade Android dependencies
+- Upgrade Ledger library and allow setting it up so no blind transaction is allowed 
 
 ### Change
 - Move from NPM to PNPM
