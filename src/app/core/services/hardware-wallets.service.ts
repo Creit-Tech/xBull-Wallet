@@ -7,7 +7,8 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
-import { FeeBumpTransaction, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, StrKey, Transaction } from 'stellar-sdk';
+import { SettingsQuery } from '~root/state';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class HardwareWalletsService {
 
   constructor(
     private readonly stellarSdkService: StellarSdkService,
+    private readonly settingsQuery: SettingsQuery,
   ) {
     this.configureTrezorLibrary().then(() => {
       console.log('Trezor connected');
@@ -46,7 +48,7 @@ export class HardwareWalletsService {
     const finalTransport = !!transport ? transport : (await TransportWebUSB.create());
     const str = new Str(finalTransport);
     const result = await str.getPublicKey(path);
-    return result.publicKey;
+    return StrKey.encodeEd25519PublicKey(result.rawPublicKey);
   }
 
   async signWithLedger(data: {
@@ -54,13 +56,12 @@ export class HardwareWalletsService {
     publicKey: string;
     transaction: Transaction | FeeBumpTransaction;
     transport: TransportWebUSB;
-    blindTransaction?: boolean;
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
+    const appConfiguration = await str.getAppConfiguration();
+    const blockBlindLedgerTransactions = await firstValueFrom(this.settingsQuery.blockBlindLedgerTransactions$);
 
-    // I know that the ledger can get a signatureBase with 1540 length
-    // But I have received issues even with ~1400 long signatures, so we use a hash method if 1000 is reached
-    const result = data.transaction.signatureBase().length < 1000 && !data.blindTransaction
+    const result = (data.transaction.signatureBase().length < (appConfiguration.maxDataSize || 1000)) || blockBlindLedgerTransactions
       ? await str.signTransaction(data.accountPath, data.transaction.signatureBase())
       : await str.signHash(data.accountPath, data.transaction.hash());
 

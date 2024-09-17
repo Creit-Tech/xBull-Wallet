@@ -96,10 +96,10 @@ importers:
         specifier: ^0.7.2
         version: 0.7.9
       '@ledgerhq/hw-app-str':
-        specifier: ^6.27.11
-        version: 6.29.0
+        specifier: ^7.0.2
+        version: 7.0.2
       '@ledgerhq/hw-transport-webusb':
-        specifier: ^6.27.11
+        specifier: ^6.29.2
         version: 6.29.2
       '@ngx-translate/core':
         specifier: ^14.0.0
@@ -1652,8 +1652,8 @@ packages:
   '@ledgerhq/errors@6.18.0':
     resolution: {integrity: sha512-L3jQWAGyooxRDk/MRlW2v4Ji9+kloBtdmz9wBkHaj2j0n+05rweJSV3GHw9oye1BYMbVFqFffmT4H3hlXlCasw==}
 
-  '@ledgerhq/hw-app-str@6.29.0':
-    resolution: {integrity: sha512-bEHrp4wPxsuVTMEdX9uhqqkF6pW2T4aIzmmxFwXF3GPyJjMukjB7MAXiZArxe5DkHO+L6sNY/o/AsHJEHBqamg==}
+  '@ledgerhq/hw-app-str@7.0.2':
+    resolution: {integrity: sha512-cC6daqDBlK34eA9phyfzXPVLy2KDtwVGff3x3BIaN8Ijy/mC9rM7OO/kEvpRk5RBUc9F/f8juMpYFzecjCrWuA==}
 
   '@ledgerhq/hw-transport-webusb@6.29.2':
     resolution: {integrity: sha512-BBFvntj4L0toMhabluuQ3eEnbUTDbdQ11tliaTqwlrPxhwUmzx+o3M5q8edKkyUdoAeuvXz9a1CVeHGP0fvhBA==}
@@ -2694,6 +2694,9 @@ packages:
 
   bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
+
+  bip32-path@0.4.2:
+    resolution: {integrity: sha512-ZBMCELjJfcNMkz5bDuJ1WrYvjlhEF5k6mQ8vUr4N7MbVRsXei7ZOg8VhhwMfNiW68NWmLkgkc6WvTickrLGprQ==}
 
   bip39@3.1.0:
     resolution: {integrity: sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==}
@@ -8579,12 +8582,11 @@ snapshots:
 
   '@ledgerhq/errors@6.18.0': {}
 
-  '@ledgerhq/hw-app-str@6.29.0':
+  '@ledgerhq/hw-app-str@7.0.2':
     dependencies:
+      '@ledgerhq/errors': 6.18.0
       '@ledgerhq/hw-transport': 6.31.2
-      base32.js: 0.1.0
-      sha.js: 2.4.11
-      tweetnacl: 1.0.3
+      bip32-path: 0.4.2
 
   '@ledgerhq/hw-transport-webusb@6.29.2':
     dependencies:
@@ -9888,6 +9890,8 @@ snapshots:
   bindings@1.5.0:
     dependencies:
       file-uri-to-path: 1.0.0
+
+  bip32-path@0.4.2: {}
 
   bip39@3.1.0:
     dependencies:

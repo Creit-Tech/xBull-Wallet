@@ -47,6 +47,14 @@ export interface SettingsState {
   // This is to use an asset as the base price
   // Default values are USDC on both testnet and pubnet
   counterAssetId: IWalletAssetModel['_id'];
+
+  // Hardware wallet global configurations
+
+  /**
+   * Ledger allows blind signing transactions, the oldest model from ledger requires that the XDR string is lower than a certain amount of characters because otherwise it throws an error
+   * If this is enabled, even those cases where xBull thinks a ledger device could fail it will still try a regular non-blind transaction
+   */
+  blockBlindLedgerTransactions: boolean;
 }
 
 export function createInitialState(): SettingsState {
@@ -90,6 +98,7 @@ export function createInitialState(): SettingsState {
       'liquidity_pool_withdraw',
     ],
     counterAssetId: 'native',
+    blockBlindLedgerTransactions: false,
   };
 }
 

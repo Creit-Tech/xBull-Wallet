@@ -224,10 +224,7 @@ export class SigningService {
             transaction: params.target,
             accountPath: params.selectedAccount.path,
             publicKey: params.selectedAccount.publicKey,
-            transport,
-            blindTransaction: params.target instanceof FeeBumpTransaction
-              ? !!params.target.innerTransaction.operations.find(o => o.type === 'invokeHostFunction')
-              : !!params.target.operations.find(o => o.type === 'invokeHostFunction'),
+            transport
           });
 
           params.target.addSignature(result.publicKey, result.signature);

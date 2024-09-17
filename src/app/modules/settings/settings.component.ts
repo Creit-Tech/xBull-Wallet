@@ -54,6 +54,9 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   languageSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
 
+  blockBlindLedgerTransactionsControl: UntypedFormControl = new UntypedFormControl(false);
+  blockBlindLedgerTransactions$: Observable<boolean> = this.settingsQuery.blockBlindLedgerTransactions$;
+
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
@@ -81,6 +84,20 @@ export class SettingsComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.componentDestroyed$))
     .subscribe(value => {
       this.settingsService.setAdvanceModeStatus(value);
+    });
+
+  blockBlindLedgerTransactionsStateSubscription: Subscription = this.blockBlindLedgerTransactions$
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(mode => {
+      this.blockBlindLedgerTransactionsControl.patchValue(mode, {
+        emitEvent: false,
+      });
+    });
+
+  blockBlindLedgerTransactionsUpdateSubscription: Subscription = this.blockBlindLedgerTransactionsControl.valueChanges
+    .pipe(takeUntil(this.componentDestroyed$))
+    .subscribe(value => {
+      this.settingsService.setBlockBlindLedgerTransactionsStatus(value);
     });
 
   setLanguageSubscription: Subscription = this.languageSelectControl.valueChanges

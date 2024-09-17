@@ -286,6 +286,7 @@
       "HORIZON_APIS": "Horizon APIs",
       "LANGUAGE_TITLE": "Language",
       "DEFAULT_FEE_TITLE": "Default fee",
+      "BLIND_LEDGER_TXS": "Prevent blind Ledger signing",
       "ACTIVE_OPERATIONS_TYPES": "Active operation types",
       "SITES_CONNECTED": "Sites connected",
       "ANTI_SPAM": "Anti SPAM",

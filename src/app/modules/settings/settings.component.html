@@ -112,6 +112,17 @@
         </div>
       </nz-list-item>
 
+      <nz-list-item class="px-4">
+        <div class="w-8/12">
+          <p class="m-0 text-sm font-bold">
+            {{ 'SETTINGS.SETTINGS_DASHBOARD.BLIND_LEDGER_TXS' | translate }}
+          </p>
+        </div>
+        <div class="w-auto">
+          <nz-switch [formControl]="blockBlindLedgerTransactionsControl"></nz-switch>
+        </div>
+      </nz-list-item>
+
       <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/active-operations-types">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">

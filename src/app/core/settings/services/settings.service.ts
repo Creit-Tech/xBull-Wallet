@@ -59,6 +59,10 @@ export class SettingsService {
     this.settingsStore.updateState({ defaultFee: value });
   }
 
+  setBlockBlindLedgerTransactionsStatus(status: SettingsState['blockBlindLedgerTransactions']): void {
+    this.settingsStore.updateState({ blockBlindLedgerTransactions: status });
+  }
+
   getRecommendedFee(): Observable<string> {
     this.settingsStore.updateUIState({ gettingRecommendedFee: true });
 

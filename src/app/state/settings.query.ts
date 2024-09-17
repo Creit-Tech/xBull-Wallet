@@ -29,6 +29,8 @@ export class SettingsQuery extends Query<SettingsState> {
 
   counterAssetId$ = this.select(state => state.counterAssetId);
 
+  blockBlindLedgerTransactions$ = this.select(state => state.blockBlindLedgerTransactions);
+
   constructor(protected store: SettingsStore) {
     super(store);
   }
