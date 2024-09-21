@@ -1,0 +1,55 @@
+.ios-safe-padding {
+  padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+}
+
+.ios-safe-padding-none {
+  padding: max(0rem, env(safe-area-inset-top)) max(0rem, env(safe-area-inset-right)) max(0rem, env(safe-area-inset-bottom)) max(0rem, env(safe-area-inset-left));
+}
+
+.ios-safe-padding-top-none {
+  padding-top: max(0rem, env(safe-area-inset-top));
+}
+
+.ios-safe-padding-left-none {
+  padding-left: max(0rem, env(safe-area-inset-left));
+}
+
+.ios-safe-padding-right-none {
+  padding-right: max(0rem, env(safe-area-inset-right));
+}
+
+.ios-safe-padding-bottom-none {
+  padding-bottom: max(0rem, env(safe-area-inset-bottom));
+}
+
+.ios-safe-padding-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}
+
+.ios-safe-padding-left {
+  padding-left: max(1rem, env(safe-area-inset-left));
+}
+
+.ios-safe-padding-right {
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+
+.ios-safe-padding-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+.ios-safe-top {
+  top: env(safe-area-inset-top);
+}
+
+.ios-safe-bottom {
+  bottom: env(safe-area-inset-bottom);
+}
+
+.ios-safe-left {
+  left: env(safe-area-inset-left);
+}
+
+.ios-safe-right {
+  right: env(safe-area-inset-right);
+}
