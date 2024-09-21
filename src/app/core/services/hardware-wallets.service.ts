@@ -58,10 +58,9 @@ export class HardwareWalletsService {
     transport: TransportWebUSB;
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
-    const appConfiguration = await str.getAppConfiguration();
     const blockBlindLedgerTransactions = await firstValueFrom(this.settingsQuery.blockBlindLedgerTransactions$);
 
-    const result = (data.transaction.signatureBase().length < (appConfiguration.maxDataSize || 1000)) || blockBlindLedgerTransactions
+    const result = blockBlindLedgerTransactions
       ? await str.signTransaction(data.accountPath, data.transaction.signatureBase())
       : await str.signHash(data.accountPath, data.transaction.hash());
 
