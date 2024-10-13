@@ -9,17 +9,16 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { ReactiveFormsModule } from '@angular/forms';
-import { OperationItemComponent } from './components/operation-item/operation-item.component';
 import { SharedPipesModule } from '~root/shared/shared-pipes/shared-pipes.module';
 import { OperationDetailsComponent } from './components/operation-details/operation-details.component';
 import { ClipboardModule } from '~root/shared/clipboard/clipboard.module';
 import { TranslationModule } from '~root/translation.module';
+import { OperationRowComponent } from '~root/modules/operations/components/operation-row/operation-row.component';
 
 
 @NgModule({
   declarations: [
     OperationsDashboardComponent,
-    OperationItemComponent,
     OperationDetailsComponent
   ],
   imports: [
@@ -34,6 +33,7 @@ import { TranslationModule } from '~root/translation.module';
     SharedPipesModule,
     ClipboardModule,
     TranslationModule.forChild(),
+    OperationRowComponent,
   ]
 })
 export class OperationsModule { }

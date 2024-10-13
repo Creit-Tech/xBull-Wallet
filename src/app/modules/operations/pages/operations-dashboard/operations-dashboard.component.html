@@ -17,26 +17,15 @@
 
 <section class="w-full flex justify-center items-center">
   <section class="max-w-lg w-full py-4">
-    <div class="w-full text-center mb-4" [class.pointer-events-none]="!!(gettingAccountsOperations$ | async)">
-      <nz-radio-group [formControl]="typeOfOperationsControl" nzButtonStyle="solid" style="z-index: 0">
-        <label nz-radio-button nzValue="only_payments">
-          {{ 'OPERATIONS.ONLY_PAYMENT' | translate }}
-        </label>
-        <label nz-radio-button nzValue="all_operations">
-          {{ 'OPERATIONS.ALL_OPERATIONS' | translate }}
-        </label>
-      </nz-radio-group>
-    </div>
-
-    <nz-list [nzLoading]="gettingAccountsOperations$ | async" class="mb-4">
-      <ng-container *ngFor="let operation of filteredOperations$ | async">
-        <nz-list-item (click)="onSelected(operation)" class="w-full">
-          <app-operation-item class="w-full" [operation]="operation"></app-operation-item>
+    <nz-list [nzLoading]="fetchingData" class="mb-4">
+      <ng-container *ngFor="let operation of filteredOperationRecords$ | async">
+        <nz-list-item (click)="onSelected(operation.recordId)" class="w-full">
+          <app-operation-row [operation]="operation"></app-operation-row>
         </nz-list-item>
       </ng-container>
     </nz-list>
 
-    <section *ngIf="(accountOperations$ | async)?.length" class="w-full flex justify-center">
+    <section class="w-full flex justify-center">
       <button (click)="checkOnBlockchain()" nz-button>
         {{ 'OPERATIONS.MORE_BUTTON' | translate }}
       </button>

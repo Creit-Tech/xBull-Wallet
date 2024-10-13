@@ -1,31 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription, switchMap } from 'rxjs';
 import {
   HorizonApisQuery,
   IWalletsOperation,
-  SettingsQuery,
   WalletsAccountsQuery,
-  WalletsOperationsQuery
 } from '~root/state';
-import { UntypedFormControl, Validators } from '@angular/forms';
 import {
-  debounceTime,
   distinctUntilKeyChanged,
   filter, map,
-  startWith,
-  switchMap, take,
-  takeUntil,
-  withLatestFrom
 } from 'rxjs/operators';
-import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Networks } from 'stellar-sdk';
+import { Horizon, Networks } from 'stellar-sdk';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {
   OperationDetailsComponent
 } from '~root/modules/operations/components/operation-details/operation-details.component';
 import { TranslateService } from '@ngx-translate/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 
 @Component({
   selector: 'app-operations-dashboard',
@@ -35,64 +28,61 @@ import { TranslateService } from '@ngx-translate/core';
 export class OperationsDashboardComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
 
-  gettingAccountsOperations$ = this.walletsOperationsQuery.gettingAccountsOperations$;
+  fetchingData: boolean = false;
+  hideSpam$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
 
-  selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
-  accountOperations$: Observable<IWalletsOperation[]> = this.selectedAccount$
-    .pipe(filter(account => !!account))
-    .pipe(distinctUntilKeyChanged('_id'))
-    .pipe(withLatestFrom(this.settingsQuery.antiSpamPublicKeys$))
-    .pipe(switchMap(([account, antiSpamPublicKeys]) => {
-      return this.walletsOperationsQuery.selectAll({
-        filterBy: entity => entity.ownerAccount === account._id
-          && !antiSpamPublicKeys.find(key => entity.operationRecord.source_account === key),
-        sortBy: (entityA, entityB) => entityB.createdAt - entityA.createdAt,
-      });
+  operationRecords$: BehaviorSubject<IOperationRecord[]> = new BehaviorSubject<IOperationRecord[]>([]);
+  filteredOperationRecords$: Observable<IOperationRecord[]> = this.hideSpam$.asObservable()
+    .pipe(switchMap(hideSpam => {
+      return this.operationRecords$
+        .pipe(map(operationsRecords => {
+          return operationsRecords.filter(op => !(hideSpam && op.asset === 'native' && op.debit < 0.005));
+        }))
     }))
-    .pipe(debounceTime(10));
-
-  filteredOperations$: Observable<IWalletsOperation[]> = combineLatest([
-    this.accountOperations$,
-    this.settingsQuery.operationTypesToShow$
-  ]).pipe(map(([operations, operationTypesToShow]) => {
-    return operations.filter(operation => operationTypesToShow.indexOf(operation.operationRecord.type) !== -1);
-  }));
-
-  typeOfOperationsControl: UntypedFormControl = new UntypedFormControl('only_payments', Validators.required);
+  selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
   constructor(
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
-    private readonly walletsAccountsService: WalletsAccountsService,
     private readonly nzMessageService: NzMessageService,
-    private readonly walletsOperationsQuery: WalletsOperationsQuery,
-    private readonly settingsQuery: SettingsQuery,
     private readonly globalsService: GlobalsService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly translateService: TranslateService,
-  ) { }
+    private readonly stellarSdkService: StellarSdkService,
+  ) {
+  }
 
-  getLatestOperationsSubscription: Subscription = this.typeOfOperationsControl.valueChanges
-    .pipe(startWith('only_payments'))
-    .pipe(switchMap(_ => {
-      return combineLatest([
-        this.selectedAccount$.pipe(distinctUntilKeyChanged('_id')),
-        this.horizonApisQuery.getSelectedHorizonApi$.pipe(distinctUntilKeyChanged('_id'))
-      ]);
-    }))
-    .pipe(takeUntil(this.componentDestroyed$))
-    .pipe(switchMap(([account, horizonApi]) => {
-      return this.walletsAccountsService.getLatestAccountOperations({
-        account,
-        horizonApi,
-        onlyPayments: this.typeOfOperationsControl.value === 'only_payments',
-      })
-        .catch(_ => {
-          this.nzMessageService.error('No operations available for this account in the Blockchain');
-          return [];
-        });
-    }))
-    .subscribe();
+  fetchInitialRecordsSubscription: Subscription = combineLatest([
+    this.selectedAccount$.pipe(distinctUntilKeyChanged('_id')),
+    this.horizonApisQuery.getSelectedHorizonApi$.pipe(distinctUntilKeyChanged('_id')),
+  ])
+    .pipe(takeUntilDestroyed())
+    .subscribe(async ([ selectedAccount, horizonApi ]) => {
+      if (!selectedAccount || !horizonApi) {
+        this.operationRecords$.next([]);
+      } else {
+        this.fetchingData = true;
+        try {
+          const server = this.stellarSdkService.selectServer(horizonApi.url);
+          let response = await server.effects()
+            .forAccount(selectedAccount.publicKey)
+            .order('desc')
+            .limit(200)
+            .call();
+
+          let parsedRecords: IOperationRecord[] = this.parseEffects(response);
+          while (response.records.length > 0 || parsedRecords.length === 200) {
+            parsedRecords = [ ...parsedRecords, ...this.parseEffects(response) ];
+            response = await response.next();
+          }
+
+          this.operationRecords$.next(parsedRecords);
+        } catch (e) {
+          this.nzMessageService.error('Failed when fetching the data from Horizon.');
+        }
+        this.fetchingData = false;
+      }
+    });
 
   ngOnInit(): void {
   }
@@ -102,14 +92,34 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  async onSelected(operation: IWalletsOperation): Promise<void> {
-    this.nzDrawerService.create<OperationDetailsComponent>({
-      nzContent: OperationDetailsComponent,
-      nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
-      nzCloseOnNavigation: true,
-      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
-      nzContentParams: { operation }
-    });
+  async onSelected(effectId: string): Promise<void> {
+    const horizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+    const selectedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
+    const server = this.stellarSdkService.selectServer(horizonApi.url);
+    this.fetchingData = true;
+    try {
+      const operation = await server.operations().operation(effectId.split('-')[0]).call();
+
+      this.nzDrawerService.create<OperationDetailsComponent>({
+        nzContent: OperationDetailsComponent,
+        nzTitle: this.translateService.instant('COMMON_WORDS.DETAILS'),
+        nzCloseOnNavigation: true,
+        nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
+        nzContentParams: {
+          operation: {
+            _id: operation.id,
+            createdAt: new Date(operation.created_at).getTime(),
+            operationRecord: operation,
+            pagingToken: operation.paging_token,
+            ownerAccount: selectedAccount._id,
+            ownerPublicKey: selectedAccount.publicKey,
+          }
+        }
+      });
+    } catch (e) {
+      this.nzMessageService.error('Error while fetching the operation data.');
+    }
+    this.fetchingData = false;
   }
 
   async checkOnBlockchain(): Promise<void> {
@@ -123,11 +133,53 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
 
     // TODO: This needs to be dynamic
     this.globalsService.window.open(
-      `https://stellar.expert/explorer/${network}/account/${selectedAccount.publicKey}`,
+      `https://stellar.expert/explorer/${ network }/account/${ selectedAccount.publicKey }`,
       '_blank'
     );
   }
 
+  parseEffects(response: Horizon.ServerApi.CollectionPage<Horizon.ServerApi.EffectRecord>): IOperationRecord[] {
+    const parsedRecords: IOperationRecord[] = [];
+    for (const record of response.records) {
+      switch (record.type) {
+        case 'account_created':
+          parsedRecords.push({
+            dateNumber: new Date(record.created_at).getTime(),
+            date: new Date(record.created_at),
+            recordId: record.id,
+            recordType: 'account_created',
+            asset: 'native',
+            debit: Number((record as any).starting_balance),
+            credit: 0,
+          });
+          break;
 
+        case 'account_debited':
+        case 'account_credited':
+          parsedRecords.push({
+            dateNumber: new Date(record.created_at).getTime(),
+            date: new Date(record.created_at),
+            recordId: record.id,
+            recordType: record.type as 'account_debited' | 'account_credited',
+            asset: (record as any).asset_type === 'native'
+              ? 'native'
+              : `${(record as any).asset_code}:${(record as any).asset_issuer}`,
+            debit: record.type === 'account_debited' ? 0 : Number((record as any).amount),
+            credit: record.type === 'account_credited' ? 0 : Number((record as any).amount),
+          });
+          break;
+      }
+    }
+    return parsedRecords;
+  }
+}
 
+export interface IOperationRecord {
+  asset: string;
+  debit: number;
+  credit: number;
+  date: Date;
+  recordId: string;
+  recordType: 'account_created' | 'account_debited' | 'account_credited';
+  dateNumber: number;
 }
