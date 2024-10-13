@@ -2,21 +2,16 @@ import { Injectable } from '@angular/core';
 import { NotFoundError, Horizon } from 'stellar-sdk';
 import { firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import {
-  BalanceAssetType,
-  createWalletsAccount, createWalletsOperation, IHorizonApi, IWallet, IWalletAsset,
-  IWalletsAccount, IWalletsOperation, LpAssetsStore,
+  createWalletsOperation, IHorizonApi,
+  IWalletsAccount, LpAssetsStore,
   WalletsAccountsQuery,
   WalletsAccountsStore,
   WalletsAssetsStore, WalletsOperationsStore,
 } from '~root/state';
-import { catchError, map, take, withLatestFrom } from 'rxjs/operators';
-import { applyTransaction } from '@datorama/akita';
+import { catchError, map, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { IWalletsAccountUI } from '~root/state/wallets-accounts.store';
-import BalanceLine = Horizon.HorizonApi.BalanceLine;
-import BigNumber from 'bignumber.js';
-import OperationRecord = Horizon.ServerApi.OperationRecord;
+import { ServerApi } from 'stellar-sdk/lib/horizon';
 
 @Injectable({
   providedIn: 'root'
@@ -173,7 +168,7 @@ export class WalletsAccountsService {
             this.walletsOperationsStore.upsertMany([createWalletsOperation({
               ownerId: params.account._id,
               ownerPublicKey: params.account.publicKey,
-              operation: operationRecord as any as OperationRecord,
+              operation: operationRecord as any as ServerApi.OperationRecord,
             })]);
           }
         });
@@ -207,41 +202,6 @@ export class WalletsAccountsService {
     }
   }
 
-  getLatestAccountOperations(params: {
-    account: IWalletsAccount,
-    horizonApi: IHorizonApi,
-    onlyPayments?: boolean,
-  }): Promise<IWalletsOperation[]> {
-    this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: true });
-    const server = this.stellarSdkService.selectServer(params.horizonApi.url);
-    return (!!params.onlyPayments ? server.payments() : server.operations())
-      .forAccount(params.account.publicKey)
-      .limit(100)
-      .order('desc')
-      .join('transactions')
-      .call()
-      .then(response => {
-        const operations = response.records.map(operationRecord => {
-          return createWalletsOperation({
-            ownerId: params.account._id,
-            ownerPublicKey: params.account.publicKey,
-            operation: operationRecord as any as OperationRecord,
-          });
-        });
-
-        applyTransaction(() => {
-          this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
-          this.walletsOperationsStore.set(operations);
-        });
-
-        return operations;
-      })
-      .catch(error => {
-        this.walletsOperationsStore.updateUIState({ gettingAccountsOperations: false });
-        return Promise.reject(error);
-      });
-  }
-
   async setAccountName(data: { publicKey: IWalletsAccount['publicKey']; name: IWalletsAccount['name'] }): Promise<void> {
     const sameNameAccount = await firstValueFrom(this.walletsAccountsQuery.selectAll({
       filterBy: entity => entity.name === data.name,
@@ -259,12 +219,4 @@ export class WalletsAccountsService {
       name: data.name,
     });
   }
-}
-
-export interface AccountParsedBalance {
-  balance: string;
-  assetCode: 'XLM' | string;
-  assetIssuer?: string;
-  buyingLiabilities: string;
-  sellingLiabilities: string;
 }
