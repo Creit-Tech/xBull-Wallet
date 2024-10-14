@@ -8,7 +8,6 @@ export class SettingsQuery extends Query<SettingsState> {
 
   selectedLanguage$ = this.select(state => state.selectedLanguage);
 
-  advanceMode$ = this.select(state => state.advanceMode);
   defaultFee$ = this.select(state => state.defaultFee);
 
   antiSpamPublicKeys$ = this.select(state => state.antiSPAMPublicKeys);

@@ -22,8 +22,6 @@ export class ConfirmPublicKeysComponent implements OnInit, AfterViewInit {
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   accountsToAdd$: BehaviorSubject<Array<{ publicKey: string; path: string; active: boolean }>> = new BehaviorSubject<Array<{ publicKey: string; path: string; active: boolean }>>([]);
 
-  advanceMode$ = this.settingsQuery.advanceMode$;
-
   form = new UntypedFormGroup({
     accounts: new UntypedFormArray([]),
   });

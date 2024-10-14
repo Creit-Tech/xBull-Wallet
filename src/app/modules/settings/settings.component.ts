@@ -30,9 +30,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
   componentDestroyed$: Subject<void> = new Subject<void>();
   defaultFee$ = this.settingsQuery.defaultFee$;
 
-  advanceMode$ = this.settingsQuery.advanceMode$;
-  advanceModeControl: UntypedFormControl = new UntypedFormControl(false);
-
   selectedWallet$ = this.walletsQuery.getSelectedWallet$;
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
 
@@ -60,31 +57,13 @@ export class SettingsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly settingsQuery: SettingsQuery,
     private readonly settingsService: SettingsService,
-    private readonly settingsStore: SettingsStore,
     private readonly walletsQuery: WalletsQuery,
     private readonly walletsAssetsQuery: WalletsAssetsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
-    private readonly horizonApisService: HorizonApisService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly translateService: TranslateService,
-    private readonly nzModalService: NzModalService,
-    private readonly walletsService: WalletsService,
   ) { }
-
-  advanceModeStateSubscription: Subscription = this.advanceMode$
-    .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(mode => {
-      this.advanceModeControl.patchValue(mode, {
-        emitEvent: false,
-      });
-    });
-
-  advanceModeControlUpdateSubscription: Subscription = this.advanceModeControl.valueChanges
-    .pipe(takeUntil(this.componentDestroyed$))
-    .subscribe(value => {
-      this.settingsService.setAdvanceModeStatus(value);
-    });
 
   blockBlindLedgerTransactionsStateSubscription: Subscription = this.blockBlindLedgerTransactions$
     .pipe(takeUntil(this.componentDestroyed$))

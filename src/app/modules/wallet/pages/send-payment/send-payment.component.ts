@@ -7,8 +7,9 @@ import {
   OnInit,
 } from '@angular/core';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { BehaviorSubject, from, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, from, Observable, Subject, Subscription } from 'rxjs';
 import {
+  HorizonApisQuery,
   IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
@@ -44,10 +45,11 @@ import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
-import { Account, Asset, Claimant, Memo, Operation, TransactionBuilder } from 'stellar-sdk';
+import { Account, Asset, Claimant, Memo, Operation, StrKey, Transaction, TransactionBuilder } from 'stellar-sdk';
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 import { Record } from '@creit.tech/sorobandomains-sdk';
+import { validRecipientKeyValidator } from '~root/shared/forms-validators/valid-recipient.validator';
 
 @Component({
   selector: 'app-send-payment',
@@ -69,7 +71,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
   form: UntypedFormGroup = new UntypedFormGroup({
     publicKey: new UntypedFormControl('', [
       Validators.required,
-      validPublicKeyValidator
+      validRecipientKeyValidator
     ]),
     memo: new UntypedFormControl(''),
     assetCode: new UntypedFormControl('', [Validators.required]), // it's called asset code but it's actually the id
@@ -139,8 +141,6 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly walletsAccountsQuery: WalletsAccountsQuery,
     private readonly stellarSdkService: StellarSdkService,
     private readonly walletsOperationsQuery: WalletsOperationsQuery,
-    private readonly walletsAccountsService: WalletsAccountsService,
-    private readonly componentCreatorService: ComponentCreatorService,
     private readonly walletsService: WalletsService,
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
@@ -149,6 +149,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly translateService: TranslateService,
     private readonly sorobandomainsService: SorobandomainsService,
+    private readonly horizonApisQuery: HorizonApisQuery,
   ) { }
 
   resetFormWhenSourceAccountChangesSubscription = this.selectedAccount$
@@ -212,61 +213,35 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  async onSubmit(): Promise<void> {
-    const [
-      selectedAsset,
-      selectedAccount,
-    ] = await Promise.all([
-      this.selectedAsset$.pipe(take(1)).toPromise(),
-      this.selectedAccount$.pipe(take(1)).toPromise(),
-    ]);
-
-    if (!selectedAsset || !selectedAccount) {
-      return;
-    }
-
-    const loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
-
-    const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
-
-    const transaction = new TransactionBuilder(targetAccount, {
-      fee: this.stellarSdkService.fee,
-      networkPassphrase: this.stellarSdkService.networkPassphrase,
-    }).setTimeout(this.stellarSdkService.defaultTimeout);
-
+  async sendPaymentToAccountXDR(params: {
+    asset: IWalletAssetModel;
+    account: IWalletsAccount;
+    tx: TransactionBuilder;
+  }): Promise<Transaction> {
     let destinationLoadedAccount: AccountResponse;
     try {
       destinationLoadedAccount = await this.stellarSdkService.loadAccount(this.form.value.publicKey);
 
-      if (selectedAsset._id === 'native') {
-        transaction.addOperation(
+      if (params.asset._id === 'native') {
+        params.tx.addOperation(
           Operation.payment({
-            asset: selectedAsset._id === 'native'
+            asset: params.asset._id === 'native'
               ? Asset.native()
-              : new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+              : new Asset(params.asset.assetCode, params.asset.assetIssuer),
             destination: this.form.value.publicKey,
             amount: new BigNumber(this.form.value.amount).toFixed(7),
           })
         );
       } else {
         const hasTrustline = destinationLoadedAccount.balances.find(b => {
-          if (
-            b.asset_type !== 'credit_alphanum4' &&
-            b.asset_type !== 'credit_alphanum12'
-          ) {
-            return false;
-          }
-
-          return (
-            b.asset_code === selectedAsset.assetCode &&
-            b.asset_issuer === selectedAsset.assetIssuer
-          );
+          if (b.asset_type !== 'credit_alphanum4' && b.asset_type !== 'credit_alphanum12') return false;
+          else return (b.asset_code === params.asset.assetCode && b.asset_issuer === params.asset.assetIssuer);
         });
 
-        if (hasTrustline || selectedAsset.assetIssuer === this.form.value.publicKey) {
-          transaction.addOperation(
+        if (hasTrustline || params.asset.assetIssuer === this.form.value.publicKey) {
+          params.tx.addOperation(
             Operation.payment({
-              asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+              asset: new Asset(params.asset.assetCode, params.asset.assetIssuer),
               destination: this.form.value.publicKey,
               amount: new BigNumber(this.form.value.amount).toFixed(7),
             })
@@ -284,20 +259,20 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           });
 
           if (await modalResult$.pipe(take(1)).toPromise()) {
-            transaction.addOperation(
+            params.tx.addOperation(
               Operation.createClaimableBalance({
-                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                asset: new Asset(params.asset.assetCode, params.asset.assetIssuer),
                 amount: new BigNumber(this.form.value.amount).toFixed(7),
-                claimants: [new Claimant(this.form.value.publicKey), new Claimant(loadedAccount.account_id)],
+                claimants: [new Claimant(this.form.value.publicKey), new Claimant(params.account.publicKey)],
               })
             );
           } else {
             this.nzMessageService.info(this.translateService.instant('WALLET.SEND_PAYMENT.ALERT_SENDING_NO_TRUSTLINE'), {
               nzDuration: 5000,
             });
-            transaction.addOperation(
+            params.tx.addOperation(
               Operation.payment({
-                asset: new Asset(selectedAsset.assetCode, selectedAsset.assetIssuer),
+                asset: new Asset(params.asset.assetCode, params.asset.assetIssuer),
                 destination: this.form.value.publicKey,
                 amount: new BigNumber(this.form.value.amount).toFixed(7),
               })
@@ -307,11 +282,8 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
     } catch (e: any) {
-      if (selectedAsset._id !== 'native') {
-        this.nzMessageService.error(this.translateService.instant('WALLET.SEND_PAYMENT.CUSTOM_ASSET_TO_NON_TRUSTED'), {
-          nzDuration: 3000,
-        });
-        return;
+      if (params.asset._id !== 'native') {
+        throw new Error(this.translateService.instant('WALLET.SEND_PAYMENT.CUSTOM_ASSET_TO_NON_TRUSTED'));
       }
 
       const modalResult$ = new Subject<boolean>();
@@ -323,32 +295,84 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
         nzCentered: true
       });
 
-      if (await modalResult$.pipe(take(1)).toPromise()) {
-        transaction.addOperation(
+      if (await firstValueFrom(modalResult$)) {
+        params.tx.addOperation(
           Operation.createAccount({
             destination: this.form.value.publicKey,
             startingBalance: new BigNumber(this.form.value.amount).toFixed(7),
           })
         );
       } else {
-        return;
+        throw new Error('Process cancelled.');
       }
     }
+    return params.tx.build();
+  }
+
+  async sendToContractXDR(params: {
+    asset: IWalletAssetModel;
+    account: IWalletsAccount;
+    tx: TransactionBuilder;
+  }): Promise<Transaction> {
+    const selectedHorizon = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+    const assetId = this.walletsAssetsService.sdkAssetFromAssetId(params.asset._id).contractId(selectedHorizon.networkPassphrase);
+    const contract = new this.stellarSdkService.SDK.Contract(assetId);
+    params.tx.addOperation(
+      contract.call(
+        'transfer',
+        new this.stellarSdkService.SDK.Address(params.account.publicKey).toScVal(),
+        new this.stellarSdkService.SDK.Address(this.form.value.publicKey).toScVal(),
+        this.stellarSdkService.SDK.nativeToScVal(new BigNumber(this.form.value.amount).multipliedBy(10000000).toFixed(0), { type: 'i128' }),
+      ),
+    );
+
+    return this.stellarSdkService.simOrRestore(params.tx.build());
+  }
+
+  async onSubmit(): Promise<void> {
+    const [
+      selectedAsset,
+      selectedAccount,
+    ] = await Promise.all([
+      firstValueFrom(this.selectedAsset$),
+      firstValueFrom(this.selectedAccount$),
+    ]);
+
+    if (!selectedAsset || !selectedAccount) {
+      return;
+    }
+
+    const loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
+
+    const targetAccount = new Account(loadedAccount.accountId(), loadedAccount.sequence);
+
+    const transaction = new TransactionBuilder(targetAccount, {
+      fee: this.stellarSdkService.fee,
+      networkPassphrase: this.stellarSdkService.networkPassphrase,
+    }).setTimeout(this.stellarSdkService.defaultTimeout);
 
     if (!!this.form.value.memo) {
       transaction.addMemo(new Memo('text', this.form.value.memo));
     }
 
-    const formattedXDR = transaction
-      .build()
-      .toXDR();
+    let updatedTx: Transaction;
+    try {
+      updatedTx = await (StrKey.isValidContract(this.form.value.publicKey)
+        ? this.sendToContractXDR({ account: selectedAccount, asset: selectedAsset, tx: transaction })
+        : this.sendPaymentToAccountXDR({ account: selectedAccount, asset: selectedAsset, tx: transaction }));
+    } catch (e: any) {
+      this.nzMessageService.error(e.message, {
+        nzDuration: 3000,
+      });
+      return
+    }
 
     const drawerRef = this.nzDrawerService.create<XdrSignerComponent>({
       nzContent: XdrSignerComponent,
       nzContentParams: {
-        xdr: formattedXDR,
-        acceptHandler: signedXdr => {
-          this.walletsService.sendPayment(signedXdr)
+        xdr: updatedTx.toXDR(),
+        signingResultsHandler: result => {
+          this.walletsService.sendPayment(result.transaction as Transaction)
             .then(() => {
               this.nzMessageService.success(this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_SENT_MESSAGE'));
               this.form.reset();
@@ -361,7 +385,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
                 nzContent: this.translateService.instant('ERROR_MESSAGES.NETWORK_REJECTED'),
               });
             });
-        }
+        },
       },
       nzTitle: this.translateService.instant('WALLET.SEND_PAYMENT.PAYMENT_CONFIRMATION_TITLE'),
       nzWrapClassName: 'drawer-full-w-340 ios-safe-y',

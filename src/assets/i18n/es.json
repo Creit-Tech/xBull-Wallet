@@ -279,10 +279,9 @@
     "SETTINGS_DASHBOARD": {
       "SET_DEFAULT_FEE_TITLE": "Configurar fee",
       "SELECT_ASSET_TITLE": "Seleccionar Asset",
-      "ADVANCED_MODE": "Modo avanzado",
       "COUNTER_ASSET": "Valores en Asset",
       "WALLETS": "Wallets",
-      "HORIZON_APIS": "Horizon APIs",
+      "HORIZON_APIS": "Network APIs",
       "LANGUAGE_TITLE": "Lenguaje",
       "DEFAULT_FEE_TITLE": "Fee por defecto",
       "ACTIVE_OPERATIONS_TYPES": "Tipos de operaciones activas",

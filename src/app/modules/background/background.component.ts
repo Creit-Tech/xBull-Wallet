@@ -17,7 +17,7 @@ import { ComponentCreatorService } from '~root/core/services/component-creator.s
 import {
   createSiteConnection,
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   IWalletsAccount,
   WalletsAccountsQuery
 } from '~root/state';
@@ -168,7 +168,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     }
 
     if (!!params.publicKey) {
-      const selectedApi: IHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+      const selectedApi: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
       const accountId: string = this.walletsService.generateWalletAccountId({
         network: params.network || selectedApi.networkPassphrase,
         publicKey: params.publicKey,

@@ -63,8 +63,7 @@
 <!--      <span>Airtime</span>-->
 <!--    </li>-->
 
-    <li [class.hidden]="!(advanceMode$ | async)"
-        (click)="closeDrawer()"
+    <li (click)="closeDrawer()"
         routerLink="/lab"
         nzMatchRouter
         nz-menu-item

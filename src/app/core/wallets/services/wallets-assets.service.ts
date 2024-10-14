@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServerApi } from 'stellar-sdk/lib/horizon';
 import {
   BalanceAssetType,
-  IHorizonApi,
+  INetworkApi,
   IWalletAsset,
   IWalletNativeAsset,
   LpAssetsStore,
@@ -34,14 +34,14 @@ export class WalletsAssetsService {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
-    horizonApi: IHorizonApi,
+    horizonApi: INetworkApi,
   }> = new Subject();
 
 
   // This is the new version, stop using the one above
   requestAssetInformation$: Subject<{
     asset: IWalletAssetModel,
-    horizonApi: IHorizonApi,
+    horizonApi: INetworkApi,
     forceUpdate: boolean,
   }> = new Subject();
   shouldRequestAssetInformation$ = this.requestAssetInformation$.asObservable()
@@ -126,7 +126,7 @@ export class WalletsAssetsService {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
-    horizonApi: IHorizonApi,
+    horizonApi: INetworkApi,
   }): Observable<ServerApi.AssetRecord> {
     const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
       .assets()
@@ -158,7 +158,7 @@ export class WalletsAssetsService {
     _id: IWalletAsset['_id'],
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
-    horizonApi: IHorizonApi,
+    horizonApi: INetworkApi,
   }): Observable<ServerApi.AccountRecord> {
     const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
       .accounts()

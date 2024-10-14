@@ -1,6 +1,6 @@
 <div class="w-full text-center mb-4">
   <h2 class="m-0 p-0 font-bold text-xl">
-    {{ (horizonApi$ | async)?.name }}
+    {{ (networkApi$ | async)?.name }}
   </h2>
 </div>
 
@@ -10,27 +10,40 @@
       ID:
     </dt>
     <dd class="break-all opacity-80 text-sm mb-3">
-      {{ (horizonApi$ | async)?._id }}
+      {{ (networkApi$ | async)?._id }}
     </dd>
     <dt class="font-bold mb-1">
       URL:
     </dt>
     <dd class="break-all opacity-80 text-sm mb-3">
-      {{ (horizonApi$ | async)?.url }}
+      {{ (networkApi$ | async)?.url }}
+    </dd>
+    <dt class="font-bold mb-1">
+      RPC:
+    </dt>
+    <dd class="break-all opacity-80 text-sm mb-3">
+      {{ (networkApi$ | async)?.rpcUrl || 'N/A' }}
     </dd>
     <dt class="font-bold mb-1">
       Passphrase
     </dt>
     <dd class="break-all opacity-80 text-xs mb-3">
-      {{ (horizonApi$ | async)?.networkPassphrase }}
+      {{ (networkApi$ | async)?.networkPassphrase }}
     </dd>
   </dl>
 </section>
 
-<div *ngIf="(horizonApi$ | async)?.canRemove" class="w-full">
+<div *ngIf="(networkApi$ | async)?.canRemove" class="w-full">
   <button (click)="onRemove()"
           nz-button nzSize="large" nzBlock nzDanger nzType="primary"
-          [disabled]="(selectedHorizonApi$ | async)?._id === (horizonApi$ | async)?._id">
+          [disabled]="(selectedHorizonApi$ | async)?._id === (networkApi$ | async)?._id">
     {{ 'COMMON_WORDS.REMOVE' | translate }}
+  </button>
+</div>
+
+<div class="w-full mt-[1rem]">
+  <button (click)="update()"
+          nz-button nzSize="large" nzBlock nzType="primary">
+    {{ 'COMMON_WORDS.UPDATE' | translate }}
   </button>
 </div>

@@ -19,17 +19,6 @@
   <div class="max-w-lg w-full">
 
     <nz-list nzSize="large">
-      <nz-list-item class="px-4">
-        <div class="w-8/12">
-          <p class="m-0 text-sm font-bold">
-            {{ 'SETTINGS.SETTINGS_DASHBOARD.ADVANCED_MODE' | translate }}
-          </p>
-        </div>
-        <div class="w-auto">
-          <nz-switch [formControl]="advanceModeControl"></nz-switch>
-        </div>
-      </nz-list-item>
-
       <nz-list-item *ngIf="counterAsset$ | async as counterAsset"
                     class="cursor-pointer px-4 justify-between items-center"
                     (click)="setCounterAsset()">
@@ -67,7 +56,7 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/horizon-apis">
+      <nz-list-item class="cursor-pointer px-4" routerLink="/settings/horizon-apis">
         <div class="w-auto">
           <p class="m-0 text-sm font-bold">
             {{ 'SETTINGS.SETTINGS_DASHBOARD.HORIZON_APIS' | translate }}
@@ -123,7 +112,7 @@
         </div>
       </nz-list-item>
 
-      <nz-list-item *ngIf="advanceMode$ | async" class="cursor-pointer px-4" routerLink="/settings/active-operations-types">
+      <nz-list-item class="cursor-pointer px-4" routerLink="/settings/active-operations-types">
         <div class="w-8/12">
           <p class="m-0 text-sm font-bold">
             {{ 'SETTINGS.SETTINGS_DASHBOARD.ACTIVE_OPERATIONS_TYPES' | translate }}

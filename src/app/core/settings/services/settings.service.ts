@@ -51,10 +51,6 @@ export class SettingsService {
       this.setKeptPassword(undefined);
     });
 
-  setAdvanceModeStatus(status: SettingsState['advanceMode']): void {
-    this.settingsStore.updateState({ advanceMode: status });
-  }
-
   setDefaultFee(value: SettingsState['defaultFee']): void {
     this.settingsStore.updateState({ defaultFee: value });
   }

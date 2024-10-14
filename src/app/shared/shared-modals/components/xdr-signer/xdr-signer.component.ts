@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import {
   AirGappedWalletProtocol,
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   IWalletsAccount,
   IWalletsAccountAirGapped,
   IWalletsAccountLedger,
@@ -98,12 +98,12 @@ export class XdrSignerComponent implements OnInit, OnDestroy {
         : this.walletsAccountQuery.getSelectedAccount$;
     }));
 
-  pickedNetworkPassphrase$: BehaviorSubject<IHorizonApi['networkPassphrase'] | undefined> = new BehaviorSubject<IHorizonApi['networkPassphrase'] | undefined>(undefined);
-  @Input() set pickedNetworkPassphrase(networkPassphrase: IHorizonApi['networkPassphrase']) {
+  pickedNetworkPassphrase$: BehaviorSubject<INetworkApi['networkPassphrase'] | undefined> = new BehaviorSubject<INetworkApi['networkPassphrase'] | undefined>(undefined);
+  @Input() set pickedNetworkPassphrase(networkPassphrase: INetworkApi['networkPassphrase']) {
     this.pickedNetworkPassphrase$.next(networkPassphrase);
   }
 
-  selectedNetworkPassphrase$: Observable<IHorizonApi['networkPassphrase']> = this.pickedNetworkPassphrase$
+  selectedNetworkPassphrase$: Observable<INetworkApi['networkPassphrase']> = this.pickedNetworkPassphrase$
     .asObservable()
     .pipe(switchMap(pickedNetworkPassphrase => {
       return !!pickedNetworkPassphrase

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HorizonApisQuery, IHorizonApi } from '~root/state';
+import { HorizonApisQuery, INetworkApi } from '~root/state';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { AddHorizonApiComponent } from '~root/modules/settings/components/add-horizon-api/add-horizon-api.component';
 import { Subject } from 'rxjs';
@@ -31,7 +31,7 @@ export class HorizonApisComponent implements OnInit, OnDestroy {
     this.componentDestroyed$.complete();
   }
 
-  async onHorizonItemClicked(horizon: IHorizonApi): Promise<void> {
+  async onHorizonItemClicked(horizon: INetworkApi): Promise<void> {
     const drawerRef = this.nzDrawerService.create<HorizonApiDetailsComponent>({
       nzContent: HorizonApiDetailsComponent,
       nzContentParams: {

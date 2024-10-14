@@ -4,7 +4,7 @@ import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, switchMap }
 import { IAssetBalanceChange, StateChangesService } from '~root/core/services/state-changes/state-changes.service';
 import {
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   IWalletAssetModel,
   IWalletsAccount,
   WalletsAccountsQuery,
@@ -50,7 +50,7 @@ export class BalancesChangesSimulationComponent {
   ) {}
 
   async simulateAndGetChanges(tx: Transaction | FeeBumpTransaction): Promise<void> {
-    const selectedHorizon: IHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+    const selectedHorizon: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
     const rpcUrl = selectedHorizon.networkPassphrase === Networks.PUBLIC
       ? 'https://soroban-rpc.creit.tech'
       : 'https://horizon-testnet.stellar.org';

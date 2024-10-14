@@ -152,7 +152,8 @@
     "WALLETS": "Wallets",
     "ASSET": "Asset",
     "EARN": "Earn",
-    "STEP": "Step"
+    "STEP": "Step",
+    "UPDATE": "Update"
   },
   "ERROR_MESSAGES": {
     "CANT_FETCH_ACCOUNT_FROM_HORIZON": "There was an error when fetching your account from the network, make sure you are using the correct horizon and you have internet.",
@@ -280,10 +281,9 @@
     "SETTINGS_DASHBOARD": {
       "SET_DEFAULT_FEE_TITLE": "Set default fee",
       "SELECT_ASSET_TITLE": "Select Asset",
-      "ADVANCED_MODE": "Advanced mode",
       "COUNTER_ASSET": "Counter asset",
       "WALLETS": "Wallets",
-      "HORIZON_APIS": "Horizon APIs",
+      "HORIZON_APIS": "Network APIs",
       "LANGUAGE_TITLE": "Language",
       "DEFAULT_FEE_TITLE": "Default fee",
       "BLIND_LEDGER_TXS": "Prevent blind Ledger signing",

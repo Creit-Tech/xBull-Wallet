@@ -7,7 +7,7 @@ import {
   createWallet,
   createWalletsAccount,
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   IWallet,
   IWalletsAccount,
   IWalletsAccountAirGapped,
@@ -24,7 +24,7 @@ import {
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { transaction } from '@datorama/akita';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Horizon, Keypair, Memo, Networks, Operation } from 'stellar-sdk';
+import { Horizon, Keypair, Memo, Networks, Operation, Transaction } from 'stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -133,7 +133,7 @@ export class WalletsService {
 
   @transaction()
   async generateNewWallet(params: INewWalletType): Promise<string> {
-    const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
+    const activeHorizonApi = this.horizonApisQuery.getActive() as INetworkApi;
     let newWalletId: string;
     let newWallet: IWallet;
     let keypair: Keypair;
@@ -243,7 +243,7 @@ export class WalletsService {
 
   @transaction()
   selectAccount(params: { publicKey: IWalletsAccount['publicKey']; walletId: IWallet['_id']; }): void {
-    const activeHorizonApi = this.horizonApisQuery.getActive() as IHorizonApi;
+    const activeHorizonApi = this.horizonApisQuery.getActive() as INetworkApi;
     this.walletsStore.setActive(params.walletId);
     this.walletsAccountsStore.setActive(
       createHash('md5')
@@ -276,9 +276,9 @@ export class WalletsService {
     return Buffer.from(memo.value).toString();
   }
 
-  sendPayment(xdr: string): Promise<Horizon.HorizonApi.SubmitTransactionResponse> {
+  async sendPayment(xdr: Transaction): Promise<void> {
     this.walletsOperationsStore.updateUIState({ sendingPayment: true });
-    return this.stellarSdkService.submitTransaction(xdr)
+    return this.stellarSdkService.submit(xdr)
       .then(response => {
         this.walletsOperationsStore.updateUIState({ sendingPayment: false });
         return response;

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   IWalletsAccount,
   SettingsQuery,
   WalletsAccountsQuery,
@@ -26,11 +26,9 @@ export class LayoutV1AccountHorizonSelectorComponent implements OnInit, OnDestro
   wallets$ = this.walletsQuery.selectAll();
   selectedWallet$ = this.walletsQuery.getSelectedWallet$;
 
-  horizonApis: Observable<IHorizonApi[]> = this.horizonApisQuery.selectAll();
-  selectedHorizonApi$: Observable<IHorizonApi> = this.horizonApisQuery.getSelectedHorizonApi$;
+  horizonApis: Observable<INetworkApi[]> = this.horizonApisQuery.selectAll();
+  selectedHorizonApi$: Observable<INetworkApi> = this.horizonApisQuery.getSelectedHorizonApi$;
   selectedWalletAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
-
-  advanceMode$ = this.settingsQuery.advanceMode$;
 
   horizonSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);
   walletSelectControl: UntypedFormControl = new UntypedFormControl('', [Validators.required]);

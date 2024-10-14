@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { createHorizonApi, IHorizonApi } from './horizon-api.model';
+import { createNetworkApi, INetworkApi } from './horizon-api.model';
 import { ENV, environment } from '~env';
 
-export interface HorizonApisState extends EntityState<IHorizonApi> {}
+export interface HorizonApisState extends EntityState<INetworkApi> {}
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({
@@ -17,7 +17,7 @@ export class HorizonApisStore extends EntityStore<HorizonApisState> {
     private readonly env: typeof environment,
   ) {
     super();
-    this.upsertMany(env.defaultApis.map(api => createHorizonApi(api)));
+    this.upsertMany(env.defaultApis.map(api => createNetworkApi(api)));
 
     const storeValue = this.getValue();
     if (!storeValue.active) {

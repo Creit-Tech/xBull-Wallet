@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createHorizonApi, HorizonApisStore, IHorizonApi } from '~root/state';
+import { createNetworkApi, HorizonApisStore, INetworkApi } from '~root/state';
 import { randomBytes } from 'crypto';
 import { Networks } from 'stellar-sdk';
 
@@ -12,16 +12,20 @@ export class HorizonApisService {
     private readonly horizonApisStore: HorizonApisStore,
   ) { }
 
-  addHorizonApi(params: Omit<IHorizonApi, '_id' | 'Server'>): void {
+  addHorizonApi(params: Omit<INetworkApi, '_id' | 'Server'>): void {
     const recordId = randomBytes(16).toString('hex');
-    this.horizonApisStore.upsert(recordId, createHorizonApi({ _id: recordId, ...params }));
+    this.horizonApisStore.upsert(recordId, createNetworkApi({ _id: recordId, ...params }));
   }
 
-  removeHorizonApi(horizonId: IHorizonApi['_id']): void {
+  updateApi(network: INetworkApi): void {
+    this.horizonApisStore.upsert(network._id, network);
+  }
+
+  removeHorizonApi(horizonId: INetworkApi['_id']): void {
     this.horizonApisStore.remove(horizonId);
   }
 
-  selectHorizonApi(horizonId: IHorizonApi['_id']): void {
+  selectHorizonApi(horizonId: INetworkApi['_id']): void {
     this.horizonApisStore.setActive(horizonId);
   }
 
@@ -39,21 +43,5 @@ export class HorizonApisService {
   userNetworkName(network: Networks): string {
     const index = Object.values(Networks).indexOf(network);
     return Object.keys(Networks)[index] || network;
-  }
-
-  addSorobanDevelopmentHorizons(): void {
-    this.addHorizonApi({
-      networkPassphrase: Networks.FUTURENET,
-      url: 'https://horizon-futurenet.stellar.org',
-      name: 'Futurenet',
-      canRemove: false,
-    });
-
-    this.addHorizonApi({
-      networkPassphrase: Networks.STANDALONE,
-      url: 'http://localhost:8000',
-      name: 'Standalone',
-      canRemove: false,
-    });
   }
 }

@@ -257,10 +257,9 @@
     "SETTINGS_DASHBOARD": {
       "SET_DEFAULT_FEE_TITLE": "Standardgebühr festlegen",
       "SELECT_ASSET_TITLE": "Asset auswählen",
-      "ADVANCED_MODE": "Erweiterter Modus",
       "COUNTER_ASSET": "Gegenwert",
       "WALLETS": "Wallets",
-      "HORIZON_APIS": "Horizon APIs",
+      "HORIZON_APIS": "Network APIs",
       "LANGUAGE_TITLE": "Sprache",
       "DEFAULT_FEE_TITLE": "Standardgebühr",
       "ACTIVE_OPERATIONS_TYPES": "Aktive Vorgangsarten",

@@ -1,4 +1,4 @@
-import { HorizonApisState, IHorizonApi, SitesConnectionsState, WalletsAccountsState } from '~root/state';
+import { HorizonApisState, INetworkApi, SitesConnectionsState, WalletsAccountsState } from '~root/state';
 import { ISitePermissions } from '~extension/interfaces';
 
 export const getWindowId = () => new Promise<number | undefined>((resolve, reject) => {
@@ -78,7 +78,7 @@ export const getActiveApi = async () => {
     throw new Error('There are no active network');
   }
 
-  const activeApi: IHorizonApi | undefined = apisState.entities && apisState.entities[apisState.active];
+  const activeApi: INetworkApi | undefined = apisState.entities && apisState.entities[apisState.active];
 
   if (!activeApi) {
     throw new Error('There are no active network');

@@ -10,14 +10,12 @@ import { ENV, environment } from '~env';
   styleUrls: ['./mobile-menu.component.scss']
 })
 export class MobileMenuComponent implements OnInit {
-  advanceMode$ = this.settingsQuery.advanceMode$;
   isMobile: boolean = this.env.platform === 'mobile';
 
   constructor(
     @Inject(ENV)
     private readonly env: typeof environment,
     private readonly nzDrawerRef: NzDrawerRef,
-    private readonly settingsQuery: SettingsQuery,
     private readonly sep07Service: Sep07Service,
   ) { }
 

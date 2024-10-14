@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { NotFoundError, Horizon } from 'stellar-sdk';
 import { firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import {
-  createWalletsOperation, IHorizonApi,
+  createWalletsOperation, INetworkApi,
   IWalletsAccount, LpAssetsStore,
   WalletsAccountsQuery,
   WalletsAccountsStore,
@@ -76,7 +76,7 @@ export class WalletsAccountsService {
     }
   }
 
-  getAccountData({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): Observable<IWalletsAccount> {
+  getAccountData({ account, horizonApi }: { account: IWalletsAccount, horizonApi: INetworkApi }): Observable<IWalletsAccount> {
     this.walletsAccountsStore.ui.upsert(account._id, state => ({ ...state, requesting: true }));
     const accountPromise = this.stellarSdkService.selectServer(horizonApi.url)
       .accounts()
@@ -106,7 +106,7 @@ export class WalletsAccountsService {
       }));
   }
 
-  createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: IHorizonApi }): void {
+  createAccountStream({ account, horizonApi }: { account: IWalletsAccount, horizonApi: INetworkApi }): void {
     if (account) {
       // First load
       this.stellarSdkService.selectServer(horizonApi.url)
@@ -148,7 +148,7 @@ export class WalletsAccountsService {
     account: IWalletsAccount,
     order: 'asc' | 'desc',
     cursor?: string,
-    horizonApi: IHorizonApi
+    horizonApi: INetworkApi
   }): void {
     if (params.account) {
       const streamBuilder = this.stellarSdkService.selectServer(params.horizonApi.url)

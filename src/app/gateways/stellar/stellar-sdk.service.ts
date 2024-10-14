@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import BigNumber from 'bignumber.js';
-import { HorizonApisQuery, IHorizonApi, SettingsQuery, SettingsStore } from '~root/state';
+import { HorizonApisQuery, INetworkApi, SettingsQuery, SettingsStore } from '~root/state';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import * as SDK from 'stellar-sdk';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Injectable({
   providedIn: 'root'
@@ -50,7 +51,7 @@ export class StellarSdkService {
   SDK: typeof SDK = SDK;
 
   get networkPassphrase(): string {
-    const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
+    const activeValue = this.horizonApisQuery.getActive() as INetworkApi;
     return activeValue.networkPassphrase;
   }
 
@@ -70,6 +71,7 @@ export class StellarSdkService {
     private readonly settingsQuery: SettingsQuery,
     private readonly horizonApisQuery: HorizonApisQuery,
     private readonly settingsStore: SettingsStore,
+    private readonly nzMessageService: NzMessageService,
   ) { }
 
   // tslint:disable-next-line:typedef
@@ -78,15 +80,63 @@ export class StellarSdkService {
   }
 
   selectServer(url?: string, options?: SDK.Horizon.Server.Options): SDK.Horizon.Server {
-    const activeValue = this.horizonApisQuery.getActive() as IHorizonApi;
+    const activeValue = this.horizonApisQuery.getActive() as INetworkApi;
     return new this.SDK.Horizon.Server(
       url || activeValue.url,
       options || { allowHttp: url?.includes('http://localhost') }
     );
   }
 
-  submit(transaction: SDK.Transaction | SDK.FeeBumpTransaction): Promise<SDK.Horizon.HorizonApi.SubmitTransactionResponse> {
-      return this.selectServer().submitTransaction(transaction);
+  selectRPC(url?: string, options?: SDK.SorobanRpc.Server.Options): SDK.SorobanRpc.Server {
+    const activeValue = this.horizonApisQuery.getActive() as INetworkApi;
+
+    if (!activeValue.rpcUrl) {
+      throw new Error(`${activeValue.name} doesn't have an RPC defined. Define one in the settings.`);
+    }
+
+    return new this.SDK.SorobanRpc.Server(
+      url || activeValue.rpcUrl,
+      options || { allowHttp: url?.includes('http://localhost') }
+    );
+  }
+
+  async submit(transaction: SDK.Transaction | SDK.FeeBumpTransaction): Promise<void> {
+    if (transaction instanceof SDK.FeeBumpTransaction) {
+      await this.selectServer().submitTransaction(transaction);
+    } else if (!!transaction.operations.find(op => op.type === 'invokeHostFunction')) {
+      const rpc = this.selectRPC();
+      const result = await rpc.sendTransaction(transaction);
+      if (result.status === 'ERROR') {
+        throw new Error('Error while sending the transaction ' + result.hash);
+      }
+
+      await this.waitUntilTxApproved(rpc, result.hash);
+      await rpc.getTransaction(result.hash);
+    } else {
+      await this.selectServer().submitTransaction(transaction);
+    }
+  }
+
+  async waitUntilTxApproved(rpc: SDK.SorobanRpc.Server, hash: string, times = 60) {
+    let completed = false;
+    let attempts = 0;
+    while (!completed) {
+      const tx = await rpc.getTransaction(hash);
+
+      if (tx.status === 'NOT_FOUND') {
+        await new Promise(r => setTimeout(r, 1000));
+      } else if (tx.status === 'SUCCESS') {
+        completed = true;
+      } else {
+        throw new Error(`Transaction ${hash} failed.`);
+      }
+
+      attempts++;
+
+      if (attempts >= times) {
+        throw new Error(`The network did not accept the tx ${hash} in less than ${times} seconds.`);
+      }
+    }
   }
 
   // TODO: once soroban client is here to stay, refactor all the SDK logic
@@ -107,6 +157,33 @@ export class StellarSdkService {
     } else {
       return this.selectServer().loadAccount(account);
     }
+  }
+
+  async simOrRestore(tx: SDK.Transaction, opts?: { rpc: SDK.SorobanRpc.Server }): Promise<SDK.Transaction> {
+    const rpc = opts?.rpc || this.selectRPC();
+    const sim = await rpc.simulateTransaction(tx);
+
+    if (this.SDK.SorobanRpc.Api.isSimulationError(sim)) {
+      console.error(sim.error);
+      throw new Error('Contract call simulation failed.');
+    }
+
+    if (!this.SDK.SorobanRpc.Api.isSimulationRestore(sim)) {
+      return this.SDK.SorobanRpc.assembleTransaction(tx, sim).build();
+    }
+
+    this.nzMessageService.info('You need to restore a ledger key first', { nzDuration: 3000 });
+
+    const account: SDK.Account = await rpc.getAccount(tx.source);
+    let fee: number = parseInt(tx.fee);
+    fee += parseInt(sim.restorePreamble.minResourceFee);
+
+    return new this.SDK.TransactionBuilder(account, { fee: fee.toString() })
+      .setNetworkPassphrase(tx.networkPassphrase)
+      .setSorobanData(sim.restorePreamble.transactionData.build())
+      .addOperation(this.SDK.Operation.restoreFootprint({}))
+      .setTimeout(0)
+      .build();
   }
 
   /**

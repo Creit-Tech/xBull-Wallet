@@ -3,7 +3,7 @@ import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
 import { filter, map, mergeMap, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import {
   HorizonApisQuery,
-  IHorizonApi,
+  INetworkApi,
   ILpAsset,
   ILpAssetLoaded,
   IWalletAsset,
@@ -70,7 +70,7 @@ export class LpAssetItemComponent implements OnInit, OnDestroy {
       .pipe(filter<any>(Boolean))
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApisQuery.getSelectedHorizonApi$))
-      .pipe(switchMap((data: [ILpAsset, IHorizonApi]) => {
+      .pipe(switchMap((data: [ILpAsset, INetworkApi]) => {
         return this.liquidityPoolsService.getLiquidityPoolsData({
           lpId: data[0]._id,
           horizonApi: data[1],

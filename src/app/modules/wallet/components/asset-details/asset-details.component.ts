@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
-  HorizonApisQuery, IHorizonApi,
+  HorizonApisQuery, INetworkApi,
   IWalletAsset, IWalletAssetModel,
   IWalletIssuedAsset,
   IWalletNativeAsset,
@@ -71,7 +71,7 @@ export class AssetDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(filter((asset) => !!asset))
       .pipe(take(1))
       .pipe(withLatestFrom(this.horizonApiQuery.getSelectedHorizonApi$))
-      .subscribe(([asset, horizonApi]: [IWalletAssetModel, IHorizonApi]) => {
+      .subscribe(([asset, horizonApi]: [IWalletAssetModel, INetworkApi]) => {
         this.walletsAssetsService.requestAssetInformation$.next({
           asset,
           horizonApi,

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription, switchMap } from 'rxjs';
 import {
   HorizonApisQuery,
@@ -36,7 +36,12 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     .pipe(switchMap(hideSpam => {
       return this.operationRecords$
         .pipe(map(operationsRecords => {
-          return operationsRecords.filter(op => !(hideSpam && op.asset === 'native' && op.debit < 0.005));
+          return operationsRecords.filter(op => {
+            if (!hideSpam) return true;
+            if (op.recordType !== 'account_credited' || op.asset !== 'native') return true;
+            if (op.debit < 0.0025) return false
+            return false;
+          });
         }))
     }))
   selectedAccount$ = this.walletsAccountsQuery.getSelectedAccount$;
@@ -49,6 +54,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     private readonly nzDrawerService: NzDrawerService,
     private readonly translateService: TranslateService,
     private readonly stellarSdkService: StellarSdkService,
+    private readonly destroyRef: DestroyRef,
   ) {
   }
 
@@ -56,7 +62,7 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
     this.selectedAccount$.pipe(distinctUntilKeyChanged('_id')),
     this.horizonApisQuery.getSelectedHorizonApi$.pipe(distinctUntilKeyChanged('_id')),
   ])
-    .pipe(takeUntilDestroyed())
+    .pipe(takeUntilDestroyed(this.destroyRef))
     .subscribe(async ([ selectedAccount, horizonApi ]) => {
       if (!selectedAccount || !horizonApi) {
         this.operationRecords$.next([]);
@@ -71,11 +77,12 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
             .call();
 
           let parsedRecords: IOperationRecord[] = this.parseEffects(response);
-          while (response.records.length > 0 || parsedRecords.length === 200) {
+          while (response.records.length > 0 && parsedRecords.length < 200) {
             parsedRecords = [ ...parsedRecords, ...this.parseEffects(response) ];
             response = await response.next();
           }
 
+          console.log({ parsedRecords });
           this.operationRecords$.next(parsedRecords);
         } catch (e) {
           this.nzMessageService.error('Failed when fetching the data from Horizon.');

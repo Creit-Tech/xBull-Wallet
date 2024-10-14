@@ -4,7 +4,7 @@ import { InAppBrowserEvent } from '@awesome-cordova-plugins/in-app-browser';
 import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
 import { Networks } from 'stellar-sdk';
 import {
-  createSiteConnection, HorizonApisQuery, IHorizonApi,
+  createSiteConnection, HorizonApisQuery, INetworkApi,
   ISiteConnection,
   IWalletsAccount,
   SitesConnectionsQuery,
@@ -235,7 +235,7 @@ export class BrowserService {
         }
 
         if (publicKey) {
-          const selectedApi: IHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+          const selectedApi: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
           const accountId: string = this.walletsService.generateWalletAccountId({
             network: network || selectedApi.networkPassphrase,
             publicKey: publicKey,
@@ -304,7 +304,7 @@ export class BrowserService {
       case XBULL_GET_NETWORK:
         payload = e.data.detail as IGetNetworkRequestPayload;
 
-        const activeHorizonApi: IHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+        const activeHorizonApi: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
         const index: number = Object.values(Networks)
           .findIndex((n: Networks): boolean => n === activeHorizonApi.networkPassphrase);

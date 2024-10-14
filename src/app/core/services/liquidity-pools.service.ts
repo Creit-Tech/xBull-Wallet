@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IHorizonApi, ILpAsset, ILpAssetLoaded, LpAssetsStore } from '~root/state';
+import { INetworkApi, ILpAsset, ILpAssetLoaded, LpAssetsStore } from '~root/state';
 import { Asset, Horizon } from 'stellar-sdk';
 import { from, Observable, throwError } from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
@@ -18,7 +18,7 @@ export class LiquidityPoolsService {
 
   async getLiquidityPoolsData(params: {
     lpId: ILpAsset['_id'];
-    horizonApi: IHorizonApi;
+    horizonApi: INetworkApi;
   }): Promise<Horizon.ServerApi.LiquidityPoolRecord> {
     const record = await this.stellarSdkService.selectServer(params.horizonApi.url)
       .liquidityPools()
@@ -37,7 +37,7 @@ export class LiquidityPoolsService {
   }
 
   // getLatestPools(data: { horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
-  getPoolsByAssets(data: { assets: Asset[], horizonApi: IHorizonApi }): Observable<ILpAssetLoaded[]> {
+  getPoolsByAssets(data: { assets: Asset[], horizonApi: INetworkApi }): Observable<ILpAssetLoaded[]> {
     this.lpAssetsStore.updateUIState({ fetchingLatestPools: true });
     const serverCall = this.stellarSdkService.selectServer(data.horizonApi.url)
       .liquidityPools()

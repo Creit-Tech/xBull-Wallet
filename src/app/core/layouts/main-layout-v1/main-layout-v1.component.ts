@@ -10,8 +10,6 @@ import { ENV, environment } from '~env';
 export class MainLayoutV1Component implements OnInit {
   isCollapsed = true;
 
-  advanceMode$ = this.settingsQuery.advanceMode$;
-
   constructor(
     private readonly settingsQuery: SettingsQuery,
   ) { }

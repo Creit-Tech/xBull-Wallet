@@ -102,8 +102,7 @@
 <!--        <span *ngIf="!isCollapsed">Airtime</span>-->
 <!--      </li>-->
 
-      <li [class.hidden]="!(advanceMode$ | async)"
-          [class.justify-center]="isCollapsed"
+      <li [class.justify-center]="isCollapsed"
           [class.items-center]="isCollapsed"
           routerLink="/lab"
           nzMatchRouter

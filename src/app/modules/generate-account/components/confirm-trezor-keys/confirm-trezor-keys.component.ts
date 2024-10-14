@@ -19,8 +19,6 @@ export class ConfirmTrezorKeysComponent implements OnInit, AfterViewInit {
 
   loading$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  advanceMode$ = this.settingsQuery.advanceMode$;
-
   form = new UntypedFormGroup({
     accounts: new UntypedFormArray([]),
     walletId: new UntypedFormControl('', Validators.required),

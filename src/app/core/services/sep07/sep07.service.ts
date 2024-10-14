@@ -6,7 +6,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { Networks } from 'stellar-sdk';
 import { Router } from '@angular/router';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
-import { HorizonApisQuery, IHorizonApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
+import { HorizonApisQuery, INetworkApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
 import { map, take } from 'rxjs/operators';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
@@ -115,8 +115,8 @@ export class Sep07Service {
 
     const selectedHorizonApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
 
-    const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
-      ? params.network_passphrase as IHorizonApi['networkPassphrase']
+    const pickedNetworkPassphrase: INetworkApi['networkPassphrase'] = !!params.network_passphrase
+      ? params.network_passphrase as INetworkApi['networkPassphrase']
       : selectedHorizonApi.networkPassphrase;
 
     const pickedAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
@@ -185,8 +185,8 @@ export class Sep07Service {
       }
     }
 
-    const pickedNetworkPassphrase: IHorizonApi['networkPassphrase'] = !!params.network_passphrase
-      ? params.network_passphrase as IHorizonApi['networkPassphrase']
+    const pickedNetworkPassphrase: INetworkApi['networkPassphrase'] = !!params.network_passphrase
+      ? params.network_passphrase as INetworkApi['networkPassphrase']
       : await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$
         .pipe(map(horizonApi => horizonApi.networkPassphrase)));
 
@@ -221,7 +221,7 @@ export class Sep07Service {
   async handleSigning(params: {
     xdr: string;
     pickedAccount: IWalletsAccount;
-    pickedNetworkPassphrase: IHorizonApi['networkPassphrase'];
+    pickedNetworkPassphrase: INetworkApi['networkPassphrase'];
     callback: string | null;
     uri: URL;
   }): Promise<void> {
