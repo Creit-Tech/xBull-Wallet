@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.31.0] - 2024-10-14
+### Add
+- Add a field to the HorizonApis (Moving naming to "NetworkApis" step by step) so it accepts an RPC url
+- Allow sending payments to contracts
+
+### Change
+- Remove the "advance mode" switch from the settings page and instead assume all users are looking for an advance wallet
+- Refactor the logic behind the "operations" page and now use "effects" to focus only on debits/credits
+- Update crypto-js package and stop using PBKDF2
+
 ## [1.30.0] - 2024-09-16
 ### Add
 - Add a switch to the path payment component so it's easy to exchange the `fromAsset` with `toAsset`
