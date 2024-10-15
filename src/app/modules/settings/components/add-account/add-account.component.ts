@@ -47,8 +47,6 @@ export class AddAccountComponent implements OnInit {
   secretKey: UntypedFormControl = new UntypedFormControl('', Validators.required) as UntypedFormControl;
   password: UntypedFormControl = new UntypedFormControl('', Validators.required) as UntypedFormControl;
 
-  globalPasswordHash$: Observable<string | undefined> = this.walletsQuery.globalPasswordHash$;
-
   constructor(
     private readonly cryptoService: CryptoService,
     private readonly walletsService: WalletsService,
@@ -63,10 +61,7 @@ export class AddAccountComponent implements OnInit {
   }
 
   async onConfirm(): Promise<void> {
-    const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
-    const hash = this.cryptoService.hashPassword(this.password.value);
-
-    if (hash !== globalPasswordHash) {
+    if (!this.walletsService.validatePassword(this.password.value)) {
       this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
       return;
     }

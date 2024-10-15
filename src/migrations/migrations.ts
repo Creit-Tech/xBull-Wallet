@@ -4,6 +4,7 @@ import { walletsAccountsStoreMigration } from './3.wallets-accounts-type.migrati
 import { settingsStoreMigration } from './4.settings.migration';
 import { anchorsStoreMigration } from './5.anchors.migration';
 import { sorobanAccountsMigration } from './6.soroban.migration';
+import { globalHashMigration } from './global-hash.migration';
 
 export const migrationsHandler = (storeName: string, state: any, initialState: any) => {
 
@@ -28,6 +29,10 @@ export const migrationsHandler = (storeName: string, state: any, initialState: a
 
   if (storeName === 'anchors' && state.storeVersion !== initialState.storeVersion) {
     anchorsStoreMigration(state);
+  }
+
+  if (storeName === 'wallets' && state.storeVersion !== initialState.storeVersion) {
+    globalHashMigration(state);
   }
 
   return state;

@@ -3,10 +3,16 @@ import { ActiveState, EntityState, EntityStore, EntityUIStore, StoreConfig } fro
 import { IWallet } from './wallet.model';
 
 export interface WalletsState extends EntityState<IWallet>, ActiveState  {
+  storeVersion: number;
+
   walletsLocked: boolean;
 
-  // TODO: Move this from this store to the settings store
-  globalPasswordHash?: string;
+  /**
+   * This value is used to know if we already set a password at some point.
+   * For example when we have added at least one private key to the wallet.
+   * This value deprecated the `globalPasswordHash` value.
+   */
+  passwordSet: boolean;
 }
 
 export interface IWalletUI {
@@ -17,8 +23,10 @@ export interface WalletsUIState extends EntityState<IWalletUI> {}
 
 function createInitialValue(): WalletsState {
   return {
+    storeVersion: 3,
     active: 0,
     walletsLocked: false,
+    passwordSet: false,
   };
 }
 

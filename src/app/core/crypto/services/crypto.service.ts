@@ -8,15 +8,16 @@ export class CryptoService {
 
   constructor() { }
 
-  hashPassword(password: string): string {
-    return PBKDF2(password, 'WHAT_A_NICE_SALT').toString();
-  }
-
   encryptText(text: string, secret: string): string {
     return AES.encrypt(text, secret).toString();
   }
 
   decryptText(text: string, secret: string): string {
-    return AES.decrypt(text, secret).toString(enc.Utf8);
+    const decrypted = AES.decrypt(text, secret).toString(enc.Utf8);
+    if (!decrypted) {
+      throw new Error('Failed to decrypt value');
+    }
+
+    return decrypted;
   }
 }

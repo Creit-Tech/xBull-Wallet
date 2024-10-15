@@ -9,7 +9,7 @@ import { IWallet } from '~root/state/wallet.model';
 export class WalletsQuery extends QueryEntity<WalletsState> {
   ui!: EntityUIQuery<WalletsUIState>;
 
-  globalPasswordHash$ = this.select(state => state.globalPasswordHash);
+  passwordSet$ = this.select(state => state.passwordSet);
   walletsLocked$ = this.select(state => state.walletsLocked);
 
   isThereWallet$ = this.select(state => state.ids?.length && state.ids.length > 0);

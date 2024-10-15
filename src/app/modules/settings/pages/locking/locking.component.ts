@@ -11,6 +11,7 @@ import { PasswordModalComponent } from '~root/shared/shared-modals/components/pa
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CryptoService } from '~root/core/crypto/services/crypto.service';
 import { TranslateService } from '@ngx-translate/core';
+import { WalletsService } from '~root/core/wallets/services/wallets.service';
 
 @Component({
   selector: 'app-locking',
@@ -26,7 +27,6 @@ export class LockingComponent implements OnInit, OnDestroy {
   keepPasswordControl: UntypedFormControl = new UntypedFormControl(false);
   timeoutMinutesControl: UntypedFormControl = new UntypedFormControl('');
 
-  globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
   keepPasswordActive$ = this.settingsQuery.keepPasswordActive$;
 
   constructor(
@@ -34,12 +34,13 @@ export class LockingComponent implements OnInit, OnDestroy {
     private readonly env: typeof environment,
     private readonly deviceAuthService: DeviceAuthService,
     private readonly settingsService: SettingsService,
-    private readonly walletsQuery: WalletsQuery,
     private readonly settingsQuery: SettingsQuery,
     private readonly nzDrawerService: NzDrawerService,
     private readonly nzMessageService: NzMessageService,
     private readonly cryptoService: CryptoService,
     private readonly translateService: TranslateService,
+    private readonly walletsQuery: WalletsQuery,
+    private readonly walletsService: WalletsService,
   ) { }
 
   passwordAuthTokenActiveStatus: Subscription = this.settingsQuery.passwordAuthTokenActive$
@@ -99,15 +100,12 @@ export class LockingComponent implements OnInit, OnDestroy {
 
       componentRef.password
         .pipe(take(1))
-        .pipe(withLatestFrom(this.globalPasswordHash$))
-        .pipe(map(([password, globalPasswordHash]) => {
-          if (!globalPasswordHash) {
+        .pipe(map((password) => {
+          if (!this.walletsQuery.getValue().passwordSet) {
             throw new Error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_NOT_SET'));
           }
 
-          const hashedPassword = this.cryptoService.hashPassword(password);
-
-          if (hashedPassword !== globalPasswordHash) {
+          if (!this.walletsService.validatePassword(password)) {
             throw new Error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
           }
 
@@ -142,8 +140,7 @@ export class LockingComponent implements OnInit, OnDestroy {
       this.settingsService.disableKeepPasswordOption();
       this.nzMessageService.success(this.translateService.instant('SETTINGS.LOCKING.KEEP_PASSWORD_DISABLED'));
     } else {
-      const globalPasswordHash = await this.globalPasswordHash$.pipe(take(1)).toPromise();
-      if (!globalPasswordHash) {
+      if (!this.walletsQuery.getValue().passwordSet) {
         return;
       }
       const drawerRef = this.nzDrawerService.create<PasswordModalComponent>({
@@ -153,10 +150,7 @@ export class LockingComponent implements OnInit, OnDestroy {
         nzWrapClassName: 'ios-safe-y',
         nzContentParams: {
           handlePasswordEvent: password => {
-
-            const hashedPassword = this.cryptoService.hashPassword(password);
-
-            if (hashedPassword !== globalPasswordHash) {
+            if (!this.walletsService.validatePassword(password)) {
               this.nzMessageService.error(this.translateService.instant('ERROR_MESSAGES.PASSWORD_INCORRECT'));
               return;
             }

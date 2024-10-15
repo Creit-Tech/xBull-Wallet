@@ -18,8 +18,6 @@ export class GeneratePasswordComponent implements OnInit {
 
   pathType$ = this.generateAccountQuery.pathType$;
 
-  globalPasswordHash$ = this.walletsQuery.globalPasswordHash$;
-
   constructor(
     private readonly generateAccountService: GenerateAccountService,
     private readonly router: Router,
@@ -30,10 +28,10 @@ export class GeneratePasswordComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.globalPasswordHash$
+    this.walletsQuery.passwordSet$
       .pipe(take(1))
-      .subscribe(passwordHash => {
-        if (!!passwordHash) {
+      .subscribe(passwordSet => {
+        if (passwordSet) {
           this.nextStep()
             .then();
         }

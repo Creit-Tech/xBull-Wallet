@@ -36,6 +36,9 @@ export interface SettingsState {
   // The string follow the "CODE:ISSUER" style from the claimable balance endpoint
   antiSPAMClaimableAssets: string[];
 
+  /**
+   * @deprecated - We won't show operations anymore and instead we only focus on payments
+   */
   // TODO: this should be Array<IWalletsOperation['operationRecord']['type']> but the types are getting issues, fix this later
   operationTypesToShow: string[];
 

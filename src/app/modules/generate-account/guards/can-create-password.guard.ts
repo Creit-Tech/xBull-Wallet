@@ -19,10 +19,10 @@ export class CanCreatePasswordGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> {
     return selectPersistStateInit()
-      .pipe(switchMap(() => this.walletsQuery.globalPasswordHash$))
+      .pipe(switchMap(() => this.walletsQuery.passwordSet$))
       .pipe(take(1))
-      .pipe(switchMap((passwordHash) => {
-        if (!!passwordHash) {
+      .pipe(switchMap((passwordSet) => {
+        if (passwordSet) {
           return this.router.navigate(['/create-account', 'confirm-phrase-password'])
             .then(() => false);
         } else {

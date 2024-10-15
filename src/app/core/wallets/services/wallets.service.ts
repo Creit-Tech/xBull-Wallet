@@ -252,14 +252,6 @@ export class WalletsService {
     );
   }
 
-  savePasswordHash(password: string): void {
-    const hash = this.cryptoService.hashPassword(password);
-    this.walletsStore.update(state => ({
-      ...state,
-      globalPasswordHash: hash,
-    }));
-  }
-
   updateWalletName(walletId: IWallet['_id'], name: string): void {
     this.walletsStore.upsert(walletId, { name });
   }
@@ -306,6 +298,31 @@ export class WalletsService {
         { _id: sandboxId, ...rest },
       ]);
     }
+  }
+
+  updatePasswordIsSet(): void {
+    this.walletsStore.update({ passwordSet: true });
+  }
+
+  /**
+   * This function tries to decrypt one of the encrypted values to confirm the password provided is the correct one.
+   */
+  validatePassword(password: string): boolean {
+    const state = this.walletsAccountsQuery.getValue();
+    if (!!state.entities) {
+      const account: IWalletsAccountWithSecretKey | undefined = Object.values(state.entities)
+        .find(w => w.type === 'with_secret_key' && !!w.secretKey) as IWalletsAccountWithSecretKey | undefined;
+      if (!account) return true;
+
+      try {
+        this.cryptoService.decryptText(account.secretKey, password);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
 
