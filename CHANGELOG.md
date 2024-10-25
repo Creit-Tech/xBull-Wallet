@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.32.0] - 2024-10-24
+### Add
+- Add sorobandomains-sdk v0.1.3 and support to fetching TOML files from `.xlm` domains
+
+### Change
+- Change `stellar-sdk` to `@stellar/stellar-sdk`, still keeping `stellar-sdk` installed so `trezor-connect` works
+
 ## [1.31.0] - 2024-10-14
 ### Add
 - Add a field to the HorizonApis (Moving naming to "NetworkApis" step by step) so it accepts an RPC url
