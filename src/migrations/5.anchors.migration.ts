@@ -1,6 +1,6 @@
 import { AnchorsState } from '~root/modules/anchors/state/anchors.store';
 import { createAnchor } from '~root/modules/anchors/state/anchor.model';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 
 export const anchorsStoreMigration = (state: AnchorsState) => {
   if (!state.storeVersion || state.storeVersion < 1) {

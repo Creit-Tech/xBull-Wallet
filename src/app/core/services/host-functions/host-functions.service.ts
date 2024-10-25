@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
-import { xdr, buildInvocationTree, InvocationTree, ExecuteInvocation, CreateInvocation } from 'stellar-sdk';
+import { xdr, buildInvocationTree, InvocationTree, ExecuteInvocation, CreateInvocation } from '@stellar/stellar-sdk';
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { IWalletsAccount, WalletsOffersState, WalletsOffersStore } from '~root/state';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import OfferRecord = Horizon.ServerApi.OfferRecord;
 
 @Injectable({

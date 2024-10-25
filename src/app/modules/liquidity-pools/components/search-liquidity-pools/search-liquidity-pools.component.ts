@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Asset } from 'stellar-sdk';
+import { Asset } from '@stellar/stellar-sdk';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import {
   HorizonApisQuery,

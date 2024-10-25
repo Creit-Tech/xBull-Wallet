@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, ReplaySubject, Subject } from 'rxjs';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import {
   BalanceAssetType,
   HorizonApisQuery,

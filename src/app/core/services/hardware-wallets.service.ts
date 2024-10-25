@@ -7,7 +7,7 @@ import { BehaviorSubject, firstValueFrom } from 'rxjs';
 // @ts-ignore
 import transformTransaction from 'trezor-connect/lib/plugins/stellar/plugin';
 import { filter, take } from 'rxjs/operators';
-import { FeeBumpTransaction, StrKey, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, StrKey, Transaction } from '@stellar/stellar-sdk';
 import { SettingsQuery } from '~root/state';
 
 @Injectable({

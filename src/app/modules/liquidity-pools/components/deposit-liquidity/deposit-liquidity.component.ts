@@ -26,12 +26,11 @@ import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { BehaviorSubject, firstValueFrom, from, merge, Observable, of, Subject, Subscription } from 'rxjs';
-import { AccountResponse, ServerApi } from 'stellar-sdk/lib/horizon';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Asset, TransactionBuilder } from 'stellar-sdk';
+import { Asset, Horizon, TransactionBuilder } from '@stellar/stellar-sdk';
 
 @Component({
   selector: 'app-deposit-liquidity',
@@ -47,8 +46,8 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
   depositingLiquidity$ = this.lpAssetsQuery.depositingLiquidity$;
   creatingPool$ = this.walletAssetsQuery.addingAsset$;
 
-  selectedLiquidityPool$: BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined> =
-    new BehaviorSubject<ServerApi.LiquidityPoolRecord | undefined>(undefined);
+  selectedLiquidityPool$: BehaviorSubject<Horizon.ServerApi.LiquidityPoolRecord | undefined> =
+    new BehaviorSubject<Horizon.ServerApi.LiquidityPoolRecord | undefined>(undefined);
 
   disableActionButtons$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -356,7 +355,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
       .toNumber();
   }
 
-  calculateSpotPrice(data: ServerApi.LiquidityPoolRecord): number {
+  calculateSpotPrice(data: Horizon.ServerApi.LiquidityPoolRecord): number {
     return new BigNumber(data.reserves[0].amount)
       .dividedBy(data.reserves[1].amount)
       .toNumber();
@@ -431,7 +430,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
   }
 
   async onDepositLiquidity(params: {
-    loadedAccount: AccountResponse,
+    loadedAccount: Horizon.AccountResponse,
     transactionBuilder: TransactionBuilder,
   }): Promise<void> {
     const liquidityPool = await this.selectedLiquidityPool$
@@ -546,7 +545,7 @@ export class DepositLiquidityComponent implements OnInit, OnDestroy {
   }
 
   async onCreatePool(params: {
-    loadedAccount: AccountResponse,
+    loadedAccount: Horizon.AccountResponse,
     transactionBuilder: TransactionBuilder,
   }): Promise<void> {
     const [A, B] = this.getAssetAandAssetBFromForm();

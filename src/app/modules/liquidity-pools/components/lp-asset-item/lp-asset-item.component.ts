@@ -11,7 +11,7 @@ import {
   WalletsAssetsQuery,
 } from '~root/state';
 import {WalletsAssetsService} from '~root/core/wallets/services/wallets-assets.service';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import { LiquidityPoolsService } from '~root/core/services/liquidity-pools.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';

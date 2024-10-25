@@ -4,8 +4,7 @@ import {
   IWalletAssetModel, WalletsAccountsQuery,
   WalletsAssetsQuery
 } from '~root/state';
-import { Account, Asset, Operation, TransactionBuilder } from 'stellar-sdk';
-import { ServerApi } from 'stellar-sdk/lib/horizon';
+import { Account, Asset, Horizon, Operation, TransactionBuilder } from '@stellar/stellar-sdk';
 import { BehaviorSubject, Observable, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { debounceTime, map, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
@@ -145,7 +144,7 @@ export class ClaimableBalanceDetailsComponent implements OnInit, OnDestroy {
     );
 
     if (type === 'trash_it' && !asset.isNative()) {
-      let pathRecords: ServerApi.PaymentPathRecord[] = [];
+      let pathRecords: Horizon.ServerApi.PaymentPathRecord[] = [];
       try {
         pathRecords = await this.stellarSdkService.selectServer().strictSendPaths(
           asset,

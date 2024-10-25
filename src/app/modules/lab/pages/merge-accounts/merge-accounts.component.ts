@@ -12,7 +12,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import * as StellarSDK from 'stellar-sdk';
+import * as StellarSDK from '@stellar/stellar-sdk';
 
 @Component({
   selector: 'app-merge-accounts',

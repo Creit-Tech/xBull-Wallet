@@ -5,7 +5,7 @@ import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AnchorsService } from '~root/modules/anchors/services/anchors.service';
 import { createAnchor } from '~root/modules/anchors/state/anchor.model';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 
 @Component({

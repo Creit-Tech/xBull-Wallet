@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import OfferRecord = Horizon.ServerApi.OfferRecord;
 
 export interface WalletsOffersState extends EntityState<OfferRecord> {

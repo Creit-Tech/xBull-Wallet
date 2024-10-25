@@ -3,7 +3,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { Router } from '@angular/router';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { HorizonApisQuery, INetworkApi, IWalletsAccount, WalletsAccountsQuery } from '~root/state';
@@ -13,7 +13,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import BigNumber from 'bignumber.js';
 import { TranslateService } from '@ngx-translate/core';
-import { StellarToml } from 'stellar-sdk';
+import { StellarToml } from '@stellar/stellar-sdk';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({

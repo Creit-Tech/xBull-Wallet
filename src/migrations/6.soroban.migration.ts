@@ -1,5 +1,5 @@
 import { IWalletsAccount, WalletAccountType, WalletsAccountsState } from '~root/state';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { createHash } from 'crypto';
 
 function generateWalletAccountId(params: { network: Networks; publicKey: string }): string {

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@angular/core';
-import { FeeBumpTransaction, StrKey, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, StrKey, Transaction } from '@stellar/stellar-sdk';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   AirgappedXdrSignerComponent

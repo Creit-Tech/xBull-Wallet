@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { StrKey } from 'stellar-sdk';
+import { StrKey } from '@stellar/stellar-sdk';
 
 /**
  * This function validates if a control value is either a valid public key or a contract address

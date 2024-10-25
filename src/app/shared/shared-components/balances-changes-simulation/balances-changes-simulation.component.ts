@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Asset, FeeBumpTransaction, Networks, SorobanRpc, Transaction } from 'stellar-sdk';
+import { Asset, FeeBumpTransaction, Networks, SorobanRpc, Transaction } from '@stellar/stellar-sdk';
 import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, switchMap } from 'rxjs';
 import { IAssetBalanceChange, StateChangesService } from '~root/core/services/state-changes/state-changes.service';
 import {

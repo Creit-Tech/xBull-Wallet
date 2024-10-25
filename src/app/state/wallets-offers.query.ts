@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { WalletsOffersStore, WalletsOffersState } from './wallets-offers.store';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import OfferRecord = Horizon.ServerApi.OfferRecord;
 
 @Injectable({ providedIn: 'root' })

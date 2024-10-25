@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { generateMnemonic, mnemonicToSeed, validateMnemonic, wordlists } from 'bip39';
-import { Keypair } from 'stellar-sdk';
+import { Keypair } from '@stellar/stellar-sdk';
 import { HdWalletService } from '~root/core/wallets/services/hd-wallet.service';
 
 @Injectable({

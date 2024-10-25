@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { HorizonApisQuery, INetworkApi, SettingsQuery, SettingsStore } from '~root/state';
 import { from, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import * as SDK from 'stellar-sdk';
+import * as SDK from '@stellar/stellar-sdk';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Injectable({

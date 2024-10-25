@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NotFoundError, Horizon } from 'stellar-sdk';
+import { NotFoundError, Horizon } from '@stellar/stellar-sdk';
 import { firstValueFrom, from, Observable, of, throwError } from 'rxjs';
 import {
   createWalletsOperation, INetworkApi,
@@ -11,7 +11,6 @@ import {
 import { catchError, map, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { ServerApi } from 'stellar-sdk/lib/horizon';
 
 @Injectable({
   providedIn: 'root'
@@ -168,7 +167,7 @@ export class WalletsAccountsService {
             this.walletsOperationsStore.upsertMany([createWalletsOperation({
               ownerId: params.account._id,
               ownerPublicKey: params.account.publicKey,
-              operation: operationRecord as any as ServerApi.OperationRecord,
+              operation: operationRecord as any as Horizon.ServerApi.OperationRecord,
             })]);
           }
         });

@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { InAppBrowser, InAppBrowserObject } from '@awesome-cordova-plugins/in-app-browser/ngx';
 import { InAppBrowserEvent } from '@awesome-cordova-plugins/in-app-browser';
 import { firstValueFrom, Subject, take, takeUntil } from 'rxjs';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import {
   createSiteConnection, HorizonApisQuery, INetworkApi,
   ISiteConnection,

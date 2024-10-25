@@ -37,7 +37,6 @@ import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { AccountResponse } from 'stellar-sdk/lib/horizon';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { ActivatedRoute } from '@angular/router';
 
@@ -45,7 +44,17 @@ import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { TranslateService } from '@ngx-translate/core';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
-import { Account, Asset, Claimant, Memo, Operation, StrKey, Transaction, TransactionBuilder } from 'stellar-sdk';
+import {
+  Account,
+  Asset,
+  Claimant,
+  Horizon,
+  Memo,
+  Operation,
+  StrKey,
+  Transaction,
+  TransactionBuilder
+} from '@stellar/stellar-sdk';
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 import { Record } from '@creit.tech/sorobandomains-sdk';
@@ -218,7 +227,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
     account: IWalletsAccount;
     tx: TransactionBuilder;
   }): Promise<Transaction> {
-    let destinationLoadedAccount: AccountResponse;
+    let destinationLoadedAccount: Horizon.AccountResponse;
     try {
       destinationLoadedAccount = await this.stellarSdkService.loadAccount(this.form.value.publicKey);
 
@@ -233,7 +242,7 @@ export class SendPaymentComponent implements OnInit, AfterViewInit, OnDestroy {
           })
         );
       } else {
-        const hasTrustline = destinationLoadedAccount.balances.find(b => {
+        const hasTrustline = destinationLoadedAccount.balances.find((b: any) => {
           if (b.asset_type !== 'credit_alphanum4' && b.asset_type !== 'credit_alphanum12') return false;
           else return (b.asset_code === params.asset.assetCode && b.asset_issuer === params.asset.assetIssuer);
         });

@@ -3,7 +3,6 @@ import { BehaviorSubject, combineLatest, firstValueFrom, from, Observable, of, S
 import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery, WalletsOffersQuery } from '~root/state';
 import { debounceTime, delay, map, switchMap, take, takeUntil } from 'rxjs/operators';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
-import { AccountResponse, ServerApi } from 'stellar-sdk/lib/horizon';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
@@ -20,6 +19,7 @@ import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-pub
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
 import { Record } from '@creit.tech/sorobandomains-sdk';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
+import { Horizon } from '@stellar/stellar-sdk';
 
 @Component({
   selector: 'app-path-payment-form',
@@ -107,7 +107,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     return (this.swapForm.controls.toAsset as UntypedFormGroup).controls.amount as UntypedFormControl;
   }
 
-  get pathValue(): ServerApi.PaymentPathRecord | undefined {
+  get pathValue(): Horizon.ServerApi.PaymentPathRecord | undefined {
     return this.swapForm.value.path;
   }
 
@@ -262,7 +262,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
     const fromAsset: IWalletAssetModel = this.swapForm.value.fromAsset.asset;
     const toAsset: IWalletAssetModel = this.swapForm.value.toAsset.asset;
 
-    let response: { records: ServerApi.PaymentPathRecord[] };
+    let response: { records: Horizon.ServerApi.PaymentPathRecord[] };
     if (this.pathTypeValue === 'send') {
       response = await this.stellarSdkService.selectServer().strictSendPaths(
         this.walletsAssetsService.sdkAssetFromAssetId(fromAsset._id),
@@ -356,7 +356,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
       ? this.stellarSdkService.SDK.Asset.native()
       : new this.stellarSdkService.SDK.Asset(toAsset.assetCode, toAsset.assetIssuer);
 
-    let loadedAccount: AccountResponse;
+    let loadedAccount: Horizon.AccountResponse;
     try {
       loadedAccount = await this.stellarSdkService.loadAccount(selectedAccount.publicKey);
     } catch (e) {
@@ -391,7 +391,7 @@ export class PathPaymentFormComponent implements OnInit, AfterViewInit, OnDestro
       transactionBuilder.addOperation( this.stellarSdkService.SDK.Operation.changeTrust({ asset: toAssetClass }) );
     }
 
-    const path = updatedPath.path.map(item =>
+    const path = updatedPath.path.map((item: any) =>
       item.asset_type === 'native'
         ? this.stellarSdkService.SDK.Asset.native()
         : new this.stellarSdkService.SDK.Asset(item.asset_code, item.asset_issuer)

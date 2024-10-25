@@ -3,7 +3,7 @@ import SignClient from '@walletconnect/sign-client';
 import { PairingTypes, ProposalTypes } from '@walletconnect/types';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ENV, environment } from '~env';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   SessionProposalComponent

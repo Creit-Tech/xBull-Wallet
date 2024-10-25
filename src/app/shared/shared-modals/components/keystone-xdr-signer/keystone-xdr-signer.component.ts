@@ -1,5 +1,5 @@
 import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
-import { FeeBumpTransaction, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, Transaction } from '@stellar/stellar-sdk';
 import { NZ_MODAL_DATA, NzModalService } from 'ng-zorro-antd/modal';
 import KeystoneSDK, { KeystoneStellarSDK, UR, UREncoder } from '@keystonehq/keystone-sdk';
 import { BehaviorSubject, firstValueFrom, from, Observable, of } from 'rxjs';

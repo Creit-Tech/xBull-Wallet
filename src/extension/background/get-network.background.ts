@@ -4,7 +4,7 @@ import {
 } from '~extension/interfaces';
 import { getActiveApi } from '~extension/background/state.background';
 import { INetworkApi } from '~root/state';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 
 export const requestNetwork = async (): Promise<IRuntimeGetNetworkResponse | IRuntimeErrorResponse> => {
   try {

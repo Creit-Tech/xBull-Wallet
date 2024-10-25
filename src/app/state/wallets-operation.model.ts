@@ -1,4 +1,4 @@
-import { AssetType, Horizon } from 'stellar-sdk';
+import { AssetType, Horizon } from '@stellar/stellar-sdk';
 import { IWalletsAccount } from '~root/state/wallets-account.model';
 import OperationRecord = Horizon.ServerApi.OperationRecord;
 

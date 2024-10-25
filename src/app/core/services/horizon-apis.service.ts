@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createNetworkApi, HorizonApisStore, INetworkApi } from '~root/state';
 import { randomBytes } from 'crypto';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 
 @Injectable({
   providedIn: 'root'

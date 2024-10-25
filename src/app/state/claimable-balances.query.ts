@@ -3,7 +3,7 @@ import { QueryEntity } from '@datorama/akita';
 import { ClaimableBalancesStore, ClaimableBalancesState } from './claimable-balances.store';
 import { IWalletsAccount } from '~root/state/wallets-account.model';
 import { Observable, of } from 'rxjs';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import { WalletsAccountsQuery } from '~root/state/wallets-accounts.query';
 import { distinctUntilKeyChanged, switchMap } from 'rxjs/operators';
 

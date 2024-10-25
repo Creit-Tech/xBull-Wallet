@@ -11,7 +11,7 @@ import { firstValueFrom, merge, Observable, ReplaySubject, Subject } from 'rxjs'
 import { filter, map, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { TransactionBuilder, Account, Operation, Asset } from 'stellar-sdk';
+import { TransactionBuilder, Account, Operation, Asset } from '@stellar/stellar-sdk';
 import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';

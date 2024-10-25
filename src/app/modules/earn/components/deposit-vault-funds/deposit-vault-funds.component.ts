@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, firstValueFrom, Observable, ReplaySubje
 import { FormControl, Validators } from '@angular/forms';
 import { WalletsAccountsQuery } from '~root/state';
 import { map, take } from 'rxjs/operators';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import BalanceLineAsset = Horizon.HorizonApi.BalanceLineAsset;
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';

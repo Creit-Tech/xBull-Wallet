@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { StrKey, xdr } from 'stellar-sdk';
+import { StrKey, xdr } from '@stellar/stellar-sdk';
 import BigNumber from 'bignumber.js';
 
 @Injectable({

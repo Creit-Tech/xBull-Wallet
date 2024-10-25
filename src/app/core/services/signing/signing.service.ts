@@ -7,7 +7,7 @@ import {
   IWalletsAccountWithSecretKey, IWalletWithAirGapped, SettingsQuery, WalletsQuery
 } from '~root/state';
 import { firstValueFrom } from 'rxjs';
-import { FeeBumpTransaction, Keypair, Networks, Transaction, xdr } from 'stellar-sdk';
+import { FeeBumpTransaction, Keypair, Networks, Transaction, xdr } from '@stellar/stellar-sdk';
 import { PasswordModalComponent } from '~root/shared/shared-modals/components/password-modal/password-modal.component';
 import TransportWebUSB from '@ledgerhq/hw-transport-webusb';
 import { DeviceAuthService } from '~root/mobile/services/device-auth.service';

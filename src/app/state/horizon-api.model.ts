@@ -1,4 +1,4 @@
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 
 export interface INetworkApi {
   _id: string;

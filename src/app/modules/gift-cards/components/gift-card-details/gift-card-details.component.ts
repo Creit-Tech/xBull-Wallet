@@ -22,12 +22,12 @@ import { IWalletAssetModel, WalletsAccountsQuery, WalletsAssetsQuery } from '~ro
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
 import { AssetSearcherComponent } from '~root/shared/asset-searcher/asset-searcher.component';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
-import { Asset, FeeBumpTransaction, MemoType } from 'stellar-sdk';
+import { Asset, FeeBumpTransaction, MemoType } from '@stellar/stellar-sdk';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { HttpErrorResponse } from '@angular/common/http';
 import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { GiftCardsQuery } from '~root/modules/gift-cards/state/gift-cards.query';
 import { TranslateService } from '@ngx-translate/core';

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ClaimableBalancesStore, IWalletsAccount } from '~root/state';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { ServerApi } from 'stellar-sdk/lib/horizon';
-import CollectionPage = ServerApi.CollectionPage;
 import { applyTransaction } from '@datorama/akita';
 import { isAfter, isBefore } from 'date-fns';
 import { type } from 'os';
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +16,7 @@ export class ClaimableBalancesService {
     private readonly stellarSdkService: StellarSdkService,
   ) { }
 
-  async getClaimableBalancesForClaimant(walletAccount: IWalletsAccount): Promise<CollectionPage<ServerApi.ClaimableBalanceRecord>> {
+  async getClaimableBalancesForClaimant(walletAccount: IWalletsAccount): Promise<Horizon.ServerApi.CollectionPage<Horizon.ServerApi.ClaimableBalanceRecord>> {
     this.claimableBalancesStore.updateUIState({ gettingClaimableBalances: true });
 
     try {

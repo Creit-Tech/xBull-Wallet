@@ -33,7 +33,7 @@ import { distinctUntilArrayItemChanged } from '@datorama/akita';
 import { HostFunctionsService } from '~root/core/services/host-functions/host-functions.service';
 import { NzTreeNodeOptions } from 'ng-zorro-antd/core/tree/nz-tree-base-node';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
-import { FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from 'stellar-sdk';
+import { FeeBumpTransaction, Keypair, Networks, Operation, Transaction } from '@stellar/stellar-sdk';
 import { ClipboardService } from '~root/core/services/clipboard.service';
 import QRCode from 'qrcode';
 import { SigningService } from '~root/core/services/signing/signing.service';

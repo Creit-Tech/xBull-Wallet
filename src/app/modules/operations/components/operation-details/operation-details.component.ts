@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { take } from 'rxjs/operators';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
 import { HorizonApisQuery, IWalletsOperation } from '~root/state';
 import { GlobalsService } from '~root/lib/globals/globals.service';

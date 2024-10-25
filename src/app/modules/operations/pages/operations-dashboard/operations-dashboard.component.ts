@@ -10,7 +10,7 @@ import {
   filter, map,
 } from 'rxjs/operators';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { Horizon, Networks } from 'stellar-sdk';
+import { Horizon, Networks } from '@stellar/stellar-sdk';
 import { GlobalsService } from '~root/lib/globals/globals.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import {

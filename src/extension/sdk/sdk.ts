@@ -10,7 +10,7 @@ import {
   XBULL_CONNECT, XBULL_GET_NETWORK,
   XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
 } from '../interfaces';
-import { Networks } from 'stellar-sdk';
+import { Networks } from '@stellar/stellar-sdk';
 
 class Sdk {
   isConnected = false;

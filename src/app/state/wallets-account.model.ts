@@ -1,4 +1,4 @@
-import { Horizon } from 'stellar-sdk';
+import { Horizon } from '@stellar/stellar-sdk';
 import { IWallet } from '~root/state/wallet.model';
 
 export const walletsAccountDocVersion = 2;

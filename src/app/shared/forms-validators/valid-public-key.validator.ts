@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { StrKey } from 'stellar-sdk';
+import { StrKey } from '@stellar/stellar-sdk';
 
 export const validPublicKeyValidator = (control: AbstractControl): { [key: string]: any } | null => {
   if (!control.value) {

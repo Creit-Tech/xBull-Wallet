@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ServerApi } from 'stellar-sdk/lib/horizon';
 import {
   BalanceAssetType,
   INetworkApi,
@@ -21,9 +20,9 @@ import { add, isAfter } from 'date-fns';
 import { createCuratedAsset, ICuratedAsset } from '~root/state/curated-assets/curated-asset.model';
 import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.store';
 import { applyTransaction } from '@datorama/akita';
-import { Asset, Horizon, StellarToml } from 'stellar-sdk';
-import { OfferAsset } from 'stellar-sdk/lib/horizon/types/offer';
+import { Asset, Horizon, StellarToml } from '@stellar/stellar-sdk';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
+import { OfferAsset } from '@stellar/stellar-sdk/lib/horizon/types/offer';
 
 @Injectable({
   providedIn: 'root'
@@ -129,7 +128,7 @@ export class WalletsAssetsService {
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
     horizonApi: INetworkApi,
-  }): Observable<ServerApi.AssetRecord> {
+  }): Observable<Horizon.ServerApi.AssetRecord> {
     const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
       .assets()
       .forCode(data.assetCode)
@@ -161,7 +160,7 @@ export class WalletsAssetsService {
     assetIssuer: IWalletAsset<'issued'>['assetIssuer'],
     assetCode: IWalletAsset<'issued'>['assetCode'],
     horizonApi: INetworkApi,
-  }): Observable<ServerApi.AccountRecord> {
+  }): Observable<Horizon.ServerApi.AccountRecord> {
     const recordPromise = this.stellarSdkService.selectServer(data.horizonApi.url)
       .accounts()
       .accountId(data.assetIssuer)

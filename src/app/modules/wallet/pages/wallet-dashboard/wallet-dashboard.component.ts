@@ -18,7 +18,7 @@ import {
   withLatestFrom
 } from 'rxjs/operators';
 import { WalletsAssetsService } from '~root/core/wallets/services/wallets-assets.service';
-import { AssetType, Horizon } from 'stellar-sdk';
+import { AssetType, Horizon } from '@stellar/stellar-sdk';
 import BigNumber from 'bignumber.js';
 import { Color, LegendPosition, ScaleType } from '@swimlane/ngx-charts';
 import BalanceLineLiquidityPool = Horizon.HorizonApi.BalanceLineLiquidityPool;

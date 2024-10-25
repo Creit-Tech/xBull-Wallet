@@ -24,7 +24,7 @@ import {
 import { MnemonicPhraseService } from '~root/core/wallets/services/mnemonic-phrase.service';
 import { transaction } from '@datorama/akita';
 import { StellarSdkService } from '~root/gateways/stellar/stellar-sdk.service';
-import { Horizon, Keypair, Memo, Networks, Operation, Transaction } from 'stellar-sdk';
+import { Horizon, Keypair, Memo, Networks, Operation, Transaction } from '@stellar/stellar-sdk';
 
 @Injectable({
   providedIn: 'root'

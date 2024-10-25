@@ -4,7 +4,7 @@ import { distinctUntilChanged, map, switchMap, take, takeUntil } from 'rxjs/oper
 import { BehaviorSubject, combineLatest, firstValueFrom, Observable, Subject, Subscription } from 'rxjs';
 import { IAnchor } from '~root/modules/anchors/state/anchor.model';
 import { AnchorsQuery } from '~root/modules/anchors/state/anchors.query';
-import { StellarToml } from 'stellar-sdk';
+import { StellarToml } from '@stellar/stellar-sdk';
 import { HttpClient } from '@angular/common/http';
 import { ISep24InfoResponse, Sep24Service } from '~root/core/services/sep24/sep24.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
