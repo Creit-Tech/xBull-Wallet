@@ -82,7 +82,6 @@ export class OperationsDashboardComponent implements OnInit, OnDestroy {
             response = await response.next();
           }
 
-          console.log({ parsedRecords });
           this.operationRecords$.next(parsedRecords);
         } catch (e) {
           this.nzMessageService.error('Failed when fetching the data from Horizon.');

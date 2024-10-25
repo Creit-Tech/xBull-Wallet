@@ -23,6 +23,7 @@ import { CuratedAssetsStore } from '~root/state/curated-assets/curated-assets.st
 import { applyTransaction } from '@datorama/akita';
 import { Asset, Horizon, StellarToml } from 'stellar-sdk';
 import { OfferAsset } from 'stellar-sdk/lib/horizon/types/offer';
+import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +64,7 @@ export class WalletsAssetsService {
           // TODO: maybe we should make this time dynamic and configurable form the settings
           const nextUpdate = add(lastUpdate, { minutes: 15 });
           const now = new Date();
-          return !params.asset.assetFullDataLoaded && isAfter(now, nextUpdate);
+          return isAfter(now, nextUpdate);
         }))
         .pipe(filter(Boolean))
         .pipe(map(_ => ({
@@ -87,6 +88,7 @@ export class WalletsAssetsService {
     private readonly lpAssetsStore: LpAssetsStore,
     private readonly settingsQuery: SettingsQuery,
     private readonly curatedAssetsStore: CuratedAssetsStore,
+    private readonly sorobanDomainsService: SorobandomainsService,
   ) { }
 
   // DEPRECATED
@@ -168,8 +170,17 @@ export class WalletsAssetsService {
     return from(recordPromise)
       .pipe(filter(accountRecord => !!accountRecord))
       .pipe(switchMap(accountRecord => {
-        return from(StellarToml.Resolver.resolve((accountRecord as any).home_domain))
-          .pipe(withLatestFrom(of(accountRecord)));
+        if (accountRecord.home_domain) {
+          if (accountRecord.home_domain.endsWith('.xlm')) {
+            return from(this.sorobanDomainsService.getDomainToml(accountRecord.home_domain.slice(0, -4)))
+              .pipe(withLatestFrom(of(accountRecord)));
+          } else {
+            return from(StellarToml.Resolver.resolve((accountRecord as any).home_domain))
+              .pipe(withLatestFrom(of(accountRecord)));
+          }
+        } else {
+          return of([{} as any, accountRecord])
+        }
       }))
       .pipe(switchMap(async ([parsedToml, accountRecord]) => {
         const documentation: any = parsedToml.DOCUMENTATION || parsedToml.documentation;

@@ -1,14 +1,19 @@
+import { parse } from 'toml';
 import { Injectable } from '@angular/core';
-import { SorobanDomainsSDK } from '@creit.tech/sorobandomains-sdk';
+import { DomainStorageValue, SorobanDomainsSDK, DefaultStorageKeys } from '@creit.tech/sorobandomains-sdk';
 import * as SDK from 'stellar-sdk';
+import { StellarToml } from 'stellar-sdk';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SorobandomainsService {
   public sdk: SorobanDomainsSDK = new SorobanDomainsSDK({
-    contractId: 'CATRNPHYKNXAPNLHEYH55REB6YSAJLGCPA4YM6L3WUKSZOPI77M2UMKI',
-    rpc: new SDK.SorobanRpc.Server('https://soroban-rpc.creit.tech'),
+    vaultsContractId: 'CATRNPHYKNXAPNLHEYH55REB6YSAJLGCPA4YM6L3WUKSZOPI77M2UMKI',
+    valuesDatabaseContractId: 'CDH2T2CBGFPFNVRWFK4XJIRP6VOWSVTSDCRBCJ2TEIO22GADQP6RG3Y6',
+    rpc: new SDK.SorobanRpc.Server('https://soroban-rpc.creit.tech') as any,
     defaultFee: '1000000',
     defaultTimeout: 30,
     network: SDK.Networks.PUBLIC,
@@ -16,7 +21,9 @@ export class SorobandomainsService {
     stellarSDK: SDK as any,
   });
 
-  constructor() { }
+  constructor(
+    private readonly http: HttpClient,
+  ) { }
 
   domainParser(domain: string): {  domain: string; subDomain?: string; } {
     if (!domain) {
@@ -34,5 +41,24 @@ export class SorobandomainsService {
       default:
         throw new Error('invalid domain');
     }
+  }
+
+  async getDomainToml(domain: string): Promise<StellarToml.Api.StellarToml> {
+    const domainParts = this.domainParser(domain);
+    let value: DomainStorageValue;
+    try {
+      value = await this.sdk.getDomainData({
+        node: SorobanDomainsSDK.parseDomain({ domain: domainParts.domain }),
+        key: DefaultStorageKeys.TOML,
+      });
+    } catch (e) {
+      return {};
+    }
+    const [ type, data ] = value;
+    if (type !== 'String') return {};
+    if (!data) return {};
+
+    const fileData = await firstValueFrom(this.http.get(data, { responseType: 'text' }));
+    return parse(fileData);
   }
 }

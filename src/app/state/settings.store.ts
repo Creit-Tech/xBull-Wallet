@@ -12,7 +12,6 @@ export interface SettingsState {
 
   storeVersion: number;
 
-  advanceMode: boolean;
   defaultFee: string;
 
   // keep password configurations, these are used to handle the logic
@@ -67,7 +66,6 @@ export function createInitialState(): SettingsState {
       gettingRecommendedFee: false,
     },
     storeVersion: 2,
-    advanceMode: false,
     defaultFee: '10000',
     keepPasswordActive: false,
     timeoutPasswordSaved: 15,

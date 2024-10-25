@@ -30,6 +30,7 @@ import {
 } from '~root/shared/shared-modals/components/xdr-signer/xdr-signer.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
+import { selectPersistStateInit } from '@datorama/akita';
 
 @Component({
   selector: 'app-background',
@@ -112,6 +113,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async connectHandler(params: IConnectRequestPayload): Promise<IRuntimeConnectResponse | IRuntimeErrorResponse> {
+    await firstValueFrom(selectPersistStateInit());
 
     const resultSubject: Subject<IRuntimeConnectResponse | IRuntimeErrorResponse> =
       new Subject<IRuntimeConnectResponse | IRuntimeErrorResponse>();
@@ -156,6 +158,7 @@ export class BackgroundComponent implements OnInit, OnDestroy {
   }
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {
+    await firstValueFrom(selectPersistStateInit());
     if (!!params.network) {
       try {
         this.horizonApisService.setHorizonByNetwork(params.network);

@@ -65,7 +65,6 @@ export class HostFunctionsService {
 
   parseHostFunctionIntoNodeTree(f: xdr.SorobanAuthorizedInvocation, preKey: number): NzTreeNodeOptions[] {
     const invocationTree: InvocationTree = buildInvocationTree(f);
-    console.log(invocationTree);
     return this.getNodeChildren([invocationTree]);
   }
 
