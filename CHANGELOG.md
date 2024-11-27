@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.33.0] - 2024-11-26
+### Change
+- Upgrade the Stellar SDK and avoid downloading sodium-native to the repo
+- Use the selected network to calculate the balances changes
+
 ## [1.32.0] - 2024-10-24
 ### Add
 - Add sorobandomains-sdk v0.1.3 and support to fetching TOML files from `.xlm` domains
