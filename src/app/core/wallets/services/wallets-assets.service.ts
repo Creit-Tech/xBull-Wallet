@@ -23,6 +23,7 @@ import { applyTransaction } from '@datorama/akita';
 import { Asset, Horizon, StellarToml } from '@stellar/stellar-sdk';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 import { OfferAsset } from '@stellar/stellar-sdk/lib/horizon/types/offer';
+import BigNumber from 'bignumber.js';
 
 @Injectable({
   providedIn: 'root'
@@ -143,8 +144,16 @@ export class WalletsAssetsService {
         }
 
         const newData = {
-          amountIssued: assetRecord.amount,
-          numAccount: assetRecord.num_accounts,
+          amountIssued: new BigNumber(assetRecord.balances.authorized)
+            .plus(assetRecord.balances.authorized_to_maintain_liabilities)
+            .plus(assetRecord.balances.unauthorized)
+            .plus(assetRecord.contracts_amount)
+            .plus(assetRecord.liquidity_pools_amount)
+            .toFixed(7),
+          numAccount: new BigNumber(assetRecord.accounts.authorized)
+            .plus(assetRecord.accounts.authorized_to_maintain_liabilities)
+            .plus(assetRecord.accounts.unauthorized)
+            .toNumber(),
           assetExtraDataLoaded: true,
           networkPassphrase: data.horizonApi.networkPassphrase,
         };

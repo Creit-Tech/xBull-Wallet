@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Asset, FeeBumpTransaction, Networks, SorobanRpc, Transaction } from '@stellar/stellar-sdk';
+import { Asset, FeeBumpTransaction, Networks, rpc as SorobanRpc, Transaction } from '@stellar/stellar-sdk';
 import { BehaviorSubject, firstValueFrom, Observable, ReplaySubject, switchMap } from 'rxjs';
 import { IAssetBalanceChange, StateChangesService } from '~root/core/services/state-changes/state-changes.service';
 import {
@@ -51,10 +51,12 @@ export class BalancesChangesSimulationComponent {
 
   async simulateAndGetChanges(tx: Transaction | FeeBumpTransaction): Promise<void> {
     const selectedHorizon: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
-    const rpcUrl = selectedHorizon.networkPassphrase === Networks.PUBLIC
-      ? 'https://soroban-rpc.creit.tech'
-      : 'https://horizon-testnet.stellar.org';
-    const rpc: SorobanRpc.Server = new SorobanRpc.Server(rpcUrl);
+    if (!selectedHorizon.rpcUrl) {
+      console.log('No RPC url has been set in the network');
+      return;
+    }
+
+    const rpc: SorobanRpc.Server = new SorobanRpc.Server(selectedHorizon.rpcUrl);
 
     try {
       const sim = await rpc.simulateTransaction(tx);

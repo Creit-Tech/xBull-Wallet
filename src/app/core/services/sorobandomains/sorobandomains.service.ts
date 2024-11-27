@@ -13,7 +13,7 @@ export class SorobandomainsService {
   public sdk: SorobanDomainsSDK = new SorobanDomainsSDK({
     vaultsContractId: 'CATRNPHYKNXAPNLHEYH55REB6YSAJLGCPA4YM6L3WUKSZOPI77M2UMKI',
     valuesDatabaseContractId: 'CDH2T2CBGFPFNVRWFK4XJIRP6VOWSVTSDCRBCJ2TEIO22GADQP6RG3Y6',
-    rpc: new SDK.SorobanRpc.Server('https://soroban-rpc.creit.tech') as any,
+    rpc: new SDK.rpc.Server('https://soroban-rpc.creit.tech') as any,
     defaultFee: '1000000',
     defaultTimeout: 30,
     network: SDK.Networks.PUBLIC,

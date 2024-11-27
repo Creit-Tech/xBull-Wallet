@@ -65,7 +65,7 @@ export class StateChangesService {
           }
 
           assetChanges.push({
-            asset: asset.assetCode().toString('utf8') + ':' + StrKey.encodeEd25519PublicKey(asset.issuer().value()),
+            asset: (asset.assetCode() as Uint8Array).filter(Boolean).toString() + ':' + StrKey.encodeEd25519PublicKey(asset.issuer().value()),
             before: before
               ? new BigNumber(before.balance().toBigInt().toString()).dividedBy('10000000').toFixed(7)
               : '0',

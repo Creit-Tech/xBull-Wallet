@@ -87,14 +87,14 @@ export class StellarSdkService {
     );
   }
 
-  selectRPC(url?: string, options?: SDK.SorobanRpc.Server.Options): SDK.SorobanRpc.Server {
+  selectRPC(url?: string, options?: SDK.rpc.Server.Options): SDK.rpc.Server {
     const activeValue = this.horizonApisQuery.getActive() as INetworkApi;
 
     if (!activeValue.rpcUrl) {
       throw new Error(`${activeValue.name} doesn't have an RPC defined. Define one in the settings.`);
     }
 
-    return new this.SDK.SorobanRpc.Server(
+    return new this.SDK.rpc.Server(
       url || activeValue.rpcUrl,
       options || { allowHttp: url?.includes('http://localhost') }
     );
@@ -117,7 +117,7 @@ export class StellarSdkService {
     }
   }
 
-  async waitUntilTxApproved(rpc: SDK.SorobanRpc.Server, hash: string, times = 60) {
+  async waitUntilTxApproved(rpc: SDK.rpc.Server, hash: string, times = 60) {
     let completed = false;
     let attempts = 0;
     while (!completed) {
@@ -159,17 +159,17 @@ export class StellarSdkService {
     }
   }
 
-  async simOrRestore(tx: SDK.Transaction, opts?: { rpc: SDK.SorobanRpc.Server }): Promise<SDK.Transaction> {
+  async simOrRestore(tx: SDK.Transaction, opts?: { rpc: SDK.rpc.Server }): Promise<SDK.Transaction> {
     const rpc = opts?.rpc || this.selectRPC();
     const sim = await rpc.simulateTransaction(tx);
 
-    if (this.SDK.SorobanRpc.Api.isSimulationError(sim)) {
+    if (this.SDK.rpc.Api.isSimulationError(sim)) {
       console.error(sim.error);
       throw new Error('Contract call simulation failed.');
     }
 
-    if (!this.SDK.SorobanRpc.Api.isSimulationRestore(sim)) {
-      return this.SDK.SorobanRpc.assembleTransaction(tx, sim).build();
+    if (!this.SDK.rpc.Api.isSimulationRestore(sim)) {
+      return this.SDK.rpc.assembleTransaction(tx, sim).build();
     }
 
     this.nzMessageService.info('You need to restore a ledger key first', { nzDuration: 3000 });
