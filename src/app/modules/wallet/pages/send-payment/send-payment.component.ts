@@ -57,7 +57,8 @@ import {
 } from '@stellar/stellar-sdk';
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
-import { Record } from '@creit.tech/sorobandomains-sdk';
+// @ts-ignore
+import { Record } from '@creit-tech/sorobandomains-sdk';
 import { validRecipientKeyValidator } from '~root/shared/forms-validators/valid-recipient.validator';
 
 @Component({

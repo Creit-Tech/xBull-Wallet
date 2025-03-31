@@ -1,6 +1,7 @@
 import { parse } from 'toml';
 import { Injectable } from '@angular/core';
-import { DomainStorageValue, SorobanDomainsSDK, DefaultStorageKeys } from '@creit.tech/sorobandomains-sdk';
+// @ts-ignore
+import { DomainStorageValue, SorobanDomainsSDK, DefaultStorageKeys } from '@creit-tech/sorobandomains-sdk';
 import * as SDK from '@stellar/stellar-sdk';
 import { StellarToml } from '@stellar/stellar-sdk';
 import { HttpClient } from '@angular/common/http';

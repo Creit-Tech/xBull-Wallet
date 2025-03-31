@@ -30,6 +30,12 @@ export class DappsExplorerComponent {
       "description": "Decentralized lending pools created by users, DAOs, and institutions."
     },
     {
+      "url": "https://swap.xbull.app/",
+      "name": "xBull Swap",
+      "image": "https://stellar.creit.tech/wallet-icons/xbull.png",
+      "description": "Get the best rate across all the Soroban AMMs"
+    },
+    {
       "url": "https://app.sorobandomains.org",
       "name": "Soroban Domains",
       "image": "https://app.sorobandomains.org/assets/logo/logo-for-dark-background.png",
@@ -41,12 +47,6 @@ export class DappsExplorerComponent {
       "image": "https://assets.fxdao.io/brand/FxDAO-logo.png",
       "description": "The first decentralized stablecoins on Soroban"
     },
-    {
-      "url": "https://app.alpacastore.io",
-      "name": "Alpaca Store",
-      "image": "https://app.alpacastore.io/assets/logo-blackbg.png",
-      "description": "Buy airtime and gift cards with your Stellar assets"
-    }
   ]);
 
   constructor(

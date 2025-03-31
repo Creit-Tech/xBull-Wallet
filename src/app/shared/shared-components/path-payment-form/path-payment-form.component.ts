@@ -17,7 +17,8 @@ import QrScanner from 'qr-scanner';
 import { QrScanModalComponent } from '~root/shared/shared-modals/components/qr-scan-modal/qr-scan-modal.component';
 import { validPublicKeyValidator } from '~root/shared/forms-validators/valid-public-key.validator';
 import { PromptModalComponent } from '~root/shared/shared-modals/components/prompt-modal/prompt-modal.component';
-import { Record } from '@creit.tech/sorobandomains-sdk';
+// @ts-ignore
+import { Record } from '@creit-tech/sorobandomains-sdk';
 import { SorobandomainsService } from '~root/core/services/sorobandomains/sorobandomains.service';
 import { Horizon } from '@stellar/stellar-sdk';
 
