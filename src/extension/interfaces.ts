@@ -13,6 +13,9 @@ export const XBULL_SIGN_XDR_BACKGROUND = 'XBULL_SIGN_XDR_BACKGROUND';
 export const XBULL_GET_NETWORK = 'XBULL_GET_NETWORK';
 export const XBULL_GET_NETWORK_BACKGROUND = 'XBULL_GET_NETWORK_BACKGROUND';
 
+export const XBULL_SIGN_MESSAGE = 'XBULL_SIGN_MESSAGE';
+export const XBULL_SIGN_MESSAGE_BACKGROUND = 'XBULL_SIGN_MESSAGE_BACKGROUND';
+
 export type SdkResponse<T> = T | { error: SdkError };
 
 interface SdkError {
@@ -26,7 +29,8 @@ interface SdkError {
 export type EventTypes = typeof XBULL_CONNECT
   | typeof XBULL_GET_PUBLIC_KEY
   | typeof XBULL_SIGN_XDR
-  | typeof XBULL_GET_NETWORK;
+  | typeof XBULL_GET_NETWORK
+  | typeof XBULL_SIGN_MESSAGE;
 
 /**
  * @deprecated
@@ -60,13 +64,22 @@ export interface ISignXDRRequestPayload {
   publicKey?: string;
   network?: Networks;
 }
+
+export interface ISignMessageRequestPayload {
+  origin: string;
+  host: string;
+  message: string;
+  publicKey?: string;
+  network?: Networks;
+}
 // ----- SDK and Content script types END
 
 // ----- Background and Content script types
 export type BackgroundEventTypes = typeof XBULL_CONNECT_BACKGROUND
   | typeof XBULL_GET_PUBLIC_KEY_BACKGROUND
   | typeof XBULL_SIGN_XDR_BACKGROUND
-  | typeof XBULL_GET_NETWORK_BACKGROUND;
+  | typeof XBULL_GET_NETWORK_BACKGROUND
+  | typeof XBULL_SIGN_MESSAGE_BACKGROUND;
 
 export interface IRuntimeConnectMessage {
   event: typeof XBULL_CONNECT_BACKGROUND;
@@ -88,10 +101,16 @@ export interface IRuntimeGetNetworkMessage {
   payload: IGetNetworkRequestPayload;
 }
 
+export interface IRuntimeSignMessageMessage {
+  event: typeof XBULL_SIGN_MESSAGE_BACKGROUND;
+  payload: ISignMessageRequestPayload;
+}
+
 export type RuntimeMessage = IRuntimeConnectMessage
   | IRuntimeGetPublicKeyMessage
   | IRuntimeSignXDRMessage
-  | IRuntimeGetNetworkMessage;
+  | IRuntimeGetNetworkMessage
+  | IRuntimeSignMessageMessage;
 
 export interface IRuntimeConnectResponse {
   error: false;
@@ -119,6 +138,14 @@ export interface IRuntimeGetNetworkResponse {
   };
 }
 
+export interface IRuntimeSignMessageResponse {
+  error: false;
+  payload: {
+    signedMessage: string;
+    signerAddress: string;
+  };
+}
+
 export interface IRuntimeErrorResponse {
   error: true;
   errorMessage: string;
@@ -129,5 +156,6 @@ export type RuntimeResponse = IRuntimeConnectResponse
   | IRuntimeGetPublicKeyResponse
   | IRuntimeSignXDRResponse
   | IRuntimeErrorResponse
-  | IRuntimeGetNetworkResponse;
+  | IRuntimeGetNetworkResponse
+  | IRuntimeSignMessageResponse;
 // ----- Background and Content script types END

@@ -22,8 +22,6 @@ export const requestConnection = async (message: IRuntimeConnectMessage): Promis
     chrome.windows.create({
       type: 'popup',
       url: 'index.html#/sign-from-background/',
-      left: 0,
-      top: 0,
       height: 640,
       width: 380,
     }, async (popup) => {

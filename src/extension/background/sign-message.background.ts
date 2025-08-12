@@ -1,12 +1,10 @@
 import {
-  IRuntimeErrorResponse,
-  IRuntimeSignXDRMessage,
-  IRuntimeSignXDRResponse,
-  XBULL_SIGN_XDR_BACKGROUND,
+  IRuntimeErrorResponse, IRuntimeSignMessageMessage, IRuntimeSignMessageResponse,
+  XBULL_SIGN_MESSAGE_BACKGROUND,
 } from '~extension/interfaces';
 import { getSitePermissions } from '~extension/background/state.background';
 
-export const requestSignXDR = async (message: IRuntimeSignXDRMessage): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> => {
+export const requestSignMessage = async (message: IRuntimeSignMessageMessage): Promise<IRuntimeSignMessageResponse | IRuntimeErrorResponse> => {
   const payload = message.payload;
   const savedPermissions = await getSitePermissions(payload.origin + '_' + payload.host);
 
@@ -42,8 +40,8 @@ export const requestSignXDR = async (message: IRuntimeSignXDRMessage): Promise<I
         });
       }
 
-      const port = chrome.runtime.connect(chrome.runtime.id, { name: XBULL_SIGN_XDR_BACKGROUND });
-      port.onMessage.addListener((response: 'ready' | IRuntimeSignXDRResponse | IRuntimeErrorResponse) => {
+      const port = chrome.runtime.connect(chrome.runtime.id, { name: XBULL_SIGN_MESSAGE_BACKGROUND });
+      port.onMessage.addListener((response: 'ready' | IRuntimeSignMessageResponse | IRuntimeErrorResponse) => {
         if (response === 'ready') {
           port.postMessage(message);
         } else {

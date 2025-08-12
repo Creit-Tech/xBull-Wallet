@@ -19,6 +19,7 @@ import { HardwareWalletsService, IHWSigningResult } from '~root/core/services/ha
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AirgappedWalletService } from '~root/core/services/airgapped-wallet/airgapped-wallet.service';
+import { Buffer } from 'buffer';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class SigningService {
   ) { }
 
   async signWithDeviceAuthToken(params: {
-    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization;
+    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization | Buffer;
     network: Networks;
     selectedAccount: IWalletsAccountWithSecretKey;
   }): Promise<ISignResult> {
@@ -89,6 +90,12 @@ export class SigningService {
           }],
         };
 
+      case Buffer.isBuffer(params.target):
+        return {
+          signedXDR: keypair.sign(params.target).toString('base64'),
+          signers: [],
+        };
+
       case params.target instanceof xdr.HashIdPreimageSorobanAuthorization:
       default:
         throw new Error(`The type of XDR is not supported`);
@@ -97,7 +104,7 @@ export class SigningService {
   }
 
   async signWithPassword(params: {
-    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization;
+    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization | Buffer;
     network: Networks;
     selectedAccount: IWalletsAccountWithSecretKey;
     ignoreKeptPassword: boolean;
@@ -167,6 +174,12 @@ export class SigningService {
             }],
           };
 
+        case Buffer.isBuffer(params.target):
+          return {
+            signedXDR: keypair.sign(params.target).toString('base64'),
+            signers: [],
+          };
+
         case params.target instanceof xdr.HashIdPreimageSorobanAuthorization:
         default:
           throw new Error(`The type of XDR is not supported`);
@@ -183,7 +196,7 @@ export class SigningService {
   }
 
   async signWithLedger(params: {
-    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization;
+    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization | Buffer;
     network: Networks;
     selectedAccount: IWalletsAccountLedger;
   }): Promise<ISignResult> {
@@ -235,6 +248,19 @@ export class SigningService {
               publicKey: result.publicKey,
               signature: result.signature,
             }],
+          };
+
+        case Buffer.isBuffer(params.target):
+          result = await this.hardwareWalletsService.signWithLedger({
+            transaction: params.target,
+            accountPath: params.selectedAccount.path,
+            publicKey: params.selectedAccount.publicKey,
+            transport
+          });
+
+          return {
+            signedXDR: result.signature,
+            signers: [],
           };
 
         case params.target instanceof xdr.HashIdPreimageSorobanAuthorization:
@@ -295,7 +321,7 @@ export class SigningService {
   }
 
   async signWithAirgappedWallet(params: {
-    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization;
+    target: Transaction | FeeBumpTransaction | xdr.HashIdPreimageSorobanAuthorization | Buffer;
     network: Networks;
     account: IWalletsAccountAirGapped;
   }): Promise<ISignResult> {
@@ -340,6 +366,40 @@ export class SigningService {
               publicKey: params.account.publicKey,
               signature: result.signature,
             }],
+          };
+
+        case Buffer.isBuffer(params.target):
+          let signature: string;
+          switch (wallet?.protocol) {
+            case AirGappedWalletProtocol.KeyStone:
+              if (!wallet.deviceId) {
+                throw new Error('Device id is undefined, please contact support.');
+              }
+              result = await this.airgappedWalletService.signWithKeystone({
+                path: params.account.path,
+                tx: params.target,
+                deviceId: wallet.deviceId,
+              });
+
+              signature = result.signature;
+              break;
+
+            // case AirGappedWalletProtocol.LumenSigner:
+            //   result = await this.airgappedWalletService.signTransaction({
+            //     path: params.account.path,
+            //     xdr: params.target,
+            //     network: params.network,
+            //   });
+            //   signature = result.signature;
+            //   break;
+
+            default:
+              throw new Error(`Protocol ${wallet?.protocol} is not supported`);
+          }
+
+          return {
+            signedXDR: signature,
+            signers: [],
           };
 
         case params.target instanceof xdr.HashIdPreimageSorobanAuthorization:

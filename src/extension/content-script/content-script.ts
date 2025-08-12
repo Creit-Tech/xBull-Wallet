@@ -5,15 +5,15 @@ import {
   IGetPublicKeyRequestPayload,
   IRuntimeConnectResponse,
   IRuntimeGetNetworkResponse,
-  IRuntimeGetPublicKeyResponse,
-  IRuntimeSignXDRResponse,
+  IRuntimeGetPublicKeyResponse, IRuntimeSignMessageMessage, IRuntimeSignMessageResponse,
+  IRuntimeSignXDRResponse, ISignMessageRequestPayload,
   ISignXDRRequestPayload,
   XBULL_CONNECT,
   XBULL_CONNECT_BACKGROUND,
   XBULL_GET_NETWORK,
   XBULL_GET_NETWORK_BACKGROUND,
   XBULL_GET_PUBLIC_KEY,
-  XBULL_GET_PUBLIC_KEY_BACKGROUND,
+  XBULL_GET_PUBLIC_KEY_BACKGROUND, XBULL_SIGN_MESSAGE, XBULL_SIGN_MESSAGE_BACKGROUND,
   XBULL_SIGN_XDR,
   XBULL_SIGN_XDR_BACKGROUND,
 } from '../interfaces';
@@ -35,7 +35,7 @@ window.addEventListener('message', (event: any) => {
     return;
   }
 
-  let payload: IConnectRequestPayload | IGetPublicKeyRequestPayload | ISignXDRRequestPayload;
+  let payload: IConnectRequestPayload | IGetPublicKeyRequestPayload | ISignXDRRequestPayload | ISignMessageRequestPayload;
   switch (type) {
     case XBULL_CONNECT:
       payload = detail as IConnectRequestPayload;
@@ -94,6 +94,21 @@ window.addEventListener('message', (event: any) => {
           eventId,
         }, '*');
       });
+      break;
+
+    case XBULL_SIGN_MESSAGE:
+      if (detail.origin === window.origin) {
+        chrome.runtime.sendMessage({
+          event: XBULL_SIGN_MESSAGE_BACKGROUND,
+          payload: detail,
+        }, (response: IRuntimeSignMessageResponse) => {
+          window.postMessage({
+            returnFromCS: true,
+            detail: response,
+            eventId,
+          }, '*');
+        });
+      }
       break;
   }
 });

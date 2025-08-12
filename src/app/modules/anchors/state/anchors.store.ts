@@ -121,6 +121,18 @@ export class AnchorsStore extends BaseEntityStore<AnchorsState> {
         transferServerSep24: 'https://anchor.ngnc.online/sep24',
         canBeRemoved: false,
       }),
+      createAnchor({
+        name: 'Abroad Finance',
+        url: 'https://sep-stellar.abroad.finance',
+        description: '',
+        image: '',
+        email: '',
+        networkPassphrase: Networks.PUBLIC,
+        signingKey: 'GCLMP4CYNFN62DDKPRMFWU4FQZFJBUL4CPTJ3JAGIHM72UNB6IX5HUGK',
+        webAuthEndpoint: 'https://sep-stellar.abroad.finance/auth',
+        transferServerSep24: 'https://sep-stellar.abroad.finance/sep24',
+        canBeRemoved: false,
+      }),
     ];
   }
 

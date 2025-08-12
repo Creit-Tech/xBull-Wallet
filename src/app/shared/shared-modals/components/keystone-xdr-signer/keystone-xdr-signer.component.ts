@@ -27,7 +27,7 @@ export class KeystoneXdrSignerComponent {
       map(({ path, tx }) => {
         const stellarTransactionHash = {
           requestId: crypto.randomUUID(),
-          signData: tx.hash().toString('hex'),
+          signData: this.hash,
           dataType: KeystoneStellarSDK.DataType.TransactionHash,
           path,
           xfp: this.data.deviceId,
@@ -47,12 +47,14 @@ export class KeystoneXdrSignerComponent {
       }),
     );
 
-  hash: string = this.data.tx.hash().toString('hex');
+  hash: string = (
+    Buffer.isBuffer(this.data.tx) ? this.data.tx : this.data.tx.hash()
+  ).toString('hex');
 
   constructor(
     @Inject(NZ_MODAL_DATA)
     public readonly data: {
-      tx: Transaction | FeeBumpTransaction;
+      tx: Transaction | FeeBumpTransaction | Buffer;
       path: string;
       deviceId: string;
       signatureResultHandler: (signature: string) => void;

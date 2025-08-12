@@ -2,18 +2,18 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   IConnectRequestPayload,
   IRuntimeConnectResponse,
-  IRuntimeErrorResponse,
-  IRuntimeSignXDRResponse,
+  IRuntimeErrorResponse, IRuntimeSignMessageResponse,
+  IRuntimeSignXDRResponse, ISignMessageRequestPayload,
   ISignXDRRequestPayload,
   RuntimeMessage,
   XBULL_CONNECT_BACKGROUND,
+  XBULL_SIGN_MESSAGE_BACKGROUND,
   XBULL_SIGN_XDR_BACKGROUND,
 } from '../../../extension/interfaces';
 import { SiteRequestComponent } from '~root/modules/background/components/site-request/site-request.component';
-import { catchError, delay, filter, pluck, switchMap, take, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { catchError, delay, filter, pluck, switchMap, take, takeUntil, tap, withLatestFrom } from 'rxjs/operators';
 import { firstValueFrom, merge, of, ReplaySubject, Subject, Subscription } from 'rxjs';
 import { SitesConnectionsService } from '~root/core/sites-connections/sites-connections.service';
-import { ComponentCreatorService } from '~root/core/services/component-creator.service';
 import {
   createSiteConnection,
   HorizonApisQuery,
@@ -23,7 +23,7 @@ import {
 } from '~root/state';
 import { WalletsAccountsService } from '~root/core/wallets/services/wallets-accounts.service';
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
-import {HorizonApisService} from '~root/core/services/horizon-apis.service';
+import { HorizonApisService } from '~root/core/services/horizon-apis.service';
 import {
   ISigningResults,
   XdrSignerComponent
@@ -31,6 +31,11 @@ import {
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { TranslateService } from '@ngx-translate/core';
 import { selectPersistStateInit } from '@datorama/akita';
+import { Networks } from '@stellar/stellar-sdk';
+import {
+  ISignMessageResult,
+  SignMessageComponent
+} from '~root/shared/shared-modals/components/sign-message/sign-message.component';
 
 @Component({
   selector: 'app-background',
@@ -65,9 +70,15 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     .pipe(pluck('payload'))
     .pipe(switchMap(payload => this.signXDRHandler(payload as ISignXDRRequestPayload)));
 
+  signMessageHandler$ = this.runtimeEvent$.asObservable()
+    .pipe(filter(message => message.event === XBULL_SIGN_MESSAGE_BACKGROUND))
+    .pipe(pluck('payload'))
+    .pipe(switchMap(payload => this.signMessageHandler(payload as ISignMessageRequestPayload)));
+
   portResponseSubscription: Subscription = merge(
     this.connectHandler$,
-    this.signXDRHandler$
+    this.signXDRHandler$,
+    this.signMessageHandler$
   )
     .pipe(catchError(error => {
       console.error(error);
@@ -86,14 +97,17 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     });
 
   ngOnInit(): void {
+    console.log('BackgroundComponent::ngOnInit!!')
     chrome.runtime.onConnect.addListener(port => {
       if (
         port.sender?.id !== chrome.runtime.id
         || [
           XBULL_CONNECT_BACKGROUND,
-          XBULL_SIGN_XDR_BACKGROUND
+          XBULL_SIGN_XDR_BACKGROUND,
+          XBULL_SIGN_MESSAGE_BACKGROUND
         ].indexOf(port.name) === -1
       ) {
+        console.error('Connection rejected from the background component.')
         return;
       }
 
@@ -159,37 +173,11 @@ export class BackgroundComponent implements OnInit, OnDestroy {
 
   async signXDRHandler(params: ISignXDRRequestPayload): Promise<IRuntimeSignXDRResponse | IRuntimeErrorResponse> {
     await firstValueFrom(selectPersistStateInit());
-    if (!!params.network) {
-      try {
-        this.horizonApisService.setHorizonByNetwork(params.network);
-      } catch (e: any) {
-        return {
-          error: true,
-          errorMessage: e.name,
-        };
-      }
-    }
 
-    if (!!params.publicKey) {
-      const selectedApi: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
-      const accountId: string = this.walletsService.generateWalletAccountId({
-        network: params.network || selectedApi.networkPassphrase,
-        publicKey: params.publicKey,
-      });
-
-      const account = await this.walletsAccountsQuery.selectEntity(accountId).pipe(take(1)).toPromise();
-
-      if (!!account) {
-        this.walletsService.selectAccount({
-          walletId: account.walletId,
-          publicKey: account.publicKey,
-        });
-      } else {
-        return {
-          error: true,
-          errorMessage: 'Combination of Network and public key is not available in this wallet',
-        };
-      }
+    try {
+      await this.checkAddressAndNetwork(params);
+    } catch (e: any) {
+      return e;
     }
 
     const resultSubject: Subject<IRuntimeSignXDRResponse | IRuntimeErrorResponse> =
@@ -227,6 +215,88 @@ export class BackgroundComponent implements OnInit, OnDestroy {
     drawerRef.open();
 
     return firstValueFrom(resultSubject);
+  }
+
+  async signMessageHandler(params: ISignMessageRequestPayload): Promise<IRuntimeSignMessageResponse | IRuntimeErrorResponse> {
+    console.log('BackgroundComponent::signMessageHandler')
+    await firstValueFrom(selectPersistStateInit());
+
+    try {
+      await this.checkAddressAndNetwork(params);
+    } catch (e: any) {
+      return e;
+    }
+
+    const resultSubject: Subject<IRuntimeSignMessageResponse | IRuntimeErrorResponse> =
+      new Subject<IRuntimeSignMessageResponse | IRuntimeErrorResponse>();
+    const drawerRef = this.nzDrawerService.create<SignMessageComponent>({
+      nzContent: SignMessageComponent,
+      nzContentParams: {
+        message: params.message,
+        from: params.host,
+        signingResultsHandler: async (data: ISignMessageResult): Promise<void> => {
+          const selectedAccount: IWalletsAccount = await firstValueFrom(this.walletsAccountsQuery.getSelectedAccount$);
+          resultSubject.next({
+            error: false,
+            payload: {
+              signedMessage: data.signedMessage,
+              signerAddress: selectedAccount.publicKey,
+            },
+          });
+          drawerRef.close();
+        },
+      },
+      nzTitle: 'Confirm and sign',
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
+    });
+
+    drawerRef.afterClose
+      .pipe(takeUntil(this.componentDestroyed$))
+      .subscribe(() => {
+        resultSubject.next({
+          error: true,
+          errorMessage: 'Sign request denied'
+        });
+      });
+
+    drawerRef.open();
+
+    return firstValueFrom(resultSubject);
+  }
+
+  async checkAddressAndNetwork(params: { publicKey?: string; network?: Networks }): Promise<void> {
+    if (!!params.network) {
+      try {
+        this.horizonApisService.setHorizonByNetwork(params.network);
+      } catch (e: any) {
+        return Promise.reject({
+          error: true,
+          errorMessage: e.name,
+        });
+      }
+    }
+
+    if (!!params.publicKey) {
+      const selectedApi: INetworkApi = await firstValueFrom(this.horizonApisQuery.getSelectedHorizonApi$);
+      const accountId: string = this.walletsService.generateWalletAccountId({
+        network: params.network || selectedApi.networkPassphrase,
+        publicKey: params.publicKey,
+      });
+
+      const account = await this.walletsAccountsQuery.selectEntity(accountId).pipe(take(1)).toPromise();
+
+      if (!!account) {
+        this.walletsService.selectAccount({
+          walletId: account.walletId,
+          publicKey: account.publicKey,
+        });
+      } else {
+        return Promise.reject({
+          error: true,
+          errorMessage: 'Combination of Network and public key is not available in this wallet',
+        });
+      }
+    }
   }
 
 }

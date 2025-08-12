@@ -35,6 +35,7 @@ import {
 } from '~root/shared/shared-modals/components/keystone-xdr-signer/keystone-xdr-signer.component';
 import { NzProgressComponent } from 'ng-zorro-antd/progress';
 import { SharedComponentsModule } from '~root/shared/shared-components/shared-components.module';
+import { SignMessageComponent } from '~root/shared/shared-modals/components/sign-message/sign-message.component';
 
 const COMPONENTS = [
   ModalContainerComponent,
@@ -48,6 +49,7 @@ const COMPONENTS = [
   AirgappedPublicKeyComponent,
   PromptModalComponent,
   KeystoneXdrSignerComponent,
+  SignMessageComponent
 ];
 
 @NgModule({

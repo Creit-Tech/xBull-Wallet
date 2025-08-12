@@ -212,7 +212,7 @@ export class AirgappedWalletService {
   async signWithKeystone(params: {
     path: string;
     deviceId: string;
-    tx: Transaction | FeeBumpTransaction;
+    tx: Transaction | FeeBumpTransaction | Buffer;
   }): Promise<{ signature: string }> {
     return new Promise<{signature: string}>((resolve, reject) => {
       const modal = this.nzModalService.create({

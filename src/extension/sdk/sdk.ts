@@ -1,14 +1,21 @@
 import {
   EventTypes,
-  IConnectRequestPayload, IGetNetworkRequestPayload,
+  IConnectRequestPayload,
+  IGetNetworkRequestPayload,
   IGetPublicKeyRequestPayload,
   IRuntimeConnectResponse,
-  IRuntimeErrorResponse, IRuntimeGetNetworkResponse,
-  IRuntimeGetPublicKeyResponse,
+  IRuntimeErrorResponse,
+  IRuntimeGetNetworkResponse,
+  IRuntimeGetPublicKeyResponse, IRuntimeSignMessageMessage, IRuntimeSignXDRMessage,
   IRuntimeSignXDRResponse,
-  ISignXDRRequestPayload, SdkResponse,
-  XBULL_CONNECT, XBULL_GET_NETWORK,
-  XBULL_GET_PUBLIC_KEY, XBULL_SIGN_XDR,
+  ISignMessageRequestPayload,
+  ISignXDRRequestPayload,
+  SdkResponse,
+  XBULL_CONNECT,
+  XBULL_GET_NETWORK,
+  XBULL_GET_PUBLIC_KEY,
+  XBULL_SIGN_MESSAGE,
+  XBULL_SIGN_XDR,
 } from '../interfaces';
 import { Networks } from '@stellar/stellar-sdk';
 
@@ -301,6 +308,63 @@ class Sdk {
     return {
       network: detail.payload.network,
       networkPassphrase: detail.payload.networkPassphrase,
+    };
+  }
+
+  /**
+   * https://github.com/stellar/stellar-protocol/blob/master/ecosystem/sep-0043.md#signmessage
+   */
+  async signMessage(
+    message: string,
+    opts?: {
+      networkPassphrase?: Networks,
+      address?: string;
+    }): Promise<SdkResponse<{ signedMessage: string; signerAddress: string; }>> {
+    if (!message) return {
+      error: {
+        code: -1,
+        message: 'The message must be defined.'
+      }
+    }
+
+    try {
+      await this.enableConnection();
+    } catch (e: any) {
+      return {
+        error: {
+          code: e?.code || -1,
+          message: e?.message || 'Unexpected error',
+        }
+      };
+    }
+
+    const dispatchEventParams: ISignMessageRequestPayload = {
+      origin: window.origin,
+      host: window.location.host,
+      message: message,
+      publicKey: opts?.address,
+      network: opts?.networkPassphrase,
+    };
+
+    const response = await this.sendEventToContentScript<
+      ISignMessageRequestPayload,
+      IRuntimeSignMessageMessage | IRuntimeErrorResponse
+    >(XBULL_SIGN_MESSAGE, dispatchEventParams);
+
+    const { detail } = response.data;
+
+    if (!detail || detail.error) {
+      return {
+        error: {
+          code: detail?.code || -1,
+          message: detail?.errorMessage || 'Unexpected error',
+        }
+      };
+    }
+
+    return {
+      signedMessage: detail.payload.signedMessage,
+      signerAddress: detail.payload.signerAddress,
     };
   }
 

@@ -1,0 +1,48 @@
+<section class="w-full h-full grid grid-cols-1 gap-4" style="grid-template-rows: auto 1fr auto">
+  <section class="col-span-1 text-center">
+    <p *ngIf="from !== 'wallet'" class="text-xs ">
+      <b>{{ 'COMMON_WORDS.FROM' | translate }}: <span class="opacity-80">{{ from }}</span></b>
+    </p>
+
+    <div class="w-full flex flex-col items-center">
+      <p class="text-xs">
+        <b>{{ 'COMMON_WORDS.NETWORK' | translate }}: <span class="opacity-80">{{ networkBeingUsed$ | async }}</span></b>
+      </p>
+
+      <p *ngIf="selectedAccount$ | async as selectedAccount"
+         appClipboard [textToCopy]="selectedAccount.publicKey"
+         class="text-xs  cursor-pointer">
+        <b>{{ 'XDR_SIGNER.SIGN_WITH' | translate }}: <span class="opacity-80">{{ selectedAccount.publicKey | publicKey }}</span></b>
+      </p>
+    </div>
+  </section>
+
+  <section class="col-span-1 overflow-y-auto no-scrollbar">
+    <dl>
+      <dt class="text-off-white text-base font-bold mb-1 w-full">Message to sign:</dt>
+      <dd class=" break-all text-sm mb-3 w-full">{{ message$ | async }}</dd>
+    </dl>
+  </section>
+
+  <section class="col-span-1 flex flex-wrap">
+    <div class="w-6/12 flex-1 pr-2">
+      <button (click)="onClose()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzBlock nzDanger>
+        {{ 'COMMON_WORDS.REJECT' | translate }}
+      </button>
+    </div>
+
+    <div class="w-6/12 flex-1 pl-2">
+      <button (click)="signAndEmit()"
+              nz-button
+              nzType="primary"
+              nzSize="large"
+              nzBlock>
+        {{ 'COMMON_WORDS.ACCEPT' | translate }}
+      </button>
+    </div>
+  </section>
+</section>

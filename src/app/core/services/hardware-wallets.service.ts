@@ -54,19 +54,27 @@ export class HardwareWalletsService {
   async signWithLedger(data: {
     accountPath: string;
     publicKey: string;
-    transaction: Transaction | FeeBumpTransaction;
+    transaction: Transaction | FeeBumpTransaction | Buffer;
     transport: TransportWebUSB;
   }): Promise<IHWSigningResult> {
     const str = new Str(data.transport);
     const blockBlindLedgerTransactions = await firstValueFrom(this.settingsQuery.blockBlindLedgerTransactions$);
 
-    const result = blockBlindLedgerTransactions
-      ? await str.signTransaction(data.accountPath, data.transaction.signatureBase())
-      : await str.signHash(data.accountPath, data.transaction.hash());
+    let signature: string;
+    if (Buffer.isBuffer(data.transaction)) {
+      const result = await str.signHash(data.accountPath, data.transaction);
+      signature = result.signature.toString('base64');
+    } else {
+      const result = blockBlindLedgerTransactions
+        ? await str.signTransaction(data.accountPath, data.transaction.signatureBase())
+        : await str.signHash(data.accountPath, data.transaction.hash());
+
+      signature = result.signature.toString('base64');
+    }
 
     return {
       publicKey: data.publicKey,
-      signature: result.signature.toString('base64')
+      signature
     };
   }
 
