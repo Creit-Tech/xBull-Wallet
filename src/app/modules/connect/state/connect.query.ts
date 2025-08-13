@@ -16,6 +16,7 @@ export class ConnectQuery extends Query<ConnectState> {
   permissions$ = this.select(state => state.permissions);
 
   xdr$ = this.select(state => state.xdr);
+  message$ = this.select(state => state.message);
   accountIdToUse$ = this.select(state => state.accountIdToUse);
   networkPassphraseToUse$ = this.select(state => state.networkPassphraseToUse);
 

@@ -10,6 +10,7 @@ export enum ConnectStateFlow {
   START = 'START',
   CONNECT = 'CONNECT',
   SIGN = 'SIGN',
+  SIGN_MESSAGE = 'SIGN_MESSAGE',
 }
 export interface ConnectState {
   UIState: {
@@ -35,6 +36,7 @@ export interface ConnectState {
 
   // Sign flow state
   xdr?: string;
+  message?: string; // This is used in the sign message flow
   accountIdToUse?: IWalletsAccount['_id'];
   networkPassphraseToUse?: INetworkApi['networkPassphrase'];
 }

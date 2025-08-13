@@ -161,7 +161,7 @@ export class SignMessageComponent {
         message,
         fullMessage: fullMessage.toString('base64'),
         signedMessage: result.signedXDR,
-        signer: selectedAccount.publicKey,
+        signerAddress: selectedAccount.publicKey,
       };
     } catch (e) {
       console.log(e);
@@ -194,7 +194,7 @@ export class SignMessageComponent {
         message,
         fullMessage: fullMessage.toString('base64'),
         signedMessage: result.signedXDR,
-        signer: selectedAccount.publicKey,
+        signerAddress: selectedAccount.publicKey,
       };
     } catch (error) {
       console.log(error);
@@ -227,7 +227,7 @@ export class SignMessageComponent {
         message,
         fullMessage: fullMessage.toString('base64'),
         signedMessage: result.signedXDR,
-        signer: selectedAccount.publicKey,
+        signerAddress: selectedAccount.publicKey,
       };
     } catch (e: any) {
       this.signing$.next(false);
@@ -260,7 +260,7 @@ export class SignMessageComponent {
         message,
         fullMessage: fullMessage.toString('base64'),
         signedMessage: result.signedXDR,
-        signer: selectedAccount.publicKey,
+        signerAddress: selectedAccount.publicKey,
       };
     } catch (e: any) {
       console.error(e);
@@ -298,5 +298,5 @@ export interface ISignMessageResult {
   message: string;
   fullMessage: string; // This is the message with the SEP-0053 text
   signedMessage: string;
-  signer: string;
+  signerAddress: string;
 }

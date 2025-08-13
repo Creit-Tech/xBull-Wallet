@@ -2,6 +2,6 @@
   <app-connect-account></app-connect-account>
 </ng-container>
 
-<ng-container *ngIf="(signFlow$ | async)">
+<ng-container *ngIf="(signFlow$ | async) || (signMessageFlow$ | async)">
   <app-sign-request></app-sign-request>
 </ng-container>

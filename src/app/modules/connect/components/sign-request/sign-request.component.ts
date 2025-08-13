@@ -11,6 +11,10 @@ import { XdrSignerComponent } from '~root/shared/shared-modals/components/xdr-si
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { box, randomBytes } from 'tweetnacl';
 import { decodeBase64, decodeUTF8, encodeBase64 } from 'tweetnacl-util';
+import {
+  ISignMessageResult,
+  SignMessageComponent
+} from '~root/shared/shared-modals/components/sign-message/sign-message.component';
 
 @Component({
   selector: 'app-sign-request',
@@ -48,6 +52,7 @@ export class SignRequestComponent implements OnInit {
     }));
 
   xdr$ = this.connectQuery.xdr$;
+  message$ = this.connectQuery.message$;
 
   constructor(
     private readonly connectQuery: ConnectQuery,
@@ -63,6 +68,20 @@ export class SignRequestComponent implements OnInit {
   }
 
   async onAccept(): Promise<void> {
+    const xdr = await firstValueFrom(this.xdr$);
+    const message = await firstValueFrom(this.message$);
+
+    if (xdr) {
+      await this.signXdr(xdr)
+    } else if (message) {
+      await this.signMessage(message);
+    } else {
+      this.nzMessageService.error('Nothing to sign was provided.');
+      return;
+    }
+  }
+
+  async signXdr(xdr: string) {
     const [
       openerPublicKey,
       keypair,
@@ -73,12 +92,6 @@ export class SignRequestComponent implements OnInit {
 
     if (!openerPublicKey) {
       this.nzMessageService.error('Public key from opener was not provided');
-      return;
-    }
-
-    const xdr = await firstValueFrom(this.xdr$);
-    if (!xdr) {
-      this.nzMessageService.error('There was no XDR provided.');
       return;
     }
 
@@ -118,8 +131,57 @@ export class SignRequestComponent implements OnInit {
     });
   }
 
-  onReject(): void {
-    this.connectService.rejectRequest(EventType.XBULL_SIGN_RESPONSE);
+  async signMessage(message: string) {
+    const [
+      openerPublicKey,
+      keypair,
+    ] = await Promise.all([
+      firstValueFrom(this.openerPublicKey$),
+      firstValueFrom(this.keypair$),
+    ]);
+
+    if (!openerPublicKey) {
+      this.nzMessageService.error('Public key from opener was not provided');
+      return;
+    }
+
+    const accountId = await this.connectQuery.accountIdToUse$.pipe(take(1)).toPromise();
+
+    this.nzDrawerService.create<SignMessageComponent>({
+      nzContent: SignMessageComponent,
+      nzWrapClassName: 'drawer-full-w-340 ios-safe-y',
+      nzTitle: 'Sign Message',
+      nzContentParams: {
+        message,
+        pickedAccount: this.walletsAccountsQuery.getEntity(accountId),
+        pickedNetworkPassphrase: await this.networkPassphraseToUse$.pipe(take(1)).toPromise(),
+        signingResultsHandler: (result: ISignMessageResult) => {
+          const oneTimeCode = randomBytes(24);
+
+          const encryptedPayload = box(
+            decodeUTF8(JSON.stringify(result)),
+            oneTimeCode,
+            decodeBase64(openerPublicKey),
+            decodeBase64(keypair.secretKey),
+          );
+
+          opener.postMessage({
+            type: EventType.XBULL_SIGN_MESSAGE_RESPONSE,
+            message: encodeBase64(encryptedPayload),
+            oneTimeCode: encodeBase64(oneTimeCode),
+            publicKey: keypair.publicKey,
+            success: true
+          }, '*');
+        }
+      },
+    });
+  }
+
+  async onReject(): Promise<void> {
+    const xdr = await firstValueFrom(this.xdr$);
+    if (xdr) this.connectService.rejectRequest(EventType.XBULL_SIGN_RESPONSE);
+    const message = await firstValueFrom(this.message$);
+    if (message) this.connectService.rejectRequest(EventType.XBULL_SIGN_MESSAGE_RESPONSE);
   }
 
 }

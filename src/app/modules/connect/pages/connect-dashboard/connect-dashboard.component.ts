@@ -12,6 +12,7 @@ import { ConnectService, EventType, IEventData } from '~root/modules/connect/ser
 import { WalletsService } from '~root/core/wallets/services/wallets.service';
 import { WalletsAccountsQuery } from '~root/state';
 import { selectPersistStateInit } from '@datorama/akita';
+import { Networks } from '@stellar/stellar-sdk';
 
 @Component({
   selector: 'app-connect-dashboard',
@@ -31,6 +32,9 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
 
   signFlow$ = this.connectQuery.stateFlow$
     .pipe(map(stateFlow => stateFlow === ConnectStateFlow.SIGN));
+
+  signMessageFlow$ = this.connectQuery.stateFlow$
+    .pipe(map(stateFlow => stateFlow === ConnectStateFlow.SIGN_MESSAGE));
 
   // These are in base64
   private openerPublicKey$ = this.connectQuery.openerPublicKey$;
@@ -56,6 +60,10 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
 
         case EventType.XBULL_SIGN:
           await this.handleSignRequest(event);
+          return;
+
+        case EventType.XBULL_SIGN_MESSAGE:
+          await this.handleSignMessageRequest(event);
           return;
 
         default:
@@ -174,6 +182,37 @@ export class ConnectDashboardComponent implements OnInit, AfterViewInit, OnDestr
       this.connectService.setSignTransaction({
         origin: event.origin,
         xdr: message.xdr,
+      });
+    }
+  }
+
+  async handleSignMessageRequest(event: MessageEvent<IEventData>): Promise<void> {
+    const { message, opts } = await this.decryptEventMessage(event) as { message: string; opts?: { address?: string; networkPassphrase?: Networks } };
+    await selectPersistStateInit().pipe(take(1)).toPromise();
+
+    if (!!opts?.address && !!opts?.networkPassphrase) {
+      const accountId = this.walletsService.generateWalletAccountId({
+        publicKey: opts.address,
+        network: opts.networkPassphrase,
+      });
+
+      const account = this.walletsAccountsQuery.getEntity(accountId);
+
+      if (!account) {
+        this.connectService.rejectRequest(EventType.XBULL_SIGN_MESSAGE_RESPONSE);
+        return;
+      }
+
+      this.connectService.setSignMessageTransaction({
+        origin: event.origin,
+        message,
+        accountIdToUse: account._id,
+        networkPassphraseToUse: opts.networkPassphrase,
+      });
+    } else {
+      this.connectService.setSignMessageTransaction({
+        origin: event.origin,
+        message
       });
     }
   }

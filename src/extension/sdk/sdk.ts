@@ -319,7 +319,8 @@ class Sdk {
     opts?: {
       networkPassphrase?: Networks,
       address?: string;
-    }): Promise<SdkResponse<{ signedMessage: string; signerAddress: string; }>> {
+    }
+  ): Promise<SdkResponse<{ signedMessage: string; signerAddress: string; }>> {
     if (!message) return {
       error: {
         code: -1,

@@ -50,6 +50,21 @@ export class ConnectService {
     });
   }
 
+  @transaction()
+  setSignMessageTransaction(params: Required<Pick<ConnectState, 'message' | 'origin'>> & Pick<ConnectState, 'accountIdToUse' | 'networkPassphraseToUse'>): void {
+    this.connectStore.update({
+      message: params.message,
+      origin: params.origin,
+      accountIdToUse: params.accountIdToUse,
+      networkPassphraseToUse: params.networkPassphraseToUse,
+    });
+
+    this.connectStore.updateUIState({
+      stateFlow: ConnectStateFlow.SIGN_MESSAGE,
+      processStarted: true,
+    });
+  }
+
   rejectRequest(type: EventType): void {
     opener.postMessage({
       type,
@@ -70,4 +85,6 @@ export enum EventType {
   XBULL_CONNECT_RESPONSE = 'XBULL_CONNECT_RESPONSE',
   XBULL_SIGN = 'XBULL_SIGN',
   XBULL_SIGN_RESPONSE = 'XBULL_SIGN_RESPONSE',
+  XBULL_SIGN_MESSAGE = 'XBULL_SIGN_MESSAGE',
+  XBULL_SIGN_MESSAGE_RESPONSE = 'XBULL_SIGN_MESSAGE_RESPONSE',
 }
