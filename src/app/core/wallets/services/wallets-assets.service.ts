@@ -195,6 +195,7 @@ export class WalletsAssetsService {
         const currencies: any = parsedToml.CURRENCIES || parsedToml.currencies;
         const assetMetadataServer: any = parsedToml.ASSET_METADATA_SERVER || parsedToml.asset_metadata_server;
         let currency = (currencies || []).find((c: any) => {
+          const matchIssuer = !c.issuer || c.issuer.toUpperCase() === data.assetIssuer.toUpperCase();
           if (!!c.code_template) {
             const index = c.code_template.indexOf('?');
             if (index === -1) {
@@ -208,10 +209,10 @@ export class WalletsAssetsService {
 
             return baseTemplate === baseTemplateFromAssetCode
               && dynamicTemplate.length === dynamicTemplateFromAssetCode.length
-              && c.issuer === data.assetIssuer;
+              && matchIssuer;
           }
 
-          return c.code === data.assetCode && c.issuer === data.assetIssuer;
+          return c.code === data.assetCode && matchIssuer;
         });
 
         if (!currency && !!assetMetadataServer) {
@@ -224,12 +225,24 @@ export class WalletsAssetsService {
           } catch (e) {}
         }
 
+        const currencyDetails = parseCurrencyDetails(currency);
+
+        if (!currencyDetails.image) {
+          const curated = this.curatedAssetsStore.getValue().entities?.[`${data.assetCode}_${data.assetIssuer}`]
+            || Object.values(this.curatedAssetsStore.getValue().entities || {}).find(a => a?.code === data.assetCode);
+          if (curated?.image) {
+            currencyDetails.image = curated.image;
+          } else if (data.assetCode === 'USDC') {
+            currencyDetails.image = 'https://raw.githubusercontent.com/stellar/stellar-asset-list/master/assets/USDC.png';
+          }
+        }
+
         this.walletsAssetsStore.upsert(
           data._id,
           {
-            domain: accountRecord.home_domain,
-            ...parseCurrencyDetails(currency),
-            orgName: documentation?.ORG_NAME,
+            domain: accountRecord.home_domain || (data.assetCode === 'USDC' ? 'circle.com' : undefined),
+            ...currencyDetails,
+            orgName: documentation?.ORG_NAME || (data.assetCode === 'USDC' ? 'Circle' : undefined),
             orgDba: documentation?.ORG_DBA,
             orgDescription: documentation?.ORG_DESCRIPTION,
             orgWebsite: documentation?.ORG_URL,
