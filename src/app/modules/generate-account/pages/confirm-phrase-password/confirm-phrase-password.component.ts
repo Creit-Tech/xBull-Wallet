@@ -115,16 +115,57 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
   }
 
   addWord(word: string): void {
-    if (!word || !this.wordList.find(w => w.includes(word))) {
+    if (!word) {
+      return;
+    }
+
+    const trimmed = word.trim().toLowerCase();
+    const tokens = trimmed.split(/[\s,]+/).filter(Boolean);
+
+    if (tokens.length > 1) {
+      for (const token of tokens) {
+        if (this.wordList.includes(token)) {
+          this.phraseArray.push(
+            new UntypedFormControl(token, Validators.required)
+          );
+        }
+      }
+      this.form.get('searchInput')?.patchValue('');
+      this.filteredOptions = [];
+      return;
+    }
+
+    if (!this.wordList.includes(trimmed)) {
       return;
     }
 
     this.phraseArray.push(
-      new UntypedFormControl(word, Validators.required)
+      new UntypedFormControl(trimmed, Validators.required)
     );
 
     this.form.get('searchInput')?.patchValue('');
     this.filteredOptions = [];
+  }
+
+  handlePaste(event: ClipboardEvent): void {
+    const pastedData = event.clipboardData?.getData('text');
+    if (!pastedData) {
+      return;
+    }
+
+    const tokens = pastedData.trim().toLowerCase().split(/[\s,]+/).filter(Boolean);
+    if (tokens.length > 1) {
+      event.preventDefault();
+      for (const token of tokens) {
+        if (this.wordList.includes(token)) {
+          this.phraseArray.push(
+            new UntypedFormControl(token, Validators.required)
+          );
+        }
+      }
+      this.form.get('searchInput')?.patchValue('');
+      this.filteredOptions = [];
+    }
   }
 
   removeWord(index: number): void {
@@ -134,8 +175,9 @@ export class ConfirmPhrasePasswordComponent implements OnInit, OnDestroy {
 
   filterOptions(value: string): void {
     if (value && value.length > 1) {
+      const normalized = value.toLowerCase();
       this.filteredOptions = this.wordList.filter(option =>
-        option.includes(value)
+        option.includes(normalized)
       );
     } else {
       this.filteredOptions = [];
